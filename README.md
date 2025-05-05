@@ -17,23 +17,23 @@ o	Obtain a large dataset of non-contrast CT scans through the Kettering Health N
 o	Supplement with publicly available datasets if feasible.
 o	Prioritize datasets with longitudinal scans where available.
 
-3.	Preprocessing and Standardization
+2.	Preprocessing and Standardization
 
 o	Standardize images for resolution, orientation, and noise reduction.
 o	Seek expert guidance in medical image processing to ensure clinical relevance and consistency.
 
-4.	Model Development
+3.	Model Development
 o	Construct an unsupervised learning model, with architecture informed by both clinical and technical input.
 o	Begin with a basic framework, refining and adjusting based on iterative results.
 
-6.	Training and Evaluation
+4.	Training and Evaluation
 o	Train and test the model on the available dataset, tuning parameters based on preliminary outcomes.
 o	Explore the possibility of incorporating semi-supervised elements if appropriate.
 
-7.	Integration with Biophysical Simulations (Long-Term)
+5.	Integration with Biophysical Simulations (Long-Term)
 o	Explore coupling model outputs with biophysical simulations of arterial stress and blood flow dynamics to enhance predictive insight.
 
-8.	Clinical Translation (Long-Term Goal)
+6.	Clinical Translation (Long-Term Goal)
 
 o	Develop a clinician-facing tool that, based on a simple CAC scan, outputs:
 	Predicted time-dependent risk levels,
