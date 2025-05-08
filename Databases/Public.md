@@ -1,4 +1,4 @@
-[Link Text] (https://orcascore.grand-challenge.org/Home/)
+Grand Challenge --> https://orcascore.grand-challenge.org/Home/
 
 MedPix
 --> NIH database
