@@ -7,7 +7,7 @@ Current coronary artery calcium (CAC) tests are widely used in clinical practice
 ________________________________________
 Hypothesis:
 
-Unsupervised machine learning models, when trained on a large set of CT scans, can detect predictive patterns in calcium deposition that are not readily identifiable by human interpretation. Such models could uncover hidden features that improve risk prediction beyond traditional scoring systems.
+Machine learning models, when trained on a large set of CT scans, can detect predictive patterns in calcium deposition that are not readily identifiable by human interpretation. Such models could uncover hidden features that improve risk prediction beyond traditional scoring systems, discover correlations between clinical and image data, and enhance the predictive capability of these scans through powerful feature detection.
 ________________________________________
 Approach:
 
@@ -27,7 +27,7 @@ o	Seek expert guidance in medical image processing to ensure clinical relevance 
 
 3.	Model Development
 
-o	Construct an unsupervised learning model, with architecture informed by both clinical and technical input.
+o	Construct an multimodal machine learning model, with architecture informed by both clinical and technical input.
 
 o	Begin with a basic framework, refining and adjusting based on iterative results.
 
@@ -45,8 +45,8 @@ o	Explore coupling model outputs with biophysical simulations of arterial stress
 
 o	Develop a clinician-facing tool that, based on a simple CAC scan, outputs:
 
-	Predicted time-dependent risk levels,
-	Likely anatomical regions of future occlusion,
+	Predicted time-dependent risk levels for MACE,
+	Likely anatomical regions of future occlusion?,
 	Confidence intervals for predictions.
 
 o	This tool could improve patient outcomes by assisting providers in balancing the risks of cardiac events with the risks of further tests, treatments, or surgeries.
