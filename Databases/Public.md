@@ -8,6 +8,13 @@ Stanford AIMI Shared Datasets--> https://stanfordaimi.azurewebsites.net/datasets
 
 	We provide two datasets: 1) gated coronary CT DICOM images with corresponding coronary artery calcium segmentations and scores (xml files) 2) non-gated chest CT DICOM images with coronary artery calcium scores
 
+Segmented Heart Data:
+Harvard Deep Seg
+https://github.com/AIM-Harvard/DeepHeartSeg/tree/main/data
+
+Segmented coronary arteries from CTA
+https://zenodo.org/records/14743855
+
 Maybe?
 
 o	SPECTF Heart - UCI Machine Learning Repository --> https://archive.ics.uci.edu/dataset/96/spectf+heart
