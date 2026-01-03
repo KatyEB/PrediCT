@@ -1,9 +1,0 @@
-coca_project/data_raw/
-coca_project/scans/
-coca_project/dicom/
-coca_project/nifti/
-coca_project/output/
-coca_project/temp/
-*.nii
-*.nrrd
-*.dcm
