@@ -1,0 +1,41 @@
+{
+  "size_xyz": [
+    512,
+    512,
+    378
+  ],
+  "spacing_xyz": [
+    0.6484375,
+    0.6484375,
+    0.7
+  ],
+  "origin_xyz": [
+    -165.67578125,
+    -299.17578125,
+    -271.0
+  ],
+  "direction_3x3_flat": [
+    1.0,
+    0.0,
+    0.0,
+    0.0,
+    1.0,
+    0.0,
+    0.0,
+    0.0,
+    1.0
+  ],
+  "scan_id": "80f490862c43",
+  "cohort": "deidentified_nongated",
+  "patient_folder": "12",
+  "series_uid": "",
+  "source_series_dir": "C:\\coca_project\\data_raw\\dicom\\deidentified_nongated\\deidentified_nongated\\12\\12",
+  "num_files_in_series": 378,
+  "modality": "CT",
+  "series_description": null,
+  "protocol_name": null,
+  "slice_thickness_tag_mm": "1 ",
+  "convolution_kernel": "I26f\\2",
+  "num_slices_z": 378,
+  "spacing_z_mm": 0.7
+}

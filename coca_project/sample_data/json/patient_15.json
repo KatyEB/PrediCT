@@ -1,0 +1,41 @@
+{
+  "size_xyz": [
+    512,
+    512,
+    46
+  ],
+  "spacing_xyz": [
+    0.458984375,
+    0.458984375,
+    3.0
+  ],
+  "origin_xyz": [
+    -60.2705078125,
+    -287.2705078125,
+    -257.75
+  ],
+  "direction_3x3_flat": [
+    1.0,
+    0.0,
+    0.0,
+    0.0,
+    1.0,
+    0.0,
+    0.0,
+    0.0,
+    1.0
+  ],
+  "scan_id": "5c55f5b34091",
+  "cohort": "Gated_release_final",
+  "patient_folder": "15",
+  "series_uid": "1.07092430063453368698.00101493.02116395659307024474155371611315",
+  "source_series_dir": "C:\\coca_project\\data_raw\\dicom\\Gated_release_final\\Gated_release_final\\patient\\15\\Pro_Gated_CS_3.0_I30f_3_70%",
+  "num_files_in_series": 46,
+  "modality": "CT",
+  "series_description": null,
+  "protocol_name": "Anonymized",
+  "slice_thickness_tag_mm": "3 ",
+  "convolution_kernel": "I30f\\3",
+  "num_slices_z": 46,
+  "spacing_z_mm": 3.0
+}
