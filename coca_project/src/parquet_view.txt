@@ -1,0 +1,9 @@
+import pandas as pd
+
+df = pd.read_parquet(
+    r"C:\coca_project\derived\calcium_rois_raw.parquet"
+)
+
+print(df.head())
+print(df.columns)
+print(df.dtypes)
