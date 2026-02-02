@@ -15,6 +15,9 @@ https://github.com/AIM-Harvard/DeepHeartSeg/tree/main/data
 Segmented coronary arteries from CTA
 https://zenodo.org/records/14743855
 
+Segmented coronary arteries from CTA
+https://www.kaggle.com/datasets/xiaoweixumedicalai/imagecas?resource=download
+
 Maybe?
 
 o	SPECTF Heart - UCI Machine Learning Repository --> https://archive.ics.uci.edu/dataset/96/spectf+heart
