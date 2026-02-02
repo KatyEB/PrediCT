@@ -8,7 +8,7 @@ https://stanfordaimi.azurewebsites.net/
 
 3.	Download the dataset using one of the available options
 
-4.	Download the following scripts to the same folder. They are in the COCA_scripts zip file in this github: KatyEB/PrediCT: A project to enhance predictive power of routine non-contrast CT scans
+4.	Download the following scripts to the same folder. They are in the COCA_scripts zip file
 
   a.	Unnester: Fixes the format of the gated files to remove the intermediate scan label folder 
   
@@ -18,10 +18,10 @@ https://stanfordaimi.azurewebsites.net/
 
   d.	COCA_pipeline: runs COCA processor and resampler
 
-6.	Run Unnester to fix the Gated dataset
+5.	Run Unnester to fix the Gated dataset
 
-7.	Make sure COCA_processor and COCA_resampler are set up correctly to run in COCA_pipeline, taking care to tailor them to your file organization
+6.	Make sure COCA_processor and COCA_resampler are set up correctly to run in COCA_pipeline, taking care to tailor them to your file organization
   
-8.	Run COCA_pipeline
+7.	Run COCA_pipeline
 
-9.	If you would like to view the files, I recommend downloading 3D Slicer, and uploading the nii image and segmentation zip files together using the DATA upload option. Make sure to indicate the segmentation file is a segmentation rather than a volume.
+8.	If you would like to view the files, I recommend downloading 3D Slicer, and uploading the nii image and segmentation zip files together using the DATA upload option. Make sure to indicate the segmentation file is a segmentation rather than a volume.
