@@ -18,6 +18,8 @@ https://stanfordaimi.azurewebsites.net/
 
   d.	COCA_pipeline: runs COCA processor and resampler
 
+6. Install everything in Requirements.txt
+
 5.	Run Unnester to fix the Gated dataset
 
 6.	Make sure COCA_processor and COCA_resampler are set up correctly to run in COCA_pipeline, taking care to tailor them to your file organization
