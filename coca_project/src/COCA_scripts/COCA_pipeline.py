@@ -44,8 +44,13 @@ def main():
 
     if choice in ['1', '3']:
         print("\n--- Running Resampler ---")
-        space = input("Voxel Spacing (mm) [1.0]: ").strip() or "1.0"
-        target = [float(space)] * 3
+        space = input("Voxel Spacing (mm) [1.0] or [x,y,z]:").strip() or "1.0"
+        if "," in space:
+            target = [float(x.strip()) for x in space.split(",")]
+            if len(target) ! =3:
+                raise ValueError("Please enter spacing as x,y,z")
+        else:
+                target = [float(space)] * 3
         resamp = COCAResampler(project_root, target_spacing=target)
         resamp.run()
 
