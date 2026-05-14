@@ -3,3 +3,15 @@ numpy
 pandas
 SimpleITK
 opencv-python
+pydicom
+pillow
+matplotlib
+pyyaml
+jupytext
+jupyter
+ipykernel
+nibabel
+scikit-image
+torch
+torchvision
+TotalSegmentator

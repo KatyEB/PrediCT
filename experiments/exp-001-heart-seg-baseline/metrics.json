@@ -1,0 +1,13 @@
+{
+  "device": "mps",
+  "fast_mode": true,
+  "pilot_patients": 3,
+  "avg_inference_time_s": 17.0,
+  "estimated_total_787_patients_h": 3.7,
+  "heart_vol_ml_mean": 1000.4579226351731,
+  "heart_vol_ml_min": 916.4096982944757,
+  "heart_vol_ml_max": 1161.677711779601,
+  "roi_vol_ml_pilot0": 3790.0596064109805,
+  "dilation_mm": 20,
+  "masks_saved_to": "/Users/shreyaschitransh/code/eat-segmentation/data/COCA_dataset/heart_masks"
+}

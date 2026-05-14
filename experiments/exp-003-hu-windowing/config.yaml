@@ -1,0 +1,33 @@
+experiment:
+  id: exp-003
+  name: hu-windowing
+
+data:
+  source: coca
+  n_patients_to_visualize: 5
+  pilot_scan_ids:
+    - "0024645fda6a"
+    - "008ddde695d8"
+    - "00a011f0efec"
+
+windowing:
+  fat:
+    lo: -200
+    hi: -30
+
+  fat_wide:
+    lo: -250
+    hi: 0
+
+  mediastinal:
+    lo: -160
+    hi: 240
+
+  soft_tissue:
+    lo: -150
+    hi: 250
+
+  multi_channel: true
+
+cardiac_roi:
+  dilation_vox: [29, 29, 7]

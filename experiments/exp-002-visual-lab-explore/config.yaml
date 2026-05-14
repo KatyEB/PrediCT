@@ -1,0 +1,16 @@
+experiment:
+  id: exp-002
+  name: visual-lab-explore
+  description: Pixel-level study of Visual Lab annotations — understand epi/para color coding, DICOM format, HU distributions
+  date_started: 2026-05-14
+
+data:
+  source: visual_lab
+  dicom_dir: data/Dicom _ Treino
+  gt_fat_range_dir: data/GroundTruth-FatRange/Ground Truth - Fat Range
+  gt_combined_range_dir: data/GroundTruth-CombinedRange/Ground Truth - Combined Range
+  gt_higher_range_dir: data/GroundTruth-HigherRange/Ground Truth - Higher Range
+  fat_images_dir: data/FatImages/Fat Images
+  hu_range_fat: [-200, -30]
+
+seed: 42

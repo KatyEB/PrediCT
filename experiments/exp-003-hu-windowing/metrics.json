@@ -1,0 +1,41 @@
+{
+  "n_patients": 3,
+  "fat_fraction_mean": 0.19955011384854562,
+  "fat_fraction_min": 0.1865512457236857,
+  "fat_fraction_max": 0.22261211913728177,
+  "fat_stats": [
+    {
+      "pid": "0024645f",
+      "roi_shape": [
+        287,
+        257,
+        48
+      ],
+      "roi_voxels": 3540432,
+      "fat_voxels": 660472,
+      "fat_fraction": 0.1865512457236857
+    },
+    {
+      "pid": "008ddde6",
+      "roi_shape": [
+        291,
+        254,
+        46
+      ],
+      "roi_voxels": 3400044,
+      "fat_voxels": 756891,
+      "fat_fraction": 0.22261211913728177
+    },
+    {
+      "pid": "00a011f0",
+      "roi_shape": [
+        266,
+        284,
+        48
+      ],
+      "roi_voxels": 3626112,
+      "fat_voxels": 687101,
+      "fat_fraction": 0.18948697668466943
+    }
+  ]
+}

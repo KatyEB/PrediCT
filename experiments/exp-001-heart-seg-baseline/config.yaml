@@ -1,0 +1,23 @@
+experiment:
+  id: exp-001
+  name: heart-seg-baseline
+  description: Heart segmentation on COCA NIfTI scans using TotalSegmentator, validate quality and measure inference time
+  date_started: 2026-05-14
+
+data:
+  source: coca
+  resampled_dir: data/COCA_dataset/data_resampled
+  heart_masks_dir: data/COCA_dataset/heart_masks
+  scan_index: data/COCA_dataset/data_canonical/tables/scan_index.csv
+  test_n_patients: 3  # patients to run in the notebook for QC
+
+totalsegmentator:
+  task: total
+  fast: true
+  roi_subset: [heart]
+  device: mps  # Apple M4; use "cpu" if MPS not available, "cuda" for GPU cluster
+
+heart_roi:
+  dilation_mm: 20  # how much to expand the heart mask to include pericardium + paracardial region
+
+seed: 42

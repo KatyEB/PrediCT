@@ -1,0 +1,14 @@
+{
+  "num_patients": 19,
+  "slices_per_patient_min": 36,
+  "slices_per_patient_max": 50,
+  "slices_per_patient_mean": 42.21052631578947,
+  "total_epi_pixels": 747245,
+  "total_para_pixels": 4950390,
+  "epi_para_overlap_pixels": 0,
+  "epi_para_exclusive": true,
+  "epi_fraction_of_fat": 0.13115002979306326,
+  "epi_hu_in_fat_range_frac": 0.4271069072902764,
+  "para_hu_in_fat_range_frac": 0.4530984822770693,
+  "color_encoding": "R=epi, G=para (hypothesis to verify from above)"
+}
