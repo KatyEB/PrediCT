@@ -1,0 +1,16 @@
+# Jupytext configuration
+# Pairs every .ipynb with a .py file using percent format.
+# .py files are cleanly diff-able and easy to edit.
+# .ipynb files preserve cell outputs for mentor review.
+# Both files are committed to git and stay in sync via jupytext.
+#
+# See: https://jupytext.readthedocs.io/
+
+formats = "ipynb,py:percent"
+
+# Don't write a Jupyter metadata block in the .py file
+# (cleaner for code review)
+notebook_metadata_filter = "-all"
+
+# Don't include cell metadata in the .py file
+cell_metadata_filter = "-all"

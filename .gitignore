@@ -1,3 +1,9 @@
 data/
 COCA_scripts/
 .DS_Store
+docs/
+src/README.md
+weekly/
+experiments/template/
+CLAUDE.md
+README.md
