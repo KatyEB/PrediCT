@@ -29,7 +29,7 @@ data:
     - "f80c78e43274"
     - "f90e5ea147b9"
     - "f966f429ee58"
-  pilot_patients: 3   # process this many first for QC before running all 14
+  pilot_patients: 14  # pilot passed (100% slices); now running all 14
 
 output:
   masks_dir: "data/COCA_dataset/pericardium_masks"

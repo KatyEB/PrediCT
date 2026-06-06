@@ -1,0 +1,106 @@
+{
+  "pilot_patients": 14,
+  "full_score1_patients": 14,
+  "avg_time_s": 24.1,
+  "estimated_full_run_min": 5.6,
+  "pilot_results": [
+    {
+      "scan_id": "0ab03d38800c",
+      "time_s": 22.5,
+      "heart_slices": 40,
+      "predicted_slices": 40,
+      "pericardium_vol_ml": 911.7
+    },
+    {
+      "scan_id": "2685b4cfaa58",
+      "time_s": 24.1,
+      "heart_slices": 43,
+      "predicted_slices": 43,
+      "pericardium_vol_ml": 1055.5
+    },
+    {
+      "scan_id": "288f6ef3589f",
+      "time_s": 23.4,
+      "heart_slices": 42,
+      "predicted_slices": 42,
+      "pericardium_vol_ml": 1221.7
+    },
+    {
+      "scan_id": "48be8c6bef75",
+      "time_s": 23.0,
+      "heart_slices": 40,
+      "predicted_slices": 40,
+      "pericardium_vol_ml": 1054.9
+    },
+    {
+      "scan_id": "55e5446d3909",
+      "time_s": 25.6,
+      "heart_slices": 44,
+      "predicted_slices": 44,
+      "pericardium_vol_ml": 866.4
+    },
+    {
+      "scan_id": "5e491c442c9f",
+      "time_s": 23.6,
+      "heart_slices": 40,
+      "predicted_slices": 40,
+      "pericardium_vol_ml": 845.0
+    },
+    {
+      "scan_id": "ab73e336f087",
+      "time_s": 21.5,
+      "heart_slices": 34,
+      "predicted_slices": 34,
+      "pericardium_vol_ml": 835.7
+    },
+    {
+      "scan_id": "b7fe6c8df2de",
+      "time_s": 29.6,
+      "heart_slices": 44,
+      "predicted_slices": 44,
+      "pericardium_vol_ml": 1123.4
+    },
+    {
+      "scan_id": "d755207025e1",
+      "time_s": 21.7,
+      "heart_slices": 35,
+      "predicted_slices": 35,
+      "pericardium_vol_ml": 869.1
+    },
+    {
+      "scan_id": "e1190d07add9",
+      "time_s": 25.2,
+      "heart_slices": 42,
+      "predicted_slices": 42,
+      "pericardium_vol_ml": 1742.8
+    },
+    {
+      "scan_id": "ea041f6d23d2",
+      "time_s": 22.7,
+      "heart_slices": 39,
+      "predicted_slices": 39,
+      "pericardium_vol_ml": 1057.3
+    },
+    {
+      "scan_id": "f80c78e43274",
+      "time_s": 21.6,
+      "heart_slices": 37,
+      "predicted_slices": 37,
+      "pericardium_vol_ml": 954.4
+    },
+    {
+      "scan_id": "f90e5ea147b9",
+      "time_s": 25.9,
+      "heart_slices": 44,
+      "predicted_slices": 44,
+      "pericardium_vol_ml": 770.3
+    },
+    {
+      "scan_id": "f966f429ee58",
+      "time_s": 26.6,
+      "heart_slices": 45,
+      "predicted_slices": 45,
+      "pericardium_vol_ml": 1684.1
+    }
+  ]
+}
