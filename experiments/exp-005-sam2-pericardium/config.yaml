@@ -1,0 +1,35 @@
+experiment:
+  id: exp-005
+  name: sam2-pericardium
+
+sam2:
+  model_id: "facebook/sam2.1-hiera-base-plus"
+  device: "mps"
+  box_pad: 8          # pixels to pad around heart mask bbox for SAM2 box prompt
+  min_heart_vox: 200  # minimum heart voxels in slice to attempt prediction
+
+windowing:
+  lo: -160   # mediastinal window (best for pericardium, from exp-003)
+  hi: 240
+
+data:
+  # Score-1 (clear pericardium) patients from exp-004 scoring
+  score1_patients:
+    - "0ab03d38800c"
+    - "2685b4cfaa58"
+    - "288f6ef3589f"
+    - "48be8c6bef75"
+    - "55e5446d3909"
+    - "5e491c442c9f"
+    - "ab73e336f087"
+    - "b7fe6c8df2de"
+    - "d755207025e1"
+    - "e1190d07add9"
+    - "ea041f6d23d2"
+    - "f80c78e43274"
+    - "f90e5ea147b9"
+    - "f966f429ee58"
+  pilot_patients: 3   # process this many first for QC before running all 14
+
+output:
+  masks_dir: "data/COCA_dataset/pericardium_masks"

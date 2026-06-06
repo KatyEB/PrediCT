@@ -1,0 +1,17 @@
+{
+  "n_available": 785,
+  "n_sampled": 30,
+  "n_scored": 30,
+  "score_distribution": {
+    "1": 17,
+    "2": 12,
+    "3": 1
+  },
+  "estimated_full_cohort": {
+    "1": 444,
+    "2": 314,
+    "3": 26
+  },
+  "pct_usable_score1_or_2": 96.7,
+  "pct_hard_cases_score3": 3.3
+}

@@ -15,3 +15,6 @@ scikit-image
 torch
 torchvision
 TotalSegmentator
+# Segmentation models (Week 3+)
+segment-anything       # SAM v1 (Meta)
+# SAM2: install from GitHub — pip install git+https://github.com/facebookresearch/sam2.git

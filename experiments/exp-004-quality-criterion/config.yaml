@@ -1,0 +1,24 @@
+experiment:
+  id: exp-004
+  name: quality-criterion
+
+data:
+  source: coca
+  n_sample: 30
+  random_seed: 42
+
+windowing:
+  # Mediastinal window for pericardium visibility (finding from exp-003)
+  lo: -160
+  hi: 240
+
+cardiac_roi:
+  dilation_vox: [29, 29, 7]
+
+quality_scores:
+  # 3-point scale for pericardial line visibility
+  # 1: clear — pericardial sac outline visible in >=3 consecutive mid-heart slices
+  # 2: partial — pericardium visible on some slices, may still be usable with prompting
+  # 3: poor — pericardium invisible, severe artifact, or FOV truncation; hold out
+  scale: [1, 2, 3]
+  output_csv: "data/quality_scores.csv"
