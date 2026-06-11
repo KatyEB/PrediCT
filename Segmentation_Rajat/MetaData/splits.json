@@ -1,0 +1,408 @@
+{
+  "train": [
+    {
+      "id": "7ce4d470037a",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_canonical\\images\\7ce4d470037a\\7ce4d470037a_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_canonical\\images\\7ce4d470037a\\7ce4d470037a_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_canonical\\images\\7ce4d470037a\\7ce4d470037a_roi_mask.nii.gz",
+      "agatston_total": 0.0,
+      "agatston_available": 0
+    },
+    {
+      "id": "2b139c37fbb5",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_canonical\\images\\2b139c37fbb5\\2b139c37fbb5_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_canonical\\images\\2b139c37fbb5\\2b139c37fbb5_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_canonical\\images\\2b139c37fbb5\\2b139c37fbb5_roi_mask.nii.gz",
+      "agatston_total": 4.39988504583016,
+      "agatston_available": 1
+    },
+    {
+      "id": "5bbdfbe5a3f4",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_canonical\\images\\5bbdfbe5a3f4\\5bbdfbe5a3f4_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_canonical\\images\\5bbdfbe5a3f4\\5bbdfbe5a3f4_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_canonical\\images\\5bbdfbe5a3f4\\5bbdfbe5a3f4_roi_mask.nii.gz",
+      "agatston_total": 0.0967199653387069,
+      "agatston_available": 1
+    },
+    {
+      "id": "dda49b0ecf32",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_canonical\\images\\dda49b0ecf32\\dda49b0ecf32_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_canonical\\images\\dda49b0ecf32\\dda49b0ecf32_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_canonical\\images\\dda49b0ecf32\\dda49b0ecf32_roi_mask.nii.gz",
+      "agatston_total": 0.0,
+      "agatston_available": 0
+    },
+    {
+      "id": "a3de36bc384c",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_canonical\\images\\a3de36bc384c\\a3de36bc384c_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_canonical\\images\\a3de36bc384c\\a3de36bc384c_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_canonical\\images\\a3de36bc384c\\a3de36bc384c_roi_mask.nii.gz",
+      "agatston_total": 2.1459375112317502,
+      "agatston_available": 1
+    },
+    {
+      "id": "ff99d74f2dd7",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_canonical\\images\\ff99d74f2dd7\\ff99d74f2dd7_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_canonical\\images\\ff99d74f2dd7\\ff99d74f2dd7_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_canonical\\images\\ff99d74f2dd7\\ff99d74f2dd7_roi_mask.nii.gz",
+      "agatston_total": 1.6076733581721785,
+      "agatston_available": 1
+    },
+    {
+      "id": "b9260369e786",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_canonical\\images\\b9260369e786\\b9260369e786_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_canonical\\images\\b9260369e786\\b9260369e786_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_canonical\\images\\b9260369e786\\b9260369e786_roi_mask.nii.gz",
+      "agatston_total": 0.0,
+      "agatston_available": 0
+    },
+    {
+      "id": "dc3a1aac488f",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_canonical\\images\\dc3a1aac488f\\dc3a1aac488f_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_canonical\\images\\dc3a1aac488f\\dc3a1aac488f_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_canonical\\images\\dc3a1aac488f\\dc3a1aac488f_roi_mask.nii.gz",
+      "agatston_total": 9.250523331342263,
+      "agatston_available": 1
+    },
+    {
+      "id": "460618d9ae83",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_canonical\\images\\460618d9ae83\\460618d9ae83_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_canonical\\images\\460618d9ae83\\460618d9ae83_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_canonical\\images\\460618d9ae83\\460618d9ae83_roi_mask.nii.gz",
+      "agatston_total": 0.0,
+      "agatston_available": 0
+    },
+    {
+      "id": "8b08afb59e00",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_canonical\\images\\8b08afb59e00\\8b08afb59e00_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_canonical\\images\\8b08afb59e00\\8b08afb59e00_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_canonical\\images\\8b08afb59e00\\8b08afb59e00_roi_mask.nii.gz",
+      "agatston_total": 0.631704568862915,
+      "agatston_available": 1
+    },
+    {
+      "id": "6b6a23df91d3",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_canonical\\images\\6b6a23df91d3\\6b6a23df91d3_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_canonical\\images\\6b6a23df91d3\\6b6a23df91d3_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_canonical\\images\\6b6a23df91d3\\6b6a23df91d3_roi_mask.nii.gz",
+      "agatston_total": 0.5886367675848305,
+      "agatston_available": 1
+    },
+    {
+      "id": "1780ffd9e3f5",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_canonical\\images\\1780ffd9e3f5\\1780ffd9e3f5_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_canonical\\images\\1780ffd9e3f5\\1780ffd9e3f5_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_canonical\\images\\1780ffd9e3f5\\1780ffd9e3f5_roi_mask.nii.gz",
+      "agatston_total": 3.1901019671931863,
+      "agatston_available": 1
+    },
+    {
+      "id": "22bb4a0b6f11",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_canonical\\images\\22bb4a0b6f11\\22bb4a0b6f11_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_canonical\\images\\22bb4a0b6f11\\22bb4a0b6f11_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_canonical\\images\\22bb4a0b6f11\\22bb4a0b6f11_roi_mask.nii.gz",
+      "agatston_total": 0.0,
+      "agatston_available": 0
+    },
+    {
+      "id": "a5ffebbee5b2",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_canonical\\images\\a5ffebbee5b2\\a5ffebbee5b2_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_canonical\\images\\a5ffebbee5b2\\a5ffebbee5b2_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_canonical\\images\\a5ffebbee5b2\\a5ffebbee5b2_roi_mask.nii.gz",
+      "agatston_total": 6.814701080322266,
+      "agatston_available": 1
+    },
+    {
+      "id": "65f50ab2ed07",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_canonical\\images\\65f50ab2ed07\\65f50ab2ed07_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_canonical\\images\\65f50ab2ed07\\65f50ab2ed07_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_canonical\\images\\65f50ab2ed07\\65f50ab2ed07_roi_mask.nii.gz",
+      "agatston_total": 0.0,
+      "agatston_available": 0
+    },
+    {
+      "id": "ff65b864e160",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_canonical\\images\\ff65b864e160\\ff65b864e160_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_canonical\\images\\ff65b864e160\\ff65b864e160_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_canonical\\images\\ff65b864e160\\ff65b864e160_roi_mask.nii.gz",
+      "agatston_total": 7.506807893514633,
+      "agatston_available": 1
+    },
+    {
+      "id": "45e3dc50b708",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_canonical\\images\\45e3dc50b708\\45e3dc50b708_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_canonical\\images\\45e3dc50b708\\45e3dc50b708_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_canonical\\images\\45e3dc50b708\\45e3dc50b708_roi_mask.nii.gz",
+      "agatston_total": 3.697340643499047,
+      "agatston_available": 1
+    },
+    {
+      "id": "652e9028df80",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_canonical\\images\\652e9028df80\\652e9028df80_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_canonical\\images\\652e9028df80\\652e9028df80_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_canonical\\images\\652e9028df80\\652e9028df80_roi_mask.nii.gz",
+      "agatston_total": 0.3671505823731422,
+      "agatston_available": 1
+    },
+    {
+      "id": "9f6b103cf7dd",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_canonical\\images\\9f6b103cf7dd\\9f6b103cf7dd_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_canonical\\images\\9f6b103cf7dd\\9f6b103cf7dd_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_canonical\\images\\9f6b103cf7dd\\9f6b103cf7dd_roi_mask.nii.gz",
+      "agatston_total": 0.0585660561919212,
+      "agatston_available": 1
+    },
+    {
+      "id": "0d801ffd91c8",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_canonical\\images\\0d801ffd91c8\\0d801ffd91c8_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_canonical\\images\\0d801ffd91c8\\0d801ffd91c8_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_canonical\\images\\0d801ffd91c8\\0d801ffd91c8_roi_mask.nii.gz",
+      "agatston_total": 0.4660915285348892,
+      "agatston_available": 1
+    },
+    {
+      "id": "779597383514",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_canonical\\images\\779597383514\\779597383514_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_canonical\\images\\779597383514\\779597383514_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_canonical\\images\\779597383514\\779597383514_roi_mask.nii.gz",
+      "agatston_total": 0.0,
+      "agatston_available": 0
+    },
+    {
+      "id": "6fe27434c141",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_canonical\\images\\6fe27434c141\\6fe27434c141_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_canonical\\images\\6fe27434c141\\6fe27434c141_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_canonical\\images\\6fe27434c141\\6fe27434c141_roi_mask.nii.gz",
+      "agatston_total": 0.016316071152687,
+      "agatston_available": 1
+    },
+    {
+      "id": "fcf7e018fe06",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_canonical\\images\\fcf7e018fe06\\fcf7e018fe06_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_canonical\\images\\fcf7e018fe06\\fcf7e018fe06_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_canonical\\images\\fcf7e018fe06\\fcf7e018fe06_roi_mask.nii.gz",
+      "agatston_total": 0.0,
+      "agatston_available": 0
+    },
+    {
+      "id": "18b8793aa808",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_canonical\\images\\18b8793aa808\\18b8793aa808_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_canonical\\images\\18b8793aa808\\18b8793aa808_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_canonical\\images\\18b8793aa808\\18b8793aa808_roi_mask.nii.gz",
+      "agatston_total": 0.0,
+      "agatston_available": 0
+    },
+    {
+      "id": "2c9896c5cb10",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_canonical\\images\\2c9896c5cb10\\2c9896c5cb10_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_canonical\\images\\2c9896c5cb10\\2c9896c5cb10_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_canonical\\images\\2c9896c5cb10\\2c9896c5cb10_roi_mask.nii.gz",
+      "agatston_total": 0.11444091796875,
+      "agatston_available": 1
+    },
+    {
+      "id": "1fae3e276587",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_canonical\\images\\1fae3e276587\\1fae3e276587_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_canonical\\images\\1fae3e276587\\1fae3e276587_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_canonical\\images\\1fae3e276587\\1fae3e276587_roi_mask.nii.gz",
+      "agatston_total": 0.0,
+      "agatston_available": 0
+    },
+    {
+      "id": "7b0ba724c1ec",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_canonical\\images\\7b0ba724c1ec\\7b0ba724c1ec_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_canonical\\images\\7b0ba724c1ec\\7b0ba724c1ec_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_canonical\\images\\7b0ba724c1ec\\7b0ba724c1ec_roi_mask.nii.gz",
+      "agatston_total": 0.0,
+      "agatston_available": 0
+    },
+    {
+      "id": "ca1a9ce04bbd",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_canonical\\images\\ca1a9ce04bbd\\ca1a9ce04bbd_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_canonical\\images\\ca1a9ce04bbd\\ca1a9ce04bbd_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_canonical\\images\\ca1a9ce04bbd\\ca1a9ce04bbd_roi_mask.nii.gz",
+      "agatston_total": 0.0,
+      "agatston_available": 0
+    },
+    {
+      "id": "a010272b05e8",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_canonical\\images\\a010272b05e8\\a010272b05e8_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_canonical\\images\\a010272b05e8\\a010272b05e8_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_canonical\\images\\a010272b05e8\\a010272b05e8_roi_mask.nii.gz",
+      "agatston_total": 0.0138304522261023,
+      "agatston_available": 1
+    },
+    {
+      "id": "fd682be81a83",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_canonical\\images\\fd682be81a83\\fd682be81a83_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_canonical\\images\\fd682be81a83\\fd682be81a83_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_canonical\\images\\fd682be81a83\\fd682be81a83_roi_mask.nii.gz",
+      "agatston_total": 0.0,
+      "agatston_available": 0
+    },
+    {
+      "id": "f9ee17acc749",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_canonical\\images\\f9ee17acc749\\f9ee17acc749_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_canonical\\images\\f9ee17acc749\\f9ee17acc749_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_canonical\\images\\f9ee17acc749\\f9ee17acc749_roi_mask.nii.gz",
+      "agatston_total": 0.240020751953125,
+      "agatston_available": 1
+    },
+    {
+      "id": "1acd2b512fd5",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_canonical\\images\\1acd2b512fd5\\1acd2b512fd5_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_canonical\\images\\1acd2b512fd5\\1acd2b512fd5_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_canonical\\images\\1acd2b512fd5\\1acd2b512fd5_roi_mask.nii.gz",
+      "agatston_total": 0.7073780631180853,
+      "agatston_available": 1
+    },
+    {
+      "id": "645845ccb52f",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_canonical\\images\\645845ccb52f\\645845ccb52f_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_canonical\\images\\645845ccb52f\\645845ccb52f_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_canonical\\images\\645845ccb52f\\645845ccb52f_roi_mask.nii.gz",
+      "agatston_total": 0.0,
+      "agatston_available": 0
+    },
+    {
+      "id": "8c35a8db2534",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_canonical\\images\\8c35a8db2534\\8c35a8db2534_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_canonical\\images\\8c35a8db2534\\8c35a8db2534_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_canonical\\images\\8c35a8db2534\\8c35a8db2534_roi_mask.nii.gz",
+      "agatston_total": 9.490531384944916,
+      "agatston_available": 1
+    },
+    {
+      "id": "e319a3595b95",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_canonical\\images\\e319a3595b95\\e319a3595b95_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_canonical\\images\\e319a3595b95\\e319a3595b95_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_canonical\\images\\e319a3595b95\\e319a3595b95_roi_mask.nii.gz",
+      "agatston_total": 0.0,
+      "agatston_available": 0
+    }
+  ],
+  "val": [
+    {
+      "id": "03e5cc719f94",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_canonical\\images\\03e5cc719f94\\03e5cc719f94_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_canonical\\images\\03e5cc719f94\\03e5cc719f94_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_canonical\\images\\03e5cc719f94\\03e5cc719f94_roi_mask.nii.gz",
+      "agatston_total": 0.5413832366466522,
+      "agatston_available": 1
+    },
+    {
+      "id": "9d198544e367",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_canonical\\images\\9d198544e367\\9d198544e367_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_canonical\\images\\9d198544e367\\9d198544e367_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_canonical\\images\\9d198544e367\\9d198544e367_roi_mask.nii.gz",
+      "agatston_total": 0.5126953125,
+      "agatston_available": 1
+    },
+    {
+      "id": "9822f34e9419",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_canonical\\images\\9822f34e9419\\9822f34e9419_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_canonical\\images\\9822f34e9419\\9822f34e9419_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_canonical\\images\\9822f34e9419\\9822f34e9419_roi_mask.nii.gz",
+      "agatston_total": 0.0,
+      "agatston_available": 0
+    },
+    {
+      "id": "0197da31b34c",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_canonical\\images\\0197da31b34c\\0197da31b34c_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_canonical\\images\\0197da31b34c\\0197da31b34c_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_canonical\\images\\0197da31b34c\\0197da31b34c_roi_mask.nii.gz",
+      "agatston_total": 0.0,
+      "agatston_available": 0
+    },
+    {
+      "id": "b26496c56399",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_canonical\\images\\b26496c56399\\b26496c56399_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_canonical\\images\\b26496c56399\\b26496c56399_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_canonical\\images\\b26496c56399\\b26496c56399_roi_mask.nii.gz",
+      "agatston_total": 0.0,
+      "agatston_available": 0
+    },
+    {
+      "id": "1d077ebcbdcb",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_canonical\\images\\1d077ebcbdcb\\1d077ebcbdcb_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_canonical\\images\\1d077ebcbdcb\\1d077ebcbdcb_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_canonical\\images\\1d077ebcbdcb\\1d077ebcbdcb_roi_mask.nii.gz",
+      "agatston_total": 0.0391552746295928,
+      "agatston_available": 1
+    },
+    {
+      "id": "c7d7621a0a54",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_canonical\\images\\c7d7621a0a54\\c7d7621a0a54_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_canonical\\images\\c7d7621a0a54\\c7d7621a0a54_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_canonical\\images\\c7d7621a0a54\\c7d7621a0a54_roi_mask.nii.gz",
+      "agatston_total": 1.134412458981387,
+      "agatston_available": 1
+    }
+  ],
+  "test": [
+    {
+      "id": "5b39d01d4687",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_canonical\\images\\5b39d01d4687\\5b39d01d4687_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_canonical\\images\\5b39d01d4687\\5b39d01d4687_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_canonical\\images\\5b39d01d4687\\5b39d01d4687_roi_mask.nii.gz",
+      "agatston_total": 13.671660772990435,
+      "agatston_available": 1
+    },
+    {
+      "id": "1c93192c6822",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_canonical\\images\\1c93192c6822\\1c93192c6822_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_canonical\\images\\1c93192c6822\\1c93192c6822_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_canonical\\images\\1c93192c6822\\1c93192c6822_roi_mask.nii.gz",
+      "agatston_total": 0.0,
+      "agatston_available": 0
+    },
+    {
+      "id": "a89d2bbfae88",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_canonical\\images\\a89d2bbfae88\\a89d2bbfae88_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_canonical\\images\\a89d2bbfae88\\a89d2bbfae88_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_canonical\\images\\a89d2bbfae88\\a89d2bbfae88_roi_mask.nii.gz",
+      "agatston_total": 0.0,
+      "agatston_available": 0
+    },
+    {
+      "id": "1fe73bd40d1d",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_canonical\\images\\1fe73bd40d1d\\1fe73bd40d1d_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_canonical\\images\\1fe73bd40d1d\\1fe73bd40d1d_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_canonical\\images\\1fe73bd40d1d\\1fe73bd40d1d_roi_mask.nii.gz",
+      "agatston_total": 1.4883694080635903,
+      "agatston_available": 1
+    },
+    {
+      "id": "048cdac183fa",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_canonical\\images\\048cdac183fa\\048cdac183fa_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_canonical\\images\\048cdac183fa\\048cdac183fa_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_canonical\\images\\048cdac183fa\\048cdac183fa_roi_mask.nii.gz",
+      "agatston_total": 0.0,
+      "agatston_available": 0
+    },
+    {
+      "id": "e4bcb07a615b",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_canonical\\images\\e4bcb07a615b\\e4bcb07a615b_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_canonical\\images\\e4bcb07a615b\\e4bcb07a615b_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_canonical\\images\\e4bcb07a615b\\e4bcb07a615b_roi_mask.nii.gz",
+      "agatston_total": 0.0366363519569858,
+      "agatston_available": 1
+    },
+    {
+      "id": "337807004934",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_canonical\\images\\337807004934\\337807004934_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_canonical\\images\\337807004934\\337807004934_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_canonical\\images\\337807004934\\337807004934_roi_mask.nii.gz",
+      "agatston_total": 0.0,
+      "agatston_available": 0
+    },
+    {
+      "id": "638bea82466a",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_canonical\\images\\638bea82466a\\638bea82466a_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_canonical\\images\\638bea82466a\\638bea82466a_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_canonical\\images\\638bea82466a\\638bea82466a_roi_mask.nii.gz",
+      "agatston_total": 0.6565355556085706,
+      "agatston_available": 1
+    }
+  ]
+}

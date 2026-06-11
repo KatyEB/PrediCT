@@ -1,0 +1,75 @@
+{
+  "dataset": {
+    "total_scans": 50,
+    "cac_positive": 28,
+    "cac_negative": 22,
+    "cac_positive_pct": 56.0,
+    "cac_negative_pct": 44.0,
+    "agatston_total_mean": 1.39,
+    "agatston_total_median": 0.038,
+    "agatston_total_max": 13.672,
+    "agatston_total_std": 2.946
+  },
+  "splits": {
+    "train": {
+      "n": 35,
+      "cac_positive": 20,
+      "cac_negative": 15,
+      "pos_pct": 57.14
+    },
+    "val": {
+      "n": 7,
+      "cac_positive": 4,
+      "cac_negative": 3,
+      "pos_pct": 57.14
+    },
+    "test": {
+      "n": 8,
+      "cac_positive": 4,
+      "cac_negative": 4,
+      "pos_pct": 50.0
+    }
+  },
+  "image_level": {
+    "sampled_n": 20,
+    "spacing_mm": {
+      "mean": 1.2393,
+      "min": 1.1589,
+      "max": 1.2865
+    },
+    "volume_voxels": {
+      "mean": 358.5,
+      "min": 355.0,
+      "max": 365.3333
+    },
+    "hu_min": {
+      "mean": -1223.9,
+      "min": -3024.0,
+      "max": -1022.0
+    },
+    "hu_mean": {
+      "mean": -336.6549,
+      "min": -952.0107,
+      "max": -178.3228
+    },
+    "hu_max": {
+      "mean": 1798.35,
+      "min": 1104.0,
+      "max": 3071.0
+    },
+    "hu_std": {
+      "mean": 484.7718,
+      "min": 358.0074,
+      "max": 1199.8549
+    }
+  },
+  "hu_window": {
+    "hu_min": -150.0,
+    "hu_max": 350.0,
+    "justification": "Cardiac soft-tissue window [-150, 350] HU. Covers myocardium (50-80), blood pool (30-45), pericardial fat (-30 to -100), vessel walls (~200). Excludes lung/bone noise from a thoracic window [-500, 1300]."
+  },
+  "class_imbalance": {
+    "neg_to_pos_ratio": 0.79,
+    "mitigation": "Stratified train/val/test splits preserve CAC+/- ratio. Consider pos_weight in BCE loss or oversampling CAC+ during training."
+  }
+}

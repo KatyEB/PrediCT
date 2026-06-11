@@ -17,24 +17,26 @@ ground_truth_config = {
 }
 
 preprocessing_config = {
-    "TRAIN_CSV":   str(BASE_DIR / "train.csv"),
-    "SPLITS_JSON": str(BASE_DIR / "splits.json"),
-    "STATS_JSON":  str(BASE_DIR / "dataset_stats.json"),
-    "VAL_SIZE":    0.15,
-    "TEST_SIZE":   0.15,
-    "RANDOM_SEED": 42,
-
-    # NEW:
-    "TASK": "binary" #can also be "multi"
-    "HEART_MASK": False # if True, use heart seg model to get heart masks.
-
+    "DATASET_CSV":   str("E:\MyProjects\Gsoc_2026_Official\data_resampled\dataset_resampled.csv"), # provdies address for resamplaed dataset path
+    "SPLITS_JSON": str(BASE_DIR / "MetaData" / "splits.json"), # path to save the splits json file
+    "STATS_JSON":  str(BASE_DIR / "MetaData" / "dataset_stats.json"), # path to save the dataset statistics json file
+    "VAL_SIZE":    0.15, # Val Percentage
+    "TEST_SIZE":   0.15, # Test Percentage
+    "RANDOM_SEED": 42, # for reproducibility
+    "TASK": "binary", #can also be "multi", multi -> RCA, LCA, LCX, LADX
 }
+
+do_heart_roi_masking = True
+add_heart_mask_channel = False
 
 dataloader_config = {
     "BATCH_SIZE":  1,               # safe for <12GB VRAM
     "ROI_SIZE":    (96, 128, 96),    # 96^3 patches
     "CACHE_RATE":  1.0,             # auto-overridden by get_cache_rate()
     "NUM_WORKERS": 0,               # must be 0 on Windows
+    "HEART_MASK_FLAG": do_heart_roi_masking, #     if True, dataloader will load heart masks and return as additional channel
+    "ADD_HEART_MASK_CHANNEL": add_heart_mask_channel, # if True, dataloader will load heart masks and return as additional channel
+    "HEART_MODEL_PATH": str(BASE_DIR / "LW_UNET_TVERSKY" / "best_model.pth"), # path to the pretrained heart segmentation model,
 }
 
 HU_CONFIG = {
