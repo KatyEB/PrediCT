@@ -67,7 +67,7 @@ class COCAProcessor:
         h = hashlib.sha1("||".join(parts).encode("utf-8")).hexdigest()
         return h[:n]
 
-    def parse_plist_filled(self, xml_path: Path, image_shape: tuple):
+    def parse_plist_filled(self, xml_path: Path, image_shape: tuple, spacing):
 
       binary_mask = np.zeros(image_shape, dtype=np.uint8)
       multi_mask = np.zeros(image_shape, dtype=np.uint8)
@@ -125,7 +125,7 @@ class COCAProcessor:
                   if not points_str:
                       continue
 
-                  area_mm2 = float(roi.get("Area", 0))
+                  area_mm2 = float(roi.get("Area", 0)) * 100  # Convert from cm^2 to mm^2
                   max_hu = float(roi.get("Max", 0))
 
                   if area_mm2 > 0:
@@ -225,6 +225,8 @@ class COCAProcessor:
                               if label > 0:
                                   temp_multi[y, x] = label
 
+
+
                   if np.any(temp_binary):
 
                       binary_mask[z] = np.logical_or(
@@ -237,6 +239,19 @@ class COCAProcessor:
                       )
 
                       segmented_slices.add(z)
+
+                      xml_area_mm2 = float(roi["Area"]) * 100
+
+                      mask_pixels = np.sum(temp_binary)
+
+                      spacing_x, spacing_y, _ = spacing
+
+                      pixel_area_mm2 = spacing_x * spacing_y
+
+
+                      mask_area_mm2 = mask_pixels * pixel_area_mm2
+
+                      print(f"XML Area: {xml_area_mm2}, Mask Area: {mask_area_mm2}")
 
       except Exception as e:
           print(
@@ -336,7 +351,8 @@ class COCAProcessor:
                     total_agatston,
                     lesion_count) = self.parse_plist_filled(
                     xml_path,
-                    img_array.shape
+                    img_array.shape,
+                    image.GetSpacing()
                 )
 
 
