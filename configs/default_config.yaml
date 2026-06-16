@@ -1,0 +1,81 @@
+# configs/default_config.yaml
+# Central config for all PrediCT scripts.
+# Edit DATA_ROOT to match your machine. Everything else derives from it.
+
+# ── Paths ─────────────────────────────────────────────────────────────────────
+data_root: "C:/SOHAM/coca_raw/cocacoronarycalciumandchestcts-2"
+
+# Derived paths (do not change unless folder structure differs)
+dicom_root:    "${data_root}/Gated_release_final/patient"
+xml_root:      "${data_root}/Gated_release_final/calcium_xml"
+out_canonical: "${data_root}/data_canonical"
+out_images:    "${data_root}/data_canonical/images"
+out_tables:    "${data_root}/data_canonical/tables"
+figures_dir:   "docs/figures"
+
+# ── Preprocessing ─────────────────────────────────────────────────────────────
+preprocessing:
+  target_spacing: [0.37, 0.37, 3.0]      # mm — x, y, z
+  ct_interpolator: "sitkLinear"
+  mask_interpolator: "sitkNearestNeighbor"
+  use_total_segmentator: false            # Enable after baseline is validated
+  ts_device: "gpu"                        # "gpu" or "cpu"
+  min_dcm_files: 5                        # Minimum DICOMs to count as valid series
+
+# ── HU Window (EXPERIMENTAL — ablation required) ──────────────────────────────
+# Option A: Rajat's validated cardiac window — preserves soft-tissue context
+#   myocardium 40–80 HU, blood pool 30–45 HU, pericardial fat -30 to -100 HU
+# Option B: Calcium-salient window — maximises calcium contrast, cuts anatomy
+#   Agatston threshold begins at 130 HU, buffer of 30 HU before calcium appears
+#
+# Run ablation: train 3D UNet with each, compare val Dice, pick winner.
+hu_window:
+  min: -150    # Option A (Rajat). Change to 100 for Option B.
+  max: 350     # Option A (Rajat). Change to 1000 for Option B.
+  # ABLATION STATUS: undecided. Do not treat either as ground truth.
+
+# ── Dataset cleaning ──────────────────────────────────────────────────────────
+cleaning:
+  error_patients: [263]    # Known bad mask (Rajat README Issue #1)
+                            # Add IDs of remaining 2 error patients when confirmed
+  duplicate_patients: [700, 726]   # Each has 2 series; keep series with most voxels
+
+# ── Dataset split ─────────────────────────────────────────────────────────────
+split:
+  train_ratio: 0.70
+  val_ratio:   0.15
+  test_ratio:  0.15
+  random_seed: 42
+  split_level: "patient"   # Never split by scan — prevents data leakage
+
+# ── Training (3D UNet baseline) ───────────────────────────────────────────────
+training:
+  patch_size: [64, 64, 32]        # x, y, z in voxels at 0.37x0.37x3.0mm
+  batch_size: 2
+  num_workers: 4
+  max_epochs: 300
+  learning_rate: 1.0e-4
+  optimizer: "Adam"
+  scheduler: "CosineAnnealingLR"
+
+  # Foreground-biased sampling — NON-NEGOTIABLE
+  # With 1:27,000 foreground:background ratio, random patches learn nothing.
+  # pos=1, neg=1 guarantees 50% of patches contain calcium voxels.
+  pos_neg_ratio:
+    pos: 1
+    neg: 1   # Tune to neg=3 if model overfits to foreground during training
+
+  # Loss function
+  loss: "DiceCELoss"   # Dice + Cross-Entropy combined
+                        # Dice handles voxel imbalance; CE stabilises early training
+
+  # Checkpointing
+  checkpoint_dir: "checkpoints/"
+  save_best_metric: "val_dice"
+
+# ── Evaluation ────────────────────────────────────────────────────────────────
+evaluation:
+  metrics: ["dice", "binary_agatston_mae", "soft_agatston_mae"]
+  agatston_threshold_hu: 130      # Standard Agatston calcium threshold
+  soft_agatston: true             # Use model probabilities instead of hard threshold
+  xml_gt_csv: "${out_tables}/xml_agatston_gt.csv"   # Extracted from plist files

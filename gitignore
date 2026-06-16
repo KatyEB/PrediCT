@@ -1,0 +1,67 @@
+# ── Dataset and processed data (DO NOT PUSH) ────────────────────────────────
+*.dcm
+*.nii
+*.nii.gz
+data_canonical/
+coca_raw/
+data_raw/
+
+# ── Model checkpoints and training outputs ───────────────────────────────────
+checkpoints/
+runs/
+wandb/
+outputs/
+*.pth
+*.ckpt
+*.pt
+*.safetensors
+
+# ── Split and index files (contain local paths, regenerate from scripts) ─────
+*.parquet
+scan_index.csv
+scan_index_clean.csv
+
+# ── Python ───────────────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+dist/
+*.egg-info/
+.eggs/
+pip-wheel-metadata/
+
+# ── Virtual environments ─────────────────────────────────────────────────────
+vmenv/
+venv/
+.venv/
+env/
+
+# ── IDEs ─────────────────────────────────────────────────────────────────────
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# ── Jupyter ──────────────────────────────────────────────────────────────────
+.ipynb_checkpoints/
+*.ipynb
+
+# ── Logs ─────────────────────────────────────────────────────────────────────
+*.log
+logs/
+
+# ── TotalSegmentator temp files ──────────────────────────────────────────────
+ts_tmp/
+
+# ── Environment variables ────────────────────────────────────────────────────
+.env
+.env.local
+
+# ── Test outputs ─────────────────────────────────────────────────────────────
+tmp/
+temp/
