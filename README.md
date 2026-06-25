@@ -14,7 +14,7 @@ This branch (`soham/preprocessing-pipeline`) covers **Stages 1–3** of the Pred
 Stage 1  DICOM + XML → NIfTI + binary masks     [COMPLETE]
 Stage 2  Exploratory data analysis               [COMPLETE]
 Stage 3  Dataset cleaning + train/val/test split [COMPLETE]
-Stage 4  3D UNet baseline training               [IN PROGRESS]
+Stage 4  3D UNet baseline training               [COMPLETE]
 Stage 5  nnU-Net + Hybrid Attention comparison   [PENDING]
 Stage 6  Soft Agatston evaluation                [PENDING]
 ```
@@ -234,7 +234,7 @@ PrediCT-main/
 │   │   └── xml_vs_mask_comparison_v3.py    ← 5-col limitation slides
 │   └── training/
 │       ├── __init__.py
-│       └── train_unet.py         ← [IN PROGRESS]
+│       └── Train_3D_Unet_Binery.py         ← [COMPLETE]
 ├── docs/
 │   ├── progress_report.md        ← Full written report
 │   └── figures/
@@ -256,8 +256,8 @@ PrediCT-main/
 
 ## Next Steps (Midterm — July 10)
 
-- [ ] `src/training/train_unet.py` — 3D UNet baseline on GCP L4 VM
-- [ ] Foreground-biased patch sampling (`RandCropByPosNegLabeld`)
+- [x] `src/training/Train_3D_Unet_Binery.py` — 3D UNet baseline on GCP L4 VM (Mean Dice 0.61, Median 0.69)
+- [x] Foreground-biased patch sampling (`RandCropByPosNegLabeld`)
 - [ ] HU window ablation — `[-150, 350]` vs `[100, 1000]`
 - [ ] Validation Dice score ≥ 0.65 (acceptable) / ≥ 0.75 (strong)
 - [ ] `src/evaluation/soft_agatston.py` — soft scorer implementation

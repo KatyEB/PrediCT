@@ -11,7 +11,7 @@
 | 2 | Exploratory Data Analysis | ✅ Complete | `docs/figures/eda_full_dataset.png` |
 | 3 | Dataset cleaning + splitting | ✅ Complete | 313 / 67 / 67 |
 | 4 | Limitation analysis (fillPoly vs XML) | ✅ Complete | 5 comparison figures |
-| 5 | 3D UNet baseline training | ⏳ Next | Dice ≥ 0.65 target |
+| 5 | 3D UNet baseline training | ✅ Complete | Mean Dice 0.61, Median 0.69 |
 | 6 | nnU-Net + Hybrid Attention | ⏳ Pending | Comparison table |
 | 7 | Soft Agatston evaluation | ⏳ Pending | Core research contribution |
 
