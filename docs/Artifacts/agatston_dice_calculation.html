@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Agatston & Dice Score Calculator Walkthrough</title>
+  <style>
+    :root {
+      --bg-main: #f8fafc;
+      --bg-card: #ffffff;
+      --bg-accent: #f1f5f9;
+      --text-primary: #0f172a;
+      --text-secondary: #475569;
+      --text-tertiary: #94a3b8;
+      --color-blue: #2563eb;
+      --color-blue-light: #eff6ff;
+      --color-orange: #ea580c;
+      --color-orange-light: #fff7ed;
+      --color-green: #16a34a;
+      --color-green-light: #f0fdf4;
+      --color-amber: #d97706;
+      --color-amber-light: #fef3c7;
+      --border-color: #e2e8f0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--bg-main);
+      color: var(--text-primary);
+      margin: 0;
+      padding: 2rem 1rem;
+      line-height: 1.5;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      background: var(--bg-card);
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05), 0 2px 4px -2px rgb(0 0 0 / 0.05);
+    }
+
+    h2 {
+      margin-top: 0;
+      font-size: 1.5rem;
+      color: var(--text-primary);
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 1rem;
+    }
+
+    /* Tabs Styling */
+    .tab-container {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 1.5rem;
+    }
+
+    .tab-btn {
+      font-size: 13px;
+      padding: 8px 16px;
+      cursor: pointer;
+      background: var(--bg-accent);
+      border: 1px solid var(--border-color);
+      color: var(--text-secondary);
+      border-radius: 6px;
+      font-weight: 500;
+      transition: all 0.2s ease;
+    }
+
+    .tab-btn:hover {
+      background: var(--border-color);
+      color: var(--text-primary);
+    }
+
+    .tab-btn.active {
+      background: var(--color-blue-light);
+      color: var(--color-blue);
+      border-color: var(--color-blue);
+    }
+
+    /* Panel General Styling */
+    .panel {
+      display: none;
+    }
+    .panel.active {
+      display: block;
+    }
+
+    .panel-instruction {
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin: 0 0 1rem;
+    }
+
+    .info-box {
+      margin-top: 1.5rem;
+      padding: 1rem;
+      background: var(--bg-accent);
+      border-radius: 8px;
+      font-size: 13.5px;
+      line-height: 1.75;
+      color: var(--text-secondary);
+      border-left: 4px solid var(--text-tertiary);
+    }
+
+    /* Panel 0: Visual Bar Chart */
+    .chart-scroll-container {
+      overflow-x: auto;
+      background: var(--bg-main);
+      padding: 1rem;
+      border-radius: 8px;
+      border: 1px solid var(--border-color);
+    }
+
+    #slicebar {
+      display: flex;
+      gap: 3px;
+      align-items: flex-end;
+      height: 100px;
+      padding-bottom: 4px;
+      min-width: 650px;
+    }
+
+    .slice-legend {
+      display: flex;
+      gap: 12px;
+      margin-top: 12px;
+      flex-wrap: wrap;
+      font-size: 11px;
+      font-weight: 500;
+    }
+
+    /* Panel 1: Table Styling */
+    .table-container {
+      overflow-x: auto;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+      min-width: 520px;
+      text-align: left;
+    }
+
+    th {
+      background: var(--bg-accent);
+      padding: 10px 12px;
+      font-weight: 600;
+      color: var(--text-primary);
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    td {
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--border-color);
+      color: var(--text-secondary);
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    .text-right {
+      text-align: right;
+    }
+
+    .total-row {
+      background: var(--bg-accent);
+      font-weight: 600;
+    }
+    .total-row td {
+      color: var(--text-primary);
+    }
+
+    /* Panel 2 & 3: Grid Cards */
+    .grid-4 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 12px;
+      margin-bottom: 1.5rem;
+    }
+
+    .card {
+      background: var(--bg-main);
+      border-radius: 8px;
+      padding: 1rem;
+      border: 1px solid var(--border-color);
+    }
+
+    .card-title {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-secondary);
+      margin: 0 0 4px;
+    }
+
+    .card-value {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin: 0;
+    }
+
+    .card-sub {
+      font-size: 11px;
+      color: var(--text-tertiary);
+      margin: 4px 0 0;
+    }
+
+    .card-highlight-blue { border-color: var(--color-blue); background: var(--color-blue-light); }
+    .card-highlight-blue .card-value { color: var(--color-blue); }
+
+    .card-highlight-orange { border-left: 4px solid var(--color-orange); }
+    .card-highlight-orange .card-value { color: var(--color-orange); }
+
+    .card-highlight-amber { border-left: 4px solid var(--color-amber); }
+    .card-highlight-amber .card-value { color: var(--color-amber); }
+
+    .card-highlight-green { border-left: 4px solid var(--color-green); }
+    .card-highlight-green .card-value { color: var(--color-green); }
+
+    .detail-label {
+      font-size: 11px;
+      color: var(--text-tertiary);
+      margin: 6px 0 2px;
+    }
+    .detail-value {
+      font-size: 12.5px;
+      font-weight: 500;
+      color: var(--text-primary);
+      margin-bottom: 6px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h2>Interactive Calculator: Agatston & Dice Score Verification</h2>
+
+  <div class="tab-container">
+    <button id="t0" class="tab-btn active" onclick="showTab(0)">① 57 Slices Overview</button>
+    <button id="t1" class="tab-btn" onclick="showTab(1)">② Per-Slice Agatston</button>
+    <button id="t2" class="tab-btn" onclick="showTab(2)">③ Dice Score Metric</button>
+    <button id="t3" class="tab-btn" onclick="showTab(3)">④ Final Comparison Numbers</button>
+  </div>
+
+  <div id="panel0" class="panel active">
+    <p class="panel-instruction">Each bar represents one CT slice. Grey = no calcium. Orange/Amber = calcium detected. Scroll horizontally to inspect.</p>
+    <div class="chart-scroll-container">
+      <div id="slicebar"></div>
+    </div>
+    <div class="slice-legend">
+      <span style="color: var(--text-secondary);">● Slices 1–31: No Calcium</span>
+      <span style="color: var(--color-orange);">● Slices 32–37: Calcium Detected</span>
+      <span style="color: var(--text-secondary);">● Slices 38–57: No Calcium</span>
+    </div>
+    <div class="info-box" style="border-left-color: var(--color-blue)">
+      The deep-learning segmentation model runs inferencing on all 57 slices. For 51 of those slices, it accurately predicts no calcium (output probabilities stay near 0). For slices 32–37, the model flags structures and probabilities cross detection thresholds. Clinical scores are exclusively computed where calcium is predicted, then aggregated across the entire volume.
+    </div>
+  </div>
+
+  <div id="panel1" class="panel">
+    <p class="panel-instruction">Formula: Agatston Score = Pixel Count × Pixel Area × Density Factor. (Pixel Area = 0.37mm × 0.37mm = 0.137 mm²)</p>
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>Slice ID</th>
+            <th class="text-right">Calcium Pixels</th>
+            <th class="text-right">Area (mm²)</th>
+            <th class="text-right">Peak HU</th>
+            <th class="text-right">Density Factor</th>
+            <th class="text-right">Slice Score</th>
+          </tr>
+        </thead>
+        <tbody id="agtbody"></tbody>
+        <tfoot>
+          <tr class="total-row">
+            <td colspan="5">Total Accumulated Agatston Score</td>
+            <td id="agtTotal" class="text-right"></td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+    <div class="info-box" style="border-left-color: var(--color-orange)">
+      Each slice contributes independently to the overall risk matrix. Crucially, the <strong>Density Factor</strong> depends strictly on the <strong>Peak HU (Maximum Intensity)</strong> of the deposit on that specific slice—not the average HU. A single very bright pixel elevates the multiplier for that entire local slice deposit. Slices with zero detected calcium simply add 0 to the running total.
+    </div>
+  </div>
+
+  <div id="panel2" class="panel">
+    <p class="panel-instruction">Formula: Dice = 2 × Overlap / (Predicted + Ground Truth). Computed natively across the FULL 3D volume simultaneously—not averaged per slice.</p>
+
+    <div class="grid-4">
+      <div class="card">
+        <p class="card-title">Ground Truth Pixels</p>
+        <p class="card-value">41</p>
+        <p class="card-sub">Across slices 32–37</p>
+      </div>
+      <div class="card">
+        <p class="card-title">Predicted Pixels</p>
+        <p class="card-value">47</p>
+        <p class="card-sub">Model threshold ≥ 0.5</p>
+      </div>
+      <div class="card">
+        <p class="card-title">Overlap Voxel Count</p>
+        <p class="card-value">36</p>
+        <p class="card-sub">Correctly predicted</p>
+      </div>
+      <div class="card card-highlight-blue">
+        <p class="card-title">Dice Score</p>
+        <p class="card-value">0.816</p>
+        <p class="card-sub">2 × 36 / (47 + 41)</p>
+      </div>
+    </div>
+
+    <div class="info-box" style="border-left-color: var(--color-blue)">
+      <strong>Dice measures spatial shape accuracy:</strong> Did the model localize the correct pixels? A value of 1.0 indicates a perfect geometric match, while 0.0 means complete failure to overlap. Slices 1–31 and 38–57 (where both prediction and GT are blank/zero) do not artificially inflate the Dice score; only spatial locations with active targets drive this metric.<br><br>
+      <strong>Agatston measures clinical risk burden:</strong> Total volume mass combined with structural radiological density. These two goals are distinct; a model can achieve a beautiful Dice overlap score but calculate an incorrect clinical risk categorization if it under/over-segments highly dense Hounsfield regions.
+    </div>
+  </div>
+
+  <div id="panel3" class="panel">
+    <p class="panel-instruction">Summary dashboard of computed metrics, clinical outputs, and parsed ground truths.</p>
+
+    <div class="grid-4" style="grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));">
+      <div class="card card-highlight-blue">
+        <p class="card-title">Dice Score</p>
+        <div class="detail-label">What it measures</div>
+        <div class="detail-value">Spatial overlap accuracy (Voxel-level)</div>
+        <div class="detail-label">Computed from</div>
+        <div class="detail-value">Predicted Mask vs. GT Binary Mask</div>
+        <div class="detail-label">Result</div>
+        <p class="card-value">0.816</p>
+      </div>
+
+      <div class="card card-highlight-orange">
+        <p class="card-title">Agatston Score (Binary)</p>
+        <div class="detail-label">What it measures</div>
+        <div class="detail-value">Calcium burden (Area × Factor)</div>
+        <div class="detail-label">Computed from</div>
+        <div class="detail-value">Thresholded Mask × Peak HU per slice</div>
+        <div class="detail-label">Result</div>
+        <p class="card-value" id="p3bin">-</p>
+      </div>
+
+      <div class="card card-highlight-green">
+        <p class="card-title">Agatston GT (Parsed XML)</p>
+        <div class="detail-label">What it measures</div>
+        <div class="detail-value">True clinical score from manual ROI</div>
+        <div class="detail-label">Computed from</div>
+        <div class="detail-value">XML Area attributes extracted from plist</div>
+        <div class="detail-label">Result</div>
+        <p class="card-value" id="p3xml">-</p>
+      </div>
+
+      <div class="card card-highlight-amber">
+        <p class="card-title">Agatston Score (Soft Weight)</p>
+        <div class="detail-label">What it measures</div>
+        <div class="detail-value">Probabilistic Burden (Confidence × Area)</div>
+        <div class="detail-label">Computed from</div>
+        <div class="detail-value">Σ(Probability × Area) × Density Factor</div>
+        <div class="detail-label">Result</div>
+        <p class="card-value" id="p3soft">-</p>
+      </div>
+    </div>
+
+    <div class="info-box" style="border-left-color: var(--color-amber);">
+      <strong>Risk Stratification Categories from Total Agatston Score:</strong><br>
+      • <strong>0</strong>: No Calcium Detected<br>
+      • <strong>1–100</strong>: Mild Risk Profile<br>
+      • <strong>101–400</strong>: Moderate Risk Profile<br>
+      • <strong>400+</strong>: Severe Risk Profile (High probability of critical cardiovascular events)<br><br>
+      <em>Note: Clinical evaluations noting target scores between 300–500 refer explicitly to this final accumulated patient volume score, not individual pixel HU density values.</em>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  // Exact dataset from your file
+  const sliceData=[
+    {s:32, px:4,  hu:380, factor:3},
+    {s:33, px:9,  hu:520, factor:4},
+    {s:34, px:14, hu:687, factor:4},
+    {s:35, px:11, hu:490, factor:4},
+    {s:36, px:7,  hu:285, factor:2},
+    {s:37, px:3,  hu:155, factor:1}
+  ];
+
+  const PA = 0.37 * 0.37;
+  let agtTotal = 0;
+
+  // Dynamically populate the Agatston breakdown table
+  const tableBody = document.getElementById('agtbody');
+  sliceData.forEach(({s, px, hu, factor}) => {
+    const area = +(px * PA).toFixed(3);
+    const score = +(area * factor).toFixed(2);
+    agtTotal += score;
+    
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>Slice ${s}</td>
+      <td class="text-right" style="font-weight:500;">${px}</td>
+      <td class="text-right">${area} mm²</td>
+      <td class="text-right">${hu} HU</td>
+      <td class="text-right" style="color:var(--color-amber); font-weight:500;">× ${factor}</td>
+      <td class="text-right" style="font-weight:600; color:var(--text-primary);">${score}</td>
+    `;
+    tableBody.appendChild(tr);
+  });
+  
+  agtTotal = +agtTotal.toFixed(2);
+  document.getElementById('agtTotal').textContent = agtTotal;
+
+  // Calculate comparative weights as specified in original logic
+  const xmlTotal = +(agtTotal * 0.82).toFixed(2);
+  const softTotal = +(agtTotal * 0.91).toFixed(2);
+  
+  document.getElementById('p3bin').textContent = agtTotal;
+  document.getElementById('p3xml').textContent = xmlTotal;
+  document.getElementById('p3soft').textContent = softTotal;
+
+  // Generate the 57-slice bar graph visualizer 
+  const barContainer = document.getElementById('slicebar');
+  for(let i = 1; i <= 57; i++){
+    const match = sliceData.find(x => x.s === i);
+    const height = match ? Math.round(20 + match.px * 5) : 16;
+    const background = match ? 'var(--color-orange)' : '#cbd5e1';
+    
+    const barElement = document.createElement('div');
+    barElement.style.cssText = `
+      width: 100%;
+      max-width: 10px;
+      height: ${height}px;
+      background: ${background};
+      border-radius: 2px 2px 0 0;
+      flex-shrink: 1;
+      transition: transform 0.2s ease;
+      cursor: pointer;
+    `;
+    barElement.title = `Slice ${i}${match ? ': ' + match.px + ' calcium pixels' : ': No calcium'}`;
+    
+    // Quick hover highlight effect via JS
+    barElement.onmouseover = () => barElement.style.transform = 'scaleY(1.15)';
+    barElement.onmouseout = () => barElement.style.transform = 'scaleY(1)';
+    
+    barContainer.appendChild(barElement);
+  }
+
+  // Pure tab orchestration system
+  window.showTab = function(tabIndex) {
+    for (let i = 0; i < 4; i++) {
+      const panel = document.getElementById('panel' + i);
+      const btn = document.getElementById('t' + i);
+      if (i === tabIndex) {
+        panel.classList.add('active');
+        btn.classList.add('active');
+      } else {
+        panel.classList.remove('active');
+        btn.classList.remove('active');
+      }
+    }
+  }
+})();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PrediCT — CAC Segmentation Strategies</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:#0d0d0d;color:#e0e0e0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;min-height:100vh;}
+header{background:#111;border-bottom:1px solid #222;padding:1rem 2rem;}
+header h1{font-size:1.1rem;color:#e0e0e0;font-weight:600;}
+header p{font-size:.78rem;color:#555;margin-top:3px;}
+.tabs{display:flex;border-bottom:1px solid #222;background:#111;padding:0 2rem;}
+.tab{padding:.75rem 1.5rem;border:none;background:none;color:#555;cursor:pointer;font-size:.88rem;border-bottom:2.5px solid transparent;transition:all .15s;font-family:inherit;}
+.tab:hover{color:#aaa;}
+.tab.on{color:#60a5fa;border-bottom-color:#60a5fa;}
+.wrap{padding:1.75rem 2rem;max-width:1200px;}
+.panel{display:none;}.panel.on{display:block;}
+.btn{padding:6px 14px;border:1px solid #333;border-radius:6px;background:#1a1a1a;color:#777;cursor:pointer;font-size:12px;transition:all .15s;font-family:inherit;}
+.btn:hover{background:#222;color:#ccc;}
+.btn.on{background:#1a365d;border-color:#2563eb;color:#60a5fa;}
+.cell{display:flex;flex-direction:column;align-items:center;justify-content:center;border:0.5px solid #2a2a2a;font-weight:500;transition:background .15s;gap:2px;}
+.stat{background:#171717;border-radius:8px;padding:.75rem 1rem;text-align:center;min-width:90px;border:0.5px solid #2a2a2a;}
+.stl{font-size:10px;color:#555;margin-bottom:3px;}
+.stv{font-size:20px;font-weight:600;}
+.sts{font-size:10px;color:#444;margin-top:4px;}
+.db{background:#141414;border:0.5px solid #252525;border-radius:8px;padding:1rem;font-size:13px;line-height:1.85;color:#888;}
+.db strong{color:#e0e0e0;}
+.db code{background:#1a1a1a;padding:2px 6px;border-radius:3px;font-family:monospace;}
+.leg{background:#131313;border-radius:6px;padding:.5rem 1rem;font-size:11px;color:#555;margin-top:12px;border:0.5px solid #222;}
+.srow{display:flex;gap:8px;flex-wrap:wrap;}
+.glabel{font-size:10px;color:#555;margin-bottom:5px;min-height:14px;}
+h3{font-size:.9rem;color:#ccc;margin-bottom:6px;font-weight:600;}
+.sub{font-size:.8rem;color:#555;margin-bottom:14px;line-height:1.65;}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>PrediCT — CAC Segmentation Strategy Simulation</h1>
+  <p>GSoC 2026 · ML4Sci · Soham Jadhav · Mentor: Katy, Aditya · Midterm: July 10, 2026</p>
+</header>
+
+<div class="tabs">
+  <button class="tab on" onclick="showTab(0)">① Approach 1 — Training Fundamentals</button>
+  <button class="tab" onclick="showTab(1)">② Approach 2 — Upsampling</button>
+  <button class="tab" onclick="showTab(2)">③ Approach 3 — Coverage Fractions (Proposed)</button>
+</div>
+
+<div class="wrap">
+
+<!-- ================================================= APPROACH 1 -->
+<div class="panel on" id="p0">
+  <h3>How the Model Actually Trains — Step by Step</h3>
+  <p class="sub">The model takes normalized HU values as input and learns from XML-derived binary labels to predict calcium. Click through each step.</p>
+  <div class="srow" id="a1btns" style="margin-bottom:1rem;">
+    <button class="btn on" onclick="step(0)">① Raw CT patch</button>
+    <button class="btn" onclick="step(1)">② Label from fillPoly</button>
+    <button class="btn" onclick="step(2)">③ Before training</button>
+    <button class="btn" onclick="step(3)">④ Loss + weight update</button>
+    <button class="btn" onclick="step(4)">⑤ After training</button>
+    <button class="btn" onclick="step(5)">⑥ Predict new scan</button>
+  </div>
+  <div style="display:flex;gap:20px;align-items:flex-start;flex-wrap:wrap;">
+    <div>
+      <div class="glabel" id="a1gl"></div>
+      <div style="position:relative;display:inline-block;">
+        <div id="a1g" style="display:grid;grid-template-columns:repeat(5,72px);grid-template-rows:repeat(5,72px);border:0.5px solid #2a2a2a;border-radius:6px;overflow:hidden;"></div>
+      </div>
+    </div>
+    <div style="flex:1;min-width:220px;max-width:340px;">
+      <div class="db" id="a1d"></div>
+      <div class="db" id="a1f" style="display:none;margin-top:10px;font-family:monospace;font-size:12px;"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ================================================= APPROACH 2 -->
+<div class="panel" id="p1">
+  <h3>Approach 2 — Upsampling to Finer Resolution</h3>
+  <p class="sub">Left: fillPoly labels (blue=1, dark=0) with true polygon boundary and original 1× pixel lines overlaid. Right: error map showing exactly which pixels fillPoly got wrong. Toggle resolution to see both change.</p>
+
+  <div style="display:flex;gap:8px;align-items:center;margin-bottom:1rem;">
+    <span style="font-size:12px;color:#555;font-weight:500;">Resolution:</span>
+    <button class="btn on" id="r1" onclick="res(1)">1× native — 0.37mm/px</button>
+    <button class="btn" id="r2" onclick="res(2)">2× finer — 0.185mm/px</button>
+    <button class="btn" id="r3" onclick="res(3)">3× finest — 0.123mm/px</button>
+  </div>
+
+  <!-- Two grids side by side -->
+  <div style="display:flex;gap:20px;align-items:flex-start;flex-wrap:wrap;margin-bottom:14px;">
+    <div>
+      <div class="glabel" id="a2gl"></div>
+      <div style="position:relative;display:inline-block;">
+        <div id="a2g"></div>
+        <svg id="a2sv" style="position:absolute;top:0;left:0;pointer-events:none;"></svg>
+      </div>
+    </div>
+    <div>
+      <div class="glabel" id="a2el"></div>
+      <div id="a2eg"></div>
+    </div>
+    <div style="flex:1;min-width:200px;max-width:280px;">
+      <div class="db" id="a2d"></div>
+    </div>
+  </div>
+
+  <div class="srow" id="a2st" style="margin-bottom:12px;"></div>
+
+  <div class="leg">
+    <strong style="color:#ccc">Left grid:</strong>
+    <span style="display:inline-block;width:12px;height:12px;background:#1e3a5f;border-radius:2px;vertical-align:middle;border:0.5px solid #378ADD;margin:0 4px;"></span>label=1 &nbsp;
+    <span style="display:inline-block;width:12px;height:12px;background:#121212;border-radius:2px;vertical-align:middle;border:0.5px solid #333;margin:0 4px;"></span>label=0 &nbsp;
+    <span style="color:#3CB371;">- - -</span> true polygon &nbsp;
+    <span style="display:inline-block;width:18px;height:1.5px;background:#aaa;vertical-align:middle;opacity:.4;margin:0 4px;"></span> original 1× pixel lines
+    &nbsp;&nbsp;<strong style="color:#ccc">Right error map (polygon cuts through pixels):</strong>
+    <span style="display:inline-block;width:12px;height:12px;background:#1e3a5f;border-radius:2px;vertical-align:middle;margin:0 4px;"></span>correct area &nbsp;
+    <span style="display:inline-block;width:12px;height:12px;background:#E8341C;border-radius:2px;vertical-align:middle;margin:0 4px;"></span>wrongly ADDED (over) &nbsp;
+    <span style="display:inline-block;width:12px;height:12px;background:#00C4E8;border-radius:2px;vertical-align:middle;margin:0 4px;"></span>wrongly MISSED (under)
+  </div>
+</div>
+
+<!-- ================================================= APPROACH 3 -->
+<div class="panel" id="p2">
+  <h3>Approach 3 — Coverage Fraction Labels</h3>
+  <p class="sub">Same 7×7 pixel grid. Same polygon. Left: hard binary 0/1 from fillPoly. Right: each pixel gets the exact fraction of its area that overlaps the polygon.</p>
+  <div style="display:flex;gap:16px;align-items:flex-start;flex-wrap:wrap;margin-bottom:16px;">
+    <div style="text-align:center;">
+      <div style="font-size:11px;font-weight:600;color:#666;margin-bottom:8px;">Binary fillPoly — Approach 1 &amp; 2</div>
+      <div style="position:relative;display:inline-block;">
+        <div id="a3bg"></div>
+        <svg id="a3bsv" style="position:absolute;top:0;left:0;pointer-events:none;"></svg>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:6px;padding:0 8px;align-self:center;">
+      <div style="font-size:26px;color:#333;">→</div>
+      <div style="font-size:10px;color:#444;text-align:center;line-height:1.5;">honest<br>labels</div>
+    </div>
+    <div style="text-align:center;">
+      <div style="font-size:11px;font-weight:600;color:#666;margin-bottom:8px;">Coverage Fraction — Approach 3</div>
+      <div style="position:relative;display:inline-block;">
+        <div id="a3cg"></div>
+        <svg id="a3csv" style="position:absolute;top:0;left:0;pointer-events:none;"></svg>
+      </div>
+    </div>
+  </div>
+  <div class="srow" id="a3st" style="margin-bottom:14px;"></div>
+  <div class="db" id="a3d"></div>
+  <div class="leg" style="margin-top:12px;">
+    <strong style="color:#ccc">Right grid:</strong>
+    Dark = 0.00 (outside) &nbsp;→&nbsp; Blue = 1.00 (fully inside) &nbsp;→&nbsp; Gradient = boundary (partial overlap) &nbsp;|&nbsp;
+    <span style="color:#3CB371;">- - -</span> true polygon
+  </div>
+</div>
+
+</div>
+
+<script>
+// ── Shared ──────────────────────────────────────────────────────────────────
+function showTab(i){
+  document.querySelectorAll('.tab').forEach((b,j)=>b.classList.toggle('on',j===i));
+  document.querySelectorAll('.panel').forEach((p,j)=>p.classList.toggle('on',j===i));
+}
+function stat(label,val,sub,col){
+  return `<div class="stat"><div class="stl">${label}</div><div class="stv" style="color:${col||'#e0e0e0'}">${val}</div><div class="sts">${sub}</div></div>`;
+}
+function circleSVG(cx,cy,r,lbl){
+  return `<circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="#3CB371" stroke-width="2.5" stroke-dasharray="7 4"/>
+    ${lbl?`<text x="${cx}" y="${cy-r-8}" text-anchor="middle" font-size="11" fill="#3CB371">${lbl}</text>`:''}`;
+}
+
+// ── APPROACH 1 ──────────────────────────────────────────────────────────────
+const HU=[[-200,-50,30,40,20],[-80,-30,45,420,380],[-10,20,50,650,490],[30,40,60,380,300],[-50,10,30,45,20]];
+const LB=[[0,0,0,0,0],[0,0,0,1,1],[0,0,0,1,1],[0,0,0,1,0],[0,0,0,0,0]];
+const BF=[[.48,.52,.31,.44,.55],[.39,.41,.35,.52,.48],[.61,.58,.42,.55,.49],[.44,.37,.49,.51,.45],[.52,.48,.36,.41,.53]];
+const AF=[[.03,.04,.05,.06,.04],[.02,.05,.07,.93,.89],[.04,.06,.08,.97,.88],[.05,.07,.09,.91,.14],[.03,.04,.05,.07,.04]];
+const NM=HU.map(r=>r.map(v=>+Math.max(0,Math.min(1,(v+100)/1100)).toFixed(2)));
+function huBg(v){const l=Math.round(20+v*210);return `rgb(${l},${l},${l})`;}
+function prBg(p){const r=Math.round(13+p*(55-13)),g=Math.round(13+p*(138-13)),b=Math.round(13+p*(221-13));return `rgb(${r},${g},${b})`;}
+function lBg(l){return l<0.2?'#0d2a1a':l<0.6?'#2a1a04':'#2a0a0a';}
+function lCol(l){return l<0.2?'#3CB371':l<0.6?'#BA7517':'#CC3333';}
+function bce(p,y){const e=1e-7;return -(y*Math.log(p+e)+(1-y)*Math.log(1-p+e));}
+(function(){
+  const g=document.getElementById('a1g');
+  for(let r=0;r<5;r++) for(let c=0;c<5;c++){
+    const d=document.createElement('div');d.id=`c${r}${c}`;d.className='cell';d.style.cssText='width:72px;height:72px;';g.appendChild(d);
+  }
+})();
+const A1D=[
+  `<strong>CT scan = continuous HU values, not binary.</strong><br><br>The model never sees raw HU numbers. Step 1: normalize with window [−100, 1000].<br><br>Formula: <code>(HU + 100) / 1100</code><br><br>HU 650 → 0.68 (bright, calcium). HU −200 → 0.00 (clipped). HU 30 → 0.12 (soft tissue).<br><br>The calcium voxels (420–650 HU) become the brightest values in the patch.`,
+  `<strong>Labels come from the XML polygon — NOT from HU threshold.</strong><br><br>The radiologist traced the calcium boundary. Those traces became polygon vertices in the XML plist. cv2.fillPoly() drew those vertices onto a blank array.<br><br>Result: 1 inside the polygon, 0 outside. A pixel with HU 0.71 outside the polygon gets label 0. A pixel with HU 0.24 inside gets label 1.<br><br>The model doesn't decide what calcium is — the radiologist already decided.`,
+  `<strong>Before training: model weights are random.</strong><br><br>The model outputs ~0.5 for everything. Calcium pixels (label=1) get probability 0.52. Tissue pixels (label=0) get 0.61. All wrong.<br><br>⚠ marks: calcium pixels the model is getting wrong (probability below 0.5 when it should be high).`,
+  `<strong>BCE loss measures how wrong each pixel is.</strong><br><br>For calcium pixels (label=1): any probability below 1.0 creates loss.<br>For tissue pixels (label=0): any probability above 0.0 creates loss.<br><br>All pixel losses summed → flows backward through the network → every weight nudged → model improves.<br><br>Repeated for 10,000+ patches from 313 patients.`,
+  `<strong>After training: model learned the spatial pattern.</strong><br><br>Calcium pixels now get 0.88–0.97 (clearly above 0.5 ✓). Tissue pixels get 0.02–0.09 (clearly below 0.5 ✓).<br><br>The model didn't just learn "if HU > 0.5 → calcium." It learned spatial context: a bright cluster in a specific anatomical location inside the heart = calcium.`,
+  `<strong>New patient scan — no labels, no XML.</strong><br><br>1. Load DICOM → normalize HU → float array<br>2. Feed into trained model<br>3. Model outputs probability per voxel<br>4. Threshold at 0.5 → binary prediction<br>5. Count pixels × pixel area × density factor → Agatston score<br><br>No radiologist. No annotation. Just the trained weights.`
+];
+const A1F=[null,null,null,
+  `BCE loss = −[ label × log(prob) + (1−label) × log(1−prob) ]<br><br>Calcium pixel (row=2,col=3): label=1, pred=0.55<br>loss = −log(0.55) = <strong style="color:#CC3333">0.60</strong>  ← high, model was wrong<br><br>Tissue pixel (row=0,col=0): label=0, pred=0.48<br>loss = −log(0.52) = <strong style="color:#BA7517">0.65</strong>  ← also wrong<br><br>Sum all losses → backpropagate → nudge all weights → repeat`,
+  null,
+  `No XML file. No labels. Just normalized HU values → trained model → probability per pixel.<br>Threshold at 0.5 → binary prediction → Agatston score`
+];
+const A1GL=['5×5 patch — normalized HU values (model input)','binary label mask from fillPoly on XML polygon (NOT HU threshold)','model output — BEFORE training (random weights)','BCE loss per pixel — high=wrong, weights adjust','model output — AFTER training (weights learned)','new unseen scan — model predicts without any labels'];
+function step(s){
+  document.querySelectorAll('#a1btns .btn').forEach((b,i)=>{const on=i===s;b.classList.toggle('on',on);b.style.background=on?'#1a365d':'#1a1a1a';b.style.color=on?'#60a5fa':'#777';b.style.borderColor=on?'#2563eb':'#333';});
+  document.getElementById('a1f').style.display='none';
+  document.getElementById('a1gl').textContent=A1GL[s];
+  for(let r=0;r<5;r++) for(let c=0;c<5;c++){
+    const el=document.getElementById(`c${r}${c}`);el.innerHTML='';
+    const n=NM[r][c],raw=HU[r][c],lbl=LB[r][c],bf=BF[r][c],af=AF[r][c];
+    if(s===0){el.style.background=huBg(n);el.style.borderColor='#1a1a1a';const tc=n>0.45?'#eee':'#bbb';el.innerHTML=`<span style="color:${tc};font-size:11px;font-weight:600">${raw}HU</span><span style="color:${tc};opacity:.65;font-size:9px">→${n}</span>`;}
+    else if(s===1){el.style.background=lbl?'#1a2f50':'#141414';el.style.borderColor=lbl?'rgba(55,138,221,0.4)':'#2a2a2a';el.innerHTML=`<span style="color:${lbl?'#60a5fa':'#383838'};font-size:22px;font-weight:700">${lbl}</span><span style="color:${lbl?'#3a6a9a':'#2a2a2a'};font-size:9px">${n}</span>`;}
+    else if(s===2){el.style.background=prBg(bf);el.style.borderColor='#1e1e1e';const tc=bf>0.55?'#e0e0e0':'#60a5fa';const w=lbl===1&&bf<0.5?'⚠':'';el.innerHTML=`<span style="color:${tc};font-size:15px">${bf.toFixed(2)}</span>${w?`<span style="color:#CC3333;font-size:11px">${w}</span>`:''}`;}
+    else if(s===3){const loss=+bce(bf,lbl).toFixed(2);el.style.background=lBg(loss);el.style.borderColor='#2a2a2a';el.innerHTML=`<span style="color:${lCol(loss)};font-size:16px;font-weight:700">${loss}</span><span style="font-size:9px;color:#444">L=${lbl} P=${bf.toFixed(2)}</span>`;}
+    else if(s===4){el.style.background=prBg(af);el.style.borderColor='#1e1e1e';const tc=af>0.55?'#e0e0e0':'#60a5fa';const ok=(af>0.5&&lbl===1)||(af<=0.5&&lbl===0);el.innerHTML=`<span style="color:${tc};font-size:15px">${af.toFixed(2)}</span><span style="font-size:12px">${ok?'✓':''}</span>`;}
+    else{el.style.background=prBg(af);el.style.borderColor='#1e1e1e';const tc=af>0.55?'#e0e0e0':'#60a5fa';el.innerHTML=`<span style="color:${tc};font-size:14px">${af.toFixed(2)}</span><span style="font-size:10px;color:${tc};opacity:.75">→${af>0.5?1:0}</span>`;}
+  }
+  document.getElementById('a1d').innerHTML=A1D[s];
+  if(A1F[s]){const fl=document.getElementById('a1f');fl.style.display='block';fl.innerHTML=A1F[s];}
+}
+step(0);
+
+// ── APPROACH 2 ──────────────────────────────────────────────────────────────
+const N2=7, B2=48, CX2=3.5, CY2=3.5, R2=2.3;
+function iC2(x,y){return (x-CX2)**2+(y-CY2)**2<R2*R2;}
+const tA2=+(Math.PI*R2*R2).toFixed(2);
+
+function res(sc){
+  [1,2,3].forEach(i=>{const b=document.getElementById('r'+i);const on=i===sc;b.classList.toggle('on',on);b.style.background=on?'#1a365d':'#1a1a1a';b.style.color=on?'#60a5fa':'#777';b.style.borderColor=on?'#2563eb':'#333';});
+  const gn=N2*sc, cs=Math.floor(N2*B2/gn), W=gn*cs;
+
+  // ── Main fillPoly grid ──
+  const g=document.getElementById('a2g');
+  g.style.cssText=`display:grid;grid-template-columns:repeat(${gn},${cs}px);grid-template-rows:repeat(${gn},${cs}px);border:0.5px solid #2a2a2a;border-radius:6px;overflow:hidden;`;
+  g.innerHTML='';
+  let filled=0;
+  for(let r=0;r<gn;r++) for(let c=0;c<gn;c++){
+    const ins=iC2((c+.5)/sc,(r+.5)/sc);if(ins)filled++;
+    const d=document.createElement('div');d.className='cell';
+    d.style.cssText=`width:${cs}px;height:${cs}px;background:${ins?'#1e3a5f':'#121212'};border-color:${ins?'rgba(55,138,221,0.25)':'#1e1e1e'};color:${ins?'#B5D4F4':'#2a2a2a'};font-size:${cs>22?11:0}px;`;
+    if(cs>22)d.textContent=ins?'1':'';
+    g.appendChild(d);
+  }
+
+  // ── SVG: true circle boundary + original 1× pixel grid overlay ──
+  const sv=document.getElementById('a2sv');
+  sv.setAttribute('width',W);sv.setAttribute('height',W);
+  sv.style.cssText=`position:absolute;top:0;left:0;width:${W}px;height:${W}px;pointer-events:none;`;
+  let svgHtml=circleSVG(CX2*cs*sc,CY2*cs*sc,R2*cs*sc,'true boundary');
+  if(sc>1){
+    // Original 1× pixel boundaries — thicker white lines at every B2 px
+    for(let i=1;i<N2;i++){
+      const pos=i*B2;
+      svgHtml+=`<line x1="${pos}" y1="0" x2="${pos}" y2="${W}" stroke="#cccccc" stroke-width="1.5" opacity="0.30"/>`;
+      svgHtml+=`<line x1="0" y1="${pos}" x2="${W}" y2="${pos}" stroke="#cccccc" stroke-width="1.5" opacity="0.30"/>`;
+    }
+    svgHtml+=`<rect x="3" y="${W-17}" width="152" height="13" fill="rgba(0,0,0,0.75)" rx="2"/>`;
+    svgHtml+=`<text x="7" y="${W-6}" font-size="9" fill="#999">— original 1× pixel boundaries</text>`;
+  }
+  sv.innerHTML=svgHtml;
+
+  // ── Error map: SVG with real polygon cutting through pixels ──
+  // Each pixel rendered. Blue = fillPoly filled this pixel. Then the TRUE circle
+  // is overlaid. RED slivers = area fillPoly wrongly INCLUDED (filled but outside
+  // circle). CYAN slivers = area fillPoly wrongly MISSED (empty but inside circle).
+  const S=24; // subpixel sampling
+  const eg=document.getElementById('a2eg');
+  eg.style.cssText=`position:relative;width:${W}px;height:${W}px;`;
+  let ovrA=0,undA=0,corA=0;
+  let cells='';
+  for(let r=0;r<gn;r++) for(let c=0;c<gn;c++){
+    const binInside=iC2((c+.5)/sc,(r+.5)/sc)?1:0;
+    cells+=`<rect x="${c*cs}" y="${r*cs}" width="${cs}" height="${cs}" fill="${binInside?'rgba(30,58,95,0.5)':'#101010'}" stroke="#1c1c1c" stroke-width="0.5"/>`;
+    const sub=cs/S;
+    for(let sy=0;sy<S;sy++) for(let sx=0;sx<S;sx++){
+      const px=c+(sx+.5)/S, py=r+(sy+.5)/S;
+      const trueInside=iC2(px/sc,py/sc);
+      if(binInside===1&&trueInside){corA++;}
+      else if(binInside===1&&!trueInside){ovrA++;cells+=`<rect x="${(c*cs+sx*sub).toFixed(2)}" y="${(r*cs+sy*sub).toFixed(2)}" width="${sub.toFixed(2)}" height="${sub.toFixed(2)}" fill="#E8341C" opacity="0.9"/>`;}
+      else if(binInside===0&&trueInside){undA++;cells+=`<rect x="${(c*cs+sx*sub).toFixed(2)}" y="${(r*cs+sy*sub).toFixed(2)}" width="${sub.toFixed(2)}" height="${sub.toFixed(2)}" fill="#00C4E8" opacity="0.9"/>`;}
+    }
+  }
+  cells+=`<circle cx="${CX2*cs*sc}" cy="${CY2*cs*sc}" r="${R2*cs*sc}" fill="none" stroke="#3CB371" stroke-width="2.5" stroke-dasharray="7 4"/>`;
+  if(sc>1){for(let i=1;i<N2;i++){const pos=i*B2;cells+=`<line x1="${pos}" y1="0" x2="${pos}" y2="${W}" stroke="#cccccc" stroke-width="1.2" opacity="0.22"/><line x1="0" y1="${pos}" x2="${W}" y2="${pos}" stroke="#cccccc" stroke-width="1.2" opacity="0.22"/>`;}}
+  eg.innerHTML=`<svg width="${W}" height="${W}" style="border:0.5px solid #2a2a2a;border-radius:6px;display:block;">${cells}</svg>`;
+
+  const totSub=S*S;
+  const ovrPx=+(ovrA/totSub).toFixed(2);
+  const undPx=+(undA/totSub).toFixed(2);
+
+  document.getElementById('a2gl').textContent=sc===1?`fillPoly labels — native 1× grid (0.37mm/pixel)`:`fillPoly at ${sc}× (${(0.37/sc).toFixed(3)}mm/pixel) — white lines = original 1× boundaries`;
+  document.getElementById('a2el').textContent=`Error map — RED = wrongly added · CYAN = wrongly missed · BLUE = correct`;
+
+  // ── Stats ──
+  const area=+(filled/(sc*sc)).toFixed(2);
+  const err=+(Math.abs(area-tA2)/tA2*100).toFixed(1);
+  const cost=sc*sc;
+  const totalErrArea=+(ovrPx+undPx).toFixed(2);
+  const ec=err>20?'#CC3333':err>10?'#BA7517':'#3CB371';
+  const cc=cost>4?'#CC3333':cost>1?'#BA7517':'#3CB371';
+  const te=totalErrArea>2?'#CC3333':totalErrArea>1?'#BA7517':'#3CB371';
+  document.getElementById('a2st').innerHTML=
+    stat('grid size',`${gn}×${gn}`,`${gn*gn} total pixels`)+
+    stat('area error',`${err}%`,`true=${tA2} px²`,ec)+
+    stat('wrong area',`${totalErrArea} px²`,`red:${ovrPx} cyan:${undPx}`,te)+
+    stat('compute cost',`${cost}×`,'vs 1× native',cc);
+
+  const D=[
+    `<strong>1× native — 0.37mm per pixel.</strong><br><br>Left: blue pixels = fillPoly label. Green dashed circle = true XML polygon.<br><br>Right error map: this is the key view. The green circle cuts THROUGH the boundary pixels. <strong style="color:#E8341C">Red</strong> = area fillPoly wrongly added (pixel filled blue, but that part is outside the true circle). <strong style="color:#00C4E8">Cyan</strong> = area fillPoly wrongly missed (pixel left empty, but that part is inside the circle).<br><br>Wrong area = <strong style="color:#CC3333">${totalErrArea} px²</strong>. Area error = <strong style="color:#CC3333">${err}%</strong>.`,
+    `<strong>2× finer — 0.185mm per pixel (Rajat's approach).</strong><br><br>Same circle. Each original 1× pixel (white lines) split into 2×2 = 4 smaller pixels.<br><br>Look at the right error map: the red and cyan slivers are now much THINNER. The smaller pixels hug the green circle far more closely — less area gets wrongly added or missed at the boundary.<br><br>Wrong area = <strong style="color:${te}">${totalErrArea} px²</strong> (was larger at 1×). Compute cost = <strong style="color:#BA7517">${cost}× more</strong>.`,
+    `<strong>3× finest — 0.123mm per pixel.</strong><br><br>Each original 1× pixel (white lines) split into 3×3 = 9 smaller pixels.<br><br>The red and cyan error slivers are now very thin — the staircase tightly follows the green circle. Wrong area = <strong style="color:${te}">${totalErrArea} px²</strong> — very small.<br><br>But compute cost = <strong style="color:#CC3333">9× more</strong>. For 57-slice 3D volumes this is a major GPU memory constraint. Practical limit is 2×.`
+  ];
+  document.getElementById('a2d').innerHTML=D[sc-1];
+}
+res(1);
+
+// ── APPROACH 3 ──────────────────────────────────────────────────────────────
+const N3=7,C3=54,CX3=3.5,CY3=3.5,R3=2.3;
+function iC3(x,y){return (x-CX3)**2+(y-CY3)**2<R3*R3;}
+const tA3=+(Math.PI*R3*R3).toFixed(2);
+function cov3(c,r,S=28){let n=0;for(let sy=0;sy<S;sy++) for(let sx=0;sx<S;sx++) if(iC3(c+(sx+.5)/S,r+(sy+.5)/S))n++;return +(n/(S*S)).toFixed(2);}
+(function(){
+  const gn=N3,cs=C3,W=gn*cs;
+  let binA=0,covA=0;
+  const rows=[];
+  for(let r=0;r<gn;r++){rows.push([]);for(let c=0;c<gn;c++){const bn=iC3(c+.5,r+.5)?1:0,fr=cov3(c,r);rows[r].push({bn,fr});binA+=bn;covA+=fr;}}
+  binA=+binA.toFixed(2);covA=+covA.toFixed(2);
+  const eb=+(Math.abs(binA-tA3)/tA3*100).toFixed(1);
+  const ec=+(Math.abs(covA-tA3)/tA3*100).toFixed(1);
+  function mkG(id,svgId,useCov){
+    const g=document.getElementById(id);
+    g.style.cssText=`display:grid;grid-template-columns:repeat(${gn},${cs}px);grid-template-rows:repeat(${gn},${cs}px);border:0.5px solid #2a2a2a;border-radius:6px;overflow:hidden;`;
+    g.innerHTML='';
+    for(let r=0;r<gn;r++) for(let c=0;c<gn;c++){
+      const{bn,fr}=rows[r][c];const d=document.createElement('div');d.className='cell';
+      if(useCov){const rr=Math.round(13+fr*(55-13)),gg=Math.round(13+fr*(138-13)),bb=Math.round(13+fr*(221-13));const tc=fr>0.55?'#e0e0e0':fr>0.1?'#60a5fa':'#333';d.style.cssText=`width:${cs}px;height:${cs}px;background:rgb(${rr},${gg},${bb});border:0.5px solid rgba(55,138,221,0.15);color:${tc};font-size:11px;font-weight:600;display:flex;align-items:center;justify-content:center;`;d.textContent=fr>0.01?fr.toFixed(2):'';}
+      else{d.style.cssText=`width:${cs}px;height:${cs}px;background:${bn?'#1e3a5f':'#121212'};border:0.5px solid ${bn?'rgba(55,138,221,0.35)':'#1e1e1e'};color:${bn?'#B5D4F4':'#2a2a2a'};font-size:17px;font-weight:700;display:flex;align-items:center;justify-content:center;`;d.textContent=bn?'1':'0';}
+      g.appendChild(d);
+    }
+    const sv=document.getElementById(svgId);sv.setAttribute('width',W);sv.setAttribute('height',W);sv.style.cssText=`position:absolute;top:0;left:0;width:${W}px;height:${W}px;pointer-events:none;`;sv.innerHTML=circleSVG(CX3*cs,CY3*cs,R3*cs,'');
+  }
+  mkG('a3bg','a3bsv',false);mkG('a3cg','a3csv',true);
+  document.getElementById('a3st').innerHTML=
+    stat('true polygon area',`${tA3} px²`,'from XML — exact','#3CB371')+
+    stat('binary area',`${binA} px²`,`error: +${eb}%`,'#CC3333')+
+    stat('coverage area',`${covA} px²`,`error: +${ec}%`,'#3CB371')+
+    stat('compute overhead','≈ 0×','same resolution','#3CB371');
+  document.getElementById('a3d').innerHTML=
+    `<strong>Left (binary fillPoly):</strong> Every pixel is hard 0 or 1. A pixel that is only 15% inside the polygon gets label 0. One that is 85% inside gets label 1. Neither is accurate. Area inflated by <strong style="color:#CC3333">+${eb}%</strong>.<br><br>
+<strong>Right (coverage fractions):</strong> Each pixel shows the exact fraction of its physical area that overlaps the XML polygon. Boundary pixels get values like 0.23, 0.47, 0.81 — reflecting reality. Interior pixels reach 1.00. Exterior pixels are 0.00.<br><br>
+Coverage area = <strong style="color:#3CB371">${covA} px²</strong> — only <strong style="color:#3CB371">+${ec}%</strong> error vs true (${tA3} px²). Binary error was ${eb}%. <strong>Same grid. Same polygon. No resolution increase. No extra compute. Far more honest labels.</strong>`;
+})();
+</script>
+</body>
+</html>
