@@ -1,0 +1,530 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Heart-ROI cropping — pipeline simulation</title>
+<style>
+:root{
+  --bg0:#10141b; --bg1:#161c26; --bg2:#1c2431;
+  --line:#2a3342; --line-strong:#3a4658;
+  --text:#e7eaef; --text-dim:#9aa5b5; --text-mute:#6b7688;
+  --teal:#3ad0c8; --teal-dim:#1f6e69; --teal-bg:#122726;
+  --amber:#f2a93b; --amber-dim:#8a611f; --amber-bg:#2a2013;
+  --coral:#e8593c; --coral-dim:#8a3a26;
+  --mono:"SF Mono","Cascadia Code","Consolas","Roboto Mono",monospace;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
+}
+*{box-sizing:border-box}
+body{
+  margin:0; background:var(--bg0); color:var(--text);
+  font-family:var(--sans); line-height:1.5; -webkit-font-smoothing:antialiased;
+}
+header{
+  position:sticky; top:0; z-index:10; background:rgba(16,20,27,0.96);
+  backdrop-filter:blur(6px); border-bottom:1px solid var(--line);
+  padding:14px 28px;
+}
+.hwrap{max-width:1180px; margin:0 auto; display:flex; align-items:center; justify-content:space-between; gap:24px; flex-wrap:wrap}
+.brand{display:flex; flex-direction:column; gap:2px}
+.brand .eyebrow{font-family:var(--mono); font-size:11px; letter-spacing:.06em; color:var(--teal); text-transform:uppercase}
+.brand h1{font-size:16px; font-weight:600; margin:0; color:var(--text)}
+nav{display:flex; gap:6px; flex-wrap:wrap}
+nav button{
+  font-family:var(--sans); font-size:13px; font-weight:500; color:var(--text-dim);
+  background:transparent; border:1px solid var(--line); padding:8px 14px;
+  border-radius:7px; cursor:pointer; transition:all .15s;
+}
+nav button:hover{border-color:var(--line-strong); color:var(--text)}
+nav button.active{background:var(--teal-bg); border-color:var(--teal-dim); color:var(--teal)}
+
+main{max-width:1180px; margin:0 auto; padding:36px 28px 80px}
+section{display:none}
+section.active{display:block; animation:fade .25s ease}
+@keyframes fade{from{opacity:0; transform:translateY(4px)} to{opacity:1; transform:translateY(0)}}
+
+.eyebrow{font-family:var(--mono); font-size:11px; letter-spacing:.08em; color:var(--teal); text-transform:uppercase; margin:0 0 8px}
+h2{font-size:24px; font-weight:600; margin:0 0 6px; color:var(--text)}
+.lede{font-size:14.5px; color:var(--text-dim); max-width:680px; margin:0 0 28px}
+
+.grid2{display:grid; grid-template-columns:1.1fr 0.9fr; gap:28px; align-items:start}
+.grid3{display:grid; grid-template-columns:repeat(3,1fr); gap:16px}
+@media(max-width:860px){.grid2{grid-template-columns:1fr}.grid3{grid-template-columns:1fr}}
+
+.card{background:var(--bg1); border:1px solid var(--line); border-radius:12px; padding:20px}
+.card h3{font-size:13px; font-weight:600; color:var(--text); margin:0 0 4px}
+.card .sub{font-size:12px; color:var(--text-mute); margin:0 0 14px}
+
+.pillrow{display:flex; gap:8px; margin-bottom:16px; flex-wrap:wrap}
+.pill{
+  font-family:var(--sans); font-size:13px; font-weight:500; color:var(--text-dim);
+  background:var(--bg2); border:1px solid var(--line); padding:8px 16px;
+  border-radius:20px; cursor:pointer; transition:all .15s;
+}
+.pill:hover{border-color:var(--line-strong)}
+.pill.active{background:var(--teal-bg); border-color:var(--teal); color:var(--teal)}
+
+.readout{font-family:var(--mono); font-size:12.5px; color:var(--text-dim); display:flex; flex-direction:column; gap:7px}
+.readout .row{display:flex; justify-content:space-between; gap:12px; padding:7px 0; border-bottom:1px solid var(--line)}
+.readout .row:last-child{border-bottom:none}
+.readout .k{color:var(--text-mute)}
+.readout .v{color:var(--text); font-weight:500}
+.readout .v.ok{color:var(--teal)}
+.readout .v.bad{color:var(--coral)}
+
+.slidewrap{margin:14px 0 4px}
+.slidewrap label{font-size:12px; color:var(--text-mute); display:flex; justify-content:space-between; margin-bottom:6px}
+.slidewrap label span{color:var(--amber); font-family:var(--mono)}
+input[type=range]{width:100%; accent-color:var(--teal)}
+
+.badge{display:inline-flex; align-items:center; gap:6px; font-family:var(--mono); font-size:11px; padding:4px 10px; border-radius:6px}
+.badge.ok{background:var(--teal-bg); color:var(--teal); border:1px solid var(--teal-dim)}
+.badge.bad{background:var(--coral-dim); color:#ffd8cf; border:1px solid var(--coral)}
+
+.toggle{display:inline-flex; border:1px solid var(--line); border-radius:9px; overflow:hidden; margin-bottom:18px}
+.toggle button{
+  font-size:13px; font-weight:500; padding:9px 18px; border:none; background:var(--bg1);
+  color:var(--text-dim); cursor:pointer; font-family:var(--sans);
+}
+.toggle button.active{background:var(--teal-bg); color:var(--teal)}
+
+svg{display:block; width:100%; height:auto}
+.tlabel{font-family:var(--sans); font-size:12px; fill:var(--text-dim)}
+.tlabel.strong{fill:var(--text); font-weight:600}
+.mono-svg{font-family:var(--mono); font-size:11px; fill:var(--text-mute)}
+
+.steprow{display:flex; align-items:center; gap:8px; margin:20px 0}
+.stepbtn{
+  font-family:var(--sans); font-size:13px; font-weight:500; color:var(--text);
+  background:var(--bg2); border:1px solid var(--line-strong); padding:9px 18px;
+  border-radius:7px; cursor:pointer;
+}
+.stepbtn:disabled{opacity:.35; cursor:not-allowed}
+.stepbtn.primary{background:var(--teal-bg); border-color:var(--teal-dim); color:var(--teal)}
+.dots{display:flex; gap:6px; margin-left:6px}
+.dot{width:7px; height:7px; border-radius:50%; background:var(--line-strong)}
+.dot.on{background:var(--teal)}
+
+.tracklabel{font-family:var(--mono); font-size:11px; color:var(--text-mute); text-transform:uppercase; letter-spacing:.05em; margin-bottom:6px}
+.chipflow{display:flex; align-items:center; gap:4px; flex-wrap:wrap; margin-bottom:22px}
+.chip{
+  font-family:var(--sans); font-size:12px; padding:7px 12px; border-radius:7px;
+  background:var(--bg2); border:1px solid var(--line); color:var(--text-dim);
+  transition:all .2s; white-space:nowrap;
+}
+.chip.done{color:var(--text); border-color:var(--line-strong)}
+.chip.now{background:var(--teal-bg); border-color:var(--teal); color:var(--teal); font-weight:600}
+.chip.key{background:var(--amber-bg); border-color:var(--amber-dim); color:var(--amber)}
+.chip.key.now{background:var(--amber); border-color:var(--amber); color:#241a05}
+.arrow{color:var(--text-mute); font-size:13px}
+
+.stepdesc{background:var(--bg2); border:1px solid var(--line); border-radius:10px; padding:16px 18px; font-size:13.5px; color:var(--text-dim); min-height:44px}
+.stepdesc b{color:var(--text)}
+
+.statuscard{background:var(--bg1); border:1px solid var(--line); border-radius:12px; padding:22px}
+.statuscard.now{border-color:var(--teal-dim)}
+.statuscard.need{border-color:var(--amber-dim)}
+.stattag{font-family:var(--mono); font-size:11px; letter-spacing:.05em; text-transform:uppercase; padding:3px 9px; border-radius:5px; display:inline-block; margin-bottom:12px}
+.stattag.now{background:var(--teal-bg); color:var(--teal)}
+.stattag.need{background:var(--amber-bg); color:var(--amber)}
+.specrow{display:flex; justify-content:space-between; font-size:13px; padding:8px 0; border-bottom:1px solid var(--line)}
+.specrow:last-child{border-bottom:none}
+.specrow .k{color:var(--text-mute)}
+.specrow .v{font-family:var(--mono); color:var(--text)}
+
+.optioncard{background:var(--bg2); border:1px solid var(--line); border-radius:10px; padding:16px; margin-top:10px}
+.optioncard h4{font-size:13px; margin:0 0 6px; color:var(--text); display:flex; align-items:center; gap:8px}
+.optioncard p{font-size:12.5px; color:var(--text-dim); margin:0}
+.rec{font-family:var(--mono); font-size:10.5px; background:var(--teal-bg); color:var(--teal); padding:2px 8px; border-radius:5px; letter-spacing:.04em}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="hwrap">
+    <div class="brand">
+      <span class="eyebrow">PrediCT — CAC segmentation</span>
+      <h1>Heart-ROI cropping: pipeline simulation</h1>
+    </div>
+    <nav id="navbar"></nav>
+  </div>
+</header>
+
+<main>
+
+<section id="sec-overview">
+  <p class="eyebrow">01 — why crop at all</p>
+  <h2>Two ways the model can search a scan</h2>
+  <p class="lede">Traditional segmentation scans the entire thorax for calcium. ROI cropping restricts the search to a small region around the heart, computed individually for each patient.</p>
+
+  <div class="toggle" id="ovToggle">
+    <button data-mode="trad" class="active">Traditional</button>
+    <button data-mode="roi">ROI-cropped</button>
+  </div>
+
+  <div class="grid2">
+    <div class="card">
+      <h3 id="ovTitle">Traditional — searches the entire volume</h3>
+      <p class="sub" id="ovSub">Every voxel in the thorax is a candidate. Ribs, spine, and lung tissue can all be misread as calcium.</p>
+      <svg viewBox="0 0 460 380" id="ovSvg"></svg>
+    </div>
+    <div class="card">
+      <h3>What changes</h3>
+      <div class="readout" id="ovReadout"></div>
+    </div>
+  </div>
+</section>
+
+<section id="sec-crop">
+  <p class="eyebrow">02 — how the crop is computed</p>
+  <h2>The box is measured, never fixed</h2>
+  <p class="lede">Each patient's crop box comes from their own heart segmentation, expanded by a physical margin. Try the presets and the margin slider — a margin that's too small can clip real calcium near the heart boundary.</p>
+
+  <div class="grid2">
+    <div class="card">
+      <h3>Simulated patient</h3>
+      <p class="sub">Three different heart sizes, same margin rule applied</p>
+      <div class="pillrow" id="patientPills"></div>
+      <svg viewBox="0 0 460 380" id="cropSvg"></svg>
+    </div>
+    <div class="card">
+      <h3>Live crop calculation</h3>
+      <p class="sub">All values derived from the selected patient — nothing hardcoded</p>
+      <div class="slidewrap">
+        <label>Margin around heart mask <span id="marginVal">8mm</span></label>
+        <input type="range" id="marginSlider" min="0" max="20" value="8" step="1">
+      </div>
+      <div class="readout" id="cropReadout"></div>
+    </div>
+  </div>
+</section>
+
+<section id="sec-train">
+  <p class="eyebrow">03 — training pipeline</p>
+  <h2>What changes when training with ROI cropping</h2>
+  <p class="lede">Two extra steps happen before training starts: find the box, then crop the image and its label to that box. Everything after — patch sampling, the training loop — is unchanged.</p>
+
+  <div class="tracklabel">Traditional</div>
+  <div class="chipflow" id="trainTradFlow"></div>
+  <div class="tracklabel">ROI-cropped</div>
+  <div class="chipflow" id="trainRoiFlow"></div>
+
+  <div class="steprow">
+    <button class="stepbtn" id="trainPrev">← Prev</button>
+    <button class="stepbtn primary" id="trainNext">Next step →</button>
+    <div class="dots" id="trainDots"></div>
+  </div>
+  <div class="stepdesc" id="trainDesc"></div>
+</section>
+
+<section id="sec-test">
+  <p class="eyebrow">04 — testing / inference pipeline</p>
+  <h2>A brand-new patient has no crop waiting for them</h2>
+  <p class="lede">Two models run in sequence. The second model only ever sees a small cropped patch — its output has to be placed back into a full-size canvas before it means anything.</p>
+
+  <div class="tracklabel">Traditional</div>
+  <div class="chipflow" id="testTradFlow"></div>
+  <div class="tracklabel">ROI-cropped</div>
+  <div class="chipflow" id="testRoiFlow"></div>
+
+  <div class="steprow">
+    <button class="stepbtn" id="testPrev">← Prev</button>
+    <button class="stepbtn primary" id="testNext">Next step →</button>
+    <div class="dots" id="testDots"></div>
+  </div>
+  <div class="stepdesc" id="testDesc"></div>
+
+  <div class="card" style="margin-top:20px">
+    <h3>Reassembly view</h3>
+    <p class="sub">The step every ROI pipeline needs and every naive implementation forgets</p>
+    <svg viewBox="0 0 900 320" id="pasteSvg"></svg>
+  </div>
+</section>
+
+<section id="sec-status">
+  <p class="eyebrow">05 — current status</p>
+  <h2>What's training now, and what ROI cropping needs</h2>
+  <p class="lede">These are two different models solving two different tasks — one does not replace the other.</p>
+
+  <div class="grid2">
+    <div class="statuscard now">
+      <span class="stattag now">currently training</span>
+      <h3 style="font-size:16px; margin:0 0 4px">CAC segmentation model</h3>
+      <p class="sub" style="margin-bottom:16px">Finds calcium. This is Approach 1, the model this whole project is built around.</p>
+      <div class="specrow"><span class="k">Architecture</span><span class="v">MONAI 3D UNet, ~4.8M params</span></div>
+      <div class="specrow"><span class="k">Loss</span><span class="v">TverskyLoss(&#945;=0.3, &#946;=0.7)</span></div>
+      <div class="specrow"><span class="k">HU window</span><span class="v">[0, 1200]</span></div>
+      <div class="specrow"><span class="k">Input (today)</span><span class="v">Full-volume CT</span></div>
+      <div class="specrow"><span class="k">Result</span><span class="v">mean Dice 0.61 / median 0.69</span></div>
+    </div>
+    <div class="statuscard need">
+      <span class="stattag need">needed for ROI</span>
+      <h3 style="font-size:16px; margin:0 0 4px">Heart-localization model</h3>
+      <p class="sub" style="margin-bottom:16px">Finds the heart, not calcium. A different, much simpler task — and it doesn't need to be trained from scratch.</p>
+      <div class="optioncard">
+        <h4>Reuse Rajat's checkpoint <span class="rec">fastest</span></h4>
+        <p>LW_UNET_TVERSKY, 3.1M params, already trained and sitting in the repo. Zero additional training time.</p>
+      </div>
+      <div class="optioncard">
+        <h4>Enable TotalSegmentator</h4>
+        <p>Public pretrained tool, already wired into COCA_processor_main.py behind a disabled flag (USE_TOTAL_SEGMENTATOR). Slower per scan, no training needed either.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<script>
+const SECTIONS = [
+  {id:'sec-overview', label:'Overview'},
+  {id:'sec-crop', label:'Crop calculator'},
+  {id:'sec-train', label:'Training'},
+  {id:'sec-test', label:'Testing'},
+  {id:'sec-status', label:'Model status'},
+];
+const navbar = document.getElementById('navbar');
+SECTIONS.forEach((s,i)=>{
+  const b = document.createElement('button');
+  b.textContent = s.label;
+  b.onclick = ()=>showSection(s.id);
+  b.dataset.id = s.id;
+  if(i===0) b.classList.add('active');
+  navbar.appendChild(b);
+});
+function showSection(id){
+  document.querySelectorAll('section').forEach(s=>s.classList.toggle('active', s.id===id));
+  document.querySelectorAll('#navbar button').forEach(b=>b.classList.toggle('active', b.dataset.id===id));
+}
+showSection('sec-overview');
+
+function torsoSVG(opts){
+  const {cx=230, cy=170, showBox=false, dim=false, heartRx=30, heartRy=36, hx=0, hy=0, boxPad=14, caption=''} = opts;
+  const bx1 = cx+hx-heartRx-boxPad, by1 = cy+hy-heartRy-boxPad;
+  const bw = (heartRx+boxPad)*2, bh = (heartRy+boxPad)*2;
+  const dimOp = dim ? 0.28 : 1;
+  return `
+    <ellipse cx="${cx}" cy="${cy}" rx="155" ry="135" fill="var(--bg2)" stroke="var(--line-strong)" stroke-width="1" opacity="${dim?0.5:1}"/>
+    <ellipse cx="${cx}" cy="${cy}" rx="134" ry="115" fill="none" stroke="var(--line-strong)" stroke-width="1" stroke-dasharray="4 4" opacity="${dimOp*0.5}"/>
+    <circle cx="${cx}" cy="${cy+108}" r="13" fill="var(--text-mute)" opacity="${dimOp*0.4}"/>
+    <ellipse cx="${cx-62}" cy="${cy-14}" rx="42" ry="66" fill="var(--bg1)" stroke="var(--line)" stroke-width="1" opacity="${dimOp}"/>
+    <ellipse cx="${cx+62}" cy="${cy-14}" rx="42" ry="66" fill="var(--bg1)" stroke="var(--line)" stroke-width="1" opacity="${dimOp}"/>
+    <ellipse cx="${cx+hx}" cy="${cy+hy}" rx="${heartRx}" ry="${heartRy}" fill="var(--coral)"/>
+    ${showBox ? `<rect x="${bx1}" y="${by1}" width="${bw}" height="${bh}" rx="12" fill="var(--teal)" fill-opacity="0.12" stroke="var(--teal)" stroke-width="2" stroke-dasharray="6 4"/>` : `<ellipse cx="${cx}" cy="${cy}" rx="160" ry="140" fill="var(--teal)" fill-opacity="0.06" stroke="var(--teal)" stroke-width="2" stroke-dasharray="6 4"/>`}
+    <text class="tlabel" x="${cx}" y="345" text-anchor="middle">${caption}</text>
+  `;
+}
+
+const ovSvg = document.getElementById('ovSvg');
+const ovTitle = document.getElementById('ovTitle');
+const ovSub = document.getElementById('ovSub');
+const ovReadout = document.getElementById('ovReadout');
+function renderOverview(mode){
+  const roi = mode==='roi';
+  ovSvg.innerHTML = torsoSVG({
+    showBox: roi, dim: roi,
+    caption: roi ? 'Search region: cropped box only' : 'Search region: entire volume'
+  });
+  ovTitle.textContent = roi ? 'ROI-cropped — searches only the heart region' : 'Traditional — searches the entire volume';
+  ovSub.textContent = roi
+    ? 'Ribs, spine, and lung tissue never enter the model\'s field of view — they cannot be misread as calcium.'
+    : 'Every voxel in the thorax is a candidate. Ribs, spine, and lung tissue can all be misread as calcium.';
+  ovReadout.innerHTML = roi ? `
+    <div class="row"><span class="k">Voxels searched</span><span class="v ok">~0.6% of full volume</span></div>
+    <div class="row"><span class="k">False-positive sources</span><span class="v ok">Ribs, spine excluded</span></div>
+    <div class="row"><span class="k">Comparable to earlier 0.94 Dice figure</span><span class="v ok">Yes — same easier task</span></div>
+  ` : `
+    <div class="row"><span class="k">Voxels searched</span><span class="v">100% of full volume</span></div>
+    <div class="row"><span class="k">False-positive sources</span><span class="v bad">Ribs, spine, soft tissue</span></div>
+    <div class="row"><span class="k">This is today's baseline</span><span class="v">mean Dice 0.61</span></div>
+  `;
+}
+document.querySelectorAll('#ovToggle button').forEach(b=>{
+  b.onclick = ()=>{
+    document.querySelectorAll('#ovToggle button').forEach(x=>x.classList.remove('active'));
+    b.classList.add('active');
+    renderOverview(b.dataset.mode);
+  };
+});
+renderOverview('trad');
+
+const PATIENTS = {
+  A:{label:'Patient A — small heart', heartMM:[78,74,96], hx:-14, hy:6, rxpx:26, rypx:31, farCalciumMM:6},
+  B:{label:'Patient B — medium heart', heartMM:[96,90,118], hx:10, hy:-4, rxpx:34, rypx:40, farCalciumMM:9},
+  C:{label:'Patient C — large heart', heartMM:[110,102,131], hx:-4, hy:10, rxpx:40, rypx:46, farCalciumMM:4},
+};
+const FULLVOL_MM = [189.4, 189.4, 264];
+let currentPatient = 'A';
+let currentMargin = 8;
+
+const patientPills = document.getElementById('patientPills');
+Object.keys(PATIENTS).forEach(k=>{
+  const p = document.createElement('button');
+  p.className = 'pill' + (k==='A' ? ' active':'');
+  p.textContent = 'Patient ' + k;
+  p.dataset.k = k;
+  p.onclick = ()=>{ currentPatient=k; document.querySelectorAll('#patientPills .pill').forEach(x=>x.classList.toggle('active', x.dataset.k===k)); renderCrop(); };
+  patientPills.appendChild(p);
+});
+
+const marginSlider = document.getElementById('marginSlider');
+const marginVal = document.getElementById('marginVal');
+marginSlider.oninput = ()=>{ currentMargin = +marginSlider.value; marginVal.textContent = currentMargin+'mm'; renderCrop(); };
+
+const cropSvg = document.getElementById('cropSvg');
+const cropReadout = document.getElementById('cropReadout');
+function round1(n){ return Math.round(n*10)/10; }
+function renderCrop(){
+  const p = PATIENTS[currentPatient];
+  const pxPerMM = 0.34;
+  const marginPx = currentMargin * pxPerMM * 8;
+  cropSvg.innerHTML = torsoSVG({
+    showBox:true, dim:true,
+    heartRx:p.rxpx, heartRy:p.rypx, hx:p.hx, hy:p.hy,
+    boxPad: 14 + currentMargin*1.6,
+    caption: p.label
+  });
+  const [hx,hy,hz] = p.heartMM;
+  const cropDims = [hx+currentMargin*2, hy+currentMargin*2, hz+currentMargin*2];
+  const fullVol = FULLVOL_MM[0]*FULLVOL_MM[1]*FULLVOL_MM[2];
+  const cropVol = cropDims[0]*cropDims[1]*cropDims[2];
+  const reduction = round1(100*(1-cropVol/fullVol));
+  const preserved = currentMargin >= p.farCalciumMM;
+  cropReadout.innerHTML = `
+    <div class="row"><span class="k">Heart bbox (mm)</span><span class="v">${hx} &times; ${hy} &times; ${hz}</span></div>
+    <div class="row"><span class="k">+ margin each side</span><span class="v">${currentMargin}mm</span></div>
+    <div class="row"><span class="k">Crop box (mm)</span><span class="v">${round1(cropDims[0])} &times; ${round1(cropDims[1])} &times; ${round1(cropDims[2])}</span></div>
+    <div class="row"><span class="k">Volume searched vs full scan</span><span class="v ok">&minus;${reduction}%</span></div>
+    <div class="row"><span class="k">Farthest real calcium from heart mask</span><span class="v">${p.farCalciumMM}mm</span></div>
+    <div class="row"><span class="k">Calcium preserved at this margin</span><span>${preserved ? '<span class="badge ok">&#10003; preserved</span>' : '<span class="badge bad">&#10007; would be clipped</span>'}</span></div>
+  `;
+}
+renderCrop();
+
+function buildStaticFlow(el, steps){
+  el.innerHTML = steps.map((s,i)=>{
+    const arrow = i < steps.length-1 ? '<span class="arrow">&#8594;</span>' : '';
+    return `<span class="chip done">${s.label}</span>${arrow}`;
+  }).join('');
+}
+function buildFlow(el, steps, activeIdx){
+  el.innerHTML = steps.map((s,i)=>{
+    const cls = ['chip'];
+    if(s.key) cls.push('key');
+    if(i < activeIdx) cls.push('done');
+    if(i === activeIdx) cls.push('now');
+    const arrow = i < steps.length-1 ? '<span class="arrow">&#8594;</span>' : '';
+    return `<span class="${cls.join(' ')}">${s.label}</span>${arrow}`;
+  }).join('');
+}
+
+const TRAIN_TRAD = [
+  {label:'CT + label'},
+  {label:'Sample patches anywhere'},
+  {label:'Train CAC model'},
+];
+const TRAIN_ROI = [
+  {label:'CT + heart mask'},
+  {label:'Find bbox + margin'},
+  {label:'Crop CT + label'},
+  {label:'Sample patches in crop'},
+  {label:'Train CAC model'},
+];
+const TRAIN_DESC = [
+  'Both pipelines start the same way — a CT volume paired with its ground-truth calcium label.',
+  'Traditional patch sampling can draw a training patch from anywhere in the volume, including ribs and spine. ROI training first needs the patient\'s heart mask to know where to look.',
+  'ROI-only step: the heart mask\'s bounding box is computed and expanded by the margin. This box is different for every patient — see the crop calculator tab.',
+  'Both the CT image and its calcium label are physically cropped to the box. Training data is now much smaller per patient.',
+  'Patches are sampled only from inside the crop. The model never sees rib or spine examples during training — it doesn\'t need to learn to reject them.',
+];
+let trainStep = 0;
+function renderTrain(){
+  const roiIdx = Math.min(trainStep, TRAIN_ROI.length-1);
+  buildStaticFlow(document.getElementById('trainTradFlow'), TRAIN_TRAD);
+  buildFlow(document.getElementById('trainRoiFlow'), TRAIN_ROI, roiIdx);
+  document.getElementById('trainDesc').innerHTML = TRAIN_DESC[trainStep];
+  document.getElementById('trainPrev').disabled = trainStep===0;
+  document.getElementById('trainNext').disabled = trainStep===TRAIN_DESC.length-1;
+  const dots = document.getElementById('trainDots');
+  dots.innerHTML = TRAIN_DESC.map((_,i)=>`<span class="dot ${i===trainStep?'on':''}"></span>`).join('');
+}
+document.getElementById('trainPrev').onclick = ()=>{ trainStep=Math.max(0,trainStep-1); renderTrain(); };
+document.getElementById('trainNext').onclick = ()=>{ trainStep=Math.min(TRAIN_DESC.length-1,trainStep+1); renderTrain(); };
+renderTrain();
+
+const TEST_TRAD = [
+  {label:'New CT'},
+  {label:'Trained model'},
+  {label:'Full-size prediction — done'},
+];
+const TEST_ROI = [
+  {label:'New CT'},
+  {label:'Heart-seg model (stage 1)'},
+  {label:'Find bbox + margin'},
+  {label:'Crop CT'},
+  {label:'CAC model (stage 2)'},
+  {label:'Small prediction'},
+  {label:'Paste at saved offset', key:true},
+  {label:'Full-size prediction'},
+];
+const TEST_DESC = [
+  'A brand-new patient arrives with only a raw CT. No crop, no heart mask — nothing has been precomputed.',
+  'ROI-only: a separate, already-trained heart-localization model runs first, live, to find where the heart is in this new scan.',
+  'The bounding box is computed from that heart mask and expanded by the margin — same rule as training, computed fresh for this patient.',
+  'The CT is physically cropped to the box. This small volume is all the CAC model will ever see.',
+  'The CAC model — the one actually being trained today — runs only on the small cropped volume.',
+  'Its output is a small prediction, sized to the crop, not the original scan. On its own it has no meaning outside that crop.',
+  'The critical step: the small prediction is placed into a zero-filled canvas the size of the original scan, at the exact offset recorded when the crop was made.',
+  'Only now is the prediction in the same coordinate space as the original CT — ready for Dice scoring or Agatston calculation.',
+];
+let testStep = 0;
+function renderTest(){
+  const roiIdx = Math.min(testStep, TEST_ROI.length-1);
+  buildStaticFlow(document.getElementById('testTradFlow'), TEST_TRAD);
+  buildFlow(document.getElementById('testRoiFlow'), TEST_ROI, roiIdx);
+  document.getElementById('testDesc').innerHTML = TEST_DESC[testStep];
+  document.getElementById('testPrev').disabled = testStep===0;
+  document.getElementById('testNext').disabled = testStep===TEST_DESC.length-1;
+  const dots = document.getElementById('testDots');
+  dots.innerHTML = TEST_DESC.map((_,i)=>`<span class="dot ${i===testStep?'on':''}"></span>`).join('');
+  renderPaste(testStep);
+}
+document.getElementById('testPrev').onclick = ()=>{ testStep=Math.max(0,testStep-1); renderTest(); };
+document.getElementById('testNext').onclick = ()=>{ testStep=Math.min(TEST_DESC.length-1,testStep+1); renderTest(); };
+
+const pasteSvg = document.getElementById('pasteSvg');
+function renderPaste(step){
+  const fullX=520, fullY=40, fullW=340, fullH=240;
+  const offX=118, offY=96, cropW=90, cropH=70;
+  const px = fullX+offX, py = fullY+offY;
+  const showCrop = step>=3;
+  const showPredFloating = step===5;
+  const showPasted = step>=6;
+  const floatX = 90, floatY = 130;
+  let html = `
+    <text class="tlabel strong" x="${fullX}" y="24">Full CT volume — 512&times;512&times;88</text>
+    <rect x="${fullX}" y="${fullY}" width="${fullW}" height="${fullH}" rx="4" fill="var(--bg2)" stroke="var(--line-strong)" stroke-width="1.5"/>
+    <text class="mono-svg" x="${fullX}" y="${fullY+fullH+18}">origin (0,0,0)</text>
+  `;
+  if(showCrop){
+    html += `<rect x="${px}" y="${py}" width="${cropW}" height="${cropH}" rx="4" fill="none" stroke="var(--teal)" stroke-width="2" stroke-dasharray="5 3"/>`;
+    html += `<text class="mono-svg" x="${px}" y="${py-8}">crop offset (${offX},${offY})</text>`;
+  }
+  if(showPredFloating){
+    html += `
+      <text class="tlabel strong" x="${floatX}" y="24">CAC model output</text>
+      <rect x="${floatX}" y="${floatY}" width="${cropW}" height="${cropH}" rx="4" fill="var(--amber)" fill-opacity="0.18" stroke="var(--amber)" stroke-width="2"/>
+      <text class="mono-svg" x="${floatX}" y="${floatY+cropH+18}">size ${cropW}&times;${cropH} — no scan coordinates</text>
+      <line x1="${floatX+cropW+10}" y1="${floatY+cropH/2}" x2="${px-10}" y2="${py+cropH/2}" stroke="var(--amber)" stroke-width="1.5" stroke-dasharray="4 3" marker-end="url(#ah)"/>
+    `;
+  }
+  if(showPasted){
+    html += `<rect x="${px}" y="${py}" width="${cropW}" height="${cropH}" rx="4" fill="var(--amber)" fill-opacity="0.28" stroke="var(--amber)" stroke-width="2.5"/>`;
+    html += `<text class="tlabel" x="${fullX}" y="${fullY+fullH+40}" fill="var(--amber)">Pasted at (${offX},${offY}) — coordinates now match the original scan</text>`;
+  }
+  pasteSvg.innerHTML = `<defs><marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="var(--amber)" stroke-width="1.5"/></marker></defs>` + html;
+}
+renderTest();
+</script>
+</body>
+</html>
