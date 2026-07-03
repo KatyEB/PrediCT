@@ -8,15 +8,16 @@
 
 ## What This Branch Contains
 
-This branch (`soham/preprocessing-pipeline`) covers **Stages 1–3** of the PrediCT pipeline:
+This branch (`soham_segmentation`) covers **Stages 1–5** of the PrediCT pipeline:
 
 ```
 Stage 1  DICOM + XML → NIfTI + binary masks     [COMPLETE]
 Stage 2  Exploratory data analysis               [COMPLETE]
 Stage 3  Dataset cleaning + train/val/test split [COMPLETE]
 Stage 4  3D UNet baseline training               [COMPLETE]
-Stage 5  nnU-Net + Hybrid Attention comparison   [PENDING]
-Stage 6  Soft Agatston evaluation                [PENDING]
+Stage 5  ROI Cropping & TotalSegmentator Masking [COMPLETE]
+Stage 6  nnU-Net + Hybrid Attention comparison   [PENDING]
+Stage 7  Soft Agatston evaluation                [PENDING]
 ```
 
 ---
@@ -46,7 +47,7 @@ Expected structure after download:
 # Clone and enter repo
 git clone <repo_url>
 cd PrediCT-main
-git checkout soham/preprocessing-pipeline
+git checkout soham_segmentation
 
 # Create virtual environment
 python -m venv vmenv
@@ -106,7 +107,7 @@ Converts raw DICOM cardiac CT scans + XML polygon annotations into standardized 
 | Mask interpolator | `sitkNearestNeighbor` | Preserves binary labels |
 | Mask renderer | `cv2.fillPoly` | Integer pixel grid |
 | HU window | **EXPERIMENTAL** | See open decisions below |
-| TotalSegmentator | Disabled | Optional cardiac ROI masking |
+| TotalSegmentator | Enabled | Cardiac ROI masking via `generate_roi_cropped_dataset.py` |
 
 **Output per patient:**
 ```
@@ -205,7 +206,7 @@ These are unresolved and require ablation runs. **None block the baseline traini
 | 2 | Patient 263 — fixable XML edge case or corrupt DICOM? | Inspect manually |
 | 3 | 2 additional error patients (IDs unknown) — confirm with Rajat | Pending |
 | 4 | Patch sampling ratio: `pos=1, neg=1` vs `pos=1, neg=3` | Tune during training |
-| 5 | TotalSegmentator cardiac ROI masking — enable after baseline | Post-baseline |
+| 5 | TotalSegmentator cardiac ROI masking — enable after baseline | ✅ Completed |
 
 ---
 
@@ -224,7 +225,8 @@ PrediCT-main/
 │   │   ├── COCA_processor.py     ← COCAProcessor class
 │   │   ├── COCA_processor_main.py← Entry point, runs preprocessing
 │   │   ├── cleanup_patient.py    ← Filter 787→447 clean patients
-│   │   └── split_dataset.py      ← 70/15/15 patient-level split
+│   │   ├── split_dataset.py      ← 70/15/15 patient-level split
+│   │   └── generate_roi_cropped_dataset.py ← TotalSegmentator ROI masking
 │   ├── analysis/
 │   │   ├── __init__.py
 │   │   └── eda.py                ← 6-panel EDA figure
@@ -234,19 +236,20 @@ PrediCT-main/
 │   │   └── xml_vs_mask_comparison_v3.py    ← 5-col limitation slides
 │   └── training/
 │       ├── __init__.py
-│       └── Train_3D_Unet_Binery.py         ← [COMPLETE]
+│       ├── Train_3D_Unet_Binery.py         ← Baseline Training
+│       └── Train_3D_Unet_ROI.py            ← ROI Cropped Training
+├── Results/                      ← Training logs, config, best models
+│   ├── approach1_binary/         ← 3D UNet Baseline results
+│   └── approach1_roi_cropped/    ← 3D UNet with Cardiac ROI Cropping results
 ├── docs/
 │   ├── progress_report.md        ← Full written report
+│   ├── Approach2_Analysis.md     ← Approach 2 comparative analysis
+│   ├── Artifacts/                ← Interactive HTML artifacts
+│   ├── Analysis/                 ← fillpoly vs xml real comparisons
 │   └── figures/
 │       ├── eda_full_dataset.png
-│       ├── v3_P0_z034.png
-│       ├── v3_P1_z012.png
-│       ├── v3_P1_z019.png
-│       ├── v3_P10_z009.png
-│       ├── v3_P10_z010.png
-│       ├── 2740d96a230c_mask_check.png
-│       ├── fd14b377bebc_mask_check.png
-│       └── c3be56167c58_mask_check.png
+│       ├── Mask vs XML/          ← XML boundary vs fillPoly visualisations
+│       └── ROI Crop/             ← TotalSegmentator overlay examples
 └── data_canonical/               ← NOT pushed (see .gitignore)
     ├── images/<scan_id>/         ← NIfTI volumes + masks
     └── tables/                   ← CSV + parquet splits
@@ -257,6 +260,8 @@ PrediCT-main/
 ## Next Steps (Midterm — July 10)
 
 - [x] `src/training/Train_3D_Unet_Binery.py` — 3D UNet baseline on GCP L4 VM (Mean Dice 0.61, Median 0.69)
+- [x] `src/training/Train_3D_Unet_ROI.py` — 3D UNet with TotalSegmentator ROI Cropping
+- [x] Comparative results & HTML Artifacts added
 - [x] Foreground-biased patch sampling (`RandCropByPosNegLabeld`)
 - [ ] HU window ablation — `[-150, 350]` vs `[100, 1000]`
 - [ ] Validation Dice score ≥ 0.65 (acceptable) / ≥ 0.75 (strong)

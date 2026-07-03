@@ -10,10 +10,26 @@
 | 1 | DICOM + XML → NIfTI + masks | ✅ Complete | 787 NIfTI pairs |
 | 2 | Exploratory Data Analysis | ✅ Complete | `docs/figures/eda_full_dataset.png` |
 | 3 | Dataset cleaning + splitting | ✅ Complete | 313 / 67 / 67 |
-| 4 | Limitation analysis (fillPoly vs XML) | ✅ Complete | 5 comparison figures |
+| 4 | Limitation analysis (fillPoly vs XML) | ✅ Complete | 5 comparison figures, CSV analysis |
 | 5 | 3D UNet baseline training | ✅ Complete | Mean Dice 0.61, Median 0.69 |
-| 6 | nnU-Net + Hybrid Attention | ⏳ Pending | Comparison table |
-| 7 | Soft Agatston evaluation | ⏳ Pending | Core research contribution |
+| 6 | Cardiac ROI Cropping Simulation & Training | ✅ Complete | Results in `approach1_roi_cropped/` |
+| 7 | nnU-Net + Hybrid Attention | ⏳ Pending | Comparison table |
+| 8 | Soft Agatston evaluation | ⏳ Pending | Core research contribution |
+
+---
+
+## Model Performance & Improvements
+
+Transitioning from full CT scans to cardiac ROI-cropped scans (along with the removal of the anomaly patient `fc53a04c4dd5`) yielded substantial improvements in segmentation accuracy and training efficiency.
+
+| Approach | Setup | Mean Dice | Median Dice | Total Training Time |
+|----------|-------|-----------|-------------|---------------------|
+| **Approach 1 Baseline** | Full CT, native masks | 0.6097 | 0.6916 | 284.6 min |
+| **Approach 1 ROI Cropped** | TotalSegmentator Heart ROI + anomaly excluded | 0.6524 | 0.7466 | 105.4 min |
+
+**Key Takeaways:**
+- **Accuracy Boost:** Mean Dice improved by ~0.043 and Median Dice by ~0.055, driven by eliminating false positives in non-cardiac structures.
+- **Efficiency:** Total training time dropped by over 60% despite running more epochs, due to significantly smaller input volumes.
 
 ---
 
@@ -96,7 +112,7 @@ Model converges to predicting all-zero with near-perfect BCE loss.
 | 2 | Patient 263 — fixable or permanently exclude? | MEDIUM |
 | 3 | 2 unknown error patients — confirm IDs with Rajat | MEDIUM |
 | 4 | Patch sampling ratio `pos:neg` — tune during training | LOW |
-| 5 | TotalSegmentator ROI masking — enable after baseline | LOW |
+| 5 | TotalSegmentator ROI masking — enable after baseline | ✅ COMPLETED |
 
 ---
 
@@ -105,5 +121,6 @@ Model converges to predicting all-zero with near-perfect BCE loss.
 | Figure | Description |
 |--------|-------------|
 | `eda_full_dataset.png` | 6-panel EDA: distribution, burden, spacing |
-| `v3_P*_z*.png` | 5-column comparison: CT / fillPoly / XML / Overlay / Error map |
-| `*_mask_check.png` | Per-patient calcium mask verification |
+| `Mask vs XML/*.png` | 5-column comparison: CT / fillPoly / XML / Overlay / Error map |
+| `ROI Crop/*.png` | TotalSegmentator ROI Cropping Overlay examples |
+| `docs/Artifacts/*.html` | Interactive HTML visualisations (Simulation, Metrics) |
