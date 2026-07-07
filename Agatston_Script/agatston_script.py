@@ -145,14 +145,18 @@ def calculate_agatston(ct_path: str, mask_path: str) -> dict:
         ct_slice   = ct_arr[z]    # (y, x) float32
         mask_slice = mask_arr[z]  # (y, x) uint8
 
+        assert ct_slice.shape == mask_slice.shape, f"Slice shape mismatch at z={z}: {ct_slice.shape} vs {mask_slice.shape}"
+
         # Skip empty slices fast
         if not mask_slice.any():
+            # print(f"! Skipping slice {z} (no calcium)")
             continue
 
         # Label connected components in this slice
         labeled, n_components = label(mask_slice)
 
         if n_components == 0:
+            # print(f"? Skipping slice {z} (no labeled components)")
             continue
 
         slice_score      = 0.0
@@ -166,6 +170,7 @@ def calculate_agatston(ct_path: str, mask_path: str) -> dict:
             # < 1 mm² → noise / partial volume, skip
             area_mm2 = comp_mask.sum() * pixel_area_mm2
             if area_mm2 < 1.0:
+                # print(f"# Skipping lesion in slice {z} with area {area_mm2:.4f} mm² (< 1 mm²)")
                 continue
 
             # ── Peak HU in this lesion ────────────────────────────
@@ -175,6 +180,7 @@ def calculate_agatston(ct_path: str, mask_path: str) -> dict:
             weight = _density_weight(peak_hu)
             if weight == 0:
                 # Mask contains sub-130 HU voxels — skip gracefully
+                print(f"& Skipping lesion in slice {z} with peak HU {peak_hu:.2f} (< 130 HU)")
                 continue
 
             # ── Lesion score ──────────────────────────────────────

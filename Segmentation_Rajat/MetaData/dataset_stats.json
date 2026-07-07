@@ -1,66 +1,66 @@
 {
   "dataset": {
-    "total_scans": 50,
-    "cac_positive": 28,
-    "cac_negative": 22,
-    "cac_positive_pct": 56.0,
-    "cac_negative_pct": 44.0,
-    "agatston_total_mean": 1.39,
-    "agatston_total_median": 0.038,
-    "agatston_total_max": 13.672,
-    "agatston_total_std": 2.946
+    "total_scans": 448,
+    "cac_positive": 448,
+    "cac_negative": 0,
+    "cac_positive_pct": 100.0,
+    "cac_negative_pct": 0.0,
+    "agatston_total_mean": 429.825,
+    "agatston_total_median": 113.535,
+    "agatston_total_max": 5770.008,
+    "agatston_total_std": 782.341
   },
   "splits": {
     "train": {
-      "n": 35,
-      "cac_positive": 20,
-      "cac_negative": 15,
-      "pos_pct": 57.14
+      "n": 391,
+      "cac_positive": 391,
+      "cac_negative": 0,
+      "pos_pct": 100.0
     },
     "val": {
-      "n": 7,
-      "cac_positive": 4,
-      "cac_negative": 3,
-      "pos_pct": 57.14
+      "n": 32,
+      "cac_positive": 32,
+      "cac_negative": 0,
+      "pos_pct": 100.0
     },
     "test": {
-      "n": 8,
-      "cac_positive": 4,
-      "cac_negative": 4,
-      "pos_pct": 50.0
+      "n": 25,
+      "cac_positive": 25,
+      "cac_negative": 0,
+      "pos_pct": 100.0
     }
   },
   "image_level": {
     "sampled_n": 20,
     "spacing_mm": {
-      "mean": 1.2393,
-      "min": 1.1589,
-      "max": 1.2865
+      "mean": 1.25,
+      "min": 1.25,
+      "max": 1.25
     },
     "volume_voxels": {
-      "mean": 358.5,
-      "min": 355.0,
-      "max": 365.3333
+      "mean": 364.9167,
+      "min": 297.0,
+      "max": 451.0
     },
     "hu_min": {
-      "mean": -1223.9,
-      "min": -3024.0,
-      "max": -1022.0
+      "mean": -1023.1,
+      "min": -1024.0,
+      "max": -1012.0
     },
     "hu_mean": {
-      "mean": -336.6549,
-      "min": -952.0107,
-      "max": -178.3228
+      "mean": -244.9637,
+      "min": -366.2437,
+      "max": -133.3353
     },
     "hu_max": {
-      "mean": 1798.35,
-      "min": 1104.0,
+      "mean": 1753.65,
+      "min": 1094.0,
       "max": 3071.0
     },
     "hu_std": {
-      "mean": 484.7718,
-      "min": 358.0074,
-      "max": 1199.8549
+      "mean": 394.6306,
+      "min": 319.9622,
+      "max": 444.1961
     }
   },
   "hu_window": {
@@ -69,7 +69,7 @@
     "justification": "Cardiac soft-tissue window [-150, 350] HU. Covers myocardium (50-80), blood pool (30-45), pericardial fat (-30 to -100), vessel walls (~200). Excludes lung/bone noise from a thoracic window [-500, 1300]."
   },
   "class_imbalance": {
-    "neg_to_pos_ratio": 0.79,
+    "neg_to_pos_ratio": 0.0,
     "mitigation": "Stratified train/val/test splits preserve CAC+/- ratio. Consider pos_weight in BCE loss or oversampling CAC+ during training."
   }
 }

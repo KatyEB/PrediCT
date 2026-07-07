@@ -96,8 +96,8 @@ class COCAResampler:
 
                 # 5. Update CSV with new paths
                 df.loc[df['scan_id'] == scan_id, 'resampled_image_path'] = str(resampled_folder / f"{scan_id}_img.nii.gz")
-                df.loc[df['scan_id'] == scan_id, 'resampled_binary_seg_path'] = str(resampled_folder / f"{scan_id}_seg.nii.gz")
-                df.loc[df['scan_id'] == scan_id, 'resampled_multi_label_seg_path'] = str(resampled_folder / f"{scan_id}_multi_label_seg.nii.gz")    
+                df.loc[df['scan_id'] == scan_id, 'resampled_binary_seg_path'] = str(resampled_folder / f"{scan_id}_binary_seg.nii.gz")
+                df.loc[df['scan_id'] == scan_id, 'resampled_multi_label_seg_path'] = str(resampled_folder / f"{scan_id}_multi_seg.nii.gz")    
 
             except Exception as e:
                 print(f"  [ERROR] Failed to resample {scan_id}: {e}")

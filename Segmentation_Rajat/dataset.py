@@ -4,6 +4,7 @@ import numpy as np
 import torch
 from pathlib import Path
 from torch.utils.data import WeightedRandomSampler
+
 from monai.data import (
     Dataset,
     CacheDataset,
@@ -24,9 +25,14 @@ from monai.transforms import (
     RandGaussianNoised,
     RandAdjustContrastd,
     RandShiftIntensityd,
+    RandAffined,
+    Rand3DElasticd,
+    RandGaussianSmoothd,
     EnsureTyped,
     ToTensord,
 )
+from monai.transforms import MapTransform
+from monai.data import PersistentDataset
 
 sys.path.append(str(Path(__file__).parent))
 import config
@@ -39,105 +45,251 @@ NUM_WORKERS = config.dataloader_config["NUM_WORKERS"]
 HU          = config.HU_CONFIG
 
 
+ADD_COORD_CHANNELS = config.dataloader_config["ADD_COORD_CHANNELS"]
+DO_HEART_ROI_MASKING = config.dataloader_config["HEART_MASK_FLAG"]
+ADD_HEART_MASK_CHANNEL = config.dataloader_config["ADD_HEART_MASK_CHANNEL"]
+COORD_MODE = config.dataloader_config["COORD_MODE"]
+
+# ── Patch size ────────────────────────────────────────────────────
+# (96,128,96)  → safe for 8-12GB VRAM,  batch_size=2
+# (112,160,128)→ nnU-Net native,         needs 24GB VRAM, batch_size=2
+
+ROI_SIZE = (128, 128, 35)
+
 # For Caching we will go with Persisten Cahcing, where we store the deterministic transforms on disk, and load them into memory during training. This is more efficient than caching in memory for large datasets, and allows us to reuse the cached data across multiple runs.
 # So Assuming Float32 images and Binary labels, we can estimate the cache size as follows:
 # Each scan is Worst case 300x300x60x4 bytes(float 32) = 21.6MB for image + 300x300x60x1 byte(uint8) = 5.4MB for label → ~27MB per scan.
 # 27MB x 789 scans = ~21.3GB total cache size if we cache everything.
+
+# ══════════════════════════════════════════════════════════════════
+#  ADDITION OF CHANNELS (HEART MASK, COORD CONV)
+# ══════════════════════════════════════════════════════════════════
+
+class AddHeartMaskChanneld(MapTransform):
+    def __init__(
+        self,
+        image_key="image",
+        roi_key="roi_mask",
+    ):
+        super().__init__([image_key, roi_key])
+        self.image_key = image_key
+        self.roi_key = roi_key
+
+    def __call__(self, data):
+        d = dict(data)
+
+        img = d[self.image_key]
+        roi = (d[self.roi_key] > 0).astype(img.dtype)
+
+        d[self.image_key] = np.concatenate(
+            [img, roi],
+            axis=0,
+        )
+
+        return d
+    
+class DualHUWindowingd(MapTransform):
+    def __init__(self, image_key="image"):
+        super().__init__([image_key])
+        self.image_key = image_key
+
+    def __call__(self, data):
+        d = dict(data)
+
+        img = d[self.image_key]
+
+        # Tissue window [-100, 400]
+        tissue = np.clip(img, -100.0, 400.0)
+        tissue = (tissue + 100.0) / 500.0
+
+        # Calcium window [130, 1000]
+        calcium = np.clip(img, 130.0, 1000.0)
+        calcium = (calcium - 130.0) / (1000.0 - 130.0)
+
+        d[self.image_key] = np.concatenate(
+            [tissue, calcium],
+            axis=0
+        ).astype(np.float32)
+
+        return d
+
+# Right now we are doing PIXEL CO-ORD CONVULTION WITH REALTIVE ENCODING
+class AddCoordConvChannelsd(MapTransform):
+    def __init__(
+        self,
+        image_key="image",
+        normalized=True,
+    ):
+        super().__init__([image_key])
+        self.image_key = image_key
+        self.normalized = normalized
+
+    def __call__(self, data):
+
+        d = dict(data)
+
+        img = d[self.image_key]
+
+        _, D, H, W = img.shape
+
+        if self.normalized:
+
+            z = np.linspace(-1, 1, D, dtype=np.float32)
+            y = np.linspace(-1, 1, H, dtype=np.float32)
+            x = np.linspace(-1, 1, W, dtype=np.float32)
+
+        else:
+
+            z = np.arange(D, dtype=np.float32)
+            y = np.arange(H, dtype=np.float32)
+            x = np.arange(W, dtype=np.float32)
+
+        zz = np.broadcast_to(
+            z[:, None, None],
+            (D, H, W)
+        )
+
+        yy = np.broadcast_to(
+            y[None, :, None],
+            (D, H, W)
+        )
+
+        xx = np.broadcast_to(
+            x[None, None, :],
+            (D, H, W)
+        )
+
+        coords = np.stack(
+            [zz, yy, xx],
+            axis=0
+        )
+
+        d[self.image_key] = np.concatenate(
+            [img, coords],
+            axis=0
+        )
+
+        return d
 
 
 # ══════════════════════════════════════════════════════════════════
 #  TRANSFORMS
 # ══════════════════════════════════════════════════════════════════
 
-def get_transforms(mode: str) -> Compose:
-    """
-    MONAI transform pipeline for Project CAC segmentation.
 
-    ── Shared base (train + val + test) ─────────────────────────────
+class ApplyHeartROIMaskd(MapTransform):
+    def __init__(
+        self,
+        image_key="image",
+        roi_key="roi_mask",
+    ):
+        super().__init__([image_key, roi_key])
+        self.image_key = image_key
+        self.roi_key = roi_key
 
-    Orientationd → RAS:
-      Reorients all volumes to standard RAS (Right-Anterior-Superior).
-      COCA scans may have different orientations across patients.
-      Without this, flipping augmentations are anatomically inconsistent
-      e.g. left/right flip would mean different things per patient.
-      Always apply before Spacingd.
+    def __call__(self, data):
+        d = dict(data)
 
-    ScaleIntensityRanged → HU window -500 to +1300:
-      WL=400, WW=1800 — cardiac CAC optimized.
-      Captures: calcium (130-1000 HU), myocardium (40-80 HU),
-                blood pool (30-45 HU), pericardial fat (-100 HU).
-      Clips and normalizes to [0.0, 1.0] for network input.
+        img = d[self.image_key]
+        roi = d[self.roi_key]
 
-    CropForegroundd (margin=10):
-      Removes large empty air borders before patch extraction.
-      source_key="image" → crops based on non-zero image region.
-      margin=10 voxels → heart never accidentally cropped out.
-      Reduces volume size → faster patch sampling + less VRAM.
+        roi = (roi > 0).astype(img.dtype)
 
-    ── Train only ───────────────────────────────────────────────────
+        d[self.image_key] = img * roi
 
-    RandCropByPosNegLabeld (pos=2, neg=1, num_samples=2):
-      Foreground-biased patch sampling.
-      pos=2, neg=1 → 2/3 patches contain heart voxels.
-      Prevents degenerate all-background prediction.
-      num_samples=2 → 2 patches per scan per epoch.
-      With 14 train scans × 2 = 28 patches/epoch — enough.
+        return d
 
-    Geometric augmentations (image + label jointly):
-      RandFlip ×3: safe — heart has no orientation constraint in CT.
-      RandRotate90: cardiac CT orientation varies across scanners.
-      RandZoom 0.85-1.15: simulates patient size + FOV variation.
-      Applied to image AND label simultaneously → spatial alignment.
+def get_transforms(mode: str):
 
-    Intensity augmentations (image only):
-      GaussianNoise: electronic noise variation across scanners.
-      AdjustContrast: reconstruction kernel differences in COCA.
-      ShiftIntensity: scanner calibration drift between sites.
-    """
-    assert mode in ("train", "val", "test"), \
-        f"mode must be train/val/test, got '{mode}'"
+    load_keys = ["image", "label"]
 
-    base = [
+    if DO_HEART_ROI_MASKING or ADD_HEART_MASK_CHANNEL:
+        load_keys.append("roi_mask")
+
+    base = []
+
+    # Load
+    base.append(
         LoadImaged(
-            keys=["image", "label"],
+            keys=load_keys,
             image_only=False,
-        ),
-        EnsureChannelFirstd(keys=["image", "label"]),
+        )
+    )
 
-        # Reorient to RAS before any spatial transforms
-        Orientationd(keys=["image", "label"], axcodes="RAS"),
+    # Ensure channel first
+    base.append(
+        EnsureChannelFirstd(keys=load_keys)
+    )
 
-        # Alreayd we have 1mm isotropic spacing, but ensure consistent resampling across all scans
-        # Spacingd must come after Orientationd to ensure consistent resampling
-        # Resample to 1.0mm isotropic
-        Spacingd(
-            keys=["image", "label"],
-            pixdim=(1.0, 1.0, 1.0),
-            mode=("bilinear", "nearest"),
-        ),
+    # DUAL HU WINDOWING! 
 
-        # HU windowing → normalize to [0, 1]
-        ScaleIntensityRanged(
-            keys=["image"],
-            a_min=HU["A_MIN"],    # -500
-            a_max=HU["A_MAX"],    # +1300
-            b_min=0.0,
-            b_max=1.0,
-            clip=True,
-        ),
+    base.append(
+        DualHUWindowingd(
+            image_key="image"
+        )
+    )
+    
+    # Add heart mask as extra channel
+    if ADD_HEART_MASK_CHANNEL:
+        base.append(
+            AddHeartMaskChanneld(
+                image_key="image",
+                roi_key="roi_mask",
+            )
+        )
 
-        # Crop tight around foreground
+    # Add CoordConv channels
+    if ADD_COORD_CHANNELS:
+        base.append(
+            AddCoordConvChannelsd(
+                image_key="image",
+                normalized=(COORD_MODE == "normalized"),
+            )
+        )
+
+    # # Resample to isotropic spacing
+    # base.append(
+    #     Spacingd(
+    #         keys=["image", "label"],
+    #         pixdim=(1.0, 1.0, 1.0),
+    #         mode=("bilinear", "nearest"),
+    #     )
+    # ) # already resampled before passing 
+
+    # Reorient to RAS
+    base.append(
+        Orientationd(
+            keys=load_keys,
+            axcodes="RAS",
+        )
+    )
+
+    # Apply heart ROI masking if enabled
+    if DO_HEART_ROI_MASKING:
+        base.append(
+            ApplyHeartROIMaskd(
+                image_key="image",
+                roi_key="roi_mask",
+            )
+        )
+
+    # Crop around foreground
+    base.append(
         CropForegroundd(
-            keys=["image", "label"],
+            keys=load_keys,
             source_key="image",
-            margin=10,
-        ),
+            margin=5,
+        )
+    )
 
-        EnsureTyped(keys=["image", "label"]),
-    ]
+    base.append(
+        EnsureTyped(keys=load_keys)
+    )
 
     if mode == "train":
+
         aug = [
+
             # Foreground-biased patch sampling
             RandCropByPosNegLabeld(
                 keys=["image", "label"],
@@ -150,58 +302,99 @@ def get_transforms(mode: str) -> Compose:
                 image_threshold=0,
             ),
 
-            # Geometric — image + label together
+            # Anatomically valid flips
             RandFlipd(
                 keys=["image", "label"],
-                prob=0.5, spatial_axis=0),
-            RandFlipd(
-                keys=["image", "label"],
-                prob=0.5, spatial_axis=1),
-            RandFlipd(
-                keys=["image", "label"],
-                prob=0.5, spatial_axis=2),
-            RandRotate90d(
-                keys=["image", "label"],
-                prob=0.3, max_k=3),
-            RandZoomd(
-                keys=["image", "label"],
-                prob=0.3,
-                min_zoom=0.85,
-                max_zoom=1.15,
-                mode=["trilinear", "nearest"],
+                prob=0.5,
+                spatial_axis=0,
             ),
 
-            # Intensity — image only
-            RandGaussianNoised(
-                keys=["image"], prob=0.2, std=0.01),
-            RandAdjustContrastd(
-                keys=["image"], prob=0.3, gamma=(0.7, 1.5)),
-            RandShiftIntensityd(
-                keys=["image"], prob=0.3, offsets=0.1),
+            RandFlipd(
+                keys=["image", "label"],
+                prob=0.5,
+                spatial_axis=1,
+            ),
 
-            ToTensord(keys=["image", "label"]),
+            RandFlipd(
+                keys=["image", "label"],
+                prob=0.5,
+                spatial_axis=2,
+            ),
+
+            # Small realistic geometric perturbations
+            RandAffined(
+                keys=["image", "label"],
+                prob=0.2,
+                rotate_range=(0.1, 0.1, 0.1),  # ~6 degrees
+                scale_range=(0.05, 0.05, 0.05),
+                mode=("bilinear", "nearest"),
+            ),
+
+            # Conservative elastic deformation
+            Rand3DElasticd(
+                keys=["image", "label"],
+                prob=0.15,
+                sigma_range=(4, 6),
+                magnitude_range=(0.5, 1.5),
+                mode=("bilinear", "nearest"),
+            ),
+
+            # Simulated scanner blur / reconstruction variability
+            RandGaussianSmoothd(
+                keys=["image"],
+                prob=0.2,
+                sigma_x=(0.25, 0.75),
+                sigma_y=(0.25, 0.75),
+                sigma_z=(0.25, 0.75),
+            ),
+
+            # Low-dose CT style noise
+            RandGaussianNoised(
+                keys=["image"],
+                prob=0.25,
+                std=0.015,
+            ),
+
+            # Gamma / contrast augmentation
+            RandAdjustContrastd(
+                keys=["image"],
+                prob=0.3,
+                gamma=(0.7, 1.5),
+            ),
+
+            # Small HU calibration shifts
+            RandShiftIntensityd(
+                keys=["image"],
+                prob=0.3,
+                offsets=0.05,
+            ),
+
+            ToTensord(
+                keys=["image", "label"]
+            ),
         ]
+
         return Compose(base + aug)
 
-    # Val/Test — no augmentation, no patching, full volume
-    return Compose(base + [ToTensord(keys=["image", "label"])])
+    # Validation / Test
+    return Compose(
+        base + [
+            ToTensord(keys=["image", "label"])
+        ]
+    )
 
 
 # ══════════════════════════════════════════════════════════════════
 #  DATASET CLASS
 #
-#  Uses CacheDataset — NOT plain Dataset.
+#  PersistentDataset is a MONAI dataset that caches transformed data on disk.
+#  We will need some where around 30GBs of disk space from my estimate
 #
-#  Why CacheDataset with 20 scans?
-#    Loading + resampling one NIfTI to 1.5mm isotropic takes ~2-3s.
-#    With 14 train scans × 100 epochs = 1400 loads from disk.
-#    With caching:  1400 loads → 14 loads (epoch 1) + 1386 from RAM.
-#    Time saved: ~1386 × 2.5s = ~58 minutes of IO eliminated.
-#    At cache_rate=1.0 with 20 scans, ~1.5GB RAM used — totally safe.
-
 # ══════════════════════════════════════════════════════════════════
 
-class CacSegDataset(CacheDataset):
+from monai.data import PersistentDataset
+
+class CacSegDataset(PersistentDataset):
     """
     Args:
         data  : list of dicts with "image", "label", "id"
@@ -209,26 +402,27 @@ class CacSegDataset(CacheDataset):
     """
 
     def __init__(self, data: list, mode: str):
-        n          = len(data)
+        n = len(data)
 
         print(f"   [{mode:5s}] {n} scans | "
               f"cache_method: Persistent | "
               f"roi={ROI_SIZE if mode=='train' else 'full volume'}")
+        
+        parent_dir = Path(__file__).parent
 
         super().__init__(
             data=data,
             transform=get_transforms(mode),
-            cache_dir="./monai_cache",
-            num_workers=NUM_WORKERS,
+            cache_dir=f"{parent_dir}/monai_cache",
         )
         self.mode      = mode
         self.data_list = data
 
-    def __repr__(self) -> str:
+    def __repr__(self):
         return (
             f"CAC_Seg_Dataset("
-            f"mode={self.mode}, "
-            f"n={len(self.data_list)}, "
+            f"mode='{self.mode}', "
+            f"n={len(self.data_list)})"
         )
 
 
@@ -238,25 +432,36 @@ class CacSegDataset(CacheDataset):
 
 def make_weighted_sampler(train_data: list) -> WeightedRandomSampler:
     """
-    Balance heart size categories during training.
+    Balance scans based on Agatston availability.
 
-    Your current train set:
-      size_cat=0 (Small  <550ml) : 4 scans
-      size_cat=1 (Medium 550-800): 10 scans
-      size_cat=2 (Large  >800ml) : 0 scans
-
-    Without sampler: model sees medium hearts 71% of the time.
-    With sampler:    each category sampled equally → better generalization.
+    agatston_available=0 -> no score available
+    agatston_available=1 -> score available
     """
-    cats         = [d["size_cat"] for d in train_data]
-    class_counts = np.bincount(cats, minlength=3).astype(float)
-    class_counts  = np.where(class_counts == 0, 1.0, class_counts)
-    weights       = 1.0 / class_counts[cats]
 
-    print(f"\n   WeightedSampler — "
-          f"Small(0): {int(class_counts[0])}  "
-          f"Med(1): {int(class_counts[1])}  "
-          f"Large(2): {int(class_counts[2])}")
+    classes = [
+        int(d.get("agatston_available", 0))
+        for d in train_data
+    ]
+
+    class_counts = np.bincount(
+        classes,
+        minlength=2,
+    ).astype(float)
+
+    # avoid divide-by-zero
+    class_counts = np.where(
+        class_counts == 0,
+        1.0,
+        class_counts,
+    )
+
+    weights = 1.0 / class_counts[classes]
+
+    print(
+        "\n   WeightedSampler — "
+        f"NoAgatston(0): {int(class_counts[0])}  "
+        f"HasAgatston(1): {int(class_counts[1])}"
+    )
 
     return WeightedRandomSampler(
         weights=torch.DoubleTensor(weights),
@@ -288,7 +493,7 @@ def build_dataloaders(splits_json: str = SPLITS_JSON):
     n_val   = len(splits["val"])
     n_test  = len(splits["test"])
 
-    print(f"\n📦 Building HeartSegDatasets")
+    print("\n📦 Building CACSegDatasets")
     print(f"   Splits : {splits_json}")
     print(f"   ROI    : {ROI_SIZE}")
     print(f"   Batch  : {BATCH_SIZE}\n")
@@ -350,41 +555,140 @@ if __name__ == "__main__":
 
     train_loader, val_loader, test_loader = build_dataloaders()
 
-    print(f"\n🔍 Loading one training batch...")
-    print(f"   (First load triggers caching — may take 30-60s)\n")
+    print("\n🔍 Loading one training batch...")
+    print("   (First load triggers caching — may take 30-60s)\n")
 
     batch = next(iter(train_loader))
-    img   = batch["image"]
-    lbl   = batch["label"]
+    batch = next(iter(train_loader))
+    batch = next(iter(train_loader))
 
-    print(f"\n   image shape  : {list(img.shape)}")
-    print(f"   label shape  : {list(lbl.shape)}")
-    print(f"   image dtype  : {img.dtype}")
-    print(f"   image min    : {img.min():.4f}")
-    print(f"   image max    : {img.max():.4f}")
-    print(f"   label unique : {lbl.unique().tolist()}")
-    print(f"   label sum    : {int(lbl.sum())} foreground voxels")
 
-    # ── Sanity checks ─────────────────────────────────────────────
+    img = batch["image"]
+    lbl = batch["label"]
+
+    print(f"\n   image shape      : {list(img.shape)}")
+    print(f"   label shape      : {list(lbl.shape)}")
+    print(f"   image dtype      : {img.dtype}")
+    print(f"   image min        : {img.min():.4f}")
+    print(f"   image max        : {img.max():.4f}")
+    print(f"   label unique     : {lbl.unique().tolist()}")
+    print(f"   label sum        : {int(lbl.sum())} foreground voxels")
+
+    # ---------------------------------------------------------
+    # Channel verification
+    # ---------------------------------------------------------
+
+    expected_channels = 2  # Dual HU windowing
+
+    if ADD_HEART_MASK_CHANNEL:
+        expected_channels += 1
+
+    if ADD_COORD_CHANNELS:
+        expected_channels += 3
+
+    print(f"   image channels   : {img.shape[1]}")
+    print(f"   expected channels: {expected_channels}")
+
+    # ---------------------------------------------------------
+    # Sanity checks
+    # ---------------------------------------------------------
+
     errors = []
-    if img.min() < -0.01:
-        errors.append(f"image min {img.min():.4f} < 0 — HU window broken")
-    if img.max() > 1.01:
-        errors.append(f"image max {img.max():.4f} > 1 — HU window broken")
-    if not set(lbl.unique().numpy().flatten().tolist())\
-            .issubset({0.0, 1.0}):
-        errors.append(f"label not binary: {lbl.unique().tolist()}")
-    if lbl.sum() == 0:
-        errors.append("label all zeros — check heart_mask paths")
+
+    # Shape checks
+    if img.shape[1] != expected_channels:
+        errors.append(
+            f"Expected {expected_channels} channels "
+            f"but got {img.shape[1]}"
+        )
+
     if list(img.shape[-3:]) != list(ROI_SIZE):
         errors.append(
-            f"patch shape {list(img.shape[-3:])} != ROI {list(ROI_SIZE)}")
+            f"patch shape {list(img.shape[-3:])} "
+            f"!= ROI {list(ROI_SIZE)}"
+        )
+
+    # Image checks
+    if torch.isnan(img).any():
+        errors.append("NaNs found in image")
+
+    if torch.isinf(img).any():
+        errors.append("Infs found in image")
+
+    # Due to Gaussian it can happen 
+
+    # if img.min() < -0.01:
+    #     errors.append(
+    #         f"image min {img.min():.4f} < 0"
+    #     )
+
+    # if img.max() > 1.01:
+    #     errors.append(
+    #         f"image max {img.max():.4f} > 1"
+    #     )
+
+    # Label checks
+    label_values = set(
+        lbl.unique().cpu().numpy().tolist()
+    )
+
+    if not label_values.issubset({0, 1, 0.0, 1.0}):
+        errors.append(
+            f"label not binary: {sorted(label_values)}"
+        )
+
+    # ---------------------------------------------------------
+    # Heart mask verification
+    # ---------------------------------------------------------
+
+    if ADD_HEART_MASK_CHANNEL:
+
+        heart_idx = 2
+
+        heart_channel = img[:, heart_idx]
+
+        heart_unique = torch.unique(
+            heart_channel
+        ).cpu().numpy()
+
+        print(
+            f"   heart mask vals  : "
+            f"{heart_unique[:10]}"
+        )
+
+    # ---------------------------------------------------------
+    # Final report
+    # ---------------------------------------------------------
 
     if errors:
-        print(f"\n❌ Checks FAILED:")
+
+        print("\n❌ Checks FAILED:")
+
         for e in errors:
             print(f"   • {e}")
+
     else:
-        print(f"\n✅ All checks passed")
-        print(f"   Caching active — subsequent epochs will be fast")
-        print(f"   Ready → python common_task/train.py")
+
+        print("\n✅ All checks passed")
+
+        print(
+            f"   channels={expected_channels}"
+        )
+
+        print(
+            "   Dual HU windowing verified"
+        )
+
+        if ADD_HEART_MASK_CHANNEL:
+            print(
+                "   Heart-mask channel verified"
+            )
+
+        if ADD_COORD_CHANNELS:
+            print(
+                "   CoordConv channels verified"
+            )
+
+        print(
+            "   Persistent caching active"
+        )

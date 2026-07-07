@@ -18,6 +18,7 @@ ground_truth_config = {
 
 preprocessing_config = {
     "DATASET_CSV":   str("E:\MyProjects\Gsoc_2026_Official\data_resampled\dataset_resampled.csv"), # provdies address for resamplaed dataset path
+    "DATASET_FOR_DOB_SCV": str("E:/MyProjects/Gsoc_2026_Official/data_canonical/tables/scan_index.csv"), # provides address of data from where we intake feature to do DOB SCV
     "SPLITS_JSON": str(BASE_DIR / "MetaData" / "splits.json"), # path to save the splits json file
     "STATS_JSON":  str(BASE_DIR / "MetaData" / "dataset_stats.json"), # path to save the dataset statistics json file
     "VAL_SIZE":    0.15, # Val Percentage
@@ -31,12 +32,15 @@ add_heart_mask_channel = False
 
 dataloader_config = {
     "BATCH_SIZE":  1,               # safe for <12GB VRAM
-    "ROI_SIZE":    (96, 128, 96),    # 96^3 patches
+    "ROI_SIZE":    (128, 128, 35),    # 96^3 patches
     "CACHE_RATE":  1.0,             # auto-overridden by get_cache_rate()
     "NUM_WORKERS": 0,               # must be 0 on Windows
     "HEART_MASK_FLAG": do_heart_roi_masking, #     if True, dataloader will load heart masks and return as additional channel
     "ADD_HEART_MASK_CHANNEL": add_heart_mask_channel, # if True, dataloader will load heart masks and return as additional channel
     "HEART_MODEL_PATH": str(BASE_DIR / "LW_UNET_TVERSKY" / "best_model.pth"), # path to the pretrained heart segmentation model,
+    "ADD_COORD_CHANNELS": True, # if True, dataloader will add coordinate convolution channels to the input
+    "COORD_MODE": "normalized", # "normalized" or "absolute", only relevant if ADD_COORD_CHANNELS is True
+    "DUAL_HU_WINDOWING": True, # if True, then do DUAL HU WINDOWING
 }
 
 HU_CONFIG = {
