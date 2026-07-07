@@ -16,7 +16,7 @@
 
 **dataset.py** has been configured to include CoordConv channels, Heart ROI masks, Dual HU Windowing for both Calcium and Soft Tissue, and Persistent Caching to speed up training.
 
-** All global variables and hyperparameters can be tuned from `config.py` **
+**All global variables and hyperparameters can be tuned from `config.py**
 
 Ablation flags: `HEART_MASK_FLAG`, `ADD_HEART_MASK_CHANNEL`, `ADD_COORD_CHANNELS`, 'DUAL_HU_WINDOWING'
 
