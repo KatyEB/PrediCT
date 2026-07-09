@@ -21,16 +21,12 @@ from monai.transforms import (
 TEST_CSV = r"C:\SOHAM\coca_raw\cocacoronarycalciumandchestcts-2\data_canonical\tables\test_split.parquet"
 DATA_ROOT_FULL = r"C:\SOHAM\coca_raw\cocacoronarycalciumandchestcts-2\data_canonical\images"
 DATA_ROOT_ROI = r"C:\SOHAM\coca_raw\cocacoronarycalciumandchestcts-2\data_canonical\images_roi"
+DATA_ROOT_COV = r"C:\SOHAM\coca_raw\cocacoronarycalciumandchestcts-2\data_canonical\images_roi_cov"
 
 MODELS = {
-    "A1_Full_Volume": {
-        "weights": r"C:\SOHAM\runs\approach1_binary\best_model.pth",
-        "data_root": DATA_ROOT_FULL,
-        "is_roi": False
-    },
-    "A1_ROI_Cropped": {
-        "weights": r"C:\SOHAM\runs\approach1_roi_cropped\best_model.pth",
-        "data_root": DATA_ROOT_ROI,
+    "A3_Coverage": {
+        "weights": r"C:\SOHAM\runs\approach3_coverage\best_model.pth",
+        "data_root": DATA_ROOT_COV,
         "is_roi": True
     }
 }

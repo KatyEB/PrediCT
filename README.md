@@ -16,8 +16,12 @@ Stage 2  Exploratory data analysis               [COMPLETE]
 Stage 3  Dataset cleaning + train/val/test split [COMPLETE]
 Stage 4  3D UNet baseline training               [COMPLETE]
 Stage 5  ROI Cropping & TotalSegmentator Masking [COMPLETE]
-Stage 6  nnU-Net + Hybrid Attention comparison   [PENDING]
-Stage 7  Soft Agatston evaluation                [PENDING]
+Stage 6  Approach 3 (Soft Coverage) Training     [COMPLETE]
+Stage 7  Final Test Set Evaluation (Volume MAE)  [COMPLETE]
+Stage 8  Agatston score calculation              [PENDING]
+Stage 9  Agatston comparison (across approaches) [PENDING]
+Stage 10 Hybrid + Custom CNN approach (Results Impr.) [PENDING]
+Stage 11 Software deployment automation plan     [PENDING]
 ```
 
 ---
@@ -238,11 +242,15 @@ PrediCT-main/
 │       ├── __init__.py
 │       ├── Train_3D_Unet_Binery.py         ← Baseline Training
 │       └── Train_3D_Unet_ROI.py            ← ROI Cropped Training
+├── src/testing/
+│       └── evaluate_models.py              ← Test set evaluation script
 ├── Results/                      ← Training logs, config, best models
 │   ├── approach1_binary/         ← 3D UNet Baseline results
 │   └── approach1_roi_cropped/    ← 3D UNet with Cardiac ROI Cropping results
 ├── docs/
 │   ├── progress_report.md        ← Full written report
+│   ├── Final_Testing_Report.md   ← Test generalization & volumetric MAE
+│   ├── Approach3_Analysis.md     ← Approach 3 design and Soft Agatston
 │   ├── Approach2_Analysis.md     ← Approach 2 comparative analysis
 │   ├── Artifacts/                ← Interactive HTML artifacts
 │   ├── Analysis/                 ← fillpoly vs xml real comparisons
@@ -257,17 +265,19 @@ PrediCT-main/
 
 ---
 
-## Next Steps (Midterm — July 10)
+## Next Steps (Post-Midterm & Final)
 
-- [x] `src/training/Train_3D_Unet_Binery.py` — 3D UNet baseline on GCP L4 VM (Mean Dice 0.61, Median 0.69)
+- [x] `src/training/Train_3D_Unet_Binery.py` — 3D UNet baseline on GCP L4 VM
 - [x] `src/training/Train_3D_Unet_ROI.py` — 3D UNet with TotalSegmentator ROI Cropping
+- [x] Approach 3 Training and Testing
+- [x] Final Test Set Evaluation (Volume MAE & Bias Analysis)
 - [x] Comparative results & HTML Artifacts added
 - [x] Foreground-biased patch sampling (`RandCropByPosNegLabeld`)
 - [ ] HU window ablation — `[-150, 350]` vs `[100, 1000]`
-- [ ] Validation Dice score ≥ 0.65 (acceptable) / ≥ 0.75 (strong)
-- [ ] `src/evaluation/soft_agatston.py` — soft scorer implementation
-- [ ] XML Area extraction → `xml_agatston_gt.csv`
-- [ ] Agatston comparison table: binary vs soft vs XML ground truth
+- [ ] **Agatston Score Calculation:** Extract original XML area and predict soft/binary volumes.
+- [ ] **Agatston Score Comparison:** Evaluate standard Agatston error across Approaches 1 & 3 vs Ground Truth.
+- [ ] **Hybrid + Custom CNN Architecture:** Research and experiment with advanced models for further segmentation improvements (time permitting).
+- [ ] **Software Application Automation Plan:** Formulate a full deployment plan to automate the end-to-end clinical pipeline.
 
 ---
 
