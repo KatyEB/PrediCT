@@ -2,13 +2,13 @@
 ### GSoC 2026 @ ML4Sci | Building and Comparing Segmentation Strategies for Coronary Artery Calcium
 
 **Contributor:** Soham Jadhav &nbsp;|&nbsp; **Mentors:** Katy, Anna &nbsp;|&nbsp; **Co-contributor:** Rajat  
-**Midterm:** July 10, 2026 &nbsp;|&nbsp; **Final:** August 24, 2026
+**Midterm:** July 24, 2026 &nbsp;|&nbsp; **Final:** September 24, 2026
 
 ---
 
 ## What This Branch Contains
 
-This branch (`soham_segmentation`) covers **Stages 1–5** of the PrediCT pipeline:
+This branch (`soham_segmentation`) covers **Stages 1–10** of the PrediCT pipeline:
 
 ```
 Stage 1  DICOM + XML → NIfTI + binary masks     [COMPLETE]
@@ -48,7 +48,7 @@ Expected structure after download:
 ## Installation
 
 ```bash
-# Clone and enter repo
+# Clone and enter the repo
 git clone <repo_url>
 cd PrediCT-main
 git checkout soham_segmentation
