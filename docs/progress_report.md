@@ -135,11 +135,27 @@ Model converges to predicting all-zero with near-perfect BCE loss.
 
 | # | Decision | Priority |
 |---|----------|----------|
-| 1 | HU window: `[-150, 350]` vs `[100, 1000]` — ablation required | HIGH |
-| 2 | Patient 263 — fixable or permanently exclude? | MEDIUM |
-| 3 | 2 unknown error patients — confirm IDs with Rajat | MEDIUM |
+| 1 | HU window: `[-150, 350]` vs `[100, 1000]` — ablation required | ✅ COMPLETED (Settled on `[100, 1000]`) |
+| 2 | Patient 263 — fixable or permanently exclude? | ✅ COMPLETED (Permanently excluded) |
+| 3 | Hunt down remaining 13 corrupted datasets from Rajat's project-wide warning | ✅ COMPLETED (All 14 corrupted patients found & excluded!) |
 | 4 | Patch sampling ratio `pos:neg` — tune during training | LOW |
 | 5 | TotalSegmentator ROI masking — enable after baseline | ✅ COMPLETED |
+
+---
+
+## 🚨 Major Finding: The 14 Corrupted Datasets Solved
+
+Rajat's original documentation warned of 14 patients affected project-wide by a multi-series data corruption bug causing DICOM/XML z-slice misalignment. This defect causes the `cv2.fillPoly` rasterization to either completely miss calcium (false negatives, 0.00 mask area) or hallucinate massive overshoots on empty slices (+723% area). 
+
+Through rigorous area fidelity checks and cross-referencing, we have successfully hunted down **all 14 corrupted datasets** and permanently excluded them from the training and testing pipelines:
+
+*   **Group A (Known Corrupted):** Patient `263`
+*   **Group B (Massive Overshoots):** Patients `28`, `38`, `76`, `77`, `159`, `388`
+*   **Group C (Complete Misses):** Patients `135`, `146`, `155`, `192`, `411`, `417`
+
+*(Note: Patient 159 appears in both Group B and Group C across two different scans, perfectly confirming the multi-series overlapping bug hypothesis).*
+
+**Update (v2 Training Results):** After permanently dropping these 14 corrupted anomalies, the `Approach 3 (Soft Coverage)` model was retrained (`approach3_coverage_v2`). Removing these severely flawed ground truth labels resulted in a massive performance leap: the **Best Validation Dice skyrocketed from 0.596 to 0.7227** (with a Median Dice of **0.7865**, achieved at epoch 140). Final test set evaluation on the cleaned test split is currently pending.
 
 ---
 

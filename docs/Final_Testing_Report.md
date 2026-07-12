@@ -9,6 +9,7 @@ This report summarizes the performance of the baseline binary models (Approach 1
 | **A1_Full_Volume** | 0.610 | **0.640** |
 | **A1_ROI_Cropped** | 0.652 | **0.669** |
 | **A3_Coverage** | ~0.596 | **0.654** |
+| **A3_Coverage_v2** (Anomaly Free) | **0.7227** (Med: **0.7865**) | *Pending* |
 
 **Conclusion:** All models exhibit excellent generalization, with test scores slightly higher or comparable to validation scores. This indicates the models did not overfit the training data and perform robustly on entirely unseen scans.
 
