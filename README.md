@@ -252,6 +252,7 @@ PrediCT-main/
 │   ├── Final_Testing_Report.md   ← Test generalization & volumetric MAE
 │   ├── Approach3_Analysis.md     ← Approach 3 design and Soft Agatston
 │   ├── Approach2_Analysis.md     ← Approach 2 comparative analysis
+│   ├── FAQ.md                    ← Frequently Asked Questions (Data & Vis)
 │   ├── Artifacts/                ← Interactive HTML artifacts
 │   ├── Analysis/                 ← fillpoly vs xml real comparisons
 │   └── figures/

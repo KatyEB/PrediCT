@@ -25,7 +25,7 @@ DATA_ROOT_COV = r"C:\SOHAM\coca_raw\cocacoronarycalciumandchestcts-2\data_canoni
 
 MODELS = {
     "A3_Coverage": {
-        "weights": r"C:\SOHAM\runs\approach3_coverage\best_model.pth",
+        "weights": r"C:\SOHAM\runs\approach3_coverage_v2\best_model.pth",
         "data_root": DATA_ROOT_COV,
         "is_roi": True
     }
