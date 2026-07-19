@@ -190,7 +190,7 @@ def get_transforms(mode: str) -> Compose:
             # Axis flips: safe for cardiac CT (no handedness constraint)
             RandFlipd(keys=["image", "label"], prob=0.5, spatial_axis=0),
             RandFlipd(keys=["image", "label"], prob=0.5, spatial_axis=1),
-            RandFlipd(keys=["image", "label"], prob=0.5, spatial_axis=2),
+            RandFlipd(keys=["image", "label"], prob=0.5, spatial_axis=2 ),
 
             # 90° rotations: handles scanner orientation differences
             RandRotate90d(
@@ -417,6 +417,12 @@ def load_clean_and_pre_process(dataset_resampled_csv, config, max_files=None):
 
     df = pd.read_csv(dataset_resampled_csv)
 
+    no_pre_process_len = len(df)
+
+    if max_files is not None:
+        # Check we still have both classes before hard-slicing
+        print(f"\n⚠️  max_files={max_files} → using {no_pre_process_len} scans before preprocessing")
+
     print(
         f"\n📋 Loaded dataset_resampled.csv "
         f"— {len(df)} scans"
@@ -536,24 +542,6 @@ def load_clean_and_pre_process(dataset_resampled_csv, config, max_files=None):
         .reset_index(drop=True)
     )
 
-    # ── Cap AFTER validation so stratify has enough of both classes ──
-    if max_files is not None:
-        # Check we still have both classes before hard-slicing
-        available_pos = (df["agatston_total"] > 0).sum()
-        available_neg = (df["agatston_total"] == 0).sum()
-
-        # Proportionally sample to preserve class balance
-        pos_ratio = available_pos / len(df)
-        n_pos = max(1, int(max_files * pos_ratio))
-        n_neg = max(1, max_files - n_pos)
-
-        df_pos = df[df["agatston_total"] > 0].head(n_pos)
-        df_neg = df[df["agatston_total"] == 0].head(n_neg)
-        df = pd.concat([df_pos, df_neg]).sample(frac=1, random_state=SEED).reset_index(drop=True)
-
-        print(f"\n⚠️  max_files={max_files} → using {len(df)} scans "
-              f"(CAC+: {n_pos}, CAC-: {n_neg})")
-
     print(f"\n✅ Valid scans : {len(df)}")
 
 
@@ -608,6 +596,188 @@ def create_splits_dob_scv(dataset_df, features_csv_path, splits_json_path):
         Train : 70% (14/20 folds)
         Val   : 15% (3/20 folds)
         Test  : 15% (3/20 folds)
+    """
+    df = dataset_df.copy()
+    
+    # 1. Load the low-level clinical/structural features
+    feat_df = pd.read_csv(features_csv_path)
+    
+    feature_cols = [
+        'lesion_count', 
+        'agatston_rca', 
+        'agatston_left_coronary', 
+        'agatston_lad', 
+        'agatston_lcx'
+    ]
+    
+    # Ensure features match up perfectly with dataset_df using 'scan_id'
+    # This prevents misalignment if rows are ordered differently
+    df = df.merge(feat_df[['scan_id'] + feature_cols], on='scan_id', how='left')
+
+    print(f'CColumns: {df.columns.tolist()}')
+    
+    # Fill missing values if any scan lacked calcification profile info
+    df[feature_cols] = df[feature_cols].fillna(0)
+    
+    # 2. Setup internal 20-fold tracking for 70/15/15 assignment mapping
+    n_splits = 20
+    fold_indices = [[] for _ in range(n_splits)]
+    
+    # Stratify explicitly by presence/absence of calcium first
+    # ISSUE IS THAT HERE WE ARE SUPPOSED TO BIN THESE! 
+
+    def assign_risk_label(score):
+        if score < 10:
+            return 'Low Risk'
+        elif score < 100:
+            return 'Medium Risk'
+        elif score < 400:
+            return 'High Risk'
+        elif score < 1000:
+            return 'Very High Risk'
+        else:
+            return 'Extreme Risk'
+        
+    score_col = "agatston_total"
+
+    # Assign each scan to a risk category
+    df["risk_group"] = df[score_col].apply(assign_risk_label)
+
+    # Keep the categories ordered
+    df["risk_group"] = pd.Categorical(
+        df["risk_group"],
+        categories=[
+            "Low Risk",
+            "Medium Risk",
+            "High Risk",
+            "Very High Risk",
+            "Extreme Risk",
+        ],
+        ordered=True,
+    )
+
+    print(f"--- Loaded {len(df)} Patients from Scan Index ---")
+    print(df["risk_group"].value_counts().sort_index())
+    print("\n" + "=" * 50 + "\n")
+
+    # Process one risk group at a time
+    for c in df["risk_group"].cat.categories:
+
+        class_subset = df[df["risk_group"] == c]
+        class_idx = class_subset.index.values
+
+        if len(class_idx) == 0:
+            continue
+
+        # Extract features and scale them
+        feats = class_subset[feature_cols].values
+        scaler = StandardScaler()
+        feats_scaled = scaler.fit_transform(feats)
+
+        assigned = np.zeros(len(class_idx), dtype=bool)
+
+        # Determine neighborhood sizes
+        k_neighbors = min(n_splits, len(class_idx))
+        nn = NearestNeighbors(
+            n_neighbors=k_neighbors,
+            metric="euclidean"
+        )
+        nn.fit(feats_scaled)
+
+        for i in range(len(class_idx)):
+            if assigned[i]:
+                continue
+
+            remaining = len(class_idx) - np.sum(assigned)
+
+            _, indices = nn.kneighbors(
+                [feats_scaled[i]],
+                n_neighbors=min(n_splits, remaining)
+            )
+
+            indices = indices[0]
+
+            valid_indices = [
+                idx for idx in indices
+                if not assigned[idx]
+            ]
+
+            # Spread neighbors across folds
+            for fold_offset, idx in enumerate(valid_indices):
+                fold_id = fold_offset % n_splits
+                fold_indices[fold_id].append(class_idx[idx])
+                assigned[idx] = True
+
+    # 3. Aggregate the 20 internal buckets into target clinical ratios
+    # 14 folds (70%) -> Train | 3 folds (15%) -> Val | 3 folds (15%) -> Test
+    train_indices = []
+    val_indices = []
+    test_indices = []
+    
+    for f in range(20):
+        if f < 14:
+            train_indices.extend(fold_indices[f])
+        elif f < 17:
+            val_indices.extend(fold_indices[f])
+        else:
+            test_indices.extend(fold_indices[f])
+            
+    train_df = df.loc[train_indices].reset_index(drop=True)
+    val_df = df.loc[val_indices].reset_index(drop=True)
+    test_df = df.loc[test_indices].reset_index(drop=True)
+
+    # 4. Convert DataFrame -> MONAI dictionaries
+    def build_monai_dicts(split_df):
+        return [
+            {
+                "id": str(row.scan_id),
+                "image": str(row.image),
+                "label": str(row.label),
+                "roi_mask": str(row.roi_mask),
+                "agatston_total": float(row.agatston_total),
+                "agatston_available": int(row.agatston_available),
+            }
+            for row in split_df.itertuples()
+        ]
+
+    splits = {
+        "train": build_monai_dicts(train_df),
+        "val": build_monai_dicts(val_df),
+        "test": build_monai_dicts(test_df),
+    }
+
+    # Save
+    with open(splits_json_path, "w") as f:
+        json.dump(splits, f, indent=2)
+
+    # Summary Stats
+    print(f"\n✅ Saved DOB-SCV balanced splits → {splits_json_path}")
+    print(f"Train : {len(train_df)} ({len(train_df)/len(df)*100:.1f}%)")
+    print(f"Val   : {len(val_df)} ({len(val_df)/len(df)*100:.1f}%)")
+    print(f"Test  : {len(test_df)} ({len(test_df)/len(df)*100:.1f}%)")
+
+    print("\nStructural Target Balancing Breakdown:")
+    for name, split_df in [("train", train_df), ("val", val_df), ("test", test_df)]:
+        counts = split_df["agatston_available"].value_counts().sort_index().to_dict()
+        mean_agatston = split_df["agatston_total"].mean()
+        mean_lesions = split_df["lesion_count"].mean()
+        print(f"{name:5s} -> Calcium Presence Count: {counts} | Mean Agatston: {mean_agatston:.2f} | Mean Lesions: {mean_lesions:.2f}")
+
+    return splits
+
+def create_splits_simple_scv(dataset_df, features_csv_path, splits_json_path):
+    """
+    Creates MONAI-compatible train/val/test splits using simple stratified sampling
+    based on Agatston score risk bins.
+
+    Stratifies by risk groups: Low Risk (<10), Medium Risk [10,100),
+    High Risk [100,400), Very High Risk [400,1000), Extreme Risk (>=1000)
+    Then performs train/val/test split (70%/15%/15%) within each stratum.
+
+    Ratios:
+        Train : 70%
+        Val   : 15%
+        Test  : 15%
     """
     df = dataset_df.copy()
     

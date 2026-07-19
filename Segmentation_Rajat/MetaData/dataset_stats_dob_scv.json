@@ -1,19 +1,19 @@
 {
   "dataset": {
-    "total_scans": 448,
-    "cac_positive": 448,
+    "total_scans": 433,
+    "cac_positive": 433,
     "cac_negative": 0,
     "cac_positive_pct": 100.0,
     "cac_negative_pct": 0.0,
-    "agatston_total_mean": 429.825,
-    "agatston_total_median": 113.535,
+    "agatston_total_mean": 412.313,
+    "agatston_total_median": 103.461,
     "agatston_total_max": 5770.008,
-    "agatston_total_std": 782.341
+    "agatston_total_std": 754.352
   },
   "splits": {
     "train": {
-      "n": 391,
-      "cac_positive": 391,
+      "n": 377,
+      "cac_positive": 377,
       "cac_negative": 0,
       "pos_pct": 100.0
     },
@@ -24,8 +24,8 @@
       "pos_pct": 100.0
     },
     "test": {
-      "n": 25,
-      "cac_positive": 25,
+      "n": 24,
+      "cac_positive": 24,
       "cac_negative": 0,
       "pos_pct": 100.0
     }

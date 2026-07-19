@@ -113,14 +113,6 @@
       "agatston_available": 1
     },
     {
-      "id": "a002da03850e",
-      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\a002da03850e\\a002da03850e_img.nii.gz",
-      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\a002da03850e\\a002da03850e_binary_seg.nii.gz",
-      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\a002da03850e\\a002da03850e_roi_mask.nii.gz",
-      "agatston_total": 20.628478564321995,
-      "agatston_available": 1
-    },
-    {
       "id": "58a3c31ce6c5",
       "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\58a3c31ce6c5\\58a3c31ce6c5_img.nii.gz",
       "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\58a3c31ce6c5\\58a3c31ce6c5_binary_seg.nii.gz",
@@ -145,14 +137,6 @@
       "agatston_available": 1
     },
     {
-      "id": "82c72ffef25f",
-      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\82c72ffef25f\\82c72ffef25f_img.nii.gz",
-      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\82c72ffef25f\\82c72ffef25f_binary_seg.nii.gz",
-      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\82c72ffef25f\\82c72ffef25f_roi_mask.nii.gz",
-      "agatston_total": 69.65255737304688,
-      "agatston_available": 1
-    },
-    {
       "id": "5c090787a2c0",
       "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\5c090787a2c0\\5c090787a2c0_img.nii.gz",
       "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\5c090787a2c0\\5c090787a2c0_binary_seg.nii.gz",
@@ -169,6 +153,14 @@
       "agatston_available": 1
     },
     {
+      "id": "1795b7f5218d",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\1795b7f5218d\\1795b7f5218d_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\1795b7f5218d\\1795b7f5218d_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\1795b7f5218d\\1795b7f5218d_roi_mask.nii.gz",
+      "agatston_total": 25.45576859265566,
+      "agatston_available": 1
+    },
+    {
       "id": "d0920bb20648",
       "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\d0920bb20648\\d0920bb20648_img.nii.gz",
       "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\d0920bb20648\\d0920bb20648_binary_seg.nii.gz",
@@ -177,19 +169,19 @@
       "agatston_available": 1
     },
     {
+      "id": "820c13f7308d",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\820c13f7308d\\820c13f7308d_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\820c13f7308d\\820c13f7308d_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\820c13f7308d\\820c13f7308d_roi_mask.nii.gz",
+      "agatston_total": 66.35027846787125,
+      "agatston_available": 1
+    },
+    {
       "id": "10ef86b48958",
       "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\10ef86b48958\\10ef86b48958_img.nii.gz",
       "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\10ef86b48958\\10ef86b48958_binary_seg.nii.gz",
       "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\10ef86b48958\\10ef86b48958_roi_mask.nii.gz",
       "agatston_total": 97.30671296129005,
-      "agatston_available": 1
-    },
-    {
-      "id": "80685a8b231e",
-      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\80685a8b231e\\80685a8b231e_img.nii.gz",
-      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\80685a8b231e\\80685a8b231e_binary_seg.nii.gz",
-      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\80685a8b231e\\80685a8b231e_roi_mask.nii.gz",
-      "agatston_total": 61.96894370950759,
       "agatston_available": 1
     },
     {
@@ -310,6 +302,14 @@
       "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\f15ebff422c5\\f15ebff422c5_binary_seg.nii.gz",
       "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\f15ebff422c5\\f15ebff422c5_roi_mask.nii.gz",
       "agatston_total": 337.64062295667827,
+      "agatston_available": 1
+    },
+    {
+      "id": "cd6455119b99",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\cd6455119b99\\cd6455119b99_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\cd6455119b99\\cd6455119b99_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\cd6455119b99\\cd6455119b99_roi_mask.nii.gz",
+      "agatston_total": 182.0640262681991,
       "agatston_available": 1
     },
     {
@@ -561,14 +561,6 @@
       "agatston_available": 1
     },
     {
-      "id": "8e59e4fb641a",
-      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\8e59e4fb641a\\8e59e4fb641a_img.nii.gz",
-      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\8e59e4fb641a\\8e59e4fb641a_binary_seg.nii.gz",
-      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\8e59e4fb641a\\8e59e4fb641a_roi_mask.nii.gz",
-      "agatston_total": 23.424087278544903,
-      "agatston_available": 1
-    },
-    {
       "id": "dcc22fe9713b",
       "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\dcc22fe9713b\\dcc22fe9713b_img.nii.gz",
       "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\dcc22fe9713b\\dcc22fe9713b_binary_seg.nii.gz",
@@ -585,11 +577,11 @@
       "agatston_available": 1
     },
     {
-      "id": "070938e00c49",
-      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\070938e00c49\\070938e00c49_img.nii.gz",
-      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\070938e00c49\\070938e00c49_binary_seg.nii.gz",
-      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\070938e00c49\\070938e00c49_roi_mask.nii.gz",
-      "agatston_total": 85.49755681306124,
+      "id": "d2d35094d681",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\d2d35094d681\\d2d35094d681_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\d2d35094d681\\d2d35094d681_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\d2d35094d681\\d2d35094d681_roi_mask.nii.gz",
+      "agatston_total": 92.95206069946288,
       "agatston_available": 1
     },
     {
@@ -601,11 +593,27 @@
       "agatston_available": 1
     },
     {
+      "id": "1ba64af07ed3",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\1ba64af07ed3\\1ba64af07ed3_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\1ba64af07ed3\\1ba64af07ed3_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\1ba64af07ed3\\1ba64af07ed3_roi_mask.nii.gz",
+      "agatston_total": 28.631775081157684,
+      "agatston_available": 1
+    },
+    {
       "id": "bc119062781c",
       "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\bc119062781c\\bc119062781c_img.nii.gz",
       "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\bc119062781c\\bc119062781c_binary_seg.nii.gz",
       "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\bc119062781c\\bc119062781c_roi_mask.nii.gz",
       "agatston_total": 30.149687826633453,
+      "agatston_available": 1
+    },
+    {
+      "id": "80685a8b231e",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\80685a8b231e\\80685a8b231e_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\80685a8b231e\\80685a8b231e_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\80685a8b231e\\80685a8b231e_roi_mask.nii.gz",
+      "agatston_total": 61.96894370950759,
       "agatston_available": 1
     },
     {
@@ -761,11 +769,11 @@
       "agatston_available": 1
     },
     {
-      "id": "b327c5ed8550",
-      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\b327c5ed8550\\b327c5ed8550_img.nii.gz",
-      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\b327c5ed8550\\b327c5ed8550_binary_seg.nii.gz",
-      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\b327c5ed8550\\b327c5ed8550_roi_mask.nii.gz",
-      "agatston_total": 2701.7221434041858,
+      "id": "95d3b3ff04fc",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\95d3b3ff04fc\\95d3b3ff04fc_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\95d3b3ff04fc\\95d3b3ff04fc_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\95d3b3ff04fc\\95d3b3ff04fc_roi_mask.nii.gz",
+      "agatston_total": 3010.167195275426,
       "agatston_available": 1
     },
     {
@@ -865,11 +873,11 @@
       "agatston_available": 1
     },
     {
-      "id": "92da14e398c6",
-      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\92da14e398c6\\92da14e398c6_img.nii.gz",
-      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\92da14e398c6\\92da14e398c6_binary_seg.nii.gz",
-      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\92da14e398c6\\92da14e398c6_roi_mask.nii.gz",
-      "agatston_total": 55.72821721434593,
+      "id": "652e9028df80",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\652e9028df80\\652e9028df80_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\652e9028df80\\652e9028df80_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\652e9028df80\\652e9028df80_roi_mask.nii.gz",
+      "agatston_total": 36.715058237314224,
       "agatston_available": 1
     },
     {
@@ -897,14 +905,6 @@
       "agatston_available": 1
     },
     {
-      "id": "1795b7f5218d",
-      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\1795b7f5218d\\1795b7f5218d_img.nii.gz",
-      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\1795b7f5218d\\1795b7f5218d_binary_seg.nii.gz",
-      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\1795b7f5218d\\1795b7f5218d_roi_mask.nii.gz",
-      "agatston_total": 25.45576859265566,
-      "agatston_available": 1
-    },
-    {
       "id": "8fa1474da4c2",
       "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\8fa1474da4c2\\8fa1474da4c2_img.nii.gz",
       "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\8fa1474da4c2\\8fa1474da4c2_binary_seg.nii.gz",
@@ -921,11 +921,11 @@
       "agatston_available": 1
     },
     {
-      "id": "d2d35094d681",
-      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\d2d35094d681\\d2d35094d681_img.nii.gz",
-      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\d2d35094d681\\d2d35094d681_binary_seg.nii.gz",
-      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\d2d35094d681\\d2d35094d681_roi_mask.nii.gz",
-      "agatston_total": 92.95206069946288,
+      "id": "f4841b42bbf5",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\f4841b42bbf5\\f4841b42bbf5_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\f4841b42bbf5\\f4841b42bbf5_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\f4841b42bbf5\\f4841b42bbf5_roi_mask.nii.gz",
+      "agatston_total": 96.18218746036293,
       "agatston_available": 1
     },
     {
@@ -934,6 +934,14 @@
       "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\0e169166811c\\0e169166811c_binary_seg.nii.gz",
       "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\0e169166811c\\0e169166811c_roi_mask.nii.gz",
       "agatston_total": 78.4017943777144,
+      "agatston_available": 1
+    },
+    {
+      "id": "8e59e4fb641a",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\8e59e4fb641a\\8e59e4fb641a_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\8e59e4fb641a\\8e59e4fb641a_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\8e59e4fb641a\\8e59e4fb641a_roi_mask.nii.gz",
+      "agatston_total": 23.424087278544903,
       "agatston_available": 1
     },
     {
@@ -1001,14 +1009,6 @@
       "agatston_available": 1
     },
     {
-      "id": "cd6455119b99",
-      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\cd6455119b99\\cd6455119b99_img.nii.gz",
-      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\cd6455119b99\\cd6455119b99_binary_seg.nii.gz",
-      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\cd6455119b99\\cd6455119b99_roi_mask.nii.gz",
-      "agatston_total": 182.0640262681991,
-      "agatston_available": 1
-    },
-    {
       "id": "cc98d6cfa5b3",
       "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\cc98d6cfa5b3\\cc98d6cfa5b3_img.nii.gz",
       "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\cc98d6cfa5b3\\cc98d6cfa5b3_binary_seg.nii.gz",
@@ -1065,11 +1065,11 @@
       "agatston_available": 1
     },
     {
-      "id": "95d3b3ff04fc",
-      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\95d3b3ff04fc\\95d3b3ff04fc_img.nii.gz",
-      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\95d3b3ff04fc\\95d3b3ff04fc_binary_seg.nii.gz",
-      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\95d3b3ff04fc\\95d3b3ff04fc_roi_mask.nii.gz",
-      "agatston_total": 3010.167195275426,
+      "id": "ba0fa44f88c1",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\ba0fa44f88c1\\ba0fa44f88c1_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\ba0fa44f88c1\\ba0fa44f88c1_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\ba0fa44f88c1\\ba0fa44f88c1_roi_mask.nii.gz",
+      "agatston_total": 2499.9640442430973,
       "agatston_available": 1
     },
     {
@@ -1081,11 +1081,11 @@
       "agatston_available": 1
     },
     {
-      "id": "a67036c8d001",
-      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\a67036c8d001\\a67036c8d001_img.nii.gz",
-      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\a67036c8d001\\a67036c8d001_binary_seg.nii.gz",
-      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\a67036c8d001\\a67036c8d001_roi_mask.nii.gz",
-      "agatston_total": 1652.83203125,
+      "id": "b0d0007b9227",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\b0d0007b9227\\b0d0007b9227_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\b0d0007b9227\\b0d0007b9227_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\b0d0007b9227\\b0d0007b9227_roi_mask.nii.gz",
+      "agatston_total": 1356.294047087431,
       "agatston_available": 1
     },
     {
@@ -1161,11 +1161,11 @@
       "agatston_available": 1
     },
     {
-      "id": "652e9028df80",
-      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\652e9028df80\\652e9028df80_img.nii.gz",
-      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\652e9028df80\\652e9028df80_binary_seg.nii.gz",
-      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\652e9028df80\\652e9028df80_roi_mask.nii.gz",
-      "agatston_total": 36.715058237314224,
+      "id": "3972e602a636",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\3972e602a636\\3972e602a636_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\3972e602a636\\3972e602a636_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\3972e602a636\\3972e602a636_roi_mask.nii.gz",
+      "agatston_total": 32.30310045182705,
       "agatston_available": 1
     },
     {
@@ -1193,14 +1193,6 @@
       "agatston_available": 1
     },
     {
-      "id": "1ba64af07ed3",
-      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\1ba64af07ed3\\1ba64af07ed3_img.nii.gz",
-      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\1ba64af07ed3\\1ba64af07ed3_binary_seg.nii.gz",
-      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\1ba64af07ed3\\1ba64af07ed3_roi_mask.nii.gz",
-      "agatston_total": 28.631775081157684,
-      "agatston_available": 1
-    },
-    {
       "id": "d55c6cf8af67",
       "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\d55c6cf8af67\\d55c6cf8af67_img.nii.gz",
       "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\d55c6cf8af67\\d55c6cf8af67_binary_seg.nii.gz",
@@ -1217,11 +1209,11 @@
       "agatston_available": 1
     },
     {
-      "id": "f4841b42bbf5",
-      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\f4841b42bbf5\\f4841b42bbf5_img.nii.gz",
-      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\f4841b42bbf5\\f4841b42bbf5_binary_seg.nii.gz",
-      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\f4841b42bbf5\\f4841b42bbf5_roi_mask.nii.gz",
-      "agatston_total": 96.18218746036293,
+      "id": "d9963ef967c2",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\d9963ef967c2\\d9963ef967c2_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\d9963ef967c2\\d9963ef967c2_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\d9963ef967c2\\d9963ef967c2_roi_mask.nii.gz",
+      "agatston_total": 72.76108041405678,
       "agatston_available": 1
     },
     {
@@ -1273,11 +1265,11 @@
       "agatston_available": 1
     },
     {
-      "id": "f6e83b22ae09",
-      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\f6e83b22ae09\\f6e83b22ae09_img.nii.gz",
-      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\f6e83b22ae09\\f6e83b22ae09_binary_seg.nii.gz",
-      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\f6e83b22ae09\\f6e83b22ae09_roi_mask.nii.gz",
-      "agatston_total": 161.13100638613105,
+      "id": "a28ebcafba1b",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\a28ebcafba1b\\a28ebcafba1b_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\a28ebcafba1b\\a28ebcafba1b_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\a28ebcafba1b\\a28ebcafba1b_roi_mask.nii.gz",
+      "agatston_total": 132.77633343823254,
       "agatston_available": 1
     },
     {
@@ -1353,27 +1345,27 @@
       "agatston_available": 1
     },
     {
-      "id": "f2e39861fd7f",
-      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\f2e39861fd7f\\f2e39861fd7f_img.nii.gz",
-      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\f2e39861fd7f\\f2e39861fd7f_binary_seg.nii.gz",
-      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\f2e39861fd7f\\f2e39861fd7f_roi_mask.nii.gz",
-      "agatston_total": 1864.550411386881,
+      "id": "391c21f333f8",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\391c21f333f8\\391c21f333f8_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\391c21f333f8\\391c21f333f8_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\391c21f333f8\\391c21f333f8_roi_mask.nii.gz",
+      "agatston_total": 1188.2716092281044,
       "agatston_available": 1
     },
     {
-      "id": "03741bbc29d1",
-      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\03741bbc29d1\\03741bbc29d1_img.nii.gz",
-      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\03741bbc29d1\\03741bbc29d1_binary_seg.nii.gz",
-      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\03741bbc29d1\\03741bbc29d1_roi_mask.nii.gz",
-      "agatston_total": 2910.787013173104,
+      "id": "0b4f988d88dc",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\0b4f988d88dc\\0b4f988d88dc_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\0b4f988d88dc\\0b4f988d88dc_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\0b4f988d88dc\\0b4f988d88dc_roi_mask.nii.gz",
+      "agatston_total": 3233.5898583754897,
       "agatston_available": 1
     },
     {
-      "id": "b0d0007b9227",
-      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\b0d0007b9227\\b0d0007b9227_img.nii.gz",
-      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\b0d0007b9227\\b0d0007b9227_binary_seg.nii.gz",
-      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\b0d0007b9227\\b0d0007b9227_roi_mask.nii.gz",
-      "agatston_total": 1356.294047087431,
+      "id": "c43c380bd6a7",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\c43c380bd6a7\\c43c380bd6a7_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\c43c380bd6a7\\c43c380bd6a7_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\c43c380bd6a7\\c43c380bd6a7_roi_mask.nii.gz",
+      "agatston_total": 1185.5307620950043,
       "agatston_available": 1
     },
     {
@@ -1473,14 +1465,6 @@
       "agatston_available": 1
     },
     {
-      "id": "f8c0e43fb22f",
-      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\f8c0e43fb22f\\f8c0e43fb22f_img.nii.gz",
-      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\f8c0e43fb22f\\f8c0e43fb22f_binary_seg.nii.gz",
-      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\f8c0e43fb22f\\f8c0e43fb22f_roi_mask.nii.gz",
-      "agatston_total": 20.230835117399693,
-      "agatston_available": 1
-    },
-    {
       "id": "f48944fc5319",
       "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\f48944fc5319\\f48944fc5319_img.nii.gz",
       "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\f48944fc5319\\f48944fc5319_binary_seg.nii.gz",
@@ -1497,11 +1481,11 @@
       "agatston_available": 1
     },
     {
-      "id": "d9963ef967c2",
-      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\d9963ef967c2\\d9963ef967c2_img.nii.gz",
-      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\d9963ef967c2\\d9963ef967c2_binary_seg.nii.gz",
-      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\d9963ef967c2\\d9963ef967c2_roi_mask.nii.gz",
-      "agatston_total": 72.76108041405678,
+      "id": "82c72ffef25f",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\82c72ffef25f\\82c72ffef25f_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\82c72ffef25f\\82c72ffef25f_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\82c72ffef25f\\82c72ffef25f_roi_mask.nii.gz",
+      "agatston_total": 69.65255737304688,
       "agatston_available": 1
     },
     {
@@ -1553,11 +1537,11 @@
       "agatston_available": 1
     },
     {
-      "id": "a28ebcafba1b",
-      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\a28ebcafba1b\\a28ebcafba1b_img.nii.gz",
-      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\a28ebcafba1b\\a28ebcafba1b_binary_seg.nii.gz",
-      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\a28ebcafba1b\\a28ebcafba1b_roi_mask.nii.gz",
-      "agatston_total": 132.77633343823254,
+      "id": "fc37120b238f",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\fc37120b238f\\fc37120b238f_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\fc37120b238f\\fc37120b238f_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\fc37120b238f\\fc37120b238f_roi_mask.nii.gz",
+      "agatston_total": 187.61948850005865,
       "agatston_available": 1
     },
     {
@@ -1617,35 +1601,35 @@
       "agatston_available": 1
     },
     {
-      "id": "f58b9c387652",
-      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\f58b9c387652\\f58b9c387652_img.nii.gz",
-      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\f58b9c387652\\f58b9c387652_binary_seg.nii.gz",
-      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\f58b9c387652\\f58b9c387652_roi_mask.nii.gz",
-      "agatston_total": 3716.344247804954,
+      "id": "757cfa37e5b4",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\757cfa37e5b4\\757cfa37e5b4_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\757cfa37e5b4\\757cfa37e5b4_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\757cfa37e5b4\\757cfa37e5b4_roi_mask.nii.gz",
+      "agatston_total": 1873.2804661151024,
       "agatston_available": 1
     },
     {
-      "id": "ba0fa44f88c1",
-      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\ba0fa44f88c1\\ba0fa44f88c1_img.nii.gz",
-      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\ba0fa44f88c1\\ba0fa44f88c1_binary_seg.nii.gz",
-      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\ba0fa44f88c1\\ba0fa44f88c1_roi_mask.nii.gz",
-      "agatston_total": 2499.9640442430973,
+      "id": "a48357154b98",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\a48357154b98\\a48357154b98_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\a48357154b98\\a48357154b98_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\a48357154b98\\a48357154b98_roi_mask.nii.gz",
+      "agatston_total": 2423.4463691711426,
       "agatston_available": 1
     },
     {
-      "id": "0b4f988d88dc",
-      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\0b4f988d88dc\\0b4f988d88dc_img.nii.gz",
-      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\0b4f988d88dc\\0b4f988d88dc_binary_seg.nii.gz",
-      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\0b4f988d88dc\\0b4f988d88dc_roi_mask.nii.gz",
-      "agatston_total": 3233.5898583754897,
+      "id": "495bf3b68548",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\495bf3b68548\\495bf3b68548_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\495bf3b68548\\495bf3b68548_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\495bf3b68548\\495bf3b68548_roi_mask.nii.gz",
+      "agatston_total": 1764.0902719227597,
       "agatston_available": 1
     },
     {
-      "id": "c43c380bd6a7",
-      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\c43c380bd6a7\\c43c380bd6a7_img.nii.gz",
-      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\c43c380bd6a7\\c43c380bd6a7_binary_seg.nii.gz",
-      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\c43c380bd6a7\\c43c380bd6a7_roi_mask.nii.gz",
-      "agatston_total": 1185.5307620950043,
+      "id": "57937c017a7d",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\57937c017a7d\\57937c017a7d_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\57937c017a7d\\57937c017a7d_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\57937c017a7d\\57937c017a7d_roi_mask.nii.gz",
+      "agatston_total": 1161.338233947754,
       "agatston_available": 1
     },
     {
@@ -1657,11 +1641,11 @@
       "agatston_available": 1
     },
     {
-      "id": "ca1a9ce04bbd",
-      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\ca1a9ce04bbd\\ca1a9ce04bbd_img.nii.gz",
-      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\ca1a9ce04bbd\\ca1a9ce04bbd_binary_seg.nii.gz",
-      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\ca1a9ce04bbd\\ca1a9ce04bbd_roi_mask.nii.gz",
-      "agatston_total": 1.5187263488769531,
+      "id": "6fe27434c141",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\6fe27434c141\\6fe27434c141_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\6fe27434c141\\6fe27434c141_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\6fe27434c141\\6fe27434c141_roi_mask.nii.gz",
+      "agatston_total": 1.6316071152687073,
       "agatston_available": 1
     },
     {
@@ -1713,11 +1697,11 @@
       "agatston_available": 1
     },
     {
-      "id": "3972e602a636",
-      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\3972e602a636\\3972e602a636_img.nii.gz",
-      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\3972e602a636\\3972e602a636_binary_seg.nii.gz",
-      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\3972e602a636\\3972e602a636_roi_mask.nii.gz",
-      "agatston_total": 32.30310045182705,
+      "id": "84375adfe7dc",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\84375adfe7dc\\84375adfe7dc_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\84375adfe7dc\\84375adfe7dc_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\84375adfe7dc\\84375adfe7dc_roi_mask.nii.gz",
+      "agatston_total": 58.76518487930298,
       "agatston_available": 1
     },
     {
@@ -1742,14 +1726,6 @@
       "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\d65e3ef2820e\\d65e3ef2820e_binary_seg.nii.gz",
       "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\d65e3ef2820e\\d65e3ef2820e_roi_mask.nii.gz",
       "agatston_total": 59.95174078270793,
-      "agatston_available": 1
-    },
-    {
-      "id": "197c12a06af0",
-      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\197c12a06af0\\197c12a06af0_img.nii.gz",
-      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\197c12a06af0\\197c12a06af0_binary_seg.nii.gz",
-      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\197c12a06af0\\197c12a06af0_roi_mask.nii.gz",
-      "agatston_total": 21.13844277337193,
       "agatston_available": 1
     },
     {
@@ -1793,27 +1769,27 @@
       "agatston_available": 1
     },
     {
-      "id": "7dfa0c315f9c",
-      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\7dfa0c315f9c\\7dfa0c315f9c_img.nii.gz",
-      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\7dfa0c315f9c\\7dfa0c315f9c_binary_seg.nii.gz",
-      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\7dfa0c315f9c\\7dfa0c315f9c_roi_mask.nii.gz",
-      "agatston_total": 125.88821472600102,
+      "id": "cf370c08e151",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\cf370c08e151\\cf370c08e151_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\cf370c08e151\\cf370c08e151_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\cf370c08e151\\cf370c08e151_roi_mask.nii.gz",
+      "agatston_total": 365.3240730985999,
       "agatston_available": 1
     },
     {
-      "id": "32a300bb4d3d",
-      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\32a300bb4d3d\\32a300bb4d3d_img.nii.gz",
-      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\32a300bb4d3d\\32a300bb4d3d_binary_seg.nii.gz",
-      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\32a300bb4d3d\\32a300bb4d3d_roi_mask.nii.gz",
-      "agatston_total": 113.6809077579528,
+      "id": "eac6214666b8",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\eac6214666b8\\eac6214666b8_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\eac6214666b8\\eac6214666b8_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\eac6214666b8\\eac6214666b8_roi_mask.nii.gz",
+      "agatston_total": 199.3302787770517,
       "agatston_available": 1
     },
     {
-      "id": "fc37120b238f",
-      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\fc37120b238f\\fc37120b238f_img.nii.gz",
-      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\fc37120b238f\\fc37120b238f_binary_seg.nii.gz",
-      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\fc37120b238f\\fc37120b238f_roi_mask.nii.gz",
-      "agatston_total": 187.61948850005865,
+      "id": "a2074a8a7ee6",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\a2074a8a7ee6\\a2074a8a7ee6_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\a2074a8a7ee6\\a2074a8a7ee6_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\a2074a8a7ee6\\a2074a8a7ee6_roi_mask.nii.gz",
+      "agatston_total": 133.6199431680143,
       "agatston_available": 1
     },
     {
@@ -1873,35 +1849,11 @@
       "agatston_available": 1
     },
     {
-      "id": "757cfa37e5b4",
-      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\757cfa37e5b4\\757cfa37e5b4_img.nii.gz",
-      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\757cfa37e5b4\\757cfa37e5b4_binary_seg.nii.gz",
-      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\757cfa37e5b4\\757cfa37e5b4_roi_mask.nii.gz",
-      "agatston_total": 1873.2804661151024,
-      "agatston_available": 1
-    },
-    {
-      "id": "391c21f333f8",
-      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\391c21f333f8\\391c21f333f8_img.nii.gz",
-      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\391c21f333f8\\391c21f333f8_binary_seg.nii.gz",
-      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\391c21f333f8\\391c21f333f8_roi_mask.nii.gz",
-      "agatston_total": 1188.2716092281044,
-      "agatston_available": 1
-    },
-    {
-      "id": "495bf3b68548",
-      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\495bf3b68548\\495bf3b68548_img.nii.gz",
-      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\495bf3b68548\\495bf3b68548_binary_seg.nii.gz",
-      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\495bf3b68548\\495bf3b68548_roi_mask.nii.gz",
-      "agatston_total": 1764.0902719227597,
-      "agatston_available": 1
-    },
-    {
-      "id": "57937c017a7d",
-      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\57937c017a7d\\57937c017a7d_img.nii.gz",
-      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\57937c017a7d\\57937c017a7d_binary_seg.nii.gz",
-      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\57937c017a7d\\57937c017a7d_roi_mask.nii.gz",
-      "agatston_total": 1161.338233947754,
+      "id": "f58b9c387652",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\f58b9c387652\\f58b9c387652_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\f58b9c387652\\f58b9c387652_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\f58b9c387652\\f58b9c387652_roi_mask.nii.gz",
+      "agatston_total": 3716.344247804954,
       "agatston_available": 1
     },
     {
@@ -1913,11 +1865,11 @@
       "agatston_available": 1
     },
     {
-      "id": "6fe27434c141",
-      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\6fe27434c141\\6fe27434c141_img.nii.gz",
-      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\6fe27434c141\\6fe27434c141_binary_seg.nii.gz",
-      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\6fe27434c141\\6fe27434c141_roi_mask.nii.gz",
-      "agatston_total": 1.6316071152687073,
+      "id": "1219fdbb1c98",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\1219fdbb1c98\\1219fdbb1c98_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\1219fdbb1c98\\1219fdbb1c98_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\1219fdbb1c98\\1219fdbb1c98_roi_mask.nii.gz",
+      "agatston_total": 1.6450652852654457,
       "agatston_available": 1
     },
     {
@@ -1961,19 +1913,19 @@
       "agatston_available": 1
     },
     {
-      "id": "84375adfe7dc",
-      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\84375adfe7dc\\84375adfe7dc_img.nii.gz",
-      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\84375adfe7dc\\84375adfe7dc_binary_seg.nii.gz",
-      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\84375adfe7dc\\84375adfe7dc_roi_mask.nii.gz",
-      "agatston_total": 58.76518487930298,
+      "id": "b28f7f2c5218",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\b28f7f2c5218\\b28f7f2c5218_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\b28f7f2c5218\\b28f7f2c5218_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\b28f7f2c5218\\b28f7f2c5218_roi_mask.nii.gz",
+      "agatston_total": 30.5064395070076,
       "agatston_available": 1
     },
     {
-      "id": "a910197a5e4e",
-      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\a910197a5e4e\\a910197a5e4e_img.nii.gz",
-      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\a910197a5e4e\\a910197a5e4e_binary_seg.nii.gz",
-      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\a910197a5e4e\\a910197a5e4e_roi_mask.nii.gz",
-      "agatston_total": 12.102538906037807,
+      "id": "f6bc134adb6e",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\f6bc134adb6e\\f6bc134adb6e_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\f6bc134adb6e\\f6bc134adb6e_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\f6bc134adb6e\\f6bc134adb6e_roi_mask.nii.gz",
+      "agatston_total": 12.890388630330564,
       "agatston_available": 1
     },
     {
@@ -2033,27 +1985,27 @@
       "agatston_available": 1
     },
     {
-      "id": "cf370c08e151",
-      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\cf370c08e151\\cf370c08e151_img.nii.gz",
-      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\cf370c08e151\\cf370c08e151_binary_seg.nii.gz",
-      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\cf370c08e151\\cf370c08e151_roi_mask.nii.gz",
-      "agatston_total": 365.3240730985999,
+      "id": "0bc4eead1cb5",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\0bc4eead1cb5\\0bc4eead1cb5_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\0bc4eead1cb5\\0bc4eead1cb5_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\0bc4eead1cb5\\0bc4eead1cb5_roi_mask.nii.gz",
+      "agatston_total": 209.62167773395777,
       "agatston_available": 1
     },
     {
-      "id": "b8c59c8a4e75",
-      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\b8c59c8a4e75\\b8c59c8a4e75_img.nii.gz",
-      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\b8c59c8a4e75\\b8c59c8a4e75_binary_seg.nii.gz",
-      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\b8c59c8a4e75\\b8c59c8a4e75_roi_mask.nii.gz",
-      "agatston_total": 224.4163802359253,
+      "id": "627795a69fb3",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\627795a69fb3\\627795a69fb3_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\627795a69fb3\\627795a69fb3_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\627795a69fb3\\627795a69fb3_roi_mask.nii.gz",
+      "agatston_total": 118.73889551497996,
       "agatston_available": 1
     },
     {
-      "id": "a2074a8a7ee6",
-      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\a2074a8a7ee6\\a2074a8a7ee6_img.nii.gz",
-      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\a2074a8a7ee6\\a2074a8a7ee6_binary_seg.nii.gz",
-      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\a2074a8a7ee6\\a2074a8a7ee6_roi_mask.nii.gz",
-      "agatston_total": 133.6199431680143,
+      "id": "b0f89b5072b2",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\b0f89b5072b2\\b0f89b5072b2_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\b0f89b5072b2\\b0f89b5072b2_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\b0f89b5072b2\\b0f89b5072b2_roi_mask.nii.gz",
+      "agatston_total": 185.26806570589545,
       "agatston_available": 1
     },
     {
@@ -2105,11 +2057,11 @@
       "agatston_available": 1
     },
     {
-      "id": "91317526d2d3",
-      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\91317526d2d3\\91317526d2d3_img.nii.gz",
-      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\91317526d2d3\\91317526d2d3_binary_seg.nii.gz",
-      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\91317526d2d3\\91317526d2d3_roi_mask.nii.gz",
-      "agatston_total": 2298.9489178173244,
+      "id": "92336a36aeb2",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\92336a36aeb2\\92336a36aeb2_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\92336a36aeb2\\92336a36aeb2_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\92336a36aeb2\\92336a36aeb2_roi_mask.nii.gz",
+      "agatston_total": 1792.767752148211,
       "agatston_available": 1
     },
     {
@@ -2161,19 +2113,19 @@
       "agatston_available": 1
     },
     {
-      "id": "b28f7f2c5218",
-      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\b28f7f2c5218\\b28f7f2c5218_img.nii.gz",
-      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\b28f7f2c5218\\b28f7f2c5218_binary_seg.nii.gz",
-      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\b28f7f2c5218\\b28f7f2c5218_roi_mask.nii.gz",
-      "agatston_total": 30.5064395070076,
+      "id": "889eea5bb448",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\889eea5bb448\\889eea5bb448_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\889eea5bb448\\889eea5bb448_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\889eea5bb448\\889eea5bb448_roi_mask.nii.gz",
+      "agatston_total": 33.64906311035156,
       "agatston_available": 1
     },
     {
-      "id": "f6bc134adb6e",
-      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\f6bc134adb6e\\f6bc134adb6e_img.nii.gz",
-      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\f6bc134adb6e\\f6bc134adb6e_binary_seg.nii.gz",
-      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\f6bc134adb6e\\f6bc134adb6e_roi_mask.nii.gz",
-      "agatston_total": 12.890388630330564,
+      "id": "1ec038a6e914",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\1ec038a6e914\\1ec038a6e914_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\1ec038a6e914\\1ec038a6e914_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\1ec038a6e914\\1ec038a6e914_roi_mask.nii.gz",
+      "agatston_total": 13.986671343445778,
       "agatston_available": 1
     },
     {
@@ -2193,11 +2145,11 @@
       "agatston_available": 1
     },
     {
-      "id": "32046f978fb9",
-      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\32046f978fb9\\32046f978fb9_img.nii.gz",
-      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\32046f978fb9\\32046f978fb9_binary_seg.nii.gz",
-      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\32046f978fb9\\32046f978fb9_roi_mask.nii.gz",
-      "agatston_total": 37.33655605465174,
+      "id": "f8c0e43fb22f",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\f8c0e43fb22f\\f8c0e43fb22f_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\f8c0e43fb22f\\f8c0e43fb22f_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\f8c0e43fb22f\\f8c0e43fb22f_roi_mask.nii.gz",
+      "agatston_total": 20.230835117399693,
       "agatston_available": 1
     },
     {
@@ -2209,19 +2161,19 @@
       "agatston_available": 1
     },
     {
-      "id": "0a8df6f41aca",
-      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\0a8df6f41aca\\0a8df6f41aca_img.nii.gz",
-      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\0a8df6f41aca\\0a8df6f41aca_binary_seg.nii.gz",
-      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\0a8df6f41aca\\0a8df6f41aca_roi_mask.nii.gz",
-      "agatston_total": 285.20711339078844,
+      "id": "032cb5aa6cdd",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\032cb5aa6cdd\\032cb5aa6cdd_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\032cb5aa6cdd\\032cb5aa6cdd_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\032cb5aa6cdd\\032cb5aa6cdd_roi_mask.nii.gz",
+      "agatston_total": 278.8670622743666,
       "agatston_available": 1
     },
     {
-      "id": "0d4f3e8aa5fb",
-      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\0d4f3e8aa5fb\\0d4f3e8aa5fb_img.nii.gz",
-      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\0d4f3e8aa5fb\\0d4f3e8aa5fb_binary_seg.nii.gz",
-      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\0d4f3e8aa5fb\\0d4f3e8aa5fb_roi_mask.nii.gz",
-      "agatston_total": 114.85046045854688,
+      "id": "accde2113b0b",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\accde2113b0b\\accde2113b0b_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\accde2113b0b\\accde2113b0b_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\accde2113b0b\\accde2113b0b_roi_mask.nii.gz",
+      "agatston_total": 146.91295656375587,
       "agatston_available": 1
     },
     {
@@ -2233,27 +2185,19 @@
       "agatston_available": 1
     },
     {
-      "id": "0bc4eead1cb5",
-      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\0bc4eead1cb5\\0bc4eead1cb5_img.nii.gz",
-      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\0bc4eead1cb5\\0bc4eead1cb5_binary_seg.nii.gz",
-      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\0bc4eead1cb5\\0bc4eead1cb5_roi_mask.nii.gz",
-      "agatston_total": 209.62167773395777,
+      "id": "859814b4b6c5",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\859814b4b6c5\\859814b4b6c5_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\859814b4b6c5\\859814b4b6c5_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\859814b4b6c5\\859814b4b6c5_roi_mask.nii.gz",
+      "agatston_total": 138.5781217366457,
       "agatston_available": 1
     },
     {
-      "id": "627795a69fb3",
-      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\627795a69fb3\\627795a69fb3_img.nii.gz",
-      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\627795a69fb3\\627795a69fb3_binary_seg.nii.gz",
-      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\627795a69fb3\\627795a69fb3_roi_mask.nii.gz",
-      "agatston_total": 118.73889551497996,
-      "agatston_available": 1
-    },
-    {
-      "id": "b0f89b5072b2",
-      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\b0f89b5072b2\\b0f89b5072b2_img.nii.gz",
-      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\b0f89b5072b2\\b0f89b5072b2_binary_seg.nii.gz",
-      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\b0f89b5072b2\\b0f89b5072b2_roi_mask.nii.gz",
-      "agatston_total": 185.26806570589545,
+      "id": "d2b775f1a982",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\d2b775f1a982\\d2b775f1a982_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\d2b775f1a982\\d2b775f1a982_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\d2b775f1a982\\d2b775f1a982_roi_mask.nii.gz",
+      "agatston_total": 160.97980439662933,
       "agatston_available": 1
     },
     {
@@ -2289,19 +2233,19 @@
       "agatston_available": 1
     },
     {
-      "id": "5497b26e1ed4",
-      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\5497b26e1ed4\\5497b26e1ed4_img.nii.gz",
-      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\5497b26e1ed4\\5497b26e1ed4_binary_seg.nii.gz",
-      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\5497b26e1ed4\\5497b26e1ed4_roi_mask.nii.gz",
-      "agatston_total": 1310.0434224586934,
+      "id": "8af03e397b74",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\8af03e397b74\\8af03e397b74_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\8af03e397b74\\8af03e397b74_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\8af03e397b74\\8af03e397b74_roi_mask.nii.gz",
+      "agatston_total": 1151.542077306658,
       "agatston_available": 1
     },
     {
-      "id": "4a3348837491",
-      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\4a3348837491\\4a3348837491_img.nii.gz",
-      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\4a3348837491\\4a3348837491_binary_seg.nii.gz",
-      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\4a3348837491\\4a3348837491_roi_mask.nii.gz",
-      "agatston_total": 4041.7392142117023,
+      "id": "444533769a11",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\444533769a11\\444533769a11_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\444533769a11\\444533769a11_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\444533769a11\\444533769a11_roi_mask.nii.gz",
+      "agatston_total": 1114.232609095052,
       "agatston_available": 1
     },
     {
@@ -2353,19 +2297,19 @@
       "agatston_available": 1
     },
     {
-      "id": "889eea5bb448",
-      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\889eea5bb448\\889eea5bb448_img.nii.gz",
-      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\889eea5bb448\\889eea5bb448_binary_seg.nii.gz",
-      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\889eea5bb448\\889eea5bb448_roi_mask.nii.gz",
-      "agatston_total": 33.64906311035156,
+      "id": "1c362ef95e22",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\1c362ef95e22\\1c362ef95e22_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\1c362ef95e22\\1c362ef95e22_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\1c362ef95e22\\1c362ef95e22_roi_mask.nii.gz",
+      "agatston_total": 29.818153381347656,
       "agatston_available": 1
     },
     {
-      "id": "1ec038a6e914",
-      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\1ec038a6e914\\1ec038a6e914_img.nii.gz",
-      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\1ec038a6e914\\1ec038a6e914_binary_seg.nii.gz",
-      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\1ec038a6e914\\1ec038a6e914_roi_mask.nii.gz",
-      "agatston_total": 13.986671343445778,
+      "id": "422e2fa73819",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\422e2fa73819\\422e2fa73819_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\422e2fa73819\\422e2fa73819_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\422e2fa73819\\422e2fa73819_roi_mask.nii.gz",
+      "agatston_total": 14.6484375,
       "agatston_available": 1
     },
     {
@@ -2385,19 +2329,27 @@
       "agatston_available": 1
     },
     {
-      "id": "032cb5aa6cdd",
-      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\032cb5aa6cdd\\032cb5aa6cdd_img.nii.gz",
-      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\032cb5aa6cdd\\032cb5aa6cdd_binary_seg.nii.gz",
-      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\032cb5aa6cdd\\032cb5aa6cdd_roi_mask.nii.gz",
-      "agatston_total": 278.8670622743666,
+      "id": "32046f978fb9",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\32046f978fb9\\32046f978fb9_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\32046f978fb9\\32046f978fb9_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\32046f978fb9\\32046f978fb9_roi_mask.nii.gz",
+      "agatston_total": 37.33655605465174,
       "agatston_available": 1
     },
     {
-      "id": "accde2113b0b",
-      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\accde2113b0b\\accde2113b0b_img.nii.gz",
-      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\accde2113b0b\\accde2113b0b_binary_seg.nii.gz",
-      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\accde2113b0b\\accde2113b0b_roi_mask.nii.gz",
-      "agatston_total": 146.91295656375587,
+      "id": "dcc57ed42160",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\dcc57ed42160\\dcc57ed42160_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\dcc57ed42160\\dcc57ed42160_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\dcc57ed42160\\dcc57ed42160_roi_mask.nii.gz",
+      "agatston_total": 228.3684093505144,
+      "agatston_available": 1
+    },
+    {
+      "id": "0d4f3e8aa5fb",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\0d4f3e8aa5fb\\0d4f3e8aa5fb_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\0d4f3e8aa5fb\\0d4f3e8aa5fb_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\0d4f3e8aa5fb\\0d4f3e8aa5fb_roi_mask.nii.gz",
+      "agatston_total": 114.85046045854688,
       "agatston_available": 1
     },
     {
@@ -2409,19 +2361,19 @@
       "agatston_available": 1
     },
     {
-      "id": "eac6214666b8",
-      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\eac6214666b8\\eac6214666b8_img.nii.gz",
-      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\eac6214666b8\\eac6214666b8_binary_seg.nii.gz",
-      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\eac6214666b8\\eac6214666b8_roi_mask.nii.gz",
-      "agatston_total": 199.3302787770517,
+      "id": "c4d390538416",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\c4d390538416\\c4d390538416_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\c4d390538416\\c4d390538416_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\c4d390538416\\c4d390538416_roi_mask.nii.gz",
+      "agatston_total": 116.06247117742896,
       "agatston_available": 1
     },
     {
-      "id": "d2b775f1a982",
-      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\d2b775f1a982\\d2b775f1a982_img.nii.gz",
-      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\d2b775f1a982\\d2b775f1a982_binary_seg.nii.gz",
-      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\d2b775f1a982\\d2b775f1a982_roi_mask.nii.gz",
-      "agatston_total": 160.97980439662933,
+      "id": "52712d30f9e2",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\52712d30f9e2\\52712d30f9e2_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\52712d30f9e2\\52712d30f9e2_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\52712d30f9e2\\52712d30f9e2_roi_mask.nii.gz",
+      "agatston_total": 130.37963639944792,
       "agatston_available": 1
     },
     {
@@ -2441,27 +2393,19 @@
       "agatston_available": 1
     },
     {
-      "id": "f3f906fdd38d",
-      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\f3f906fdd38d\\f3f906fdd38d_img.nii.gz",
-      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\f3f906fdd38d\\f3f906fdd38d_binary_seg.nii.gz",
-      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\f3f906fdd38d\\f3f906fdd38d_roi_mask.nii.gz",
-      "agatston_total": 416.0578795010224,
+      "id": "ed7f870f47c7",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\ed7f870f47c7\\ed7f870f47c7_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\ed7f870f47c7\\ed7f870f47c7_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\ed7f870f47c7\\ed7f870f47c7_roi_mask.nii.gz",
+      "agatston_total": 1623.687744140625,
       "agatston_available": 1
     },
     {
-      "id": "8af03e397b74",
-      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\8af03e397b74\\8af03e397b74_img.nii.gz",
-      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\8af03e397b74\\8af03e397b74_binary_seg.nii.gz",
-      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\8af03e397b74\\8af03e397b74_roi_mask.nii.gz",
-      "agatston_total": 1151.542077306658,
-      "agatston_available": 1
-    },
-    {
-      "id": "92336a36aeb2",
-      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\92336a36aeb2\\92336a36aeb2_img.nii.gz",
-      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\92336a36aeb2\\92336a36aeb2_binary_seg.nii.gz",
-      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\92336a36aeb2\\92336a36aeb2_roi_mask.nii.gz",
-      "agatston_total": 1792.767752148211,
+      "id": "f2e39861fd7f",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\f2e39861fd7f\\f2e39861fd7f_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\f2e39861fd7f\\f2e39861fd7f_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\f2e39861fd7f\\f2e39861fd7f_roi_mask.nii.gz",
+      "agatston_total": 1864.550411386881,
       "agatston_available": 1
     },
     {
@@ -2505,27 +2449,27 @@
       "agatston_available": 1
     },
     {
-      "id": "5afcf4192aec",
-      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\5afcf4192aec\\5afcf4192aec_img.nii.gz",
-      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\5afcf4192aec\\5afcf4192aec_binary_seg.nii.gz",
-      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\5afcf4192aec\\5afcf4192aec_roi_mask.nii.gz",
-      "agatston_total": 50.61418619006872,
+      "id": "a155cec2bd87",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\a155cec2bd87\\a155cec2bd87_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\a155cec2bd87\\a155cec2bd87_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\a155cec2bd87\\a155cec2bd87_roi_mask.nii.gz",
+      "agatston_total": 93.79651714116336,
       "agatston_available": 1
     },
     {
-      "id": "1c362ef95e22",
-      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\1c362ef95e22\\1c362ef95e22_img.nii.gz",
-      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\1c362ef95e22\\1c362ef95e22_binary_seg.nii.gz",
-      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\1c362ef95e22\\1c362ef95e22_roi_mask.nii.gz",
-      "agatston_total": 29.818153381347656,
+      "id": "26343a3867ad",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\26343a3867ad\\26343a3867ad_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\26343a3867ad\\26343a3867ad_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\26343a3867ad\\26343a3867ad_roi_mask.nii.gz",
+      "agatston_total": 29.330870509147644,
       "agatston_available": 1
     },
     {
-      "id": "422e2fa73819",
-      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\422e2fa73819\\422e2fa73819_img.nii.gz",
-      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\422e2fa73819\\422e2fa73819_binary_seg.nii.gz",
-      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\422e2fa73819\\422e2fa73819_roi_mask.nii.gz",
-      "agatston_total": 14.6484375,
+      "id": "d702753f7c3f",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\d702753f7c3f\\d702753f7c3f_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\d702753f7c3f\\d702753f7c3f_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\d702753f7c3f\\d702753f7c3f_roi_mask.nii.gz",
+      "agatston_total": 19.92216501384973,
       "agatston_available": 1
     },
     {
@@ -2537,19 +2481,27 @@
       "agatston_available": 1
     },
     {
-      "id": "c01714af59cb",
-      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\c01714af59cb\\c01714af59cb_img.nii.gz",
-      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\c01714af59cb\\c01714af59cb_binary_seg.nii.gz",
-      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\c01714af59cb\\c01714af59cb_roi_mask.nii.gz",
-      "agatston_total": 55.262328358367085,
+      "id": "f3e2ef6a6fc9",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\f3e2ef6a6fc9\\f3e2ef6a6fc9_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\f3e2ef6a6fc9\\f3e2ef6a6fc9_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\f3e2ef6a6fc9\\f3e2ef6a6fc9_roi_mask.nii.gz",
+      "agatston_total": 52.1425643004477,
       "agatston_available": 1
     },
     {
-      "id": "dcc57ed42160",
-      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\dcc57ed42160\\dcc57ed42160_img.nii.gz",
-      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\dcc57ed42160\\dcc57ed42160_binary_seg.nii.gz",
-      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\dcc57ed42160\\dcc57ed42160_roi_mask.nii.gz",
-      "agatston_total": 228.3684093505144,
+      "id": "197c12a06af0",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\197c12a06af0\\197c12a06af0_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\197c12a06af0\\197c12a06af0_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\197c12a06af0\\197c12a06af0_roi_mask.nii.gz",
+      "agatston_total": 21.13844277337193,
+      "agatston_available": 1
+    },
+    {
+      "id": "5049d1514a2d",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\5049d1514a2d\\5049d1514a2d_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\5049d1514a2d\\5049d1514a2d_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\5049d1514a2d\\5049d1514a2d_roi_mask.nii.gz",
+      "agatston_total": 329.6906830742955,
       "agatston_available": 1
     },
     {
@@ -2569,19 +2521,19 @@
       "agatston_available": 1
     },
     {
-      "id": "859814b4b6c5",
-      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\859814b4b6c5\\859814b4b6c5_img.nii.gz",
-      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\859814b4b6c5\\859814b4b6c5_binary_seg.nii.gz",
-      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\859814b4b6c5\\859814b4b6c5_roi_mask.nii.gz",
-      "agatston_total": 138.5781217366457,
+      "id": "7e001e4eaacf",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\7e001e4eaacf\\7e001e4eaacf_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\7e001e4eaacf\\7e001e4eaacf_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\7e001e4eaacf\\7e001e4eaacf_roi_mask.nii.gz",
+      "agatston_total": 103.46106118522584,
       "agatston_available": 1
     },
     {
-      "id": "52712d30f9e2",
-      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\52712d30f9e2\\52712d30f9e2_img.nii.gz",
-      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\52712d30f9e2\\52712d30f9e2_binary_seg.nii.gz",
-      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\52712d30f9e2\\52712d30f9e2_roi_mask.nii.gz",
-      "agatston_total": 130.37963639944792,
+      "id": "31e95e6bcb1e",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\31e95e6bcb1e\\31e95e6bcb1e_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\31e95e6bcb1e\\31e95e6bcb1e_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\31e95e6bcb1e\\31e95e6bcb1e_roi_mask.nii.gz",
+      "agatston_total": 171.96618057787418,
       "agatston_available": 1
     },
     {
@@ -2601,19 +2553,11 @@
       "agatston_available": 1
     },
     {
-      "id": "ed7f870f47c7",
-      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\ed7f870f47c7\\ed7f870f47c7_img.nii.gz",
-      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\ed7f870f47c7\\ed7f870f47c7_binary_seg.nii.gz",
-      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\ed7f870f47c7\\ed7f870f47c7_roi_mask.nii.gz",
-      "agatston_total": 1623.687744140625,
-      "agatston_available": 1
-    },
-    {
-      "id": "444533769a11",
-      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\444533769a11\\444533769a11_img.nii.gz",
-      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\444533769a11\\444533769a11_binary_seg.nii.gz",
-      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\444533769a11\\444533769a11_roi_mask.nii.gz",
-      "agatston_total": 1114.232609095052,
+      "id": "59543c3a4fa2",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\59543c3a4fa2\\59543c3a4fa2_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\59543c3a4fa2\\59543c3a4fa2_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\59543c3a4fa2\\59543c3a4fa2_roi_mask.nii.gz",
+      "agatston_total": 1669.8640170507133,
       "agatston_available": 1
     },
     {
@@ -2657,27 +2601,27 @@
       "agatston_available": 1
     },
     {
-      "id": "a155cec2bd87",
-      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\a155cec2bd87\\a155cec2bd87_img.nii.gz",
-      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\a155cec2bd87\\a155cec2bd87_binary_seg.nii.gz",
-      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\a155cec2bd87\\a155cec2bd87_roi_mask.nii.gz",
-      "agatston_total": 93.79651714116336,
+      "id": "6b6a23df91d3",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\6b6a23df91d3\\6b6a23df91d3_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\6b6a23df91d3\\6b6a23df91d3_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\6b6a23df91d3\\6b6a23df91d3_roi_mask.nii.gz",
+      "agatston_total": 58.86367675848305,
       "agatston_available": 1
     },
     {
-      "id": "a0838abd89bb",
-      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\a0838abd89bb\\a0838abd89bb_img.nii.gz",
-      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\a0838abd89bb\\a0838abd89bb_binary_seg.nii.gz",
-      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\a0838abd89bb\\a0838abd89bb_roi_mask.nii.gz",
-      "agatston_total": 27.42626881226897,
+      "id": "10a33fea4a4f",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\10a33fea4a4f\\10a33fea4a4f_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\10a33fea4a4f\\10a33fea4a4f_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\10a33fea4a4f\\10a33fea4a4f_roi_mask.nii.gz",
+      "agatston_total": 26.30120567046106,
       "agatston_available": 1
     },
     {
-      "id": "d702753f7c3f",
-      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\d702753f7c3f\\d702753f7c3f_img.nii.gz",
-      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\d702753f7c3f\\d702753f7c3f_binary_seg.nii.gz",
-      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\d702753f7c3f\\d702753f7c3f_roi_mask.nii.gz",
-      "agatston_total": 19.92216501384973,
+      "id": "87081cf60f68",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\87081cf60f68\\87081cf60f68_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\87081cf60f68\\87081cf60f68_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\87081cf60f68\\87081cf60f68_roi_mask.nii.gz",
+      "agatston_total": 26.79455578327179,
       "agatston_available": 1
     },
     {
@@ -2689,19 +2633,19 @@
       "agatston_available": 1
     },
     {
-      "id": "f3e2ef6a6fc9",
-      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\f3e2ef6a6fc9\\f3e2ef6a6fc9_img.nii.gz",
-      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\f3e2ef6a6fc9\\f3e2ef6a6fc9_binary_seg.nii.gz",
-      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\f3e2ef6a6fc9\\f3e2ef6a6fc9_roi_mask.nii.gz",
-      "agatston_total": 52.1425643004477,
+      "id": "2ded5128c3f7",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\2ded5128c3f7\\2ded5128c3f7_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\2ded5128c3f7\\2ded5128c3f7_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\2ded5128c3f7\\2ded5128c3f7_roi_mask.nii.gz",
+      "agatston_total": 54.48835892602801,
       "agatston_available": 1
     },
     {
-      "id": "5049d1514a2d",
-      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\5049d1514a2d\\5049d1514a2d_img.nii.gz",
-      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\5049d1514a2d\\5049d1514a2d_binary_seg.nii.gz",
-      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\5049d1514a2d\\5049d1514a2d_roi_mask.nii.gz",
-      "agatston_total": 329.6906830742955,
+      "id": "4b0782a6242e",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\4b0782a6242e\\4b0782a6242e_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\4b0782a6242e\\4b0782a6242e_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\4b0782a6242e\\4b0782a6242e_roi_mask.nii.gz",
+      "agatston_total": 316.5468567982316,
       "agatston_available": 1
     },
     {
@@ -2713,19 +2657,19 @@
       "agatston_available": 1
     },
     {
-      "id": "c4d390538416",
-      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\c4d390538416\\c4d390538416_img.nii.gz",
-      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\c4d390538416\\c4d390538416_binary_seg.nii.gz",
-      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\c4d390538416\\c4d390538416_roi_mask.nii.gz",
-      "agatston_total": 116.06247117742896,
+      "id": "29ec6092bea5",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\29ec6092bea5\\29ec6092bea5_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\29ec6092bea5\\29ec6092bea5_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\29ec6092bea5\\29ec6092bea5_roi_mask.nii.gz",
+      "agatston_total": 101.776123046875,
       "agatston_available": 1
     },
     {
-      "id": "31e95e6bcb1e",
-      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\31e95e6bcb1e\\31e95e6bcb1e_img.nii.gz",
-      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\31e95e6bcb1e\\31e95e6bcb1e_binary_seg.nii.gz",
-      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\31e95e6bcb1e\\31e95e6bcb1e_roi_mask.nii.gz",
-      "agatston_total": 171.96618057787418,
+      "id": "5e84396e8298",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\5e84396e8298\\5e84396e8298_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\5e84396e8298\\5e84396e8298_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\5e84396e8298\\5e84396e8298_roi_mask.nii.gz",
+      "agatston_total": 165.40759205818176,
       "agatston_available": 1
     },
     {
@@ -2745,19 +2689,11 @@
       "agatston_available": 1
     },
     {
-      "id": "59543c3a4fa2",
-      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\59543c3a4fa2\\59543c3a4fa2_img.nii.gz",
-      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\59543c3a4fa2\\59543c3a4fa2_binary_seg.nii.gz",
-      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\59543c3a4fa2\\59543c3a4fa2_roi_mask.nii.gz",
-      "agatston_total": 1669.8640170507133,
-      "agatston_available": 1
-    },
-    {
-      "id": "a48357154b98",
-      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\a48357154b98\\a48357154b98_img.nii.gz",
-      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\a48357154b98\\a48357154b98_binary_seg.nii.gz",
-      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\a48357154b98\\a48357154b98_roi_mask.nii.gz",
-      "agatston_total": 2423.4463691711426,
+      "id": "38222120d7dc",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\38222120d7dc\\38222120d7dc_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\38222120d7dc\\38222120d7dc_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\38222120d7dc\\38222120d7dc_roi_mask.nii.gz",
+      "agatston_total": 1462.8299713134766,
       "agatston_available": 1
     },
     {
@@ -2801,155 +2737,11 @@
       "agatston_available": 1
     },
     {
-      "id": "6b6a23df91d3",
-      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\6b6a23df91d3\\6b6a23df91d3_img.nii.gz",
-      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\6b6a23df91d3\\6b6a23df91d3_binary_seg.nii.gz",
-      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\6b6a23df91d3\\6b6a23df91d3_roi_mask.nii.gz",
-      "agatston_total": 58.86367675848305,
-      "agatston_available": 1
-    },
-    {
-      "id": "26343a3867ad",
-      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\26343a3867ad\\26343a3867ad_img.nii.gz",
-      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\26343a3867ad\\26343a3867ad_binary_seg.nii.gz",
-      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\26343a3867ad\\26343a3867ad_roi_mask.nii.gz",
-      "agatston_total": 29.330870509147644,
-      "agatston_available": 1
-    },
-    {
-      "id": "87081cf60f68",
-      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\87081cf60f68\\87081cf60f68_img.nii.gz",
-      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\87081cf60f68\\87081cf60f68_binary_seg.nii.gz",
-      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\87081cf60f68\\87081cf60f68_roi_mask.nii.gz",
-      "agatston_total": 26.79455578327179,
-      "agatston_available": 1
-    },
-    {
-      "id": "0f6a1981898c",
-      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\0f6a1981898c\\0f6a1981898c_img.nii.gz",
-      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\0f6a1981898c\\0f6a1981898c_binary_seg.nii.gz",
-      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\0f6a1981898c\\0f6a1981898c_roi_mask.nii.gz",
-      "agatston_total": 15.009582601487637,
-      "agatston_available": 1
-    },
-    {
-      "id": "2ded5128c3f7",
-      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\2ded5128c3f7\\2ded5128c3f7_img.nii.gz",
-      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\2ded5128c3f7\\2ded5128c3f7_binary_seg.nii.gz",
-      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\2ded5128c3f7\\2ded5128c3f7_roi_mask.nii.gz",
-      "agatston_total": 54.48835892602801,
-      "agatston_available": 1
-    },
-    {
-      "id": "4b0782a6242e",
-      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\4b0782a6242e\\4b0782a6242e_img.nii.gz",
-      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\4b0782a6242e\\4b0782a6242e_binary_seg.nii.gz",
-      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\4b0782a6242e\\4b0782a6242e_roi_mask.nii.gz",
-      "agatston_total": 316.5468567982316,
-      "agatston_available": 1
-    },
-    {
-      "id": "bd3f38288c38",
-      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\bd3f38288c38\\bd3f38288c38_img.nii.gz",
-      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\bd3f38288c38\\bd3f38288c38_binary_seg.nii.gz",
-      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\bd3f38288c38\\bd3f38288c38_roi_mask.nii.gz",
-      "agatston_total": 146.44134524278343,
-      "agatston_available": 1
-    },
-    {
-      "id": "7e001e4eaacf",
-      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\7e001e4eaacf\\7e001e4eaacf_img.nii.gz",
-      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\7e001e4eaacf\\7e001e4eaacf_binary_seg.nii.gz",
-      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\7e001e4eaacf\\7e001e4eaacf_roi_mask.nii.gz",
-      "agatston_total": 103.46106118522584,
-      "agatston_available": 1
-    },
-    {
-      "id": "5e84396e8298",
-      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\5e84396e8298\\5e84396e8298_img.nii.gz",
-      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\5e84396e8298\\5e84396e8298_binary_seg.nii.gz",
-      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\5e84396e8298\\5e84396e8298_roi_mask.nii.gz",
-      "agatston_total": 165.40759205818176,
-      "agatston_available": 1
-    },
-    {
-      "id": "cadb0d92d18e",
-      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\cadb0d92d18e\\cadb0d92d18e_img.nii.gz",
-      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\cadb0d92d18e\\cadb0d92d18e_binary_seg.nii.gz",
-      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\cadb0d92d18e\\cadb0d92d18e_roi_mask.nii.gz",
-      "agatston_total": 627.893194835633,
-      "agatston_available": 1
-    },
-    {
-      "id": "1f6436f3d493",
-      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\1f6436f3d493\\1f6436f3d493_img.nii.gz",
-      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\1f6436f3d493\\1f6436f3d493_binary_seg.nii.gz",
-      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\1f6436f3d493\\1f6436f3d493_roi_mask.nii.gz",
-      "agatston_total": 675.427786516957,
-      "agatston_available": 1
-    },
-    {
-      "id": "38222120d7dc",
-      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\38222120d7dc\\38222120d7dc_img.nii.gz",
-      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\38222120d7dc\\38222120d7dc_binary_seg.nii.gz",
-      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\38222120d7dc\\38222120d7dc_roi_mask.nii.gz",
-      "agatston_total": 1462.8299713134766,
-      "agatston_available": 1
-    },
-    {
-      "id": "c119775e78e9",
-      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\c119775e78e9\\c119775e78e9_img.nii.gz",
-      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\c119775e78e9\\c119775e78e9_binary_seg.nii.gz",
-      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\c119775e78e9\\c119775e78e9_roi_mask.nii.gz",
-      "agatston_total": 0.9238128550350666,
-      "agatston_available": 1
-    },
-    {
-      "id": "3a66eef415c2",
-      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\3a66eef415c2\\3a66eef415c2_img.nii.gz",
-      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\3a66eef415c2\\3a66eef415c2_binary_seg.nii.gz",
-      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\3a66eef415c2\\3a66eef415c2_roi_mask.nii.gz",
-      "agatston_total": 7.553291320800781,
-      "agatston_available": 1
-    },
-    {
-      "id": "1219fdbb1c98",
-      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\1219fdbb1c98\\1219fdbb1c98_img.nii.gz",
-      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\1219fdbb1c98\\1219fdbb1c98_binary_seg.nii.gz",
-      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\1219fdbb1c98\\1219fdbb1c98_roi_mask.nii.gz",
-      "agatston_total": 1.6450652852654457,
-      "agatston_available": 1
-    },
-    {
-      "id": "dc5d261e42f4",
-      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\dc5d261e42f4\\dc5d261e42f4_img.nii.gz",
-      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\dc5d261e42f4\\dc5d261e42f4_binary_seg.nii.gz",
-      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\dc5d261e42f4\\dc5d261e42f4_roi_mask.nii.gz",
-      "agatston_total": 15.257648564875126,
-      "agatston_available": 1
-    },
-    {
-      "id": "20c7d625f5f0",
-      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\20c7d625f5f0\\20c7d625f5f0_img.nii.gz",
-      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\20c7d625f5f0\\20c7d625f5f0_binary_seg.nii.gz",
-      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\20c7d625f5f0\\20c7d625f5f0_roi_mask.nii.gz",
-      "agatston_total": 49.65600669384003,
-      "agatston_available": 1
-    },
-    {
       "id": "d8d4826030d8",
       "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\d8d4826030d8\\d8d4826030d8_img.nii.gz",
       "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\d8d4826030d8\\d8d4826030d8_binary_seg.nii.gz",
       "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\d8d4826030d8\\d8d4826030d8_roi_mask.nii.gz",
       "agatston_total": 99.84594797715545,
-      "agatston_available": 1
-    },
-    {
-      "id": "10a33fea4a4f",
-      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\10a33fea4a4f\\10a33fea4a4f_img.nii.gz",
-      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\10a33fea4a4f\\10a33fea4a4f_binary_seg.nii.gz",
-      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\10a33fea4a4f\\10a33fea4a4f_roi_mask.nii.gz",
-      "agatston_total": 26.30120567046106,
       "agatston_available": 1
     },
     {
@@ -2961,11 +2753,11 @@
       "agatston_available": 1
     },
     {
-      "id": "dbc28745d80f",
-      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\dbc28745d80f\\dbc28745d80f_img.nii.gz",
-      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\dbc28745d80f\\dbc28745d80f_binary_seg.nii.gz",
-      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\dbc28745d80f\\dbc28745d80f_roi_mask.nii.gz",
-      "agatston_total": 38.42090666294098,
+      "id": "0f6a1981898c",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\0f6a1981898c\\0f6a1981898c_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\0f6a1981898c\\0f6a1981898c_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\0f6a1981898c\\0f6a1981898c_roi_mask.nii.gz",
+      "agatston_total": 15.009582601487637,
       "agatston_available": 1
     },
     {
@@ -2985,19 +2777,123 @@
       "agatston_available": 1
     },
     {
+      "id": "bd3f38288c38",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\bd3f38288c38\\bd3f38288c38_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\bd3f38288c38\\bd3f38288c38_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\bd3f38288c38\\bd3f38288c38_roi_mask.nii.gz",
+      "agatston_total": 146.44134524278343,
+      "agatston_available": 1
+    },
+    {
+      "id": "f6e83b22ae09",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\f6e83b22ae09\\f6e83b22ae09_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\f6e83b22ae09\\f6e83b22ae09_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\f6e83b22ae09\\f6e83b22ae09_roi_mask.nii.gz",
+      "agatston_total": 161.13100638613105,
+      "agatston_available": 1
+    },
+    {
+      "id": "cadb0d92d18e",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\cadb0d92d18e\\cadb0d92d18e_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\cadb0d92d18e\\cadb0d92d18e_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\cadb0d92d18e\\cadb0d92d18e_roi_mask.nii.gz",
+      "agatston_total": 627.893194835633,
+      "agatston_available": 1
+    },
+    {
+      "id": "1f6436f3d493",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\1f6436f3d493\\1f6436f3d493_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\1f6436f3d493\\1f6436f3d493_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\1f6436f3d493\\1f6436f3d493_roi_mask.nii.gz",
+      "agatston_total": 675.427786516957,
+      "agatston_available": 1
+    },
+    {
+      "id": "f907e4bb0215",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\f907e4bb0215\\f907e4bb0215_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\f907e4bb0215\\f907e4bb0215_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\f907e4bb0215\\f907e4bb0215_roi_mask.nii.gz",
+      "agatston_total": 1600.3856443800032,
+      "agatston_available": 1
+    },
+    {
+      "id": "c119775e78e9",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\c119775e78e9\\c119775e78e9_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\c119775e78e9\\c119775e78e9_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\c119775e78e9\\c119775e78e9_roi_mask.nii.gz",
+      "agatston_total": 0.9238128550350666,
+      "agatston_available": 1
+    },
+    {
+      "id": "3a66eef415c2",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\3a66eef415c2\\3a66eef415c2_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\3a66eef415c2\\3a66eef415c2_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\3a66eef415c2\\3a66eef415c2_roi_mask.nii.gz",
+      "agatston_total": 7.553291320800781,
+      "agatston_available": 1
+    },
+    {
+      "id": "d147a7b1c907",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\d147a7b1c907\\d147a7b1c907_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\d147a7b1c907\\d147a7b1c907_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\d147a7b1c907\\d147a7b1c907_roi_mask.nii.gz",
+      "agatston_total": 44.49015585705638,
+      "agatston_available": 1
+    },
+    {
+      "id": "20c7d625f5f0",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\20c7d625f5f0\\20c7d625f5f0_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\20c7d625f5f0\\20c7d625f5f0_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\20c7d625f5f0\\20c7d625f5f0_roi_mask.nii.gz",
+      "agatston_total": 49.65600669384003,
+      "agatston_available": 1
+    },
+    {
+      "id": "8a7c0a9d512d",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\8a7c0a9d512d\\8a7c0a9d512d_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\8a7c0a9d512d\\8a7c0a9d512d_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\8a7c0a9d512d\\8a7c0a9d512d_roi_mask.nii.gz",
+      "agatston_total": 71.29101529717445,
+      "agatston_available": 1
+    },
+    {
+      "id": "8cd85982d033",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\8cd85982d033\\8cd85982d033_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\8cd85982d033\\8cd85982d033_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\8cd85982d033\\8cd85982d033_roi_mask.nii.gz",
+      "agatston_total": 11.768692266196012,
+      "agatston_available": 1
+    },
+    {
+      "id": "dbc28745d80f",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\dbc28745d80f\\dbc28745d80f_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\dbc28745d80f\\dbc28745d80f_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\dbc28745d80f\\dbc28745d80f_roi_mask.nii.gz",
+      "agatston_total": 38.42090666294098,
+      "agatston_available": 1
+    },
+    {
+      "id": "7b404b9a06c5",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\7b404b9a06c5\\7b404b9a06c5_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\7b404b9a06c5\\7b404b9a06c5_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\7b404b9a06c5\\7b404b9a06c5_roi_mask.nii.gz",
+      "agatston_total": 14.24548365175724,
+      "agatston_available": 1
+    },
+    {
+      "id": "22fa117238e4",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\22fa117238e4\\22fa117238e4_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\22fa117238e4\\22fa117238e4_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\22fa117238e4\\22fa117238e4_roi_mask.nii.gz",
+      "agatston_total": 262.0231907814741,
+      "agatston_available": 1
+    },
+    {
       "id": "6f6fd64c9d7d",
       "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\6f6fd64c9d7d\\6f6fd64c9d7d_img.nii.gz",
       "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\6f6fd64c9d7d\\6f6fd64c9d7d_binary_seg.nii.gz",
       "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\6f6fd64c9d7d\\6f6fd64c9d7d_roi_mask.nii.gz",
       "agatston_total": 156.28120587207377,
-      "agatston_available": 1
-    },
-    {
-      "id": "29ec6092bea5",
-      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\29ec6092bea5\\29ec6092bea5_img.nii.gz",
-      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\29ec6092bea5\\29ec6092bea5_binary_seg.nii.gz",
-      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\29ec6092bea5\\29ec6092bea5_roi_mask.nii.gz",
-      "agatston_total": 101.776123046875,
       "agatston_available": 1
     },
     {
@@ -3041,11 +2937,11 @@
       "agatston_available": 1
     },
     {
-      "id": "d147a7b1c907",
-      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\d147a7b1c907\\d147a7b1c907_img.nii.gz",
-      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\d147a7b1c907\\d147a7b1c907_binary_seg.nii.gz",
-      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\d147a7b1c907\\d147a7b1c907_roi_mask.nii.gz",
-      "agatston_total": 44.49015585705638,
+      "id": "dc5d261e42f4",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\dc5d261e42f4\\dc5d261e42f4_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\dc5d261e42f4\\dc5d261e42f4_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\dc5d261e42f4\\dc5d261e42f4_roi_mask.nii.gz",
+      "agatston_total": 15.257648564875126,
       "agatston_available": 1
     },
     {
@@ -3057,19 +2953,11 @@
       "agatston_available": 1
     },
     {
-      "id": "8a7c0a9d512d",
-      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\8a7c0a9d512d\\8a7c0a9d512d_img.nii.gz",
-      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\8a7c0a9d512d\\8a7c0a9d512d_binary_seg.nii.gz",
-      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\8a7c0a9d512d\\8a7c0a9d512d_roi_mask.nii.gz",
-      "agatston_total": 71.29101529717445,
-      "agatston_available": 1
-    },
-    {
-      "id": "8cd85982d033",
-      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\8cd85982d033\\8cd85982d033_img.nii.gz",
-      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\8cd85982d033\\8cd85982d033_binary_seg.nii.gz",
-      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\8cd85982d033\\8cd85982d033_roi_mask.nii.gz",
-      "agatston_total": 11.768692266196012,
+      "id": "3e7708d3110e",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\3e7708d3110e\\3e7708d3110e_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\3e7708d3110e\\3e7708d3110e_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\3e7708d3110e\\3e7708d3110e_roi_mask.nii.gz",
+      "agatston_total": 14.946796651929615,
       "agatston_available": 1
     },
     {
@@ -3081,19 +2969,19 @@
       "agatston_available": 1
     },
     {
-      "id": "7b404b9a06c5",
-      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\7b404b9a06c5\\7b404b9a06c5_img.nii.gz",
-      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\7b404b9a06c5\\7b404b9a06c5_binary_seg.nii.gz",
-      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\7b404b9a06c5\\7b404b9a06c5_roi_mask.nii.gz",
-      "agatston_total": 14.24548365175724,
+      "id": "b1bd5f776152",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\b1bd5f776152\\b1bd5f776152_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\b1bd5f776152\\b1bd5f776152_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\b1bd5f776152\\b1bd5f776152_roi_mask.nii.gz",
+      "agatston_total": 16.352050378918648,
       "agatston_available": 1
     },
     {
-      "id": "22fa117238e4",
-      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\22fa117238e4\\22fa117238e4_img.nii.gz",
-      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\22fa117238e4\\22fa117238e4_binary_seg.nii.gz",
-      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\22fa117238e4\\22fa117238e4_roi_mask.nii.gz",
-      "agatston_total": 262.0231907814741,
+      "id": "d4cb86a2d234",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\d4cb86a2d234\\d4cb86a2d234_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\d4cb86a2d234\\d4cb86a2d234_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\d4cb86a2d234\\d4cb86a2d234_roi_mask.nii.gz",
+      "agatston_total": 245.7431677728892,
       "agatston_available": 1
     },
     {
@@ -3121,11 +3009,11 @@
       "agatston_available": 1
     },
     {
-      "id": "f907e4bb0215",
-      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\f907e4bb0215\\f907e4bb0215_img.nii.gz",
-      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\f907e4bb0215\\f907e4bb0215_binary_seg.nii.gz",
-      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\f907e4bb0215\\f907e4bb0215_roi_mask.nii.gz",
-      "agatston_total": 1600.3856443800032,
+      "id": "e0b9fc76db65",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\e0b9fc76db65\\e0b9fc76db65_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\e0b9fc76db65\\e0b9fc76db65_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\e0b9fc76db65\\e0b9fc76db65_roi_mask.nii.gz",
+      "agatston_total": 2102.879490889609,
       "agatston_available": 1
     }
   ],
@@ -3163,94 +3051,6 @@
       "agatston_available": 1
     },
     {
-      "id": "3e7708d3110e",
-      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\3e7708d3110e\\3e7708d3110e_img.nii.gz",
-      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\3e7708d3110e\\3e7708d3110e_binary_seg.nii.gz",
-      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\3e7708d3110e\\3e7708d3110e_roi_mask.nii.gz",
-      "agatston_total": 14.946796651929615,
-      "agatston_available": 1
-    },
-    {
-      "id": "b1bd5f776152",
-      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\b1bd5f776152\\b1bd5f776152_img.nii.gz",
-      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\b1bd5f776152\\b1bd5f776152_binary_seg.nii.gz",
-      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\b1bd5f776152\\b1bd5f776152_roi_mask.nii.gz",
-      "agatston_total": 16.352050378918648,
-      "agatston_available": 1
-    },
-    {
-      "id": "d4cb86a2d234",
-      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\d4cb86a2d234\\d4cb86a2d234_img.nii.gz",
-      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\d4cb86a2d234\\d4cb86a2d234_binary_seg.nii.gz",
-      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\d4cb86a2d234\\d4cb86a2d234_roi_mask.nii.gz",
-      "agatston_total": 245.7431677728892,
-      "agatston_available": 1
-    },
-    {
-      "id": "6f894b0bb16b",
-      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\6f894b0bb16b\\6f894b0bb16b_img.nii.gz",
-      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\6f894b0bb16b\\6f894b0bb16b_binary_seg.nii.gz",
-      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\6f894b0bb16b\\6f894b0bb16b_roi_mask.nii.gz",
-      "agatston_total": 172.81909468583763,
-      "agatston_available": 1
-    },
-    {
-      "id": "d21938717368",
-      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\d21938717368\\d21938717368_img.nii.gz",
-      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\d21938717368\\d21938717368_binary_seg.nii.gz",
-      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\d21938717368\\d21938717368_roi_mask.nii.gz",
-      "agatston_total": 763.57421875,
-      "agatston_available": 1
-    },
-    {
-      "id": "3b8a40f8dc21",
-      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\3b8a40f8dc21\\3b8a40f8dc21_img.nii.gz",
-      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\3b8a40f8dc21\\3b8a40f8dc21_binary_seg.nii.gz",
-      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\3b8a40f8dc21\\3b8a40f8dc21_roi_mask.nii.gz",
-      "agatston_total": 419.09122467041016,
-      "agatston_available": 1
-    },
-    {
-      "id": "e0b9fc76db65",
-      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\e0b9fc76db65\\e0b9fc76db65_img.nii.gz",
-      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\e0b9fc76db65\\e0b9fc76db65_binary_seg.nii.gz",
-      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\e0b9fc76db65\\e0b9fc76db65_roi_mask.nii.gz",
-      "agatston_total": 2102.879490889609,
-      "agatston_available": 1
-    },
-    {
-      "id": "d2b8242a3b0f",
-      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\d2b8242a3b0f\\d2b8242a3b0f_img.nii.gz",
-      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\d2b8242a3b0f\\d2b8242a3b0f_binary_seg.nii.gz",
-      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\d2b8242a3b0f\\d2b8242a3b0f_roi_mask.nii.gz",
-      "agatston_total": 1.2524757534265518,
-      "agatston_available": 1
-    },
-    {
-      "id": "a10f5e39a618",
-      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\a10f5e39a618\\a10f5e39a618_img.nii.gz",
-      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\a10f5e39a618\\a10f5e39a618_binary_seg.nii.gz",
-      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\a10f5e39a618\\a10f5e39a618_roi_mask.nii.gz",
-      "agatston_total": 8.85009765625,
-      "agatston_available": 1
-    },
-    {
-      "id": "ebc319adf8bc",
-      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\ebc319adf8bc\\ebc319adf8bc_img.nii.gz",
-      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\ebc319adf8bc\\ebc319adf8bc_binary_seg.nii.gz",
-      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\ebc319adf8bc\\ebc319adf8bc_roi_mask.nii.gz",
-      "agatston_total": 39.66064474079758,
-      "agatston_available": 1
-    },
-    {
-      "id": "820c13f7308d",
-      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\820c13f7308d\\820c13f7308d_img.nii.gz",
-      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\820c13f7308d\\820c13f7308d_binary_seg.nii.gz",
-      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\820c13f7308d\\820c13f7308d_roi_mask.nii.gz",
-      "agatston_total": 66.35027846787125,
-      "agatston_available": 1
-    },
-    {
       "id": "bc8e425affc5",
       "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\bc8e425affc5\\bc8e425affc5_img.nii.gz",
       "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\bc8e425affc5\\bc8e425affc5_binary_seg.nii.gz",
@@ -3283,19 +3083,19 @@
       "agatston_available": 1
     },
     {
-      "id": "88c466116273",
-      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\88c466116273\\88c466116273_img.nii.gz",
-      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\88c466116273\\88c466116273_binary_seg.nii.gz",
-      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\88c466116273\\88c466116273_roi_mask.nii.gz",
-      "agatston_total": 553.925707982853,
+      "id": "d21938717368",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\d21938717368\\d21938717368_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\d21938717368\\d21938717368_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\d21938717368\\d21938717368_roi_mask.nii.gz",
+      "agatston_total": 763.57421875,
       "agatston_available": 1
     },
     {
-      "id": "b6b20c547c7c",
-      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\b6b20c547c7c\\b6b20c547c7c_img.nii.gz",
-      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\b6b20c547c7c\\b6b20c547c7c_binary_seg.nii.gz",
-      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\b6b20c547c7c\\b6b20c547c7c_roi_mask.nii.gz",
-      "agatston_total": 555.3645496605895,
+      "id": "3b8a40f8dc21",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\3b8a40f8dc21\\3b8a40f8dc21_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\3b8a40f8dc21\\3b8a40f8dc21_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\3b8a40f8dc21\\3b8a40f8dc21_roi_mask.nii.gz",
+      "agatston_total": 419.09122467041016,
       "agatston_available": 1
     },
     {
@@ -3307,27 +3107,27 @@
       "agatston_available": 1
     },
     {
-      "id": "7a0cb076d3f0",
-      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\7a0cb076d3f0\\7a0cb076d3f0_img.nii.gz",
-      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\7a0cb076d3f0\\7a0cb076d3f0_binary_seg.nii.gz",
-      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\7a0cb076d3f0\\7a0cb076d3f0_roi_mask.nii.gz",
-      "agatston_total": 1.2656250037252903,
+      "id": "d2b8242a3b0f",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\d2b8242a3b0f\\d2b8242a3b0f_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\d2b8242a3b0f\\d2b8242a3b0f_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\d2b8242a3b0f\\d2b8242a3b0f_roi_mask.nii.gz",
+      "agatston_total": 1.2524757534265518,
       "agatston_available": 1
     },
     {
-      "id": "1048d399b7e2",
-      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\1048d399b7e2\\1048d399b7e2_img.nii.gz",
-      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\1048d399b7e2\\1048d399b7e2_binary_seg.nii.gz",
-      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\1048d399b7e2\\1048d399b7e2_roi_mask.nii.gz",
-      "agatston_total": 8.898559212684631,
+      "id": "a10f5e39a618",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\a10f5e39a618\\a10f5e39a618_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\a10f5e39a618\\a10f5e39a618_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\a10f5e39a618\\a10f5e39a618_roi_mask.nii.gz",
+      "agatston_total": 8.85009765625,
       "agatston_available": 1
     },
     {
-      "id": "0216eb74651b",
-      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\0216eb74651b\\0216eb74651b_img.nii.gz",
-      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\0216eb74651b\\0216eb74651b_binary_seg.nii.gz",
-      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\0216eb74651b\\0216eb74651b_roi_mask.nii.gz",
-      "agatston_total": 79.57191467285156,
+      "id": "ebc319adf8bc",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\ebc319adf8bc\\ebc319adf8bc_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\ebc319adf8bc\\ebc319adf8bc_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\ebc319adf8bc\\ebc319adf8bc_roi_mask.nii.gz",
+      "agatston_total": 39.66064474079758,
       "agatston_available": 1
     },
     {
@@ -3336,6 +3136,14 @@
       "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\638bea82466a\\638bea82466a_binary_seg.nii.gz",
       "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\638bea82466a\\638bea82466a_roi_mask.nii.gz",
       "agatston_total": 65.65355556085706,
+      "agatston_available": 1
+    },
+    {
+      "id": "a002da03850e",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\a002da03850e\\a002da03850e_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\a002da03850e\\a002da03850e_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\a002da03850e\\a002da03850e_roi_mask.nii.gz",
+      "agatston_total": 20.628478564321995,
       "agatston_available": 1
     },
     {
@@ -3363,19 +3171,19 @@
       "agatston_available": 1
     },
     {
-      "id": "40aeb9270aaa",
-      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\40aeb9270aaa\\40aeb9270aaa_img.nii.gz",
-      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\40aeb9270aaa\\40aeb9270aaa_binary_seg.nii.gz",
-      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\40aeb9270aaa\\40aeb9270aaa_roi_mask.nii.gz",
-      "agatston_total": 494.8651609942317,
+      "id": "88c466116273",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\88c466116273\\88c466116273_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\88c466116273\\88c466116273_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\88c466116273\\88c466116273_roi_mask.nii.gz",
+      "agatston_total": 553.925707982853,
       "agatston_available": 1
     },
     {
-      "id": "3baa53642d99",
-      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\3baa53642d99\\3baa53642d99_img.nii.gz",
-      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\3baa53642d99\\3baa53642d99_binary_seg.nii.gz",
-      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\3baa53642d99\\3baa53642d99_roi_mask.nii.gz",
-      "agatston_total": 890.6362373847514,
+      "id": "b6b20c547c7c",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\b6b20c547c7c\\b6b20c547c7c_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\b6b20c547c7c\\b6b20c547c7c_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\b6b20c547c7c\\b6b20c547c7c_roi_mask.nii.gz",
+      "agatston_total": 555.3645496605895,
       "agatston_available": 1
     },
     {
@@ -3385,23 +3193,21 @@
       "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\7f6f1aa56309\\7f6f1aa56309_roi_mask.nii.gz",
       "agatston_total": 1108.2029342651367,
       "agatston_available": 1
-    }
-  ],
-  "test": [
+    },
     {
-      "id": "a010272b05e8",
-      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\a010272b05e8\\a010272b05e8_img.nii.gz",
-      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\a010272b05e8\\a010272b05e8_binary_seg.nii.gz",
-      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\a010272b05e8\\a010272b05e8_roi_mask.nii.gz",
-      "agatston_total": 1.3830452226102352,
+      "id": "7a0cb076d3f0",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\7a0cb076d3f0\\7a0cb076d3f0_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\7a0cb076d3f0\\7a0cb076d3f0_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\7a0cb076d3f0\\7a0cb076d3f0_roi_mask.nii.gz",
+      "agatston_total": 1.2656250037252903,
       "agatston_available": 1
     },
     {
-      "id": "c6cac61f379a",
-      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\c6cac61f379a\\c6cac61f379a_img.nii.gz",
-      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\c6cac61f379a\\c6cac61f379a_binary_seg.nii.gz",
-      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\c6cac61f379a\\c6cac61f379a_roi_mask.nii.gz",
-      "agatston_total": 7.464843895286322,
+      "id": "1048d399b7e2",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\1048d399b7e2\\1048d399b7e2_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\1048d399b7e2\\1048d399b7e2_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\1048d399b7e2\\1048d399b7e2_roi_mask.nii.gz",
+      "agatston_total": 8.898559212684631,
       "agatston_available": 1
     },
     {
@@ -3437,11 +3243,93 @@
       "agatston_available": 1
     },
     {
-      "id": "df34b8450501",
-      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\df34b8450501\\df34b8450501_img.nii.gz",
-      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\df34b8450501\\df34b8450501_binary_seg.nii.gz",
-      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\df34b8450501\\df34b8450501_roi_mask.nii.gz",
-      "agatston_total": 138.68117495439947,
+      "id": "0e5edec84ae7",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\0e5edec84ae7\\0e5edec84ae7_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\0e5edec84ae7\\0e5edec84ae7_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\0e5edec84ae7\\0e5edec84ae7_roi_mask.nii.gz",
+      "agatston_total": 125.68512137513608,
+      "agatston_available": 1
+    },
+    {
+      "id": "40aeb9270aaa",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\40aeb9270aaa\\40aeb9270aaa_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\40aeb9270aaa\\40aeb9270aaa_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\40aeb9270aaa\\40aeb9270aaa_roi_mask.nii.gz",
+      "agatston_total": 494.8651609942317,
+      "agatston_available": 1
+    },
+    {
+      "id": "3baa53642d99",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\3baa53642d99\\3baa53642d99_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\3baa53642d99\\3baa53642d99_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\3baa53642d99\\3baa53642d99_roi_mask.nii.gz",
+      "agatston_total": 890.6362373847514,
+      "agatston_available": 1
+    },
+    {
+      "id": "93a362e6ac19",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\93a362e6ac19\\93a362e6ac19_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\93a362e6ac19\\93a362e6ac19_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\93a362e6ac19\\93a362e6ac19_roi_mask.nii.gz",
+      "agatston_total": 2713.484250335023,
+      "agatston_available": 1
+    }
+  ],
+  "test": [
+    {
+      "id": "a010272b05e8",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\a010272b05e8\\a010272b05e8_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\a010272b05e8\\a010272b05e8_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\a010272b05e8\\a010272b05e8_roi_mask.nii.gz",
+      "agatston_total": 1.3830452226102352,
+      "agatston_available": 1
+    },
+    {
+      "id": "c6cac61f379a",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\c6cac61f379a\\c6cac61f379a_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\c6cac61f379a\\c6cac61f379a_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\c6cac61f379a\\c6cac61f379a_roi_mask.nii.gz",
+      "agatston_total": 7.464843895286322,
+      "agatston_available": 1
+    },
+    {
+      "id": "88413f3ba135",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\88413f3ba135\\88413f3ba135_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\88413f3ba135\\88413f3ba135_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\88413f3ba135\\88413f3ba135_roi_mask.nii.gz",
+      "agatston_total": 22.266235202550888,
+      "agatston_available": 1
+    },
+    {
+      "id": "92da14e398c6",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\92da14e398c6\\92da14e398c6_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\92da14e398c6\\92da14e398c6_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\92da14e398c6\\92da14e398c6_roi_mask.nii.gz",
+      "agatston_total": 55.72821721434593,
+      "agatston_available": 1
+    },
+    {
+      "id": "747f92bd53bd",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\747f92bd53bd\\747f92bd53bd_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\747f92bd53bd\\747f92bd53bd_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\747f92bd53bd\\747f92bd53bd_roi_mask.nii.gz",
+      "agatston_total": 16.536712646484375,
+      "agatston_available": 1
+    },
+    {
+      "id": "aec2b0000dc7",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\aec2b0000dc7\\aec2b0000dc7_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\aec2b0000dc7\\aec2b0000dc7_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\aec2b0000dc7\\aec2b0000dc7_roi_mask.nii.gz",
+      "agatston_total": 378.515625,
+      "agatston_available": 1
+    },
+    {
+      "id": "7dfa0c315f9c",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\7dfa0c315f9c\\7dfa0c315f9c_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\7dfa0c315f9c\\7dfa0c315f9c_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\7dfa0c315f9c\\7dfa0c315f9c_roi_mask.nii.gz",
+      "agatston_total": 125.88821472600102,
       "agatston_available": 1
     },
     {
@@ -3485,27 +3373,27 @@
       "agatston_available": 1
     },
     {
-      "id": "88413f3ba135",
-      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\88413f3ba135\\88413f3ba135_img.nii.gz",
-      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\88413f3ba135\\88413f3ba135_binary_seg.nii.gz",
-      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\88413f3ba135\\88413f3ba135_roi_mask.nii.gz",
-      "agatston_total": 22.266235202550888,
+      "id": "0216eb74651b",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\0216eb74651b\\0216eb74651b_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\0216eb74651b\\0216eb74651b_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\0216eb74651b\\0216eb74651b_roi_mask.nii.gz",
+      "agatston_total": 79.57191467285156,
       "agatston_available": 1
     },
     {
-      "id": "aec2b0000dc7",
-      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\aec2b0000dc7\\aec2b0000dc7_img.nii.gz",
-      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\aec2b0000dc7\\aec2b0000dc7_binary_seg.nii.gz",
-      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\aec2b0000dc7\\aec2b0000dc7_roi_mask.nii.gz",
-      "agatston_total": 378.515625,
+      "id": "13902701b638",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\13902701b638\\13902701b638_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\13902701b638\\13902701b638_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\13902701b638\\13902701b638_roi_mask.nii.gz",
+      "agatston_total": 244.40625347197056,
       "agatston_available": 1
     },
     {
-      "id": "fd31be0151e9",
-      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\fd31be0151e9\\fd31be0151e9_img.nii.gz",
-      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\fd31be0151e9\\fd31be0151e9_binary_seg.nii.gz",
-      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\fd31be0151e9\\fd31be0151e9_roi_mask.nii.gz",
-      "agatston_total": 218.25964394956827,
+      "id": "32a300bb4d3d",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\32a300bb4d3d\\32a300bb4d3d_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\32a300bb4d3d\\32a300bb4d3d_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\32a300bb4d3d\\32a300bb4d3d_roi_mask.nii.gz",
+      "agatston_total": 113.6809077579528,
       "agatston_available": 1
     },
     {
@@ -3525,11 +3413,11 @@
       "agatston_available": 1
     },
     {
-      "id": "93a362e6ac19",
-      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\93a362e6ac19\\93a362e6ac19_img.nii.gz",
-      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\93a362e6ac19\\93a362e6ac19_binary_seg.nii.gz",
-      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\93a362e6ac19\\93a362e6ac19_roi_mask.nii.gz",
-      "agatston_total": 2713.484250335023,
+      "id": "3686a119dc50",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\3686a119dc50\\3686a119dc50_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\3686a119dc50\\3686a119dc50_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\3686a119dc50\\3686a119dc50_roi_mask.nii.gz",
+      "agatston_total": 2833.9225742500275,
       "agatston_available": 1
     },
     {
@@ -3549,27 +3437,19 @@
       "agatston_available": 1
     },
     {
-      "id": "747f92bd53bd",
-      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\747f92bd53bd\\747f92bd53bd_img.nii.gz",
-      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\747f92bd53bd\\747f92bd53bd_binary_seg.nii.gz",
-      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\747f92bd53bd\\747f92bd53bd_roi_mask.nii.gz",
-      "agatston_total": 16.536712646484375,
+      "id": "5afcf4192aec",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\5afcf4192aec\\5afcf4192aec_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\5afcf4192aec\\5afcf4192aec_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\5afcf4192aec\\5afcf4192aec_roi_mask.nii.gz",
+      "agatston_total": 50.61418619006872,
       "agatston_available": 1
     },
     {
-      "id": "13902701b638",
-      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\13902701b638\\13902701b638_img.nii.gz",
-      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\13902701b638\\13902701b638_binary_seg.nii.gz",
-      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\13902701b638\\13902701b638_roi_mask.nii.gz",
-      "agatston_total": 244.40625347197056,
-      "agatston_available": 1
-    },
-    {
-      "id": "0e5edec84ae7",
-      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\0e5edec84ae7\\0e5edec84ae7_img.nii.gz",
-      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\0e5edec84ae7\\0e5edec84ae7_binary_seg.nii.gz",
-      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\0e5edec84ae7\\0e5edec84ae7_roi_mask.nii.gz",
-      "agatston_total": 125.68512137513608,
+      "id": "b8c59c8a4e75",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\b8c59c8a4e75\\b8c59c8a4e75_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\b8c59c8a4e75\\b8c59c8a4e75_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\b8c59c8a4e75\\b8c59c8a4e75_roi_mask.nii.gz",
+      "agatston_total": 224.4163802359253,
       "agatston_available": 1
     },
     {
@@ -3581,11 +3461,11 @@
       "agatston_available": 1
     },
     {
-      "id": "3686a119dc50",
-      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\3686a119dc50\\3686a119dc50_img.nii.gz",
-      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\3686a119dc50\\3686a119dc50_binary_seg.nii.gz",
-      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\3686a119dc50\\3686a119dc50_roi_mask.nii.gz",
-      "agatston_total": 2833.9225742500275,
+      "id": "91317526d2d3",
+      "image": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\91317526d2d3\\91317526d2d3_img.nii.gz",
+      "label": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\91317526d2d3\\91317526d2d3_binary_seg.nii.gz",
+      "roi_mask": "E:\\MyProjects\\Gsoc_2026_Official\\data_resampled\\91317526d2d3\\91317526d2d3_roi_mask.nii.gz",
+      "agatston_total": 2298.9489178173244,
       "agatston_available": 1
     }
   ]

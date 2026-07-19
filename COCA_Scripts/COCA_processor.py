@@ -22,6 +22,12 @@ ARTERY_LABELS = {
     "Left Circumflex Artery": 4
 }
 
+lesions_skipped = 0
+
+faulty_scans = 0
+faulty_xml_lesions = 0
+faulty_ct_lesions = 0
+
 #Any unknown labelling will be marked as 5, but will still contribute to the overall binary mask and Agatston score. This is to preserve all annotated calcium while also allowing us to identify potential issues with artery naming in the XML files.
 
 
@@ -67,7 +73,10 @@ class COCAProcessor:
         h = hashlib.sha1("||".join(parts).encode("utf-8")).hexdigest()
         return h[:n]
 
-    def parse_plist_filled(self, xml_path: Path, image_shape: tuple, spacing):
+    def parse_plist_filled(self, xml_path: Path, image_array, image_shape: tuple, spacing):
+      global lesions_skipped
+      global faulty_xml_lesions
+      global faulty_ct_lesions
 
       binary_mask = np.zeros(image_shape, dtype=np.uint8)
       multi_mask = np.zeros(image_shape, dtype=np.uint8)
@@ -99,7 +108,8 @@ class COCAProcessor:
               [],
               artery_scores,
               total_agatston,
-              lesion_count
+              lesion_count,
+              False
           )
       else:
             if debug:
@@ -126,14 +136,36 @@ class COCAProcessor:
                       continue
 
                   area_mm2 = float(roi.get("Area", 0)) * 100  # Convert from cm^2 to mm^2
-                  max_hu = float(roi.get("Max", 0))
+                  roi_max_hu = float(roi.get("Max", 0))
+
+                  if roi_max_hu < 130:
+
+                    if debug:
+                        print(
+                            f"\n $$ [FAULTY SCAN] {xml_path.stem}"
+                            f" | Slice {z}"
+                            f" | Reason: ROI Max HU < 130"
+                            f" | XML Max HU = {roi_max_hu:.1f}"
+                        )
+
+                    lesions_skipped += 1
+                    faulty_xml_lesions += 1
+
+                    return (
+                        None,
+                        None,
+                        [],
+                        artery_scores,
+                        0.0,
+                        0,
+                        True
+                    )
 
                   if area_mm2 > 0:
-                      lesion_count += 1
 
                       roi_score = (
                           area_mm2 *
-                          agatston_factor(max_hu)
+                          agatston_factor(roi_max_hu)
                       )
 
                       total_agatston += roi_score
@@ -228,6 +260,43 @@ class COCAProcessor:
 
 
                   if np.any(temp_binary):
+                    
+                      roi_pixels = image_array[z][temp_binary.astype(bool)]
+                      ct_max_hu = float(roi_pixels.max())
+
+                      tolerance = 0.5
+
+                      if (ct_max_hu < 130 or abs(ct_max_hu - roi_max_hu) > tolerance):
+
+                        if(ct_max_hu < 130):
+                            reason = "CT Max HU < 130"
+                        elif(abs(ct_max_hu - roi_max_hu) > tolerance):
+                            reason = "CT Max HU differs from ROI Max HU by more than 0.5"
+
+                        if debug:
+                            print(
+                                f"\n $$ [FAULTY SCAN] {xml_path.stem}"
+                                f" | Slice {z}"
+                                f" | Reason: {reason}"
+                                f" | CT Max HU = {ct_max_hu:.1f}"
+                                f" | XML Max HU = {roi_max_hu:.1f}"
+                            )
+
+                        lesions_skipped += 1
+                        faulty_ct_lesions += 1
+
+                        return (
+                            None,
+                            None,
+                            [],
+                            artery_scores,
+                            0.0,
+                            0,
+                            True
+                        )
+                      
+
+                      lesion_count += 1 #so that only add if mask has it
 
                       binary_mask[z] = np.logical_or(
                           binary_mask[z],
@@ -237,6 +306,7 @@ class COCAProcessor:
                       multi_mask[z][temp_multi > 0] = (
                           temp_multi[temp_multi > 0]
                       )
+
 
                       segmented_slices.add(z)
 
@@ -248,10 +318,10 @@ class COCAProcessor:
 
                       pixel_area_mm2 = spacing_x * spacing_y
 
-
                       mask_area_mm2 = mask_pixels * pixel_area_mm2
-
-                      print(f"XML Area: {xml_area_mm2}, Mask Area: {mask_area_mm2}")
+                    
+                      if debug:
+                        print(f"XML Area: {xml_area_mm2}, Mask Area: {mask_area_mm2}")
 
       except Exception as e:
           print(
@@ -260,13 +330,14 @@ class COCAProcessor:
           )
 
       return (
-          binary_mask,
-          multi_mask,
-          sorted(segmented_slices),
-          artery_scores,
-          total_agatston,
-          lesion_count
-      )
+        binary_mask,
+        multi_mask,
+        sorted(segmented_slices),
+        artery_scores,
+        total_agatston,
+        lesion_count,
+        False
+    )
     
     def discover_series(self):
         """Scans the DICOM root for folders containing at least 5 DICOM files."""
@@ -281,6 +352,7 @@ class COCAProcessor:
         return all_series
 
     def process_all(self):
+        global faulty_scans
         """Main execution loop to process all discovered DICOM series."""
         series_dirs = self.discover_series()
         print(f"Found {len(series_dirs)} valid series. Starting processing...")
@@ -345,15 +417,26 @@ class COCAProcessor:
                 
                 # Generate Mask
                 (binary_mask,
-                    multi_mask,
-                    seg_slices,
-                    artery_scores,
-                    total_agatston,
-                    lesion_count) = self.parse_plist_filled(
+                multi_mask,
+                seg_slices,
+                artery_scores,
+                total_agatston,
+                lesion_count,
+                faulty_scan) = self.parse_plist_filled(
                     xml_path,
+                    img_array,
                     img_array.shape,
                     image.GetSpacing()
                 )
+
+                if faulty_scan:
+                    faulty_scans += 1
+
+                    print(
+                        f"[SKIPPED] Patient {patient_id} discarded due to invalid lesion."
+                    )
+
+                    continue
 
 
 
@@ -437,6 +520,7 @@ class COCAProcessor:
                 })
 
                 dataset_csv.append({
+                    "patient_id": patient_id,
                     "scan_id": scan_id,
                     "image_path": str(scan_folder / f"{scan_id}_img.nii.gz"),
                     "binary_mask_path": str(scan_folder / f"{scan_id}_binary_seg.nii.gz"),
@@ -459,7 +543,15 @@ class COCAProcessor:
         if dataset_csv:
             df_dataset = pd.DataFrame(dataset_csv)
             df_dataset.to_csv(self.out_tables / "dataset.csv", index=False)
-            print(f"Dataset CSV saved to {self.out_tables}/dataset.csv")
+            print(f"\nDataset CSV saved to {self.out_tables}/dataset.csv")
+
+            print("\n================ SUMMARY ================")
+            print(f"Valid scans saved       : {len(df_dataset)}")
+            print(f"Faulty scans discarded  : {faulty_scans}")
+            print(f"Faulty XML lesions      : {faulty_xml_lesions}")
+            print(f"Faulty CT lesions       : {faulty_ct_lesions}")
+            print(f"Total faulty lesions    : {lesions_skipped}")
+            print("========================================")
 
 if __name__ == "__main__":
     
