@@ -15,6 +15,7 @@ A dedicated preprocessing pipeline was introduced to perform LPS orientation nor
 ### 3. Separation of Registration and Evaluation Resolution
 
 The implementation introduced two independent processing paths:- a lower-resolution volume for registration (1.5 mm) and a high-resolution volume (1.0 mm) for final label transformation and evaluation. This reduced computational cost while preserving evaluation accuracy. 
+
 ---
 
 ### 4. Deterministic Multi-Resolution Registration
