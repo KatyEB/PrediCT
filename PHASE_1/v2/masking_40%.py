@@ -1,48 +1,3 @@
-"""
-PrediCT Task 3 — Coronary Atlas Registration Pipeline (v3)
-===========================================================
-Rigid → Affine cascade registering ImageCAS CCTA atlas to COCA NCCT scans.
-Implements all algorithmic corrections from MICCAI-level review.
-
-CHANGES FROM v2 (masking_corrected.py):
-  1. METRIC MASK instead of crop-parameterized affine.
-       Affine now runs on FULL fixed/moving images with a spatial mask isolating
-       the cardiac ROI. This eliminates the coordinate-space mismatch where an
-       affine parameterized on a crop subvolume was applied to a full-resolution
-       label volume at a different scale. (See Section 4, run_affine_stage.)
-
-  2. OPTIMIZER EARLY-TERMINATION FIX.
-       AFFINE_MIN_STEP raised 0.0001 → 0.001, AFFINE_LEARNING_RATE raised
-       0.25 → 1.0, relaxationFactor=0.7 added. Previously the affine was hitting
-       minStep after ~30 iterations (verified: 0.8s wall time for 200 iterations).
-       Genuine convergence now takes 15–40s.
-
-  3. RIGID SCALE FIX.
-       SetOptimizerScalesFromJacobian() → SetOptimizerScalesFromPhysicalShift().
-       Jacobian scales mix radians and mm, under-scaling rotation for Euler3D.
-       PhysicalShift normalizes by physical displacement magnitude per parameter.
-
-  4. MATTES MI BIN COUNT.
-       32 → 50 bins. At 8× pyramid shrink with 20% sampling, 32 bins gives
-       ~375 samples/bin — too noisy for reliable MI gradient estimation.
-       50 bins at full resolution gives adequate density at all pyramid levels.
-
-  5. AFFINE SAMPLING STRATEGY.
-       REGULAR → RANDOM for the affine stage. RANDOM better captures sparse
-       structures (vessel walls, calcium deposits) that REGULAR may miss with
-       a fixed grid, especially on the already-aligned crop-masked volume.
-
-  6. ADAPTIVE ROI MARGIN.
-       Fixed voxel margin → physical-unit margin (20mm default).
-       Converts to voxels at runtime using spacing, with minimum 10-voxel floor.
-       Prevents too-tight ROI on large hearts or unusual cardiac axis.
-
-  7. REDUNDANT RESAMPLING REMOVED.
-       The intermediate rigid_atlas_win full-volume resample used to build
-       moving_win_cropped is eliminated. The affine now uses a metric mask on
-       the full images, so no moving crop is needed. Saves ~0.3s per scan.
-"""
-
 import time
 import traceback
 from pathlib import Path
@@ -75,11 +30,10 @@ class CFG:
     # Preprocessing
     HU_LO          = -200.0
     HU_HI          =  600.0
-    ISO_SPACING_MM =  1.0       # eval resolution
-    REG_SPACING_MM =  1.5       # registration resolution
+    ISO_SPACING_MM =  1.0       
+    REG_SPACING_MM =  1.5      
 
-    # Rigid optimizer
-    # [FIX 3] PhysicalShift scales applied (see run_rigid_stage)
+
     RIGID_LEARNING_RATE = 2.0
     RIGID_MIN_STEP      = 0.001
     RIGID_ITERS         = 250
@@ -87,24 +41,22 @@ class CFG:
 
     # Rigid pyramid
     PYRAMID_SHRINK = [8, 4, 2, 1]
-    PYRAMID_SIGMAS = [3, 2, 1, 0]   # physical mm
-    SAMPLING_FRACTION = 0.20         # REGULAR sampling for rigid
+    PYRAMID_SIGMAS = [3, 2, 1, 0]  
+    SAMPLING_FRACTION = 0.20         
 
-    # Affine optimizer
-    # [FIX 2] Raised learning rate and minStep; added relaxation
-    AFFINE_LEARNING_RATE = 1.0       # was 0.25 — step too small for 12-DOF space
-    AFFINE_MIN_STEP      = 0.001     # was 0.0001 — caused early termination at ~30 iters
+
+    AFFINE_LEARNING_RATE = 1.0     
+    AFFINE_MIN_STEP      = 0.001    
     AFFINE_ITERS         = 200
-    AFFINE_RELAXATION    = 0.7       # was missing — prevents exponential step decay
+    AFFINE_RELAXATION    = 0.7       
 
-    # Affine pyramid (3-level; skip 8× since crops are already small)
+ 
     AFFINE_SHRINK = [4, 2, 1]
     AFFINE_SIGMAS = [2, 1, 0]
 
-    # [FIX 6] Adaptive ROI margin in physical mm (converted to voxels at runtime)
-    ROI_MARGIN_MM        = 30.0      # was fixed 12 voxels (18mm) — now physical units
-    ROI_MARGIN_VOX_MIN   = 10       # floor in voxels for very fine spacings
 
+    ROI_MARGIN_MM        = 30.0     
+    ROI_MARGIN_VOX_MIN   = 10        
     # Validation
     VALIDATION_ROI_MARGIN_VOX = 45
     DISTANCE_MM               = 10.0
@@ -319,44 +271,7 @@ class RegistrationEngine:
                          moving_win: sitk.Image,
                          rigid_tx:   sitk.Transform,
                          roi:        tuple) -> tuple:
-        """
-        12-DOF Affine registration using a SPATIAL METRIC MASK over the cardiac ROI.
-
-        [FIX 1] Metric mask instead of crop-parameterized affine.
-          The previous version cropped fixed_win and moving_win to the cardiac ROI,
-          ran the affine on the crops, then applied the crop-parameterized transform
-          to atlas_lbl_eval at full 1.0mm resolution. The affine center was set in
-          the crop's physical space; applying it to a full-resolution reference
-          caused geometric inconsistency proportional to the distance from the crop
-          center to the full-image center.
-
-          This version runs the affine on the FULL fixed_win and full rigidly-
-          resampled moving_win, restricting the MI metric to cardiac-ROI samples
-          via SetMetricFixedMask. The affine transform parameters are now defined
-          in the same physical coordinate system as the label volume, so no
-          coordinate-space mismatch exists when warping atlas_lbl_eval.
-
-        [FIX 2] Corrected optimizer parameters:
-          - AFFINE_LEARNING_RATE 0.25 → 1.0 (was too small for 12-DOF space)
-          - AFFINE_MIN_STEP 0.0001 → 0.001 (was causing early exit at ~30 iters)
-          - relaxationFactor=0.7 added (prevents exponential step decay)
-
-        [FIX 5] RANDOM sampling (was REGULAR):
-          Random sampling better captures sparse structures (vessel walls, small
-          calcium deposits) that a fixed-grid REGULAR pattern may miss, especially
-          after rigid pre-alignment has reduced the gross positional error.
-
-        Args:
-            fixed_win:  Full 1.5mm windowed patient image.
-            moving_win: Full 1.5mm windowed atlas image (NOT pre-resampled with rigid).
-                        rigid_tx is passed to SetMovingInitialTransform so the optimizer
-                        starts from the rigidly-aligned position.
-            rigid_tx:   Rigid transform from Stage A.
-            roi:        (z0,z1,y0,y1,x0,x1) cardiac bounding box in fixed_win voxels.
-        """
-        # Build binary spatial mask isolating the cardiac ROI in fixed_win space.
-        # The metric samples ONLY within this region; the transform parameters
-        # remain valid over the full image physical space.
+      
         fz0, fz1, fy0, fy1, fx0, fx1 = roi
         mask_arr = np.zeros(sitk.GetArrayFromImage(fixed_win).shape, dtype=np.uint8)
         mask_arr[fz0:fz1, fy0:fy1, fx0:fx1] = 1
@@ -372,27 +287,26 @@ class RegistrationEngine:
             R,
             shrink   = CFG.AFFINE_SHRINK,
             sigmas   = CFG.AFFINE_SIGMAS,
-            n_bins   = 50,                              # [FIX 4]
+            n_bins   = 50,                            
             fraction = 0.50,
-            strategy = sitk.ImageRegistrationMethod.RANDOM  # [FIX 5]
+            strategy = sitk.ImageRegistrationMethod.RANDOM  
         )
         R.SetOptimizerAsRegularStepGradientDescent(
-            learningRate       = CFG.AFFINE_LEARNING_RATE,   # [FIX 2]
-            minStep            = CFG.AFFINE_MIN_STEP,         # [FIX 2]
+            learningRate       = CFG.AFFINE_LEARNING_RATE,   
+            minStep            = CFG.AFFINE_MIN_STEP,        
             numberOfIterations = CFG.AFFINE_ITERS,
-            relaxationFactor   = CFG.AFFINE_RELAXATION        # [FIX 2]
+            relaxationFactor   = CFG.AFFINE_RELAXATION       
         )
         R.SetOptimizerScalesFromPhysicalShift()
-        R.SetMetricFixedMask(metric_mask)                     # [FIX 1]
+        R.SetMetricFixedMask(metric_mask)                    
 
-        # Initialize affine from rigid: optimizer sees the pre-aligned atlas image.
-        # The returned affine captures ONLY the residual local deformation.
+   
         affine_tx = sitk.AffineTransform(3)
         init_affine = sitk.CenteredTransformInitializer(
             fixed_win, moving_win, affine_tx,
             sitk.CenteredTransformInitializerFilter.GEOMETRY
         )
-        R.SetMovingInitialTransform(rigid_tx)   # pre-align moving before metric eval
+        R.SetMovingInitialTransform(rigid_tx)   
         R.SetInitialTransform(init_affine, inPlace=False)
 
         print("\n========== AFFINE MASK DEBUG ==========")
@@ -410,8 +324,7 @@ class RegistrationEngine:
             return composite, R.GetMetricValue()
             
 
-        # Inspect return type — confirmed Case B: CompositeTransform(1 × AffineTransform)
-        # rigid_tx is NOT embedded, so we add it explicitly below.
+    
         if isinstance(final_affine, sitk.CompositeTransform):
             n = final_affine.GetNumberOfTransforms()
             sub_names = [final_affine.GetNthTransform(i).GetName() for i in range(n)]
@@ -419,10 +332,7 @@ class RegistrationEngine:
         else:
             print(f"      Execute returned {final_affine.GetName()}")
 
-        # [FIX 1 continued] Compose rigid + affine in full physical space.
-        # SimpleITK AddTransform order: last-added is evaluated first.
-        # AddTransform(rigid) then AddTransform(affine_residual):
-        #   moving point → rigid → affine_residual → fixed point   (correct)
+      
         composite = sitk.CompositeTransform(3)
         composite.AddTransform(rigid_tx)
         composite.AddTransform(final_affine)
@@ -631,9 +541,9 @@ def main():
             # ── Pre-process patient ──────────────────────────────────────────
             t0 = time.time()
             patient_pack   = Preprocessor.run_memory_resample(scan["image"], scan["seg"])
-            fixed_win      = patient_pack["reg_win"]    # 1.5mm windowed — for registration
-            eval_fixed_raw = patient_pack["eval_raw"]   # 1.0mm raw HU   — for validation
-            eval_coca_seg  = patient_pack["eval_lbl"]   # 1.0mm seg       — calcium GT
+            fixed_win      = patient_pack["reg_win"]    
+            eval_fixed_raw = patient_pack["eval_raw"]   
+            eval_coca_seg  = patient_pack["eval_lbl"]   
             time_log["preprocess_sec"] = time.time() - t0
 
             print(f"  Fixed  (reg):  {fixed_win.GetSize()}  @ {fixed_win.GetSpacing()[0]:.1f}mm")
@@ -645,7 +555,7 @@ def main():
             rigid_tx, rigid_mi = RegistrationEngine.run_rigid_stage(fixed_win, atlas_win_reg)
             time_log["rigid_sec"] = time.time() - t0
 
-            # Project atlas label with rigid → identify cardiac ROI in patient space
+
             rigid_atlas_lbl = sitk.Resample(
                 atlas_lbl_reg, fixed_win, rigid_tx,
                 sitk.sitkNearestNeighbor, 0, sitk.sitkUInt8
@@ -680,12 +590,7 @@ def main():
             roi_shape = (fz1-fz0, fy1-fy0, fx1-fx0)
             print(f"  Cardiac ROI (vox): {roi_fixed}  shape={roi_shape}")
 
-            # ── Stage B: Affine (12-DOF) with metric mask ─────────────────────
-            # [FIX 1] Pass FULL fixed_win and FULL atlas_win_reg (not pre-resampled).
-            # rigid_tx goes to SetMovingInitialTransform inside run_affine_stage,
-            # so the optimizer evaluates from the rigidly-aligned position without
-            # a separate explicit resampling step.
-            # [FIX 7] Redundant rigid_atlas_win full-volume resample is eliminated.
+         
             current_stage = "Affine_Stage"
             t0 = time.time()
             final_transform, affine_mi = RegistrationEngine.run_affine_stage(
@@ -699,9 +604,7 @@ def main():
             # ── Phase 5: Warp atlas label into patient space ──────────────────
             current_stage = "Label_Transformation"
             t0 = time.time()
-            # Apply composite (rigid + affine) to atlas_lbl_eval at 1.0mm.
-            # Both transforms are parameterized in the same global physical space,
-            # so no coordinate-space mismatch exists here.
+           
             transformed_vessels = LabelTransformer.transform_labels(
                 atlas_lbl_eval, eval_fixed_raw, final_transform
             )
