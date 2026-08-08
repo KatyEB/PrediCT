@@ -1,0 +1,194 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2400 1600" width="2400" height="1600">
+<defs><marker id="ai" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,1 L9,5 L0,9 z" fill="#14161A"/></marker><marker id="ae" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,1 L9,5 L0,9 z" fill="#C9541F"/></marker></defs>
+<rect width="2400" height="1600" fill="#FFFFFF"/>
+<text x="120" y="118" font-family="'IBM Plex Sans','Segoe UI',Helvetica,sans-serif" font-size="52" font-weight="600" fill="#14161A">How a scan becomes a score</text>
+<text x="120" y="158" font-family="'IBM Plex Sans','Segoe UI',Helvetica,sans-serif" font-size="21" font-weight="400" fill="#767B84">PrediCT   ·   coronary artery calcium segmentation and Agatston scoring   ·   ML4Sci GSoC 2026</text>
+<line x1="120" y1="206" x2="2280" y2="206" stroke="#DDE0E5" stroke-width="1.5"/>
+<text x="120" y="240" font-family="'IBM Plex Sans Condensed','IBM Plex Sans',sans-serif" font-size="16" font-weight="600" fill="#A8ADB6" letter-spacing="2.6">ENTRY POINTS</text>
+<text x="380" y="240" font-family="'IBM Plex Mono',Consolas,monospace" font-size="20" font-weight="500" fill="#14161A">run.py</text>
+<text x="467.2" y="240" font-family="'IBM Plex Sans','Segoe UI',Helvetica,sans-serif" font-size="19" font-weight="400" fill="#767B84">command line</text>
+<text x="740" y="240" font-family="'IBM Plex Mono',Consolas,monospace" font-size="20" font-weight="500" fill="#14161A">server.py</text>
+<text x="863.8" y="240" font-family="'IBM Plex Sans','Segoe UI',Helvetica,sans-serif" font-size="19" font-weight="400" fill="#767B84">HTTP API</text>
+<text x="1100" y="240" font-family="'IBM Plex Mono',Consolas,monospace" font-size="20" font-weight="500" fill="#14161A">ui/index.html</text>
+<text x="1272.6" y="240" font-family="'IBM Plex Sans','Segoe UI',Helvetica,sans-serif" font-size="19" font-weight="400" fill="#767B84">viewer</text>
+<text x="2280" y="240" font-family="'IBM Plex Sans','Segoe UI',Helvetica,sans-serif" font-size="19" font-weight="400" fill="#767B84" text-anchor="end">all three call the same pipeline</text>
+<rect x="120.0" y="316" width="374.4" height="440" fill="#FFFFFF" stroke="#DDE0E5" stroke-width="1.5" rx="2"/>
+<rect x="120.0" y="316" width="374.4" height="5" fill="#C9CDD4"/>
+<text x="152.0" y="378" font-family="'IBM Plex Mono',Consolas,monospace" font-size="28" font-weight="400" fill="#A8ADB6" letter-spacing="2">01</text>
+<text x="152.0" y="424" font-family="'IBM Plex Sans','Segoe UI',Helvetica,sans-serif" font-size="34" font-weight="600" fill="#14161A">Load</text>
+<text x="462.4" y="424" font-family="'IBM Plex Mono',Consolas,monospace" font-size="18" font-weight="400" fill="#A8ADB6" text-anchor="end">load.py</text>
+<line x1="152.0" y1="448" x2="462.4" y2="448" stroke="#DDE0E5" stroke-width="1.5"/>
+<text x="152.0" y="490" font-family="'IBM Plex Mono',Consolas,monospace" font-size="17" font-weight="500" fill="#A8ADB6">1</text>
+<text x="194.0" y="490" font-family="'IBM Plex Sans','Segoe UI',Helvetica,sans-serif" font-size="20" font-weight="400" fill="#14161A">scan folder by magic bytes</text>
+<text x="152.0" y="528" font-family="'IBM Plex Mono',Consolas,monospace" font-size="17" font-weight="500" fill="#A8ADB6">2</text>
+<text x="194.0" y="528" font-family="'IBM Plex Sans','Segoe UI',Helvetica,sans-serif" font-size="20" font-weight="400" fill="#14161A">group by SeriesInstanceUID</text>
+<text x="152.0" y="566" font-family="'IBM Plex Mono',Consolas,monospace" font-size="17" font-weight="500" fill="#A8ADB6">3</text>
+<text x="194.0" y="566" font-family="'IBM Plex Sans','Segoe UI',Helvetica,sans-serif" font-size="20" font-weight="400" fill="#14161A">read → raw Hounsfield Units</text>
+<text x="152.0" y="604" font-family="'IBM Plex Mono',Consolas,monospace" font-size="17" font-weight="500" fill="#A8ADB6">4</text>
+<text x="194.0" y="604" font-family="'IBM Plex Sans','Segoe UI',Helvetica,sans-serif" font-size="20" font-weight="400" fill="#14161A">check protocol</text>
+<line x1="152.0" y1="638" x2="462.4" y2="638" stroke="#DDE0E5" stroke-width="1.5"/>
+<text x="152.0" y="672" font-family="'IBM Plex Sans','Segoe UI',Helvetica,sans-serif" font-size="17.5" font-weight="400" fill="#767B84">A file extension is a convention,</text>
+<text x="152.0" y="698" font-family="'IBM Plex Sans','Segoe UI',Helvetica,sans-serif" font-size="17.5" font-weight="400" fill="#767B84">not a rule. Real exports often</text>
+<text x="152.0" y="724" font-family="'IBM Plex Sans','Segoe UI',Helvetica,sans-serif" font-size="17.5" font-weight="400" fill="#767B84">have none at all.</text>
+<line x1="307.2" y1="756" x2="307.2" y2="830" stroke="#C9CDD4" stroke-width="2"/>
+<circle cx="307.2" cy="830" r="7" fill="#FFFFFF" stroke="#C9CDD4" stroke-width="2"/>
+<rect x="566.4" y="316" width="374.4" height="440" fill="#FFFFFF" stroke="#DDE0E5" stroke-width="1.5" rx="2"/>
+<rect x="566.4" y="316" width="374.4" height="5" fill="#C9CDD4"/>
+<text x="598.4" y="378" font-family="'IBM Plex Mono',Consolas,monospace" font-size="28" font-weight="400" fill="#A8ADB6" letter-spacing="2">02</text>
+<text x="598.4" y="424" font-family="'IBM Plex Sans','Segoe UI',Helvetica,sans-serif" font-size="34" font-weight="600" fill="#14161A">Prepare</text>
+<text x="908.8" y="424" font-family="'IBM Plex Mono',Consolas,monospace" font-size="18" font-weight="400" fill="#A8ADB6" text-anchor="end">preprocess.py</text>
+<line x1="598.4" y1="448" x2="908.8" y2="448" stroke="#DDE0E5" stroke-width="1.5"/>
+<text x="598.4" y="490" font-family="'IBM Plex Mono',Consolas,monospace" font-size="17" font-weight="500" fill="#A8ADB6">5</text>
+<text x="640.4" y="490" font-family="'IBM Plex Sans','Segoe UI',Helvetica,sans-serif" font-size="20" font-weight="400" fill="#14161A">orient → RAS</text>
+<text x="598.4" y="528" font-family="'IBM Plex Mono',Consolas,monospace" font-size="17" font-weight="500" fill="#A8ADB6">6</text>
+<text x="640.4" y="528" font-family="'IBM Plex Sans','Segoe UI',Helvetica,sans-serif" font-size="20" font-weight="400" fill="#14161A">resample to model spacing</text>
+<text x="598.4" y="566" font-family="'IBM Plex Mono',Consolas,monospace" font-size="17" font-weight="500" fill="#A8ADB6">7</text>
+<text x="640.4" y="566" font-family="'IBM Plex Sans','Segoe UI',Helvetica,sans-serif" font-size="20" font-weight="400" fill="#14161A">locate heart</text>
+<text x="598.4" y="604" font-family="'IBM Plex Mono',Consolas,monospace" font-size="17" font-weight="500" fill="#A8ADB6">8</text>
+<text x="640.4" y="604" font-family="'IBM Plex Sans','Segoe UI',Helvetica,sans-serif" font-size="20" font-weight="400" fill="#14161A">crop + 8 mm margin</text>
+<line x1="598.4" y1="638" x2="908.8" y2="638" stroke="#DDE0E5" stroke-width="1.5"/>
+<text x="598.4" y="672" font-family="'IBM Plex Sans','Segoe UI',Helvetica,sans-serif" font-size="17.5" font-weight="400" fill="#767B84">Step 7 needs raw HU, which is</text>
+<text x="598.4" y="698" font-family="'IBM Plex Sans','Segoe UI',Helvetica,sans-serif" font-size="17.5" font-weight="400" fill="#767B84">why windowing happens later,</text>
+<text x="598.4" y="724" font-family="'IBM Plex Sans','Segoe UI',Helvetica,sans-serif" font-size="17.5" font-weight="400" fill="#767B84">at step 11.</text>
+<line x1="753.5999999999999" y1="756" x2="753.5999999999999" y2="830" stroke="#C9CDD4" stroke-width="2"/>
+<circle cx="753.5999999999999" cy="830" r="7" fill="#FFFFFF" stroke="#C9CDD4" stroke-width="2"/>
+<rect x="1012.8" y="316" width="374.4" height="440" fill="#FDF3EE" stroke="#E5B8A2" stroke-width="2" rx="2"/>
+<rect x="1012.8" y="316" width="374.4" height="5" fill="#C9541F"/>
+<text x="1044.8" y="378" font-family="'IBM Plex Mono',Consolas,monospace" font-size="28" font-weight="400" fill="#A8ADB6" letter-spacing="2">03</text>
+<text x="1044.8" y="424" font-family="'IBM Plex Sans','Segoe UI',Helvetica,sans-serif" font-size="34" font-weight="600" fill="#C9541F">Model</text>
+<text x="1355.1999999999998" y="424" font-family="'IBM Plex Mono',Consolas,monospace" font-size="18" font-weight="400" fill="#A8ADB6" text-anchor="end">models.py</text>
+<line x1="1044.8" y1="448" x2="1355.1999999999998" y2="448" stroke="#E5B8A2" stroke-width="1.5"/>
+<text x="1044.8" y="490" font-family="'IBM Plex Mono',Consolas,monospace" font-size="17" font-weight="500" fill="#C9541F">9</text>
+<text x="1086.8" y="490" font-family="'IBM Plex Sans','Segoe UI',Helvetica,sans-serif" font-size="20" font-weight="400" fill="#14161A">read YAML, verify sha256</text>
+<text x="1044.8" y="528" font-family="'IBM Plex Mono',Consolas,monospace" font-size="17" font-weight="500" fill="#C9541F">10</text>
+<text x="1086.8" y="528" font-family="'IBM Plex Sans','Segoe UI',Helvetica,sans-serif" font-size="20" font-weight="500" fill="#C9541F">CONTRACT GATE</text>
+<text x="1044.8" y="566" font-family="'IBM Plex Mono',Consolas,monospace" font-size="17" font-weight="500" fill="#C9541F">11</text>
+<text x="1086.8" y="566" font-family="'IBM Plex Sans','Segoe UI',Helvetica,sans-serif" font-size="20" font-weight="400" fill="#14161A">window HU → [0,1]</text>
+<text x="1044.8" y="604" font-family="'IBM Plex Mono',Consolas,monospace" font-size="17" font-weight="500" fill="#C9541F">12</text>
+<text x="1086.8" y="604" font-family="'IBM Plex Sans','Segoe UI',Helvetica,sans-serif" font-size="20" font-weight="400" fill="#14161A">sliding-window inference</text>
+<line x1="1044.8" y1="638" x2="1355.1999999999998" y2="638" stroke="#E5B8A2" stroke-width="1.5"/>
+<text x="1044.8" y="672" font-family="'IBM Plex Sans','Segoe UI',Helvetica,sans-serif" font-size="17.5" font-weight="400" fill="#8A4520">The gate refuses on a mismatch</text>
+<text x="1044.8" y="698" font-family="'IBM Plex Sans','Segoe UI',Helvetica,sans-serif" font-size="17.5" font-weight="400" fill="#8A4520">instead of returning a</text>
+<text x="1044.8" y="724" font-family="'IBM Plex Sans','Segoe UI',Helvetica,sans-serif" font-size="17.5" font-weight="400" fill="#8A4520">confident wrong number.</text>
+<line x1="1200.0" y1="756" x2="1200.0" y2="830" stroke="#C9CDD4" stroke-width="2"/>
+<circle cx="1200.0" cy="830" r="11" fill="#C9541F" stroke="#C9541F" stroke-width="2"/>
+<rect x="1459.1999999999998" y="316" width="374.4" height="440" fill="#FFFFFF" stroke="#DDE0E5" stroke-width="1.5" rx="2"/>
+<rect x="1459.1999999999998" y="316" width="374.4" height="5" fill="#C9CDD4"/>
+<text x="1491.1999999999998" y="378" font-family="'IBM Plex Mono',Consolas,monospace" font-size="28" font-weight="400" fill="#A8ADB6" letter-spacing="2">04</text>
+<text x="1491.1999999999998" y="424" font-family="'IBM Plex Sans','Segoe UI',Helvetica,sans-serif" font-size="34" font-weight="600" fill="#14161A">Score</text>
+<text x="1801.6" y="424" font-family="'IBM Plex Mono',Consolas,monospace" font-size="18" font-weight="400" fill="#A8ADB6" text-anchor="end">scoring.py</text>
+<line x1="1491.1999999999998" y1="448" x2="1801.6" y2="448" stroke="#DDE0E5" stroke-width="1.5"/>
+<text x="1491.1999999999998" y="490" font-family="'IBM Plex Mono',Consolas,monospace" font-size="17" font-weight="500" fill="#A8ADB6">13</text>
+<text x="1533.1999999999998" y="490" font-family="'IBM Plex Sans','Segoe UI',Helvetica,sans-serif" font-size="20" font-weight="400" fill="#14161A">find lesions, 2D per slice</text>
+<text x="1491.1999999999998" y="528" font-family="'IBM Plex Mono',Consolas,monospace" font-size="17" font-weight="500" fill="#A8ADB6">14</text>
+<text x="1533.1999999999998" y="528" font-family="'IBM Plex Sans','Segoe UI',Helvetica,sans-serif" font-size="20" font-weight="400" fill="#14161A">Agatston score</text>
+<text x="1533.1999999999998" y="566" font-family="'IBM Plex Sans','Segoe UI',Helvetica,sans-serif" font-size="20" font-weight="400" fill="#14161A">calcium volume, risk band</text>
+<line x1="1491.1999999999998" y1="638" x2="1801.6" y2="638" stroke="#DDE0E5" stroke-width="1.5"/>
+<text x="1491.1999999999998" y="672" font-family="'IBM Plex Sans','Segoe UI',Helvetica,sans-serif" font-size="17.5" font-weight="400" fill="#767B84">The ≥1 mm² rule is applied.</text>
+<text x="1491.1999999999998" y="698" font-family="'IBM Plex Sans','Segoe UI',Helvetica,sans-serif" font-size="17.5" font-weight="400" fill="#767B84">Excluded lesions are listed,</text>
+<text x="1491.1999999999998" y="724" font-family="'IBM Plex Sans','Segoe UI',Helvetica,sans-serif" font-size="17.5" font-weight="400" fill="#767B84">never silently dropped.</text>
+<line x1="1646.3999999999999" y1="756" x2="1646.3999999999999" y2="830" stroke="#C9CDD4" stroke-width="2"/>
+<circle cx="1646.3999999999999" cy="830" r="7" fill="#FFFFFF" stroke="#C9CDD4" stroke-width="2"/>
+<rect x="1905.6" y="316" width="374.4" height="440" fill="#FFFFFF" stroke="#DDE0E5" stroke-width="1.5" rx="2"/>
+<rect x="1905.6" y="316" width="374.4" height="5" fill="#C9CDD4"/>
+<text x="1937.6" y="378" font-family="'IBM Plex Mono',Consolas,monospace" font-size="28" font-weight="400" fill="#A8ADB6" letter-spacing="2">05</text>
+<text x="1937.6" y="424" font-family="'IBM Plex Sans','Segoe UI',Helvetica,sans-serif" font-size="34" font-weight="600" fill="#14161A">Report</text>
+<text x="2248.0" y="424" font-family="'IBM Plex Mono',Consolas,monospace" font-size="18" font-weight="400" fill="#A8ADB6" text-anchor="end">pipeline.py</text>
+<line x1="1937.6" y1="448" x2="2248.0" y2="448" stroke="#DDE0E5" stroke-width="1.5"/>
+<text x="1937.6" y="490" font-family="'IBM Plex Mono',Consolas,monospace" font-size="17" font-weight="500" fill="#A8ADB6">15</text>
+<text x="1979.6" y="490" font-family="'IBM Plex Sans','Segoe UI',Helvetica,sans-serif" font-size="20" font-weight="400" fill="#14161A">write outputs</text>
+<text x="1979.6" y="528" font-family="'IBM Plex Sans','Segoe UI',Helvetica,sans-serif" font-size="20" font-weight="400" fill="#14161A">results.csv · mask.nii.gz</text>
+<text x="1979.6" y="566" font-family="'IBM Plex Sans','Segoe UI',Helvetica,sans-serif" font-size="20" font-weight="400" fill="#14161A">lesions.csv · record.json</text>
+<line x1="1937.6" y1="638" x2="2248.0" y2="638" stroke="#DDE0E5" stroke-width="1.5"/>
+<text x="1937.6" y="672" font-family="'IBM Plex Sans','Segoe UI',Helvetica,sans-serif" font-size="17.5" font-weight="400" fill="#767B84">One row per patient, written</text>
+<text x="1937.6" y="698" font-family="'IBM Plex Sans','Segoe UI',Helvetica,sans-serif" font-size="17.5" font-weight="400" fill="#767B84">as it finishes — so an</text>
+<text x="1937.6" y="724" font-family="'IBM Plex Sans','Segoe UI',Helvetica,sans-serif" font-size="17.5" font-weight="400" fill="#767B84">interrupted run resumes.</text>
+<line x1="2092.7999999999997" y1="756" x2="2092.7999999999997" y2="830" stroke="#C9CDD4" stroke-width="2"/>
+<circle cx="2092.7999999999997" cy="830" r="7" fill="#FFFFFF" stroke="#C9CDD4" stroke-width="2"/>
+<line x1="120" y1="830" x2="2280" y2="830" stroke="#C9CDD4" stroke-width="2"/>
+<line x1="502.4" y1="536.0" x2="558.4" y2="536.0" stroke="#14161A" stroke-width="1.8" marker-end="url(#ai)"/>
+<text x="530.4" y="502.0" font-family="'IBM Plex Mono',Consolas,monospace" font-size="15" font-weight="400" fill="#767B84" text-anchor="middle">Volume</text>
+<text x="530.4" y="520.0" font-family="'IBM Plex Mono',Consolas,monospace" font-size="15" font-weight="400" fill="#767B84" text-anchor="middle">raw HU</text>
+<line x1="948.8" y1="536.0" x2="1004.8" y2="536.0" stroke="#14161A" stroke-width="1.8" marker-end="url(#ai)"/>
+<text x="976.8" y="502.0" font-family="'IBM Plex Mono',Consolas,monospace" font-size="15" font-weight="400" fill="#767B84" text-anchor="middle">cropped</text>
+<text x="976.8" y="520.0" font-family="'IBM Plex Mono',Consolas,monospace" font-size="15" font-weight="400" fill="#767B84" text-anchor="middle">raw HU</text>
+<line x1="1395.1999999999998" y1="536.0" x2="1451.1999999999998" y2="536.0" stroke="#14161A" stroke-width="1.8" marker-end="url(#ai)"/>
+<text x="1423.1999999999998" y="502.0" font-family="'IBM Plex Mono',Consolas,monospace" font-size="15" font-weight="400" fill="#767B84" text-anchor="middle">mask</text>
+<text x="1423.1999999999998" y="520.0" font-family="'IBM Plex Mono',Consolas,monospace" font-size="15" font-weight="400" fill="#767B84" text-anchor="middle">0 … 1</text>
+<line x1="1841.6" y1="536.0" x2="1897.6" y2="536.0" stroke="#14161A" stroke-width="1.8" marker-end="url(#ai)"/>
+<text x="1869.6" y="502.0" font-family="'IBM Plex Mono',Consolas,monospace" font-size="15" font-weight="400" fill="#767B84" text-anchor="middle">Score</text>
+<text x="1869.6" y="520.0" font-family="'IBM Plex Mono',Consolas,monospace" font-size="15" font-weight="400" fill="#767B84" text-anchor="middle">+ ledger</text>
+<path d="M307.2,848 L307.2,866 L753.5999999999999,866 L753.5999999999999,848" fill="none" stroke="#C9CDD4" stroke-width="2"/>
+<text x="530.4" y="902" font-family="'IBM Plex Sans','Segoe UI',Helvetica,sans-serif" font-size="21" font-weight="400" fill="#767B84" text-anchor="middle">runs once per patient, then cached</text>
+<text x="530.4" y="932" font-family="'IBM Plex Mono',Consolas,monospace" font-size="18" font-weight="400" fill="#A8ADB6" text-anchor="middle">66 patients × 3 models: 66 heart locations, not 198</text>
+<path d="M1200.0,841 L1200.0,952" stroke="#C9541F" stroke-width="2.5" fill="none"/>
+<line x1="748.0" y1="952" x2="1652.0" y2="952" stroke="#C9541F" stroke-width="2.5"/>
+<path d="M748.0,952 L748.0,1006" stroke="#C9541F" stroke-width="2.5" fill="none" marker-end="url(#ae)"/>
+<path d="M1200.0,952 L1200.0,1006" stroke="#C9541F" stroke-width="2.5" fill="none" marker-end="url(#ae)"/>
+<path d="M1652.0,952 L1652.0,1006" stroke="#C9541F" stroke-width="2.5" fill="none" marker-end="url(#ae)"/>
+<rect x="548.0" y="1020" width="400" height="250" fill="#FAFAFB" stroke="#E5B8A2" stroke-width="1.8" rx="2"/>
+<text x="578.0" y="1068" font-family="'IBM Plex Mono',Consolas,monospace" font-size="25" font-weight="500" fill="#C9541F">a1-roi</text>
+<text x="578.0" y="1096" font-family="'IBM Plex Mono',Consolas,monospace" font-size="17" font-weight="400" fill="#A8ADB6">a1_roi.yaml</text>
+<line x1="578.0" y1="1114" x2="918.0" y2="1114" stroke="#E5B8A2" stroke-width="1.5"/>
+<text x="578.0" y="1146" font-family="'IBM Plex Mono',Consolas,monospace" font-size="17" font-weight="400" fill="#A8ADB6">output</text>
+<text x="698.0" y="1146" font-family="'IBM Plex Mono',Consolas,monospace" font-size="17" font-weight="400" fill="#14161A">binary mask</text>
+<text x="578.0" y="1172" font-family="'IBM Plex Mono',Consolas,monospace" font-size="17" font-weight="400" fill="#A8ADB6">hu_window</text>
+<text x="698.0" y="1172" font-family="'IBM Plex Mono',Consolas,monospace" font-size="17" font-weight="400" fill="#14161A">0 – 1200</text>
+<text x="578.0" y="1198" font-family="'IBM Plex Mono',Consolas,monospace" font-size="17" font-weight="400" fill="#A8ADB6">spacing</text>
+<text x="698.0" y="1198" font-family="'IBM Plex Mono',Consolas,monospace" font-size="17" font-weight="400" fill="#14161A">0.37 / 0.37 / 3.0 mm</text>
+<text x="578.0" y="1224" font-family="'IBM Plex Mono',Consolas,monospace" font-size="17" font-weight="400" fill="#A8ADB6">roi</text>
+<text x="698.0" y="1224" font-family="'IBM Plex Mono',Consolas,monospace" font-size="17" font-weight="400" fill="#14161A">heart + 8 mm</text>
+<text x="578.0" y="1250" font-family="'IBM Plex Mono',Consolas,monospace" font-size="17" font-weight="400" fill="#A8ADB6">sha256</text>
+<text x="698.0" y="1250" font-family="'IBM Plex Mono',Consolas,monospace" font-size="17" font-weight="400" fill="#14161A">verified before load</text>
+<rect x="1000.0" y="1020" width="400" height="250" fill="#FAFAFB" stroke="#E5B8A2" stroke-width="1.8" rx="2"/>
+<text x="1030.0" y="1068" font-family="'IBM Plex Mono',Consolas,monospace" font-size="25" font-weight="500" fill="#C9541F">a3-coverage-v2</text>
+<text x="1030.0" y="1096" font-family="'IBM Plex Mono',Consolas,monospace" font-size="17" font-weight="400" fill="#A8ADB6">a3_coverage_v2.yaml</text>
+<line x1="1030.0" y1="1114" x2="1370.0" y2="1114" stroke="#E5B8A2" stroke-width="1.5"/>
+<text x="1030.0" y="1146" font-family="'IBM Plex Mono',Consolas,monospace" font-size="17" font-weight="400" fill="#A8ADB6">output</text>
+<text x="1150.0" y="1146" font-family="'IBM Plex Mono',Consolas,monospace" font-size="17" font-weight="400" fill="#14161A">coverage fraction</text>
+<text x="1030.0" y="1172" font-family="'IBM Plex Mono',Consolas,monospace" font-size="17" font-weight="400" fill="#A8ADB6">hu_window</text>
+<text x="1150.0" y="1172" font-family="'IBM Plex Mono',Consolas,monospace" font-size="17" font-weight="400" fill="#14161A">0 – 1200</text>
+<text x="1030.0" y="1198" font-family="'IBM Plex Mono',Consolas,monospace" font-size="17" font-weight="400" fill="#A8ADB6">spacing</text>
+<text x="1150.0" y="1198" font-family="'IBM Plex Mono',Consolas,monospace" font-size="17" font-weight="400" fill="#14161A">0.37 / 0.37 / 3.0 mm</text>
+<text x="1030.0" y="1224" font-family="'IBM Plex Mono',Consolas,monospace" font-size="17" font-weight="400" fill="#A8ADB6">roi</text>
+<text x="1150.0" y="1224" font-family="'IBM Plex Mono',Consolas,monospace" font-size="17" font-weight="400" fill="#14161A">heart + 8 mm</text>
+<text x="1030.0" y="1250" font-family="'IBM Plex Mono',Consolas,monospace" font-size="17" font-weight="400" fill="#A8ADB6">sha256</text>
+<text x="1150.0" y="1250" font-family="'IBM Plex Mono',Consolas,monospace" font-size="17" font-weight="400" fill="#14161A">verified before load</text>
+<rect x="1452.0" y="1020" width="400" height="250" fill="#FFFFFF" stroke="#E5B8A2" stroke-width="1.8" rx="2" stroke-dasharray="8 6"/>
+<text x="1482.0" y="1068" font-family="'IBM Plex Mono',Consolas,monospace" font-size="25" font-weight="500" fill="#767B84">swap in a new one</text>
+<text x="1482.0" y="1096" font-family="'IBM Plex Mono',Consolas,monospace" font-size="17" font-weight="400" fill="#A8ADB6">your_model.yaml</text>
+<line x1="1482.0" y1="1114" x2="1822.0" y2="1114" stroke="#E5B8A2" stroke-width="1.5"/>
+<text x="1482.0" y="1146" font-family="'IBM Plex Mono',Consolas,monospace" font-size="17" font-weight="400" fill="#767B84">drop a YAML in models/</text>
+<text x="1482.0" y="1172" font-family="'IBM Plex Mono',Consolas,monospace" font-size="17" font-weight="400" fill="#767B84">point it at a .pth</text>
+<text x="1482.0" y="1198" font-family="'IBM Plex Mono',Consolas,monospace" font-size="17" font-weight="400" fill="#767B84">it appears in the model list</text>
+<text x="1482.0" y="1224" font-family="'IBM Plex Mono',Consolas,monospace" font-size="17" font-weight="400" fill="#767B84"></text>
+<text x="1482.0" y="1250" font-family="'IBM Plex Mono',Consolas,monospace" font-size="17" font-weight="400" fill="#767B84">no code change anywhere</text>
+<text x="120" y="1072" font-family="'IBM Plex Sans Condensed','IBM Plex Sans',sans-serif" font-size="28" font-weight="600" fill="#C9541F" letter-spacing="3">MODELS</text>
+<text x="120" y="1112" font-family="'IBM Plex Sans','Segoe UI',Helvetica,sans-serif" font-size="19" font-weight="400" fill="#767B84">one YAML per model.</text>
+<text x="120" y="1138" font-family="'IBM Plex Sans','Segoe UI',Helvetica,sans-serif" font-size="19" font-weight="400" fill="#767B84">A checkpoint holds only</text>
+<text x="120" y="1164" font-family="'IBM Plex Sans','Segoe UI',Helvetica,sans-serif" font-size="19" font-weight="400" fill="#767B84">tensors — the YAML is the</text>
+<text x="120" y="1190" font-family="'IBM Plex Sans','Segoe UI',Helvetica,sans-serif" font-size="19" font-weight="400" fill="#767B84">missing half of it.</text>
+<text x="2280" y="1072" font-family="'IBM Plex Sans','Segoe UI',Helvetica,sans-serif" font-size="22" font-weight="500" fill="#14161A" text-anchor="end">identical architecture,</text>
+<text x="2280" y="1100" font-family="'IBM Plex Sans','Segoe UI',Helvetica,sans-serif" font-size="22" font-weight="500" fill="#14161A" text-anchor="end">different meaning</text>
+<text x="2280" y="1138" font-family="'IBM Plex Mono',Consolas,monospace" font-size="18" font-weight="400" fill="#767B84" text-anchor="end">A1 and A3 have byte-identical</text>
+<text x="2280" y="1164" font-family="'IBM Plex Mono',Consolas,monospace" font-size="18" font-weight="400" fill="#767B84" text-anchor="end">tensors. Nothing inside either</text>
+<text x="2280" y="1190" font-family="'IBM Plex Mono',Consolas,monospace" font-size="18" font-weight="400" fill="#767B84" text-anchor="end">.pth says which is which —</text>
+<text x="2280" y="1216" font-family="'IBM Plex Mono',Consolas,monospace" font-size="18" font-weight="400" fill="#767B84" text-anchor="end">only the YAML and its hash do.</text>
+<rect x="548.0" y="1316" width="1304" height="118" fill="#FFFFFF" stroke="#DDE0E5" stroke-width="1.5" rx="2" stroke-dasharray="8 6"/>
+<line x1="748.0" y1="1272" x2="748.0" y2="1314" stroke="#E5B8A2" stroke-width="1.8" stroke-dasharray="6 5"/>
+<line x1="1200.0" y1="1272" x2="1200.0" y2="1314" stroke="#E5B8A2" stroke-width="1.8" stroke-dasharray="6 5"/>
+<text x="578.0" y="1354" font-family="'IBM Plex Sans Condensed','IBM Plex Sans',sans-serif" font-size="17" font-weight="600" fill="#A8ADB6" letter-spacing="2">CHECKPOINTS — outside the repo</text>
+<text x="578.0" y="1388" font-family="'IBM Plex Mono',Consolas,monospace" font-size="18" font-weight="400" fill="#14161A">approach1_roi_cropped/best_model.pth</text>
+<text x="578.0" y="1414" font-family="'IBM Plex Mono',Consolas,monospace" font-size="18" font-weight="400" fill="#14161A">approach3_coverage_v2/best_model.pth</text>
+<text x="1822.0" y="1354" font-family="'IBM Plex Sans Condensed','IBM Plex Sans',sans-serif" font-size="17" font-weight="600" fill="#A8ADB6" text-anchor="end" letter-spacing="2">models_root resolves</text>
+<text x="1822.0" y="1384" font-family="'IBM Plex Mono',Consolas,monospace" font-size="17" font-weight="400" fill="#767B84" text-anchor="end">1  PREDICT_MODELS_ROOT</text>
+<text x="1822.0" y="1408" font-family="'IBM Plex Mono',Consolas,monospace" font-size="17" font-weight="400" fill="#767B84" text-anchor="end">2  ~/.predict/settings.yaml</text>
+<text x="1822.0" y="1432" font-family="'IBM Plex Mono',Consolas,monospace" font-size="17" font-weight="400" fill="#767B84" text-anchor="end">3  ./runs</text>
+<rect x="120" y="1316" width="420" height="118" fill="#FFFFFF" stroke="#DDE0E5" stroke-width="1.5" rx="2" stroke-dasharray="8 6"/>
+<text x="146" y="1352" font-family="'IBM Plex Sans Condensed','IBM Plex Sans',sans-serif" font-size="17" font-weight="600" fill="#A8ADB6" letter-spacing="2.4">OPTIONAL</text>
+<text x="146" y="1378" font-family="'IBM Plex Sans','Segoe UI',Helvetica,sans-serif" font-size="17" font-weight="400" fill="#A8ADB6">only when ground truth exists</text>
+<text x="146" y="1408" font-family="'IBM Plex Mono',Consolas,monospace" font-size="17.5" font-weight="400" fill="#14161A">XML plist → geometry.py → evaluate.py</text>
+<line x1="120" y1="1504" x2="2280" y2="1504" stroke="#DDE0E5" stroke-width="1.5"/>
+<text x="120" y="1548" font-family="'IBM Plex Sans','Segoe UI',Helvetica,sans-serif" font-size="24" font-weight="500" fill="#14161A">One patient or two hundred — the same path, the same numbers.</text>
+<text x="2280" y="1548" font-family="'IBM Plex Mono',Consolas,monospace" font-size="19" font-weight="400" fill="#A8ADB6" text-anchor="end">github.com/KatyEB/PrediCT</text>
+</svg>
