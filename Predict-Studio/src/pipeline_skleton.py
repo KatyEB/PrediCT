@@ -1,45 +1,20 @@
 """
-PrediCT Pipeline Skeleton
-=========================
+Standalone PrediCT Pipeline Skeleton
+====================================
 
-This script serves as the complete, end-to-end inference and scoring pipeline 
-for the PrediCT coronary artery calcium (CAC) scoring project. 
+This is a self-contained script to test the model end-to-end. 
+It does NOT depend on the `Archives` folder or any external YAML manifests.
+All model parameters (HU window, spacing, architecture) are hardcoded here 
+for rapid deployment and testing on the `approach1_roi_cropped` model.
 
-It reads raw CT scans (DICOM/NIfTI), processes them to standard clinical 
-specifications, runs PyTorch model inference, and calculates the Agatston score.
-
-Pipeline Architecture:
-----------------------
-The pipeline is designed as a sequence of stateless, decoupled functions. 
-Data flows straight down the `run()` function:
-  1. `load()`        : Ingests a patient's CT folder, returning a 3D Volume object.
-  2. `resample()`    : Enforces exactly 3.0mm Z-spacing to conform to Agatston rules.
-  3. `crop_heart()`  : Locates the heart via TotalSegmentator and crops the volume.
-  4. `normalize()`   : Maps raw Hounsfield Units (HU) to a [0, 1] range using the 
-                       model's specifically declared window.
-  5. `predict()`     : Runs sliding-window inference via a PyTorch UNet model.
-  6. Output stage    : Saves clinical source-of-truth NIfTIs, calculates scores, 
-                       and generates a CSV and visualization slices.
-
-Output Artifacts:
------------------
-The script generates a self-describing folder for each run containing:
-  - `ct.nii.gz`     : The cropped, resampled CT volume.
-  - `pred.nii.gz`   : The model's raw probability mask prediction.
-  - `lesions.csv`   : A flat, rectangular ledger with one row per identified lesion, 
-                      containing bounding boxes, peak HU, and sub-scores. Lesions 
-                      that fail the clinical >1mm^2 gate are marked `included: False`.
-  - `run.json`      : Provenance data (checkpoint sha256, model ID, total Agatston).
-  - `slices/`       : Native-resolution PNGs overlaying probabilities onto the CT.
-
-Usage:
-------
-    run(
-        patient_folder="path/to/patient/0",
-        model_manifest="models/approach1_roi_cropped/config.json",
-        out_dir="results/patient_0"
-    )
+Outputs:
+  - pred.nii.gz
+  - ct.nii.gz
+  - lesions.csv (with per-lesion bounding boxes and Agatston scores)
+  - run.json (summary metrics)
+  - slices/ (PNG overlays)
 """
+from __future__ import annotations
 import sys
 import csv
 import json
@@ -48,67 +23,137 @@ from pathlib import Path
 import numpy as np
 import SimpleITK as sitk
 from PIL import Image
+import torch
+import scipy.ndimage as ndimage
+from monai.inferers import sliding_window_inference
+from monai.networks.nets import UNet
 
-# Ensure we can import from the existing Archives backend
-backend_dir = Path(__file__).resolve().parent.parent / "Archives" / "backend"
-sys.path.append(str(backend_dir))
+# ---------------------------------------------------------------------------
+# HARDCODED MODEL CONFIGURATION
+# ---------------------------------------------------------------------------
+HU_WINDOW = (0, 1200)
+SPACING_MM = (0.37, 0.37, 3.0)
+MARGIN_MM = 8.0
 
-from load import load_folder, Volume
-from preprocess import resample as backend_resample
-from preprocess import locate_heart, bounding_box, crop
-from models import load_model, window as backend_window, Model
-from scoring import score_volume, Spacing, ScoringConfig, find_components, binarise
+# ---------------------------------------------------------------------------
+# PIPELINE STEPS
+# ---------------------------------------------------------------------------
 
-def load(patient_folder: str | Path) -> Volume:
-    """Load the first CT volume found in the given folder."""
+def load(patient_folder: str | Path) -> sitk.Image:
+    """Load DICOM series or NIfTI using SimpleITK."""
+    patient_folder = Path(patient_folder)
     print(f"Loading {patient_folder}...")
-    volumes = load_folder(patient_folder)
-    if not volumes:
-        raise ValueError(f"No volume found in {patient_folder}")
-    print(f"Found {len(volumes)} series. Using {volumes[0].series_id}")
-    return volumes[0]
-
-def resample(ct: Volume, target_spacing: tuple[float, float, float]) -> Volume:
-    """Resample volume to target spacing (x, y, z) in mm."""
-    print(f"Resampling to {target_spacing}...")
-    # NOTE: The 3.0 mm z-resample is doing real work here. 
-    # Classic Agatston is defined on 3 mm slices. 
-    # Because we resample to exactly 3.0 mm, the slice thickness factor is 1.0. 
-    # If we ever change that spacing, every score silently scales by thickness/3.0.
-    return backend_resample(ct, target_spacing)
-
-def crop_heart(ct: Volume, margin_mm: float = 8.0) -> Volume:
-    """Locate heart using TotalSegmentator and crop to its bounding box."""
-    print("Locating heart and cropping...")
-    heart_mask = locate_heart(ct)
-    box = bounding_box(heart_mask, ct.spacing, margin_mm)
-    return crop(ct, box)
-
-def normalize(ct: Volume, hu_window: tuple[float, float]) -> np.ndarray:
-    """Map raw HU to [0, 1] based on the provided window."""
-    print(f"Normalizing HU {hu_window} -> [0, 1]...")
-    return backend_window(ct.array, hu_window)
-
-def predict(x: np.ndarray, model_info: Model) -> np.ndarray:
-    """Load PyTorch model and run inference on normalized input."""
-    import torch
-    from monai.inferers import sliding_window_inference
-    from monai.networks.nets import UNet
     
-    print(f"Running inference with {model_info.id}...")
+    if patient_folder.is_file():
+        return sitk.ReadImage(str(patient_folder))
+        
+    reader = sitk.ImageSeriesReader()
+    dicom_names = reader.GetGDCMSeriesFileNames(str(patient_folder))
+    
+    if not dicom_names:
+        niftis = list(patient_folder.rglob("*.nii*"))
+        if niftis:
+            return sitk.ReadImage(str(niftis[0]))
+        raise ValueError(f"No DICOM or NIfTI found in {patient_folder}")
+        
+    reader.SetFileNames(dicom_names)
+    return reader.Execute()
+
+def resample(image: sitk.Image, target_spacing: tuple[float, float, float]) -> sitk.Image:
+    """Resample image to target physical spacing (x, y, z) in mm."""
+    print(f"Resampling to {target_spacing} mm...")
+    # NOTE: The 3.0 mm z-resample ensures the slice thickness factor for Agatston is exactly 1.0.
+    
+    current_spacing = image.GetSpacing()
+    current_size = image.GetSize()
+    
+    new_size = [
+        int(round(current_size[i] * current_spacing[i] / target_spacing[i])) 
+        for i in range(3)
+    ]
+    
+    rs = sitk.ResampleImageFilter()
+    rs.SetOutputSpacing(target_spacing)
+    rs.SetSize(new_size)
+    rs.SetOutputDirection(image.GetDirection())
+    rs.SetOutputOrigin(image.GetOrigin())
+    rs.SetInterpolator(sitk.sitkLinear)
+    rs.SetDefaultPixelValue(float(sitk.GetArrayViewFromImage(image).min()))
+    
+    return rs.Execute(image)
+
+def crop_heart(image: sitk.Image, margin_mm: float) -> sitk.Image:
+    """Use TotalSegmentator to locate the heart and crop the image."""
+    print("Locating heart and cropping...")
+    try:
+        from totalsegmentator.python_api import totalsegmentator
+        import nibabel as nib
+        import tempfile
+    except ImportError:
+        print("TotalSegmentator or Nibabel not installed, skipping crop.")
+        return image
+        
+    with tempfile.TemporaryDirectory() as tmpdir:
+        tmp_in = Path(tmpdir) / "ct.nii.gz"
+        tmp_out = Path(tmpdir) / "mask.nii.gz"
+        
+        # Write input for totalsegmentator
+        sitk.WriteImage(image, str(tmp_in))
+        
+        # Run TS and save output to disk so we can read it back perfectly aligned with SITK
+        result_nib = totalsegmentator(tmp_in, task="total", roi_subset=["heart"], fast=True, quiet=True)
+        nib.save(result_nib, tmp_out)
+        
+        # Read back mask using SITK to ensure matching axis conventions (z, y, x)
+        mask_img = sitk.ReadImage(str(tmp_out))
+        mask_arr = sitk.GetArrayViewFromImage(mask_img) > 0
+    
+    zs, ys, xs = np.nonzero(mask_arr)
+    if zs.size == 0:
+        print("Heart not found, skipping crop.")
+        return image
+        
+    spacing = image.GetSpacing() # x, y, z
+    pad_x = int(np.ceil(margin_mm / spacing[0]))
+    pad_y = int(np.ceil(margin_mm / spacing[1]))
+    pad_z = int(np.ceil(margin_mm / spacing[2]))
+    
+    # SimpleITK indices are (x, y, z)
+    x_start = max(0, int(xs.min()) - pad_x)
+    x_end = min(image.GetSize()[0], int(xs.max()) + pad_x + 1)
+    
+    y_start = max(0, int(ys.min()) - pad_y)
+    y_end = min(image.GetSize()[1], int(ys.max()) + pad_y + 1)
+    
+    z_start = max(0, int(zs.min()) - pad_z)
+    z_end = min(image.GetSize()[2], int(zs.max()) + pad_z + 1)
+    
+    return image[x_start:x_end, y_start:y_end, z_start:z_end]
+
+def normalize(array: np.ndarray, hu_window: tuple[float, float]) -> np.ndarray:
+    """Map raw HU to [0, 1] range."""
+    print(f"Normalizing HU {hu_window} -> [0, 1]...")
+    lo, hi = float(hu_window[0]), float(hu_window[1])
+    out = (array.astype(np.float32) - lo) / (hi - lo)
+    return np.clip(out, 0.0, 1.0)
+
+def predict(x: np.ndarray, weights_path: Path) -> np.ndarray:
+    """Load PyTorch UNet and run sliding-window inference."""
+    print(f"Running inference with weights: {weights_path}")
     device = "cuda" if torch.cuda.is_available() else "cpu"
-    arch = model_info.architecture
+    
+    # Hardcoded Architecture for A1/A3 models
     net = UNet(
         spatial_dims=3,
-        in_channels=arch.get("in_channels", 1),
-        out_channels=arch.get("out_channels", 1),
-        channels=tuple(arch.get("channels", (16, 32, 64, 128, 256))),
-        strides=tuple(arch.get("strides", (2, 2, 2, 2))),
-        num_res_units=arch.get("num_res_units", 2),
-        dropout=arch.get("dropout", 0.1),
+        in_channels=1,
+        out_channels=1,
+        channels=(16, 32, 64, 128, 256),
+        strides=(2, 2, 2, 2),
+        num_res_units=2,
+        dropout=0.1,
     ).to(device)
 
-    state = torch.load(model_info.weights_path, map_location=device, weights_only=True)
+    state = torch.load(weights_path, map_location=device, weights_only=True)
     if isinstance(state, dict) and "state_dict" in state:
         state = state["state_dict"]
 
@@ -119,178 +164,196 @@ def predict(x: np.ndarray, model_info: Model) -> np.ndarray:
     with torch.no_grad():
         logits = sliding_window_inference(
             tensor,
-            roi_size=tuple(model_info.inference.get("patch_size", (96, 96, 32))),
-            sw_batch_size=model_info.inference.get("sw_batch_size", 1),
+            roi_size=(96, 96, 32),
+            sw_batch_size=1,
             predictor=net,
-            overlap=model_info.inference.get("sw_overlap", 0.5),
+            overlap=0.5,
         )
-        
-        activation = model_info.inference.get("activation", "sigmoid")
-        if activation == "sigmoid":
-            probs = torch.sigmoid(logits)
-        else:
-            probs = logits
+        # Activation for approach1 is sigmoid
+        probs = torch.sigmoid(logits)
 
     return probs.squeeze().cpu().numpy().astype(np.float32)
 
-def save_nifti(array: np.ndarray, ct: Volume, out_path: str | Path):
-    """Save array as a NIfTI file, matching the original CT's spatial metadata."""
-    out_path = Path(out_path)
+def save_nifti(array: np.ndarray, reference_image: sitk.Image, out_path: Path):
+    """Save array as NIfTI using spatial metadata from the reference image."""
+    print(f"Saving NIfTI to {out_path}...")
     out_path.parent.mkdir(parents=True, exist_ok=True)
     
     image = sitk.GetImageFromArray(array)
-    image.SetSpacing([float(s) for s in ct.spacing])
+    image.SetSpacing(reference_image.GetSpacing())
+    image.SetOrigin(reference_image.GetOrigin())
+    image.SetDirection(reference_image.GetDirection())
     
-    # Copy origin and direction if present on the original Volume 
-    # (requires support in Volume, but fallback safely if missing)
-    if hasattr(ct, "origin"):
-        image.SetOrigin(ct.origin)
-    if hasattr(ct, "direction"):
-        image.SetDirection(ct.direction)
-        
     sitk.WriteImage(image, str(out_path))
 
-def save_slices(ct: Volume, prob: np.ndarray, out_dir: str | Path, window: tuple[float, float]):
-    """Save all slices as PNGs at native resolution."""
-    print(f"Saving ALL PNG slices to {out_dir}...")
-    out_dir = Path(out_dir)
-    out_dir.mkdir(parents=True, exist_ok=True)
-    
-    # Pre-calculate normalized CT for visualization (0-255 grayscale)
-    ct_norm = np.clip((ct.array - window[0]) / (window[1] - window[0]), 0, 1)
-    ct_gray = (ct_norm * 255).astype(np.uint8)
-    
-    z_slices = prob.shape[0]
-    for z in range(z_slices):
-        ct_slice = ct_gray[z]
-        ct_rgb = np.stack([ct_slice, ct_slice, ct_slice], axis=-1)
-        
-        # Use the probability as the alpha channel over a red hue
-        mask_slice = prob[z]
-        
-        r = (ct_slice * (1 - mask_slice) + 255 * mask_slice).astype(np.uint8)
-        g = (ct_slice * (1 - mask_slice)).astype(np.uint8)
-        b = (ct_slice * (1 - mask_slice)).astype(np.uint8)
-        
-        overlay = np.stack([r, g, b], axis=-1)
-        
-        # Combine side-by-side
-        combined = np.concatenate([ct_rgb, overlay], axis=1)
-        Image.fromarray(combined).save(out_dir / f"slice_{z:03d}.png")
-
-def score_and_save_csv(ct: Volume, prob: np.ndarray, model_info: Model, out_csv: str | Path):
-    """Calculate Agatston score and save lesion-by-lesion results to CSV."""
+def score_and_save_csv(image: sitk.Image, prob: np.ndarray, out_csv: Path) -> dict:
+    """Calculate Agatston score and save slice-by-slice lesion ledger."""
     print(f"Calculating Agatston score and saving to {out_csv}...")
-    out_csv = Path(out_csv)
     out_csv.parent.mkdir(parents=True, exist_ok=True)
 
-    mask_kind = "soft" if model_info.output_type == "soft" else "binary"
-    # Force 2D for Agatston per-slice definition
-    config = ScoringConfig(lesion_definition="2d")
+    array = sitk.GetArrayViewFromImage(image)
+    spacing = image.GetSpacing() # (x, y, z)
+    pixel_area = spacing[0] * spacing[1]
+    thickness_factor = spacing[2] / 3.0
     
-    # Score the volume using the raw CT array
-    score = score_volume(
-        mask=prob,
-        hu=ct.array,
-        spacing=Spacing.from_sitk(ct.spacing),
-        config=config,
-        mask_kind=mask_kind
-    )
-
-    # We need bounding box and centroid for each lesion. 
-    # Recreate the components to calculate bbox and centroid.
-    membership = binarise(prob, mask_kind, config.binary_threshold, config.soft_threshold)
-    components = find_components(membership, config.lesion_definition, config.connectivity)
+    # Binarize threshold
+    mask = prob > 0.5
+    struct = ndimage.generate_binary_structure(2, 1) # 2D 4-connected
     
-    comp_map = {c.label: c for c in components}
-
+    total_agatston = 0.0
+    calcium_vol = 0.0
+    lesion_id = 1
+    
     with open(out_csv, 'w', newline='') as f:
         writer = csv.writer(f)
         writer.writerow([
-            "scan_id", "slice_idx", "z_mm", "lesion_id",
+            "slice_idx", "z_mm", "lesion_id",
             "area_mm2", "peak_hu", "density_weight", "agatston",
             "centroid_x", "centroid_y", "bbox_x0", "bbox_y0", "bbox_x1", "bbox_y1",
-            "model_id", "included"
+            "included"
         ])
         
-        for lesion in score.lesions: # Note: Iterating all lesions including excluded ones
-            comp = comp_map.get(lesion.lesion_id)
-            if not comp:
+        for z in range(mask.shape[0]):
+            plane = mask[z]
+            if not plane.any():
                 continue
                 
-            centroid_y = np.mean(comp.ys)
-            centroid_x = np.mean(comp.xs)
-            bbox_y0, bbox_y1 = comp.ys.min(), comp.ys.max()
-            bbox_x0, bbox_x1 = comp.xs.min(), comp.xs.max()
+            labelled, n = ndimage.label(plane, structure=struct)
             
-            z_mm = lesion.slice_index * ct.spacing[2] if lesion.slice_index is not None else 0.0
-            slice_idx = lesion.slice_index if lesion.slice_index is not None else -1
+            for lab in range(1, n + 1):
+                ys, xs = np.nonzero(labelled == lab)
+                n_vox = ys.size
+                
+                area_mm2 = n_vox * pixel_area
+                peak_hu = float(array[z, ys, xs].max())
+                
+                # Agatston density factor
+                if peak_hu < 130: factor = 0
+                elif peak_hu < 200: factor = 1
+                elif peak_hu < 300: factor = 2
+                elif peak_hu < 400: factor = 3
+                else: factor = 4
+                
+                score = area_mm2 * factor * thickness_factor
+                
+                included = True
+                if area_mm2 < 1.0 or factor == 0:
+                    included = False
+                    
+                if included:
+                    total_agatston += score
+                    calcium_vol += n_vox * spacing[0] * spacing[1] * spacing[2]
+                
+                centroid_y, centroid_x = np.mean(ys), np.mean(xs)
+                
+                writer.writerow([
+                    z, round(z * spacing[2], 2), lesion_id,
+                    round(area_mm2, 4), round(peak_hu, 2), factor, round(score, 4),
+                    round(centroid_x, 2), round(centroid_y, 2),
+                    xs.min(), ys.min(), xs.max(), ys.max(),
+                    included
+                ])
+                lesion_id += 1
 
-            writer.writerow([
-                ct.patient_id,
-                slice_idx,
-                round(z_mm, 2),
-                lesion.lesion_id,
-                round(lesion.area_mm2, 4),
-                round(lesion.peak_hu, 2),
-                lesion.density_factor,
-                round(lesion.score, 4),
-                round(centroid_x, 2),
-                round(centroid_y, 2),
-                bbox_x0, bbox_y0, bbox_x1, bbox_y1,
-                model_info.id,
-                lesion.included
-            ])
-            
-    return score
+    return {"agatston_total": total_agatston, "calcium_volume_mm3": calcium_vol}
 
-def write_run_json(out_dir: Path, ct: Volume, model_info: Model, score, hu_window: tuple):
-    print("Writing run.json...")
-    data = {
-        "scan_id": ct.patient_id,
-        "model_id": model_info.id,
-        "checkpoint": str(model_info.weights_path),
-        "sha256": model_info.sha256,
-        "hu_window": hu_window,
-        "spacing": ct.spacing,
-        "roi": model_info.requires.get("roi"),
-        "date": datetime.now().isoformat(),
-        "agatston_total": score.agatston,
-        "calcium_volume_mm3": score.calcium_volume_mm3,
-        "risk_category": score.risk_category
-    }
-    with open(out_dir / "run.json", "w") as f:
-        json.dump(data, f, indent=2)
-
-def run(patient_folder: str | Path, model_manifest: str | Path, out_dir: str | Path, save_png: bool = True):
-    """Main pipeline execution."""
-    out_dir = Path(out_dir)
+def save_slices(ct_array: np.ndarray, prob: np.ndarray, out_dir: Path):
+    """Save PNG overlays using Matplotlib to match the visualizer reference."""
+    print(f"Saving ALL PNG slices to {out_dir}...")
     out_dir.mkdir(parents=True, exist_ok=True)
     
-    # Load model info once
-    model_info = load_model(model_manifest)
-    hu_window = tuple(model_info.requires.get("hu_window", [0, 1200]))
+    import matplotlib
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+    import numpy.ma as ma
     
-    ct = load(patient_folder)
-    ct = resample(ct, (0.37, 0.37, 3.0))
-    ct = crop_heart(ct, margin_mm=8)
+    for z in range(prob.shape[0]):
+        # The visualizer clips from -100 to 400 for display
+        ct_slice = np.clip(ct_array[z], -100, 400)
+        p_slice = prob[z]
+        
+        # We only want to visualize slices that have some meaningful structure or prediction.
+        # But for completeness, we can just save all slices as 1x2 grids.
+        fig, axes = plt.subplots(1, 2, figsize=(12, 6), facecolor='black')
+        
+        for ax in axes:
+            ax.set_facecolor("black")
+            ax.tick_params(left=False, bottom=False, labelleft=False, labelbottom=False)
+            
+        # Panel 1: Original CT (origin='lower' aligns with radiology view)
+        axes[0].imshow(ct_slice, cmap='gray', origin='lower', vmin=-100, vmax=400)
+        
+        # Panel 2: Soft Probability Overlay
+        axes[1].imshow(ct_slice, cmap='gray', origin='lower', vmin=-100, vmax=400)
+        
+        # Mask out probabilities near zero so they are transparent, exactly like the visualizer
+        p_masked = ma.masked_where(p_slice < 0.01, p_slice)
+        axes[1].imshow(p_masked, cmap='inferno', origin='lower', alpha=0.5, vmin=0, vmax=1)
+        
+        plt.tight_layout()
+        plt.savefig(out_dir / f"slice_{z:03d}.png", dpi=150, facecolor=fig.get_facecolor(), edgecolor='none')
+        plt.close(fig)
+
+def run(patient_folder: str | Path, model_weights: str | Path, out_dir: str | Path, save_png: bool = True):
+    """Execute the hardcoded testing pipeline."""
+    patient_id = Path(patient_folder).name
+    out_dir = Path(out_dir) / patient_id
+    out_dir.mkdir(parents=True, exist_ok=True)
     
-    x = normalize(ct, hu_window)
-    prob = predict(x, model_info)
+    image = load(patient_folder)
+    original_orientation = sitk.DICOMOrientImageFilter_GetOrientationFromDirectionCosines(image.GetDirection())
     
-    print("Saving CT and Prediction NIfTIs...")
-    save_nifti(ct.array, ct, out_dir / "ct.nii.gz")
-    save_nifti(prob, ct, out_dir / "pred.nii.gz")
+    print(f"Reorienting from {original_orientation} to RAS...")
+    image = sitk.DICOMOrient(image, "RAS")
+    image = resample(image, SPACING_MM)
+    image = crop_heart(image, margin_mm=MARGIN_MM)
     
-    score = score_and_save_csv(ct, prob, model_info, out_dir / "lesions.csv")
-    write_run_json(out_dir, ct, model_info, score, hu_window)
+    array = sitk.GetArrayFromImage(image) # (Z, Y, X)
+    
+    # MONAI models expect spatial dimensions (X, Y, Z)
+    # SimpleITK natively provides arrays as (Z, Y, X)
+    x_monai = np.transpose(array, (2, 1, 0))
+    x_monai = normalize(x_monai, HU_WINDOW)
+    prob_xyz = predict(x_monai, Path(model_weights))
+    
+    # Transpose back to (Z, Y, X) for SimpleITK
+    prob = np.transpose(prob_xyz, (2, 1, 0))
+    
+    # Restore the original orientation before saving
+    print(f"Restoring original orientation ({original_orientation}) for outputs...")
+    prob_img = sitk.GetImageFromArray(prob)
+    prob_img.CopyInformation(image)
+    
+    image_orig = sitk.DICOMOrient(image, original_orientation)
+    prob_img_orig = sitk.DICOMOrient(prob_img, original_orientation)
+    
+    array_orig = sitk.GetArrayFromImage(image_orig)
+    prob_orig = sitk.GetArrayFromImage(prob_img_orig)
+    
+    save_nifti(array_orig, image_orig, out_dir / "ct.nii.gz")
+    save_nifti(prob_orig, image_orig, out_dir / "pred.nii.gz")
+    
+    metrics = score_and_save_csv(image_orig, prob_orig, out_dir / "lesions.csv")
+    
+    with open(out_dir / "run.json", "w") as f:
+        json.dump({
+            "model_weights": str(model_weights),
+            "date": datetime.now().isoformat(),
+            **metrics
+        }, f, indent=2)
     
     if save_png:
-        save_slices(ct, prob, out_dir / "slices", hu_window)
+        save_slices(array_orig, prob_orig, out_dir / "slices")
         
     print(f"Pipeline complete! Output in {out_dir}")
 
 if __name__ == "__main__":
-    # Example usage:
-    # run("path/to/patient/folder", "models/approach1_roi_cropped/config.json", "out/dir")
-    pass
+    # Ensure correct weights path for hardcoded test script
+    weights_path = Path(__file__).resolve().parent.parent / "models" / "approach1_roi_cropped" / "best_model.pth"
+    out_path = Path(__file__).resolve().parent.parent / "out"
+    
+    run(
+        "/pscratch/sd/s/soham95/SOHAM/coca_raw/cocacoronarycalciumandchestcts-2/deidentified_nongated/6/6", 
+        model_weights=weights_path, 
+        out_dir=out_path
+    )
