@@ -1,0 +1,11 @@
+{
+  "data_root": "/pscratch/sd/s/soham95/SOHAM/coca_raw/cocacoronarycalciumandchestcts-2/data_canonical/images_roi_cov",
+  "train_csv": "/pscratch/sd/s/soham95/SOHAM/coca_raw/cocacoronarycalciumandchestcts-2/data_canonical/tables/train_split.parquet",
+  "val_csv": "/pscratch/sd/s/soham95/SOHAM/coca_raw/cocacoronarycalciumandchestcts-2/data_canonical/tables/val_split.parquet",
+  "out_dir": "/pscratch/sd/s/soham95/SOHAM/runs/approach3_coverage_v2",
+  "label_suffix": "_seg",
+  "epochs": 200,
+  "lr": 0.001,
+  "val_interval": 2,
+  "patience": 30
+}
