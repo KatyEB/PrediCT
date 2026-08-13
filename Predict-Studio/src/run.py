@@ -23,11 +23,18 @@ import SimpleITK as sitk
 from pathlib import Path
 import csv
 
-from .paths import upload_dir, work_dir, out_dir, study_id_from_series
-from .registry import load_manifest
-from .pipeline import load, resample, crop_heart, normalize, predict, save_nifti
-from .scoring import score, totals
-from .render import save_slices
+import sys
+# Make sure we can import 'src' even if the script is executed directly from another directory
+_current_dir = Path(__file__).resolve().parent
+_parent_dir = _current_dir.parent
+if str(_parent_dir) not in sys.path:
+    sys.path.insert(0, str(_parent_dir))
+
+from src.paths import upload_dir, work_dir, out_dir, study_id_from_series
+from src.registry import load_manifest
+from src.pipeline import load, resample, crop_heart, normalize, predict, save_nifti
+from src.scoring import score, totals
+from src.render import save_slices
 
 def write_csv(rows: list[dict], path: Path):
     if not rows:
@@ -127,12 +134,33 @@ def run(study_id: str, model_id: str, crop: bool = None, progress=None, custom_i
         json.dump(run_provenance, f, indent=2)
         
     p("render", 0.9)
-    save_slices(array, prob, o / "slices", m["output"])
+    save_slices(array, prob, o / "slices", m, rows)
     
     p("done", 1.0)
     return o
 
 if __name__ == "__main__":
+    import sys
+    
+    # MANUAL RUN BLOCK (Triggered if no CLI arguments are provided)
+    if len(sys.argv) == 1:
+        print("No CLI arguments provided. Running in MANUAL mode...")
+        
+        # EDIT THESE VALUES FOR MANUAL RUNS:
+        MANUAL_INPUT_PATH = Path("/pscratch/sd/s/soham95/SOHAM/coca_raw/cocacoronarycalciumandchestcts-2/Gated_release_final/patient/173/Pro_Gated_Calcium_Score_(CS)_3.0_Qr36_2_BestSyst_255_ms")
+        MANUAL_MODEL_ID = "a1-roi"
+        
+        study_id = MANUAL_INPUT_PATH.parent.name # Usually the patient ID folder
+        
+        def log_progress(stage, pct):
+            print(f"[{pct*100:3.0f}%] {stage}")
+            
+        print(f"Starting manual run for study '{study_id}' with model '{MANUAL_MODEL_ID}'...")
+        out_path = run(study_id, MANUAL_MODEL_ID, progress=log_progress, custom_input=MANUAL_INPUT_PATH)
+        print(f"Done. Outputs saved to {out_path}")
+        sys.exit(0)
+        
+    # EXISTING CLI LOGIC
     parser = argparse.ArgumentParser(description="Run PrediCT CAC inference pipeline.")
     parser.add_argument("--study", help="Study ID (if using data/uploads/<study_id>)")
     parser.add_argument("--input", help="Absolute path to a DICOM directory (bypasses data/uploads/)")
