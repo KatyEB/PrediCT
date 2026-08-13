@@ -30,11 +30,11 @@ _parent_dir = _current_dir.parent
 if str(_parent_dir) not in sys.path:
     sys.path.insert(0, str(_parent_dir))
 
-from src.paths import upload_dir, work_dir, out_dir, study_id_from_series
-from src.registry import load_manifest
-from src.pipeline import load, resample, crop_heart, normalize, predict, save_nifti
-from src.scoring import score, totals
-from src.render import save_slices
+from src.backend.paths import upload_dir, work_dir, out_dir, study_id_from_series
+from src.backend.registry import load_manifest
+from src.backend.pipeline import load, resample, crop_heart, normalize, predict, save_nifti
+from src.backend.scoring import score, totals
+from src.backend.render import save_slices
 
 def write_csv(rows: list[dict], path: Path):
     if not rows:
@@ -87,6 +87,11 @@ def run(study_id: str, model_id: str, crop: bool = None, progress=None, custom_i
         req_spc = tuple(m["spacing"])
         assert np.allclose(spc, req_spc, atol=1e-4), f"RAS permuted axes: {spc}"
         
+        # render.py's flips assume RAS (diag(-1,-1,1)). DICOMOrient guarantees it, but
+        # a wrong direction matrix would silently mirror the display, not error.
+        assert np.allclose(image.GetDirection(), (-1,0,0, 0,-1,0, 0,0,1), atol=1e-6), \
+            f"expected RAS direction cosines, got {image.GetDirection()}"
+        
         sitk.WriteImage(image, str(ct_path))
 
     array = sitk.GetArrayFromImage(image)                 # (Z, Y, X)
@@ -123,6 +128,8 @@ def run(study_id: str, model_id: str, crop: bool = None, progress=None, custom_i
         "study_id": study_id,
         "model_id": model_id,
         "cropped": crop,
+        "shape": list(array.shape),
+        "output": m["output"],
         "hu_window": m["hu_window"],
         "spacing": list(image.GetSpacing()),
         "sha256": m.get("sha256"),

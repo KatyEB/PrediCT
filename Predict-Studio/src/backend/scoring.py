@@ -92,6 +92,7 @@ def score(prob: np.ndarray, hu: np.ndarray, spacing: tuple, mode: str, threshold
                 bbox_x1=int(xs.max()), 
                 bbox_y1=int(ys.max()),
                 n_voxels=int(ys.size),
+                mean_coverage=float(prob[z][ys, xs].mean()),
                 included=bool(area_mm2 >= min_area_mm2 and w > 0),
             ))
     return rows

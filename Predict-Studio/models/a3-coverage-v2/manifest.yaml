@@ -1,5 +1,6 @@
-id: a3-coverage
+id: a3-coverage-v2
 name: Approach 3 — Coverage (ROI)
+source_run: runs/approach3_coverage_v2
 weights: best_model.pth
 sha256: "c83170af5772581f0f75f2fe903da2adc400d53ce0c577fa8ec376258afcbe97"
 output: coverage

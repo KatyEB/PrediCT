@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,300;6..72,400;6..72,500&family=IBM+Plex+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;700&family=Libre+Franklin:wght@400;600;800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=Manrope:wght@400;600;800&family=Chivo:wght@400;700;900&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  html, body { margin:0; padding:0; background:#DEDBD3; }
+  a { color:#2E5E52; } a:hover { color:#14322B; }
+  .well { position:relative; background:radial-gradient(circle at 50% 46%, #3B4148 0%, #22262B 52%, #0B0D0F 100%); overflow:hidden; }
+  .spk { position:absolute; border-radius:50%; background:#FFFFFF; box-shadow:0 0 4px 1px rgba(255,255,255,.55); }
+  .soft { background:transparent; box-shadow:none; background-image:radial-gradient(#C9D1D9 40%, transparent 41%); background-size:2px 2px; opacity:.55; border-radius:2px; }
+</style>
+</helmet>
+
+<div style="background:#DEDBD3;min-height:100vh;padding:0 0 80px;font-family:'IBM Plex Mono',monospace;">
+
+  <div style="position:sticky;top:0;z-index:9;background:#DEDBD3;border-bottom:1px solid #B9B4A7;padding:14px 24px;display:flex;gap:18px;align-items:center;flex-wrap:wrap;">
+    <span style="font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:#5C5A51;">PrediCT Studio · sample screens · 1440×900</span>
+    <div style="display:flex;gap:6px;flex-wrap:wrap;">
+      <a href="#s1" style="font-size:11px;border:1px solid #B9B4A7;padding:5px 10px;text-decoration:none;">01 Argument</a>
+      <a href="#s2" style="font-size:11px;border:1px solid #B9B4A7;padding:5px 10px;text-decoration:none;">02 Instrument</a>
+      <a href="#s3" style="font-size:11px;border:1px solid #B9B4A7;padding:5px 10px;text-decoration:none;">03 Contact Sheet</a>
+      <a href="#s4" style="font-size:11px;border:1px solid #B9B4A7;padding:5px 10px;text-decoration:none;">04 Ledger</a>
+      <a href="#s5" style="font-size:11px;border:1px solid #B9B4A7;padding:5px 10px;text-decoration:none;">05 Field</a>
+      <a href="#s6" style="font-size:11px;border:1px solid #B9B4A7;padding:5px 10px;text-decoration:none;">06 Diff</a>
+    </div>
+    <span style="font-size:11px;color:#8A867A;">slice imagery is sketched, not real DICOM</span>
+  </div>
+
+  <!-- ══════════ 01 ARGUMENT ══════════ -->
+  <div id="s1" style="padding:34px 24px 0;">
+    <div style="font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:#5C5A51;padding-bottom:10px;">01 — The Argument · light, read top to bottom</div>
+    <div style="width:1440px;height:900px;overflow:hidden;background:#F4F1EA;color:#1A1A17;font-family:'Newsreader',serif;display:flex;flex-direction:column;box-shadow:0 1px 0 #C9C3B4;">
+      <div style="display:flex;justify-content:space-between;align-items:baseline;padding:16px 56px;border-bottom:1px solid #C9C3B4;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:0.08em;color:#5C5A51;">
+        <span>PrediCT STUDIO</span><span>study 0417-B · run 3 of 3 · 2026-08-13 14:02</span>
+      </div>
+      <div style="flex:1;padding:30px 56px 0;display:grid;grid-template-columns:1fr 372px;gap:48px;min-height:0;">
+        <div style="display:flex;flex-direction:column;gap:22px;min-height:0;">
+          <div style="display:flex;align-items:flex-end;gap:26px;">
+            <div style="display:flex;flex-direction:column;gap:2px;">
+              <span style="font-family:'Libre Franklin',sans-serif;font-weight:800;font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:#8A867A;">This study scores</span>
+              <span style="font-family:'IBM Plex Mono',monospace;font-weight:500;font-size:66px;line-height:1;letter-spacing:-0.02em;">1064.2</span>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:4px;padding-bottom:6px;">
+              <span style="font-family:'Libre Franklin',sans-serif;font-weight:800;font-size:19px;letter-spacing:0.04em;color:#8A2B2B;">SEVERE</span>
+              <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#5C5A51;">tier 4 of 4 · &gt;400 · 664.2 above the bound</span>
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:8px;">
+            <div style="display:flex;align-items:center;gap:12px;"><span style="font-family:'Libre Franklin',sans-serif;font-weight:800;font-size:10px;letter-spacing:0.16em;color:#2E5E52;">BECAUSE</span><span style="flex:1;height:1px;background:#C9C3B4;"></span></div>
+            <p style="margin:0;font-size:20px;line-height:1.45;max-width:52ch;text-wrap:pretty;">19 of 24 candidate lesions cleared the 1 mm² minimum at threshold 0.50. They sit on 8 of 120 slices, between z 183.0 and z 237.0 mm, with density weights 2 to 4.</p>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:8px;">
+            <div style="display:flex;align-items:center;gap:12px;"><span style="font-family:'Libre Franklin',sans-serif;font-weight:800;font-size:10px;letter-spacing:0.16em;color:#2E5E52;">SHOWN</span><span style="flex:1;height:1px;background:#C9C3B4;"></span><span style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:#8A867A;">HU 130–1500 · ≥0.50 solid · 0.20–0.50 stippled</span></div>
+            <div style="display:flex;gap:10px;">
+              <div style="display:flex;flex-direction:column;gap:4px;"><div class="well" style="width:106px;height:106px;"><span class="spk" style="width:5px;height:5px;left:48px;top:52px;"></span><span class="spk" style="width:3px;height:3px;left:58px;top:44px;"></span><span class="spk soft" style="width:7px;height:5px;left:40px;top:60px;"></span></div><span style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:#5C5A51;">61 · 49.6</span></div>
+              <div style="display:flex;flex-direction:column;gap:4px;"><div class="well" style="width:106px;height:106px;"><span class="spk" style="width:8px;height:6px;left:44px;top:48px;border-radius:3px;"></span><span class="spk" style="width:4px;height:4px;left:60px;top:58px;"></span></div><span style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:#5C5A51;">64 · 127.6</span></div>
+              <div style="display:flex;flex-direction:column;gap:4px;"><div class="well" style="width:106px;height:106px;"><span class="spk" style="width:3px;height:3px;left:52px;top:50px;"></span><span class="spk soft" style="width:9px;height:6px;left:44px;top:56px;"></span></div><span style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:#5C5A51;">65 · 8.2</span></div>
+              <div style="display:flex;flex-direction:column;gap:4px;"><div class="well" style="width:106px;height:106px;"><span class="spk" style="width:7px;height:5px;left:50px;top:46px;border-radius:2px;"></span></div><span style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:#5C5A51;">67 · 88.0</span></div>
+              <div style="display:flex;flex-direction:column;gap:4px;"><div class="well" style="width:106px;height:106px;"><span class="spk" style="width:10px;height:7px;left:42px;top:50px;border-radius:3px;"></span><span class="spk" style="width:4px;height:4px;left:62px;top:44px;"></span><span class="spk soft" style="width:8px;height:5px;left:38px;top:62px;"></span></div><span style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:#5C5A51;">70 · 162.4</span></div>
+              <div style="display:flex;flex-direction:column;gap:4px;"><div class="well" style="width:106px;height:106px;"><span class="spk" style="width:9px;height:6px;left:46px;top:52px;border-radius:3px;"></span><span class="spk" style="width:3px;height:3px;left:40px;top:44px;"></span></div><span style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:#5C5A51;">71 · 120.4</span></div>
+              <div style="display:flex;flex-direction:column;gap:4px;"><div class="well" style="width:106px;height:106px;"><span class="spk" style="width:12px;height:8px;left:42px;top:48px;border-radius:4px;"></span></div><span style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:#5C5A51;">74 · 240.0</span></div>
+              <div style="display:flex;flex-direction:column;gap:4px;"><div class="well" style="width:106px;height:106px;"><span class="spk" style="width:5px;height:4px;left:54px;top:56px;"></span><span class="spk soft" style="width:6px;height:5px;left:46px;top:48px;"></span></div><span style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:#5C5A51;">79 · 62.7</span></div>
+            </div>
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:#8A867A;">[ o ] originals · [ p ] overlay · [ c ] calcium only · ← → step exhibit · [ a ] all 120 slices</div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:8px;">
+            <div style="display:flex;align-items:center;gap:12px;"><span style="font-family:'Libre Franklin',sans-serif;font-weight:800;font-size:10px;letter-spacing:0.16em;color:#2E5E52;">COUNTED · 19</span><span style="flex:1;height:1px;background:#C9C3B4;"></span></div>
+            <table style="width:100%;border-collapse:collapse;font-family:'IBM Plex Mono',monospace;font-size:12px;">
+              <thead><tr style="color:#8A867A;font-size:10px;letter-spacing:0.08em;text-align:right;"><th style="text-align:left;font-weight:400;padding:2px 0;">slice</th><th style="font-weight:400;">z mm</th><th style="font-weight:400;">area mm²</th><th style="font-weight:400;">peak HU</th><th style="font-weight:400;">wt</th><th style="font-weight:400;">score</th></tr></thead>
+              <tbody>
+                <sc-for list="{{ counted }}" as="l" hint-placeholder-count="5">
+                  <tr style="text-align:right;border-top:1px solid #E4DFD2;"><td style="text-align:left;padding:3px 0;">{{ l.sl }}</td><td>{{ l.z }}</td><td>{{ l.area }}</td><td>{{ l.hu }}</td><td>{{ l.wt }}</td><td style="font-weight:500;">{{ l.score }}</td></tr>
+                </sc-for>
+                <tr style="text-align:right;border-top:1px solid #E4DFD2;color:#8A867A;"><td style="text-align:left;padding:3px 0;">…</td><td colspan="4">11 further counted lesions</td><td>205.3</td></tr>
+                <tr style="text-align:right;border-top:2px solid #1A1A17;"><td style="text-align:left;padding:5px 0;" colspan="5">total</td><td style="font-weight:600;">1064.2</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:20px;border-left:1px solid #C9C3B4;padding-left:34px;min-height:0;">
+          <div style="display:flex;flex-direction:column;gap:8px;">
+            <div style="font-family:'Libre Franklin',sans-serif;font-weight:800;font-size:10px;letter-spacing:0.16em;color:#8A2B2B;">EXCLUDED · RECORDED, NOT COUNTED</div>
+            <table style="width:100%;border-collapse:collapse;font-family:'IBM Plex Mono',monospace;font-size:11px;color:#5C5A51;">
+              <tbody>
+                <sc-for list="{{ excluded }}" as="e" hint-placeholder-count="5">
+                  <tr style="border-top:1px solid #E4DFD2;text-align:right;"><td style="text-align:left;padding:3px 0;">sl {{ e.sl }}</td><td>{{ e.area }} mm²</td><td>{{ e.hu }} HU</td><td style="color:#8A2B2B;">——</td></tr>
+                </sc-for>
+                <tr style="border-top:1px solid #C9C3B4;"><td colspan="4" style="padding:5px 0;color:#8A2B2B;">5 candidates · 2.7 mm² · below 1 mm² minimum · would add 6.9</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:8px;">
+            <div style="font-family:'Libre Franklin',sans-serif;font-weight:800;font-size:10px;letter-spacing:0.16em;color:#2E5E52;">SOFT MASS · NOT ADMITTED</div>
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;line-height:1.7;color:#5C5A51;">voxels 0.20 ≤ p &lt; 0.50<br>1 384 vox ≡ 11.2 mm²<br>at τ 0.35 the total foots to 1121.6<br>tier SEVERE, unchanged</div>
+          </div>
+          <div style="margin-top:auto;display:flex;flex-direction:column;gap:8px;padding-bottom:22px;">
+            <div style="font-family:'Libre Franklin',sans-serif;font-weight:800;font-size:10px;letter-spacing:0.16em;color:#8A867A;">PRODUCED BY</div>
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;line-height:1.85;color:#3A382F;">cacnet-v4 · softmax probability<br>threshold τ 0.50 · HU window 130–1500<br>spacing 0.39 × 0.39 × 3.00 mm · LPS<br>crop centroid-v2 · ckpt 9f4c1a7e<br>2026-08-13T14:02:11Z · [ e ] export bundle</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════ 02 INSTRUMENT ══════════ -->
+  <div id="s2" style="padding:44px 24px 0;">
+    <div style="font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:#5C5A51;padding-bottom:10px;">02 — The Instrument · warm graphite, ribbon is the cursor</div>
+    <div style="width:1440px;height:900px;overflow:hidden;background:#23272B;color:#E4DED0;font-family:'Space Grotesk',sans-serif;display:flex;flex-direction:column;">
+      <div style="padding:10px 20px;border-bottom:1px solid #3A4148;font-family:'IBM Plex Mono',monospace;font-size:11px;color:#B7AF9E;letter-spacing:0.04em;">cacnet-v4 · softmax · τ 0.50 · HU 130–1500 · 0.39×0.39×3.00 mm · LPS · centroid-v2 · ckpt 9f4c1a7e · 2026-08-13T14:02:11Z</div>
+      <div style="padding:16px 20px 12px;border-bottom:1px solid #3A4148;display:flex;flex-direction:column;gap:8px;">
+        <div style="display:flex;justify-content:space-between;font-family:'IBM Plex Mono',monospace;font-size:10px;color:#8B939B;letter-spacing:0.14em;"><span>VOLUME · SLICE 1</span><span>8 of 120 slices loaded · 6.7 % · z 183.0 → 237.0 mm</span><span>120</span></div>
+        <div style="display:flex;gap:1px;align-items:flex-end;height:54px;">
+          <sc-for list="{{ ribbon }}" as="c" hint-placeholder-count="40">
+            <div style="flex:1;height:{{ c.h }};background:{{ c.bg }};border-bottom:2px solid {{ c.mark }};"></div>
+          </sc-for>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-family:'IBM Plex Mono',monospace;font-size:10px;color:#8B939B;"><span style="color:#C98B2E;">█ counted lesion</span><span style="color:#6E7C86;">▌ sub-threshold, not counted</span><span>▲ cursor at slice 64</span><span>←→ step · ⇧←→ next loaded</span></div>
+      </div>
+      <div style="flex:1;display:grid;grid-template-columns:1fr 372px;min-height:0;">
+        <div style="background:#000;display:flex;align-items:center;justify-content:center;position:relative;">
+          <div class="well" style="width:520px;height:520px;background:radial-gradient(circle at 50% 46%, #4A5158 0%, #23272B 52%, #000 100%);">
+            <span class="spk" style="width:26px;height:18px;left:214px;top:236px;border-radius:8px;"></span>
+            <span class="spk" style="width:12px;height:11px;left:292px;top:284px;"></span>
+            <span class="spk soft" style="width:34px;height:20px;left:188px;top:264px;"></span>
+            <span class="spk soft" style="width:18px;height:14px;left:300px;top:230px;"></span>
+          </div>
+          <div style="position:absolute;left:24px;bottom:20px;font-family:'IBM Plex Mono',monospace;font-size:10px;color:#8B939B;line-height:1.8;">512 × 512 · 240 mm FOV<br>├────── 10 mm ──────┤<br><span style="color:#E4DED0;">█ p ≥ 0.50 counted</span> · <span style="color:#B7AF9E;">▒ 0.35–0.50</span> · <span style="color:#6E7C86;">· 0.20–0.35</span></div>
+          <div style="position:absolute;right:24px;top:20px;display:flex;gap:6px;font-family:'IBM Plex Mono',monospace;font-size:10px;">
+            <span style="border:1px solid #3A4148;padding:4px 9px;color:#8B939B;">o originals</span>
+            <span style="border:1px solid #C98B2E;padding:4px 9px;color:#C98B2E;">p overlay</span>
+            <span style="border:1px solid #3A4148;padding:4px 9px;color:#8B939B;">c calcium only</span>
+          </div>
+        </div>
+        <div style="border-left:1px solid #3A4148;padding:18px 20px;display:flex;flex-direction:column;gap:18px;">
+          <div style="display:flex;justify-content:space-between;align-items:baseline;"><span style="font-weight:700;font-size:22px;letter-spacing:-0.02em;">SLICE 64</span><span style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:#B7AF9E;">z 192.0 mm</span></div>
+          <div style="display:flex;flex-direction:column;gap:7px;font-family:'IBM Plex Mono',monospace;font-size:12px;">
+            <div style="display:flex;justify-content:space-between;border-bottom:1px solid #31373D;padding-bottom:5px;"><span style="color:#8B939B;">lesions here</span><span>3</span></div>
+            <div style="display:flex;justify-content:space-between;border-bottom:1px solid #31373D;padding-bottom:5px;"><span style="color:#8B939B;">area</span><span>31.9 mm²</span></div>
+            <div style="display:flex;justify-content:space-between;border-bottom:1px solid #31373D;padding-bottom:5px;"><span style="color:#8B939B;">peak HU</span><span>501</span></div>
+            <div style="display:flex;justify-content:space-between;border-bottom:1px solid #31373D;padding-bottom:5px;"><span style="color:#8B939B;">density weight</span><span>4 · ≥400 HU</span></div>
+            <div style="display:flex;justify-content:space-between;padding-bottom:2px;"><span style="color:#8B939B;">slice score</span><span style="color:#C98B2E;font-weight:600;">127.6</span></div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:8px;">
+            <span style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:0.14em;color:#8B939B;">SOFT VOXELS ON THIS SLICE</span>
+            <div style="display:flex;flex-direction:column;gap:5px;font-family:'IBM Plex Mono',monospace;font-size:11px;">
+              <div style="display:flex;align-items:center;gap:8px;"><span style="width:96px;height:8px;background:linear-gradient(90deg,#6E7C86 34%,#31373D 34%);"></span><span style="color:#6E7C86;">0.20–0.35 · 41 vox · out</span></div>
+              <div style="display:flex;align-items:center;gap:8px;"><span style="width:96px;height:8px;background:linear-gradient(90deg,#B7AF9E 14%,#31373D 14%);"></span><span style="color:#B7AF9E;">0.35–0.50 · 17 vox · out</span></div>
+              <div style="display:flex;align-items:center;gap:8px;"><span style="width:96px;height:8px;background:linear-gradient(90deg,#C98B2E 52%,#31373D 52%);"></span><span style="color:#C98B2E;">≥ 0.50 · 63 vox · counted</span></div>
+            </div>
+          </div>
+          <div style="margin-top:auto;display:flex;flex-direction:column;gap:8px;">
+            <span style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:0.14em;color:#8B939B;">EXCLUDED · 5 CANDIDATES</span>
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;line-height:1.8;color:#6E7C86;">sl 58 0.6 · sl 77 0.9 · sl 84 0.4<br>sl 91 0.5 · sl 96 0.3 → 2.7 mm²<br>below 1 mm² · [ x ] list</div>
+          </div>
+        </div>
+      </div>
+      <div style="border-top:1px solid #3A4148;padding:14px 20px;display:flex;align-items:center;gap:26px;">
+        <div style="display:flex;align-items:baseline;gap:12px;"><span style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:0.14em;color:#8B939B;">TOTAL</span><span style="font-weight:700;font-size:32px;letter-spacing:-0.02em;">1064.2</span><span style="color:#C98B2E;font-weight:700;font-size:15px;letter-spacing:0.06em;">SEVERE</span></div>
+        <div style="flex:1;display:flex;flex-direction:column;gap:5px;">
+          <div style="height:8px;background:#31373D;position:relative;"><span style="position:absolute;left:0;top:0;bottom:0;width:74%;background:#C98B2E;"></span><span style="position:absolute;left:6.6%;top:-3px;bottom:-3px;width:1px;background:#8B939B;"></span><span style="position:absolute;left:26.6%;top:-3px;bottom:-3px;width:1px;background:#8B939B;"></span></div>
+          <div style="display:flex;justify-content:space-between;font-family:'IBM Plex Mono',monospace;font-size:10px;color:#8B939B;"><span>0 zero</span><span>100 mild</span><span>400 moderate|severe</span><span>margin +664.2</span></div>
+        </div>
+        <span style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:#8B939B;">19 counted · 5 excluded · t threshold · e export</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════ 03 CONTACT SHEET ══════════ -->
+  <div id="s3" style="padding:44px 24px 0;">
+    <div style="font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:#5C5A51;padding-bottom:10px;">03 — The Contact Sheet · all 120 frames, marked in red</div>
+    <div style="width:1440px;height:900px;overflow:hidden;background:#E7E5E0;color:#26262A;font-family:'Libre Franklin',sans-serif;display:flex;flex-direction:column;">
+      <div style="padding:14px 26px;border-bottom:2px solid #26262A;display:flex;justify-content:space-between;align-items:flex-end;">
+        <div style="display:flex;flex-direction:column;gap:3px;"><span style="font-weight:800;font-size:17px;letter-spacing:0.02em;">STUDY 0417-B · CONTACT SHEET 1/1</span><span style="font-family:'Courier Prime',monospace;font-size:11px;color:#3B3B39;">120 frames · 512² · 3.00 mm apart · HU 130–1500 · LPS · centroid-v2</span></div>
+        <div style="font-family:'Courier Prime',monospace;font-size:11px;text-align:right;color:#3B3B39;line-height:1.6;">cacnet-v4 · softmax probability · τ 0.50<br>ckpt 9f4c1a7e · 2026-08-13T14:02:11Z</div>
+      </div>
+      <div style="flex:1;display:grid;grid-template-columns:1fr 268px;min-height:0;">
+        <div style="padding:16px 20px;display:flex;flex-direction:column;gap:12px;min-height:0;">
+          <div style="display:grid;grid-template-columns:repeat(20,1fr);gap:4px;">
+            <sc-for list="{{ frames }}" as="f" hint-placeholder-count="60">
+              <div style="display:flex;flex-direction:column;gap:2px;">
+                <div class="well" style="aspect-ratio:1;outline:{{ f.ring }};outline-offset:1px;">
+                  <span class="{{ f.dotClass }}" style="width:{{ f.dotW }};height:{{ f.dotW }};left:44%;top:46%;"></span>
+                </div>
+                <span style="font-family:'Courier Prime',monospace;font-size:8.5px;color:{{ f.capColor }};text-align:center;">{{ f.idx }}</span>
+              </div>
+            </sc-for>
+          </div>
+          <div style="display:flex;gap:22px;font-family:'Courier Prime',monospace;font-size:11px;color:#3B3B39;border-top:1px solid #CFCCC5;padding-top:8px;">
+            <span><span style="color:#B3241C;">●</span> 8 frames counted calcium</span>
+            <span><span style="color:#B3241C;">○</span> 5 frames sub-threshold only</span>
+            <span>▪ 107 empty at τ 0.50</span>
+            <span style="margin-left:auto;">every frame identically windowed</span>
+          </div>
+          <div style="display:grid;grid-template-columns:auto 1fr;gap:22px;border-top:1px solid #CFCCC5;padding-top:12px;min-height:0;">
+            <div style="display:flex;flex-direction:column;gap:5px;">
+              <span style="font-weight:800;font-size:10px;letter-spacing:0.14em;">ENLARGEMENT · FRAME 64</span>
+              <div class="well" style="width:150px;height:150px;outline:2px solid #B3241C;outline-offset:2px;">
+                <span class="spk" style="width:11px;height:8px;left:62px;top:68px;border-radius:4px;"></span>
+                <span class="spk" style="width:5px;height:4px;left:86px;top:84px;"></span>
+                <span class="spk soft" style="width:15px;height:10px;left:50px;top:78px;"></span>
+              </div>
+              <span style="font-family:'Courier Prime',monospace;font-size:10px;color:#3B3B39;">z 192.0 mm · ├── 10 mm ──┤</span>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:9px;font-family:'Courier Prime',monospace;font-size:12px;color:#26262A;line-height:1.5;">
+              <div style="display:flex;gap:26px;"><span>3 lesions</span><span>31.9 mm²</span><span>peak HU 501</span><span>weight 4</span><span style="font-weight:700;">score 127.6</span></div>
+              <div style="color:#3B3B39;">red crop marks enclose voxels at p ≥ 0.50 — the only voxels in 127.6.</div>
+              <div style="color:#3B3B39;">hatched area is p 0.20–0.50, 58 voxels, <span style="color:#B3241C;">not counted at this threshold</span>.</div>
+              <div style="border:1px solid #CFCCC5;padding:8px 10px;background:#DEDCD6;">o originals · p overlay · c marked frames only · ⏎ enlarge · x exclusions · e export sheet + csv</div>
+            </div>
+          </div>
+        </div>
+        <div style="border-left:1px solid #CFCCC5;padding:16px 20px;display:flex;flex-direction:column;gap:16px;min-height:0;">
+          <div style="display:flex;flex-direction:column;gap:6px;">
+            <span style="font-weight:800;font-size:10px;letter-spacing:0.14em;color:#B3241C;">MARKED FRAMES · COUNTED</span>
+            <table style="width:100%;border-collapse:collapse;font-family:'Courier Prime',monospace;font-size:12px;">
+              <sc-for list="{{ counted }}" as="l" hint-placeholder-count="5">
+                <tr style="border-top:1px solid #CFCCC5;text-align:right;"><td style="text-align:left;padding:3px 0;">{{ l.sl }}</td><td>{{ l.area }}</td><td>wt{{ l.wt }}</td><td style="font-weight:700;">{{ l.score }}</td></tr>
+              </sc-for>
+              <tr style="border-top:1px solid #CFCCC5;color:#3B3B39;text-align:right;"><td style="text-align:left;padding:3px 0;">…</td><td colspan="2">11 more</td><td>205.3</td></tr>
+            </table>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:6px;">
+            <span style="font-weight:800;font-size:10px;letter-spacing:0.14em;color:#3B3B39;">NOT COUNTED · KEPT ON SHEET</span>
+            <table style="width:100%;border-collapse:collapse;font-family:'Courier Prime',monospace;font-size:12px;color:#3B3B39;">
+              <sc-for list="{{ excluded }}" as="e" hint-placeholder-count="5">
+                <tr style="border-top:1px solid #CFCCC5;text-align:right;"><td style="text-align:left;padding:3px 0;">{{ e.sl }}</td><td>{{ e.area }}</td><td>{{ e.hu }} HU</td><td style="color:#B3241C;">——</td></tr>
+              </sc-for>
+              <tr><td colspan="4" style="padding-top:6px;">5 frames · 2.7 mm² · under 1 mm² each</td></tr>
+            </table>
+          </div>
+          <div style="margin-top:auto;border-top:2px solid #26262A;padding-top:10px;display:flex;flex-direction:column;gap:2px;">
+            <span style="font-family:'Courier Prime',monospace;font-size:11px;color:#3B3B39;">SHEET TOTAL · AGATSTON</span>
+            <span style="font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:38px;letter-spacing:-0.02em;">1064.2</span>
+            <span style="font-weight:800;font-size:14px;letter-spacing:0.06em;color:#B3241C;">SEVERE · &gt;400</span>
+            <span style="font-family:'Courier Prime',monospace;font-size:11px;color:#3B3B39;">19 counted / 5 excluded / 24 candidates</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════ 04 LEDGER ══════════ -->
+  <div id="s4" style="padding:44px 24px 0;">
+    <div style="font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:#5C5A51;padding-bottom:10px;">04 — The Ledger · arithmetic in the open, contra column, footing</div>
+    <div style="width:1440px;height:900px;overflow:hidden;background:#F1F0E6;color:#1C1C1A;font-family:'Source Serif 4',serif;display:flex;flex-direction:column;">
+      <div style="padding:14px 30px;border-bottom:2px solid #24457E;display:flex;justify-content:space-between;align-items:flex-end;">
+        <div style="display:flex;flex-direction:column;gap:2px;"><span style="font-weight:600;font-size:19px;">Calcium Score Ledger</span><span style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#24457E;">study 0417-B · run 3 · sheet 1 of 1</span></div>
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;line-height:1.65;text-align:right;color:#1C1C1A;">cacnet-v4 · softmax probability · threshold τ 0.50 · HU 130–1500<br>voxel 0.39 × 0.39 × 3.00 mm · LPS · crop centroid-v2 · ckpt 9f4c1a7e</div>
+      </div>
+      <div style="flex:1;padding:16px 30px 0;display:flex;flex-direction:column;min-height:0;">
+        <table style="width:100%;border-collapse:collapse;font-family:'IBM Plex Mono',monospace;font-size:12px;">
+          <thead>
+            <tr style="color:#24457E;font-family:'Source Serif 4',serif;font-size:11px;letter-spacing:0.12em;text-transform:uppercase;border-bottom:1px solid #24457E;">
+              <th style="text-align:left;font-weight:400;padding:4px 0;width:48px;">stmp</th><th style="text-align:right;font-weight:400;">slice</th><th style="text-align:right;font-weight:400;">z mm</th><th style="text-align:right;font-weight:400;">area mm²</th><th style="text-align:right;font-weight:400;">peak HU</th><th style="text-align:left;font-weight:400;padding-left:26px;">weight derivation</th><th style="text-align:right;font-weight:400;">score</th><th style="text-align:right;font-weight:400;">balance</th>
+            </tr>
+          </thead>
+          <tbody>
+            <sc-for list="{{ ledger }}" as="l" hint-placeholder-count="8">
+              <tr style="background:{{ l.band }};border-bottom:1px solid #D6D9CE;">
+                <td style="padding:2px 0;"><span class="well" style="display:block;width:34px;height:22px;"><span class="spk" style="width:3px;height:3px;left:15px;top:9px;"></span></span></td>
+                <td style="text-align:right;">{{ l.sl }}</td><td style="text-align:right;">{{ l.z }}</td><td style="text-align:right;">{{ l.area }}</td><td style="text-align:right;">{{ l.hu }}</td>
+                <td style="padding-left:26px;color:#24457E;">{{ l.deriv }}</td>
+                <td style="text-align:right;">{{ l.calc }}</td><td style="text-align:right;font-weight:600;">{{ l.bal }}</td>
+              </tr>
+            </sc-for>
+            <tr style="border-bottom:1px solid #D6D9CE;color:#8C8C82;"><td></td><td style="text-align:right;padding:3px 0;">…</td><td colspan="5" style="padding-left:26px;">11 further entries, individually inspectable</td><td style="text-align:right;">1064.2</td></tr>
+            <tr style="border-top:2px solid #24457E;"><td colspan="6" style="padding:6px 0;font-family:'Source Serif 4',serif;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;">carried forward · 19 entries counted</td><td></td><td style="text-align:right;font-weight:600;font-size:14px;">1064.2</td></tr>
+          </tbody>
+        </table>
+        <div style="margin-top:20px;border:1px solid #A8241F;">
+          <div style="background:#A8241F;color:#F1F0E6;padding:5px 12px;font-family:'Source Serif 4',serif;font-size:11px;letter-spacing:0.12em;text-transform:uppercase;">contra · recorded, not counted · area below the 1 mm² clinical minimum</div>
+          <table style="width:100%;border-collapse:collapse;font-family:'IBM Plex Mono',monospace;font-size:12px;">
+            <sc-for list="{{ excluded }}" as="e" hint-placeholder-count="5">
+              <tr style="border-bottom:1px solid #E3D8D5;">
+                <td style="width:48px;padding:2px 12px;"><span class="well" style="display:block;width:34px;height:22px;opacity:.55;"></span></td>
+                <td style="text-align:right;">{{ e.sl }}</td><td style="text-align:right;">{{ e.z }}</td><td style="text-align:right;">{{ e.area }}</td><td style="text-align:right;">{{ e.hu }}</td>
+                <td style="padding-left:26px;color:#24457E;">{{ e.deriv }}</td>
+                <td style="text-align:right;color:#A8241F;">withheld</td><td style="text-align:right;padding-right:12px;color:#8C8C82;">0.0</td>
+              </tr>
+            </sc-for>
+            <tr><td colspan="8" style="padding:7px 12px;font-family:'Source Serif 4',serif;font-size:13px;color:#A8241F;">Subtotal withheld · 5 entries · 2.7 mm² · <em>would add 6.9 to the footing if admitted</em></td></tr>
+          </table>
+        </div>
+        <div style="margin-top:14px;border:1px solid #24457E;padding:8px 12px;font-family:'IBM Plex Mono',monospace;font-size:12px;color:#24457E;display:flex;gap:30px;">
+          <span>SOFT MASS NOT ADMITTED · voxels 0.20 ≤ p &lt; 0.50 · 1 384 vox ≡ 11.2 mm²</span>
+          <span>admitting at τ 0.35 foots to 1121.6 → tier SEVERE, unchanged</span>
+        </div>
+        <div style="margin-top:auto;border-top:3px double #1C1C1A;padding:14px 0 18px;display:flex;align-items:flex-end;justify-content:space-between;">
+          <div style="display:flex;align-items:baseline;gap:20px;">
+            <span style="font-family:'Source Serif 4',serif;font-size:13px;letter-spacing:0.12em;text-transform:uppercase;color:#8C8C82;">footing</span>
+            <span style="font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:44px;letter-spacing:-0.02em;">1064.2</span>
+            <span style="font-family:'Source Serif 4',serif;font-size:15px;">Agatston</span>
+            <span style="font-family:'Source Serif 4',serif;font-weight:600;font-size:17px;color:#A8241F;letter-spacing:0.06em;">TIER SEVERE</span>
+            <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#8C8C82;">&gt;400 · nearest bound 664.2 below</span>
+          </div>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#8C8C82;">prepared 2026-08-13T14:02:11Z · ⏎ open entry · x contra · t τ · e export</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════ 05 FIELD ══════════ -->
+  <div id="s5" style="padding:44px 24px 0;">
+    <div style="font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:#5C5A51;padding-bottom:10px;">05 — The Field · mid-grey ground, no single hero number</div>
+    <div style="width:1440px;height:900px;overflow:hidden;background:#7C838A;color:#12161B;font-family:'Manrope',sans-serif;display:flex;flex-direction:column;">
+      <div style="padding:12px 30px;border-bottom:1px solid #5C646B;font-family:'IBM Plex Mono',monospace;font-size:11px;color:#1B2027;display:flex;justify-content:space-between;">
+        <span>cacnet-v4 · probability volume · HU 130–1500 · 0.39×0.39×3.00 mm · LPS · centroid-v2 · ckpt 9f4c1a7e</span><span>2026-08-13T14:02:11Z · nothing here is binary</span>
+      </div>
+      <div style="flex:1;display:grid;grid-template-columns:430px 1fr;min-height:0;">
+        <div style="padding:26px 30px;display:flex;flex-direction:column;gap:22px;border-right:1px solid #5C646B;">
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:0.16em;color:#2A3138;">THE SCORE DEPENDS ON THE CUT</span>
+          <div style="display:flex;flex-direction:column;gap:2px;">
+            <sc-for list="{{ sweep }}" as="s" hint-placeholder-count="5">
+              <div style="display:flex;align-items:baseline;gap:14px;padding:7px 10px;background:{{ s.bg }};border-left:3px solid {{ s.edge }};">
+                <span style="font-family:'IBM Plex Mono',monospace;font-size:12px;width:52px;color:#1B2027;">τ {{ s.t }}</span>
+                <span style="font-weight:800;font-size:{{ s.size }};letter-spacing:-0.02em;color:{{ s.fg }};">{{ s.total }}</span>
+                <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:0.1em;margin-left:auto;color:{{ s.fg }};">SEVERE</span>
+              </div>
+            </sc-for>
+          </div>
+          <p style="margin:0;font-size:15px;line-height:1.5;color:#1B2027;max-width:44ch;">The tier is stable across the whole sweep. The number is not: 379.5 of spread, 35.7 % of the value at the current cut.</p>
+          <div style="border-top:1px solid #5C646B;padding-top:14px;display:flex;flex-direction:column;gap:6px;">
+            <span style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:0.16em;color:#2A3138;">NEAREST TIER BOUNDARY</span>
+            <div style="display:flex;flex-direction:column;gap:5px;">
+              <div style="height:10px;background:#5C646B;position:relative;"><span style="position:absolute;left:0;top:0;bottom:0;width:74%;background:#F3F5F6;"></span><span style="position:absolute;left:26.6%;top:-4px;bottom:-4px;width:2px;background:#D8B22F;"></span></div>
+              <div style="display:flex;justify-content:space-between;font-family:'IBM Plex Mono',monospace;font-size:10px;color:#1B2027;"><span>0</span><span>100</span><span style="color:#D8B22F;">400 ← bound</span><span>1064.2</span></div>
+            </div>
+            <span style="font-size:14px;line-height:1.45;">400 is 664.2 below the total. No single lesion decision flips the tier — the four largest would all have to vanish.</span>
+          </div>
+          <div style="margin-top:auto;font-family:'IBM Plex Mono',monospace;font-size:11px;line-height:1.8;color:#1B2027;">24 candidates · 19 counted · 5 held out below 1 mm² (2.7 mm², recorded)<br>t sweep τ · ⏎ slice view · x held-out list · s per-lesion p · e export</div>
+        </div>
+        <div style="display:flex;flex-direction:column;min-height:0;">
+          <div style="flex:1;display:flex;align-items:center;justify-content:center;gap:44px;padding:20px 30px;min-height:0;">
+            <div style="display:flex;flex-direction:column;gap:8px;align-items:center;">
+              <span style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:0.14em;color:#2A3138;">PROBABILITY FIELD · CORONAL PROJECTION · 120 SLICES FUSED</span>
+              <div style="width:300px;height:470px;background:linear-gradient(180deg,#1B2027 0%,#252B32 100%);position:relative;overflow:hidden;">
+                <span style="position:absolute;left:104px;top:150px;width:60px;height:44px;border-radius:40%;background:radial-gradient(ellipse at 50% 50%, #F3F5F6 0%, rgba(243,245,246,.45) 38%, rgba(243,245,246,.10) 70%, transparent 100%);"></span>
+                <span style="position:absolute;left:150px;top:206px;width:78px;height:56px;border-radius:40%;background:radial-gradient(ellipse at 50% 50%, #F3F5F6 0%, rgba(243,245,246,.40) 34%, rgba(243,245,246,.08) 72%, transparent 100%);"></span>
+                <span style="position:absolute;left:84px;top:250px;width:52px;height:38px;border-radius:40%;background:radial-gradient(ellipse at 50% 50%, rgba(243,245,246,.75) 0%, rgba(243,245,246,.28) 40%, transparent 100%);"></span>
+                <span style="position:absolute;left:126px;top:300px;width:96px;height:40px;border-radius:40%;background:radial-gradient(ellipse at 50% 50%, rgba(243,245,246,.45) 0%, rgba(243,245,246,.14) 45%, transparent 100%);"></span>
+                <span style="position:absolute;left:60px;bottom:26px;right:60px;height:1px;background:#5C646B;"></span>
+                <span style="position:absolute;left:60px;bottom:10px;font-family:'IBM Plex Mono',monospace;font-size:9px;color:#8B939B;">z 0</span>
+                <span style="position:absolute;right:60px;bottom:10px;font-family:'IBM Plex Mono',monospace;font-size:9px;color:#8B939B;">360 mm</span>
+              </div>
+              <div style="display:flex;align-items:center;gap:10px;font-family:'IBM Plex Mono',monospace;font-size:10px;color:#1B2027;">
+                <span>p 0.0</span><span style="width:130px;height:9px;background:linear-gradient(90deg,#1B2027,#7C838A,#F3F5F6);"></span><span>1.0</span><span>· no outlines are drawn</span>
+              </div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:14px;max-width:330px;">
+              <span style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:0.16em;color:#2A3138;">WHERE THE MASS SITS</span>
+              <div style="display:flex;flex-direction:column;gap:9px;font-family:'IBM Plex Mono',monospace;font-size:11px;">
+                <div style="display:flex;flex-direction:column;gap:3px;"><div style="display:flex;justify-content:space-between;"><span>p 0.90–1.00</span><span>63 %</span></div><span style="height:12px;background:#F3F5F6;width:63%;"></span><span style="color:#2A3138;">certain core · counted</span></div>
+                <div style="display:flex;flex-direction:column;gap:3px;"><div style="display:flex;justify-content:space-between;"><span>p 0.50–0.90</span><span>27 %</span></div><span style="height:12px;background:rgba(243,245,246,.6);width:27%;"></span><span style="color:#2A3138;">soft, but above the cut · counted</span></div>
+                <div style="display:flex;flex-direction:column;gap:3px;"><div style="display:flex;justify-content:space-between;"><span>p 0.20–0.50</span><span>10 % ≡ 11.2 mm²</span></div><span style="height:12px;width:10%;background-image:radial-gradient(#F3F5F6 40%, transparent 41%);background-size:3px 3px;"></span><span style="color:#1B2027;">rendered soft · <span style="color:#2F6BD8;">NOT counted at τ 0.50</span></span></div>
+                <div style="display:flex;flex-direction:column;gap:3px;"><div style="display:flex;justify-content:space-between;"><span>p 0.00–0.20</span><span>—</span></div><span style="height:12px;width:2%;background:rgba(243,245,246,.2);"></span><span style="color:#2A3138;">ignored</span></div>
+              </div>
+              <div style="border-top:1px solid #5C646B;padding-top:12px;font-size:14px;line-height:1.5;">A voxel at 0.35 contributes nothing to 1064.2 and is drawn as grain, never as an edge. Moving the cut moves the number; the panel on the left says by how much.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════ 06 DIFF ══════════ -->
+  <div id="s6" style="padding:44px 24px 0;">
+    <div style="font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:#5C5A51;padding-bottom:10px;">06 — The Diff · the pair is the unit of study</div>
+    <div style="width:1440px;height:900px;overflow:hidden;background:#F2F2EF;color:#17191A;font-family:'Chivo',sans-serif;display:flex;flex-direction:column;">
+      <div style="padding:12px 28px;border-bottom:1px solid #D6D6D0;display:flex;align-items:center;gap:26px;">
+        <span style="font-weight:900;font-size:15px;letter-spacing:0.02em;">study 0417-B · PAIR</span>
+        <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#17607A;">A binary-label v4 · ckpt 9f4c1a7e</span>
+        <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#8A5B00;">B soft-label v4 · ckpt 3b81d02c</span>
+        <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#5F615E;">shared · HU 130–1500 · 0.39×0.39×3.00 LPS · centroid-v2 · τ 0.50</span>
+        <span style="margin-left:auto;font-weight:900;font-size:13px;letter-spacing:0.08em;color:#17191A;border:2px solid #17191A;padding:4px 10px;">NO TIER FLIP</span>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 176px 1fr;border-bottom:1px solid #D6D6D0;">
+        <div style="padding:16px 28px;display:flex;flex-direction:column;gap:6px;">
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:0.16em;color:#17607A;">A · BINARY LABELS</span>
+          <span style="font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:40px;letter-spacing:-0.02em;">1064.2</span>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#5F615E;">SEVERE · 19 counted · 5 excluded</span>
+        </div>
+        <div style="background:#EAEAE5;padding:16px 10px;display:flex;flex-direction:column;gap:5px;align-items:center;justify-content:center;border-left:1px solid #D6D6D0;border-right:1px solid #D6D6D0;">
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:0.14em;color:#5F615E;">Δ B − A</span>
+          <span style="font-weight:900;font-size:26px;color:#17191A;">+87.4</span>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:#5F615E;">+8.2 % · same tier</span>
+        </div>
+        <div style="padding:16px 28px;display:flex;flex-direction:column;gap:6px;align-items:flex-end;">
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:0.16em;color:#8A5B00;">SOFT LABELS · B</span>
+          <span style="font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:40px;letter-spacing:-0.02em;">1151.6</span>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#5F615E;">SEVERE · 21 counted · 4 excluded</span>
+        </div>
+      </div>
+      <div style="flex:1;display:grid;grid-template-columns:1fr 176px 1fr;min-height:0;">
+        <div style="padding:14px 28px;display:flex;flex-direction:column;gap:0;font-family:'IBM Plex Mono',monospace;font-size:12px;">
+          <sc-for list="{{ diff }}" as="d" hint-placeholder-count="8">
+            <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #E4E4DE;color:{{ d.aColor }};">
+              <span>sl {{ d.sl }}</span><span>{{ d.aArea }}</span><span>wt{{ d.aWt }}</span><span style="font-weight:600;">{{ d.aScore }}</span>
+            </div>
+          </sc-for>
+          <div style="padding:8px 0;color:#9A9A93;">▪ 6 further lesions agree exactly · [ a ] expand</div>
+        </div>
+        <div style="background:#EAEAE5;border-left:1px solid #D6D6D0;border-right:1px solid #D6D6D0;padding:14px 8px;display:flex;flex-direction:column;font-family:'IBM Plex Mono',monospace;font-size:12px;">
+          <sc-for list="{{ diff }}" as="d" hint-placeholder-count="8">
+            <div style="padding:6px 0;border-bottom:1px solid #DFDFD9;text-align:center;color:{{ d.dColor }};font-weight:{{ d.dWeight }};">{{ d.delta }}</div>
+          </sc-for>
+        </div>
+        <div style="padding:14px 28px;display:flex;flex-direction:column;font-family:'IBM Plex Mono',monospace;font-size:12px;">
+          <sc-for list="{{ diff }}" as="d" hint-placeholder-count="8">
+            <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #E4E4DE;color:{{ d.bColor }};">
+              <span style="font-weight:600;">{{ d.bScore }}</span><span>wt{{ d.bWt }}</span><span>{{ d.bArea }}</span><span>sl {{ d.sl }}</span>
+            </div>
+          </sc-for>
+          <div style="padding:8px 0;color:#9A9A93;text-align:right;">2 lesions exist only in B · marked NEW above</div>
+        </div>
+      </div>
+      <div style="border-top:1px solid #D6D6D0;padding:14px 28px;display:grid;grid-template-columns:1fr 176px 1fr;align-items:center;">
+        <div style="display:flex;gap:16px;align-items:center;">
+          <div class="well" style="width:150px;height:150px;"><span class="spk" style="width:10px;height:7px;left:64px;top:70px;border-radius:3px;"></span><span class="spk" style="width:4px;height:4px;left:52px;top:60px;"></span></div>
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;line-height:1.7;color:#5F615E;">A · slice 65 · z 195.0 mm<br>hard edge at p ≥ 0.50<br><span style="color:#17607A;">8.2 from 4.1 mm² at wt 2</span></div>
+        </div>
+        <div style="text-align:center;font-family:'IBM Plex Mono',monospace;font-size:10px;line-height:1.7;color:#5F615E;">same window<br>same zoom<br>same crop<br><span style="color:#C0342B;">edge grew 4 vox</span></div>
+        <div style="display:flex;gap:16px;align-items:center;justify-content:flex-end;">
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;line-height:1.7;text-align:right;color:#5F615E;">B · slice 65 · z 195.0 mm<br>soft 0.35–0.50 now above τ<br><span style="color:#8A5B00;">20.5 from 8.2 mm² at wt 2</span></div>
+          <div class="well" style="width:150px;height:150px;"><span class="spk" style="width:10px;height:7px;left:64px;top:70px;border-radius:3px;"></span><span class="spk" style="width:4px;height:4px;left:52px;top:60px;"></span><span class="spk soft" style="width:16px;height:10px;left:72px;top:66px;"></span></div>
+        </div>
+      </div>
+      <div style="border-top:2px solid #17191A;padding:11px 28px;display:flex;gap:26px;font-family:'IBM Plex Mono',monospace;font-size:11px;color:#17191A;">
+        <span>3 of 24 lesions disagree</span><span>Σ|Δ| 23.3</span><span>worst +12.3 at slice 65</span><span style="color:#C0342B;">1 exclusion admitted by B · 2 lesions new in B</span><span style="margin-left:auto;">⇥ swap · a expand · x exclusions · e export pair</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1500,&quot;height&quot;:1050}}">
+class Component extends DCLogic {
+  renderVals() {
+    const counted = [
+      { sl: 61, z: '183.0', area: '12.4', hu: 412, wt: 4, score: '49.6' },
+      { sl: 64, z: '192.0', area: '31.9', hu: 501, wt: 4, score: '127.6' },
+      { sl: 65, z: '195.0', area: '4.1', hu: 288, wt: 2, score: '8.2' },
+      { sl: 67, z: '201.0', area: '22.0', hu: 455, wt: 4, score: '88.0' },
+      { sl: 70, z: '210.0', area: '40.6', hu: 612, wt: 4, score: '162.4' },
+      { sl: 71, z: '213.0', area: '30.1', hu: 545, wt: 4, score: '120.4' },
+      { sl: 74, z: '222.0', area: '60.0', hu: 502, wt: 4, score: '240.0' },
+      { sl: 79, z: '237.0', area: '20.9', hu: 388, wt: 3, score: '62.7' }
+    ];
+    const excluded = [
+      { sl: 58, z: '174.0', area: '0.6', hu: 198, deriv: '130–199 → wt 1' },
+      { sl: 77, z: '231.0', area: '0.9', hu: 214, deriv: '200–299 → wt 2' },
+      { sl: 84, z: '252.0', area: '0.4', hu: 176, deriv: '130–199 → wt 1' },
+      { sl: 91, z: '273.0', area: '0.5', hu: 205, deriv: '200–299 → wt 2' },
+      { sl: 96, z: '288.0', area: '0.3', hu: 190, deriv: '130–199 → wt 1' }
+    ];
+    const derivFor = hu => hu >= 400 ? '≥400 → wt 4' : hu >= 300 ? '300–399 → wt 3' : hu >= 200 ? '200–299 → wt 2' : '130–199 → wt 1';
+    let run = 0;
+    const ledger = counted.map((l, i) => {
+      run = Math.round((run + parseFloat(l.score)) * 10) / 10;
+      return Object.assign({}, l, {
+        deriv: derivFor(l.hu),
+        calc: l.area + ' × ' + l.wt + ' = ' + l.score,
+        bal: run.toFixed(1),
+        band: i % 2 ? '#DCE3DA' : 'transparent'
+      });
+    });
+
+    const loaded = { 61: 1, 64: 1, 65: 1, 67: 1, 70: 1, 71: 1, 74: 1, 79: 1 };
+    const soft = { 58: 1, 77: 1, 84: 1, 91: 1, 96: 1 };
+    const scoreBy = {};
+    counted.forEach(l => { scoreBy[l.sl] = parseFloat(l.score); });
+    const ribbon = [];
+    for (let i = 1; i <= 120; i++) {
+      if (loaded[i]) {
+        const h = Math.max(16, Math.round(18 + (scoreBy[i] || 40) / 240 * 36));
+        ribbon.push({ h: h + 'px', bg: '#C98B2E', mark: i === 64 ? '#E4DED0' : '#C98B2E' });
+      } else if (soft[i]) {
+        ribbon.push({ h: '12px', bg: '#6E7C86', mark: '#6E7C86' });
+      } else {
+        ribbon.push({ h: '6px', bg: '#31373D', mark: '#31373D' });
+      }
+    }
+
+    const frames = [];
+    for (let i = 1; i <= 120; i++) {
+      const isL = !!loaded[i], isS = !!soft[i];
+      frames.push({
+        idx: i,
+        ring: isL ? '1.5px solid #B3241C' : isS ? '1.5px dotted #B3241C' : '1px solid #CFCCC5',
+        capColor: isL ? '#B3241C' : '#3B3B39',
+        dotClass: isL ? 'spk' : isS ? 'spk soft' : 'spk hidden-dot',
+        dotW: isL ? '4px' : isS ? '3px' : '0px'
+      });
+    }
+
+    const sweep = [
+      { t: '0.30', total: '1121.6', bg: 'rgba(27,32,39,.07)', edge: 'transparent', fg: '#1B2027', size: '24px' },
+      { t: '0.40', total: '1093.0', bg: 'rgba(27,32,39,.07)', edge: 'transparent', fg: '#1B2027', size: '24px' },
+      { t: '0.50', total: '1064.2', bg: 'rgba(243,245,246,.85)', edge: '#2F6BD8', fg: '#12161B', size: '34px' },
+      { t: '0.60', total: '912.8', bg: 'rgba(27,32,39,.07)', edge: 'transparent', fg: '#1B2027', size: '24px' },
+      { t: '0.70', total: '742.1', bg: 'rgba(27,32,39,.07)', edge: 'transparent', fg: '#1B2027', size: '24px' }
+    ];
+
+    const A = '#17607A', B = '#8A5B00', quiet = '#9A9A93', flip = '#C0342B';
+    const diff = [
+      { sl: 61, aArea: '12.4 mm²', aWt: 4, aScore: '49.6', bArea: '12.4 mm²', bWt: 4, bScore: '49.6', delta: '± 0.0', dColor: quiet, dWeight: 400 },
+      { sl: 64, aArea: '31.9 mm²', aWt: 4, aScore: '127.6', bArea: '33.9 mm²', bWt: 4, bScore: '135.6', delta: '+ 8.0', dColor: '#17191A', dWeight: 700 },
+      { sl: 65, aArea: '4.1 mm²', aWt: 2, aScore: '8.2', bArea: '8.2 mm²', bWt: 2, bScore: '20.5', delta: '+ 12.3', dColor: flip, dWeight: 900 },
+      { sl: 67, aArea: '22.0 mm²', aWt: 4, aScore: '88.0', bArea: '21.2 mm²', bWt: 4, bScore: '84.8', delta: '− 3.2', dColor: '#17191A', dWeight: 700 },
+      { sl: 70, aArea: '40.6 mm²', aWt: 4, aScore: '162.4', bArea: '40.6 mm²', bWt: 4, bScore: '162.4', delta: '± 0.0', dColor: quiet, dWeight: 400 },
+      { sl: 74, aArea: '60.0 mm²', aWt: 4, aScore: '240.0', bArea: '60.0 mm²', bWt: 4, bScore: '240.0', delta: '± 0.0', dColor: quiet, dWeight: 400 },
+      { sl: 77, aArea: '0.9 mm² excluded', aWt: 2, aScore: '——', bArea: '1.8 mm²', bWt: 2, bScore: '3.6', delta: 'ADMITTED', dColor: flip, dWeight: 700 },
+      { sl: 84, aArea: 'absent', aWt: '—', aScore: '——', bArea: '3.0 mm²', bWt: 3, bScore: '9.0', delta: 'NEW', dColor: flip, dWeight: 700 }
+    ].map(d => Object.assign({}, d, {
+      aColor: d.aScore === '——' ? quiet : A,
+      bColor: B
+    }));
+
+    return { counted, excluded, ledger, ribbon, frames, sweep, diff };
+  }
+}
+</script>
+</body>
+</html>

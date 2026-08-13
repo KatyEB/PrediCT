@@ -1,5 +1,6 @@
 id: a1-roi
 name: Approach 1 — Binary (ROI)
+source_run: runs/approach1_roi_cropped
 weights: best_model.pth
 sha256: "3fd07f9aad53c75be76b1279c8d861d82f8e25ffc817c414e4e7b2aab92be0af"
 output: binary

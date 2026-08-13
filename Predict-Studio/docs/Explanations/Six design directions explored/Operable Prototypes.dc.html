@@ -1,0 +1,1022 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,300;6..72,400;6..72,500&family=IBM+Plex+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;700&family=Libre+Franklin:wght@400;600;800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=Manrope:wght@400;600;800&family=Chivo:wght@400;700;900&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  html, body { margin:0; padding:0; overflow:hidden; height:100%; background:#101214; }
+  #root { height:100%; }
+  a { color:#2E5E52; } a:hover { color:#14322B; }
+  *:focus-visible { outline:2px solid #2F6BD8; outline-offset:1px; }
+  .scroll { overflow-y:auto; scrollbar-width:thin; }
+  @keyframes sweepline { 0% { transform:translateX(-100%); } 100% { transform:translateX(320%); } }
+  @keyframes blip { 0%,100% { opacity:.35; } 50% { opacity:1; } }
+</style>
+</helmet>
+
+<div style="height:100vh;display:flex;flex-direction:column;overflow:hidden;font-family:'IBM Plex Mono',monospace;background:#101214;">
+
+  <div style="flex:0 0 auto;background:#101214;color:#C9CDD2;display:flex;align-items:stretch;gap:0;border-bottom:1px solid #2A2F34;height:38px;">
+    <div style="display:flex;align-items:center;padding:0 12px;font-size:10px;letter-spacing:0.14em;color:#6E767E;border-right:1px solid #2A2F34;">HARNESS</div>
+    <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="6">
+      <button onClick="{{ t.go }}" style="background:{{ t.bg }};color:{{ t.fg }};border:0;border-right:1px solid #2A2F34;padding:0 14px;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:0.06em;cursor:pointer;">{{ t.label }}</button>
+    </sc-for>
+    <div style="display:flex;align-items:center;gap:6px;padding:0 12px;margin-left:auto;border-left:1px solid #2A2F34;">
+      <span style="font-size:10px;color:#6E767E;letter-spacing:0.1em;">STATE</span>
+      <sc-for list="{{ stateChips }}" as="s" hint-placeholder-count="4">
+        <button onClick="{{ s.go }}" style="background:{{ s.bg }};color:{{ s.fg }};border:1px solid {{ s.bd }};padding:3px 9px;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:0.08em;cursor:pointer;">{{ s.label }}</button>
+      </sc-for>
+      <span style="width:1px;height:18px;background:#2A2F34;"></span>
+      <span style="font-size:10px;color:#6E767E;letter-spacing:0.1em;">VIEW</span>
+      <sc-for list="{{ viewChips }}" as="v" hint-placeholder-count="3">
+        <button onClick="{{ v.go }}" style="background:{{ v.bg }};color:{{ v.fg }};border:1px solid {{ v.bd }};padding:3px 9px;font-family:'IBM Plex Mono',monospace;font-size:10px;cursor:pointer;">{{ v.label }}</button>
+      </sc-for>
+      <button onClick="{{ toggleLegend }}" style="background:transparent;color:#C9CDD2;border:1px solid #2A2F34;padding:3px 9px;font-family:'IBM Plex Mono',monospace;font-size:10px;cursor:pointer;">? keys</button>
+    </div>
+  </div>
+
+  <div style="flex:1;min-height:0;position:relative;">
+
+    <sc-if value="{{ legend }}" hint-placeholder-val="{{ false }}">
+      <div style="position:absolute;z-index:40;right:16px;top:16px;background:#101214;color:#C9CDD2;border:1px solid #3A4148;padding:14px 16px;font-size:11px;line-height:1.9;box-shadow:0 8px 30px rgba(0,0,0,.45);">
+        <div style="letter-spacing:0.14em;color:#6E767E;padding-bottom:6px;">INTERACTION CONTRACT · IDENTICAL IN ALL SIX</div>
+        wheel over image — step one slice<br>
+        ↑ ↓ ← → — step one slice<br>
+        shift + arrow — next / prev slice with calcium<br>
+        1 / 2 / 3 — Original · Prediction · Calcium only<br>
+        click lesion row — jump to slice, select lesion<br>
+        click slice index — jump to that slice<br>
+        E — export menu · ? — this legend<br>
+        <span style="color:#6E767E;">harness only: [ ] switch direction</span>
+      </div>
+    </sc-if>
+
+    <!-- ════════════ 01 ARGUMENT ════════════ -->
+    <sc-if value="{{ isD1 }}" hint-placeholder-val="{{ true }}">
+      <div style="height:100%;display:flex;flex-direction:column;background:#F4F1EA;color:#1A1A17;font-family:'Newsreader',serif;overflow:hidden;">
+        <div style="flex:0 0 auto;display:flex;justify-content:space-between;align-items:baseline;padding:10px 40px;border-bottom:1px solid #C9C3B4;font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:#5C5A51;">
+          <span>PrediCT STUDIO · THE ARGUMENT</span>
+          <span>{{ prov1 }}</span>
+        </div>
+        <div style="flex:0 0 auto;padding:6px 40px;border-bottom:1px solid #E0DACB;font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:#3A382F;background:#EFEBE1;display:flex;gap:20px;flex-wrap:wrap;">
+          <span>{{ prov2 }}</span><span>{{ prov3 }}</span>
+        </div>
+        <div style="flex:1;min-height:0;display:grid;grid-template-columns:1fr 340px;gap:34px;padding:16px 40px 0;">
+          <div style="display:flex;flex-direction:column;gap:14px;min-height:0;">
+            <sc-if value="{{ running }}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex;flex-direction:column;gap:14px;">
+                <div style="display:flex;flex-direction:column;gap:6px;">
+                  <span style="font-family:'Libre Franklin',sans-serif;font-weight:800;font-size:10px;letter-spacing:0.16em;color:#8A867A;">THIS STUDY SCORES</span>
+                  <div style="height:66px;border-bottom:2px solid #C9C3B4;display:flex;align-items:flex-end;"><span style="font-family:'Newsreader',serif;font-style:italic;font-size:30px;color:#8A867A;">no claim yet — {{ runPct }} % complete</span></div>
+                </div>
+                <p style="margin:0;max-width:56ch;font-size:19px;line-height:1.45;">The premises exist before the conclusion does. Everything below was fixed when the run started; only the number is pending.</p>
+                <div style="display:flex;flex-direction:column;gap:5px;font-family:'IBM Plex Mono',monospace;font-size:12px;">
+                  <sc-for list="{{ steps }}" as="s" hint-placeholder-count="5">
+                    <div style="display:flex;gap:12px;align-items:center;color:{{ s.fg }};"><span style="width:14px;">{{ s.mark }}</span><span style="width:150px;">{{ s.label }}</span><span style="flex:1;height:3px;background:#E0DACB;"><span style="display:block;height:3px;width:{{ s.pct }};background:{{ s.bar }};"></span></span><span style="width:78px;text-align:right;color:#8A867A;">{{ s.note }}</span></div>
+                  </sc-for>
+                </div>
+              </div>
+            </sc-if>
+            <sc-if value="{{ notRunning }}" hint-placeholder-val="{{ true }}">
+              <div style="display:flex;flex-direction:column;gap:14px;min-height:0;">
+                <div style="display:flex;align-items:flex-end;gap:22px;">
+                  <div style="display:flex;flex-direction:column;gap:1px;">
+                    <span style="font-family:'Libre Franklin',sans-serif;font-weight:800;font-size:10px;letter-spacing:0.16em;color:#8A867A;">THIS STUDY SCORES</span>
+                    <span style="font-family:'IBM Plex Mono',monospace;font-weight:500;font-size:56px;line-height:1;letter-spacing:-0.02em;">{{ total }}</span>
+                  </div>
+                  <div style="display:flex;flex-direction:column;gap:3px;padding-bottom:5px;">
+                    <span style="font-family:'Libre Franklin',sans-serif;font-weight:800;font-size:17px;letter-spacing:0.04em;color:{{ tierColorInk }};">{{ tier }}</span>
+                    <span style="font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:#5C5A51;">{{ tierNote }}</span>
+                  </div>
+                </div>
+                <div style="display:flex;flex-direction:column;gap:6px;">
+                  <div style="display:flex;align-items:center;gap:10px;"><span style="font-family:'Libre Franklin',sans-serif;font-weight:800;font-size:10px;letter-spacing:0.16em;color:#2E5E52;">BECAUSE</span><span style="flex:1;height:1px;background:#C9C3B4;"></span></div>
+                  <p style="margin:0;font-size:18px;line-height:1.4;max-width:62ch;text-wrap:pretty;">{{ because }}</p>
+                </div>
+                <div style="display:flex;flex-direction:column;gap:6px;min-height:0;">
+                  <div style="display:flex;align-items:center;gap:10px;"><span style="font-family:'Libre Franklin',sans-serif;font-weight:800;font-size:10px;letter-spacing:0.16em;color:#2E5E52;">SHOWN · {{ viewName }}</span><span style="flex:1;height:1px;background:#C9C3B4;"></span><span style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:#8A867A;">{{ overlayNote }}</span></div>
+                  <div onWheel="{{ onWheel }}" style="display:flex;gap:8px;flex-wrap:wrap;">
+                    <div style="display:flex;flex-direction:column;gap:3px;">
+                      <div style="position:relative;width:230px;height:230px;background:#0B0D0F;outline:2px solid #8A2B2B;outline-offset:1px;">{{ imgLarge }}</div>
+                      <span style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:#5C5A51;">selected exhibit · slice {{ slice }} · z {{ zmm }} mm</span>
+                    </div>
+                    <div style="display:flex;flex-direction:column;gap:6px;">
+                      <div style="display:flex;gap:6px;flex-wrap:wrap;max-width:520px;">
+                        <sc-for list="{{ exhibits }}" as="x" hint-placeholder-count="8">
+                          <button onClick="{{ x.go }}" style="background:transparent;border:0;padding:0;cursor:pointer;display:flex;flex-direction:column;gap:2px;">
+                            <span style="position:relative;display:block;width:76px;height:76px;background:#0B0D0F;outline:{{ x.ring }};outline-offset:1px;">{{ x.el }}</span>
+                            <span style="font-family:'IBM Plex Mono',monospace;font-size:9.5px;color:{{ x.fg }};">{{ x.cap }}</span>
+                          </button>
+                        </sc-for>
+                      </div>
+                      <span style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:#8A867A;max-width:52ch;line-height:1.6;">{{ exhibitNote }}</span>
+                    </div>
+                  </div>
+                </div>
+                <div style="display:flex;flex-direction:column;gap:5px;min-height:0;flex:1;">
+                  <div style="display:flex;align-items:center;gap:10px;"><span style="font-family:'Libre Franklin',sans-serif;font-weight:800;font-size:10px;letter-spacing:0.16em;color:#2E5E52;">COUNTED · {{ nCounted }}</span><span style="flex:1;height:1px;background:#C9C3B4;"></span><span style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:#8A867A;">click a row to select its lesion</span></div>
+                  <div class="scroll" style="min-height:0;flex:1;">
+                    <table style="width:100%;border-collapse:collapse;font-family:'IBM Plex Mono',monospace;font-size:11.5px;">
+                      <thead><tr style="color:#8A867A;font-size:9.5px;letter-spacing:0.08em;text-align:right;"><th style="text-align:left;font-weight:400;">lesion</th><th style="font-weight:400;">slice</th><th style="font-weight:400;">z mm</th><th style="font-weight:400;">area mm²</th><th style="font-weight:400;">peak HU</th><th style="font-weight:400;">wt</th><th style="font-weight:400;">mean p</th><th style="font-weight:400;">score</th></tr></thead>
+                      <tbody>
+                        <sc-for list="{{ rows }}" as="r" hint-placeholder-count="12">
+                          <tr onClick="{{ r.go }}" tabIndex="0" style="text-align:right;border-top:1px solid #E4DFD2;background:{{ r.bg }};cursor:pointer;color:{{ r.fg }};"><td style="text-align:left;padding:2px 0;">{{ r.tag }}</td><td>{{ r.sl }}</td><td>{{ r.z }}</td><td>{{ r.area }}</td><td>{{ r.hu }}</td><td>{{ r.wt }}</td><td style="color:{{ r.pColor }};">{{ r.p }}</td><td style="font-weight:500;">{{ r.score }}</td></tr>
+                        </sc-for>
+                        <sc-if value="{{ zero }}" hint-placeholder-val="{{ false }}">
+                          <tr><td colspan="8" style="padding:10px 0;font-family:'Newsreader',serif;font-size:16px;color:#5C5A51;">No lesion cleared 1.0 mm². 120 slices were examined; none contained scored calcium.</td></tr>
+                        </sc-if>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </sc-if>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:14px;border-left:1px solid #C9C3B4;padding-left:26px;min-height:0;">
+            <div style="display:flex;flex-direction:column;gap:5px;">
+              <div style="font-family:'Libre Franklin',sans-serif;font-weight:800;font-size:10px;letter-spacing:0.16em;color:#8A2B2B;">EXCLUDED · RECORDED, NOT COUNTED</div>
+              <div class="scroll" style="max-height:150px;">
+                <table style="width:100%;border-collapse:collapse;font-family:'IBM Plex Mono',monospace;font-size:11px;color:#5C5A51;">
+                  <tbody>
+                    <sc-for list="{{ exRows }}" as="e" hint-placeholder-count="5">
+                      <tr onClick="{{ e.go }}" tabIndex="0" style="border-top:1px solid #E4DFD2;text-align:right;cursor:pointer;"><td style="text-align:left;padding:2px 0;">sl {{ e.sl }}</td><td>{{ e.area }} mm²</td><td>{{ e.hu }} HU</td><td style="color:#8A2B2B;">withheld</td></tr>
+                    </sc-for>
+                  </tbody>
+                </table>
+              </div>
+              <div style="font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:#8A2B2B;line-height:1.6;">{{ exSummary }}</div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:5px;">
+              <div style="font-family:'Libre Franklin',sans-serif;font-weight:800;font-size:10px;letter-spacing:0.16em;color:#2E5E52;">SOFT COVERAGE · HOW AREA IS FORMED</div>
+              <div style="font-family:'IBM Plex Mono',monospace;font-size:10.5px;line-height:1.75;color:#3A382F;">{{ softNote }}</div>
+            </div>
+            <div style="margin-top:auto;display:flex;flex-direction:column;gap:5px;padding-bottom:14px;">
+              <div style="font-family:'Libre Franklin',sans-serif;font-weight:800;font-size:10px;letter-spacing:0.16em;color:#8A867A;">PRODUCED BY</div>
+              <div style="font-family:'IBM Plex Mono',monospace;font-size:10.5px;line-height:1.8;color:#3A382F;">{{ provBlock }}</div>
+              <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:#8A867A;">[ E ] export bundle · [ ? ] keys</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </sc-if>
+
+    <!-- ════════════ 02 INSTRUMENT ════════════ -->
+    <sc-if value="{{ isD2 }}" hint-placeholder-val="{{ false }}">
+      <div style="height:100%;display:flex;flex-direction:column;background:#23272B;color:#E4DED0;font-family:'Space Grotesk',sans-serif;overflow:hidden;">
+        <div style="flex:0 0 auto;padding:7px 18px;border-bottom:1px solid #3A4148;font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:#B7AF9E;display:flex;gap:18px;flex-wrap:wrap;">
+          <span>{{ prov1 }}</span><span>{{ prov2 }}</span><span style="margin-left:auto;">{{ prov3 }}</span>
+        </div>
+        <div style="flex:0 0 auto;padding:10px 18px 8px;border-bottom:1px solid #3A4148;display:flex;flex-direction:column;gap:6px;">
+          <div style="display:flex;justify-content:space-between;font-family:'IBM Plex Mono',monospace;font-size:10px;color:#8B939B;letter-spacing:0.12em;"><span>{{ trackLabel }}</span><span>{{ trackSummary }}</span></div>
+          <div onWheel="{{ onWheel }}" style="display:flex;gap:1px;align-items:flex-end;height:46px;">
+            <sc-for list="{{ track }}" as="c" hint-placeholder-count="60">
+              <button onClick="{{ c.go }}" title="{{ c.title }}" style="flex:1;min-width:0;height:{{ c.h }};background:{{ c.bg }};border:0;border-bottom:3px solid {{ c.mark }};padding:0;cursor:pointer;"></button>
+            </sc-for>
+          </div>
+          <div style="display:flex;justify-content:space-between;font-family:'IBM Plex Mono',monospace;font-size:10px;color:#8B939B;"><span style="color:#C98B2E;">█ carries scored calcium</span><span style="color:#6E7C86;">▌ sub-minimum, recorded not counted</span><span>▲ cursor slice {{ slice }}</span><span>{{ reachNote }}</span></div>
+        </div>
+        <div style="flex:1;min-height:0;display:grid;grid-template-columns:1fr 340px;overflow:hidden;">
+          <div onWheel="{{ onWheel }}" style="background:#000;display:flex;align-items:center;justify-content:center;position:relative;min-height:0;overflow:hidden;">
+            <sc-if value="{{ running }}" hint-placeholder-val="{{ false }}">
+              <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;">
+                <div style="position:relative;width:380px;height:380px;background:#0B0D0F;overflow:hidden;">{{ imgLarge }}<span style="position:absolute;left:0;top:0;bottom:0;width:80px;background:linear-gradient(90deg,transparent,rgba(201,139,46,.25),transparent);animation:sweepline 1.6s linear infinite;"></span></div>
+                <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#B7AF9E;text-align:center;line-height:1.8;">originals are already scrollable · prediction pending<br><span style="color:#8B939B;">{{ runLine }}</span></div>
+              </div>
+            </sc-if>
+            <sc-if value="{{ notRunning }}" hint-placeholder-val="{{ true }}">
+              <div style="position:relative;width:460px;height:460px;max-width:100%;background:#0B0D0F;">{{ imgLarge }}</div>
+            </sc-if>
+            <div style="position:absolute;left:16px;bottom:12px;font-family:'IBM Plex Mono',monospace;font-size:10px;color:#8B939B;line-height:1.7;">512 × 512 · 0.37 mm in-plane · ├── 10 mm ──┤<br>display W 500 / L 150 (−100…400 HU) · model saw 0…1200 HU<br>{{ overlayNote }}</div>
+            <div style="position:absolute;right:16px;top:12px;display:flex;gap:5px;font-family:'IBM Plex Mono',monospace;font-size:10px;">
+              <sc-for list="{{ viewChips }}" as="v" hint-placeholder-count="3">
+                <button onClick="{{ v.go }}" style="background:{{ v.bg2 }};color:{{ v.fg2 }};border:1px solid {{ v.bd2 }};padding:4px 8px;font-family:'IBM Plex Mono',monospace;font-size:10px;cursor:pointer;">{{ v.label }}</button>
+              </sc-for>
+            </div>
+          </div>
+          <div style="border-left:1px solid #3A4148;display:flex;flex-direction:column;min-height:0;">
+            <div style="flex:0 0 auto;padding:12px 16px;display:flex;flex-direction:column;gap:10px;border-bottom:1px solid #3A4148;">
+              <div style="display:flex;justify-content:space-between;align-items:baseline;"><span style="font-weight:700;font-size:19px;letter-spacing:-0.02em;">SLICE {{ slice }}</span><span style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#B7AF9E;">z {{ zmm }} mm</span></div>
+              <div style="display:flex;gap:5px;flex-wrap:wrap;">
+                <sc-for list="{{ sliceLesions }}" as="l" hint-placeholder-count="3">
+                  <button onClick="{{ l.go }}" style="background:{{ l.bg }};color:{{ l.fg }};border:1px solid {{ l.bd }};padding:4px 8px;font-family:'IBM Plex Mono',monospace;font-size:10.5px;cursor:pointer;">{{ l.chip }}</button>
+                </sc-for>
+                <sc-if value="{{ noneHere }}" hint-placeholder-val="{{ false }}">
+                  <span style="font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:#6E7C86;">no lesion on this slice</span>
+                </sc-if>
+              </div>
+            </div>
+            <div class="scroll" style="flex:1;min-height:0;padding:12px 16px;display:flex;flex-direction:column;gap:14px;">
+              <div style="display:flex;flex-direction:column;gap:6px;font-family:'IBM Plex Mono',monospace;font-size:11.5px;">
+                <span style="font-size:10px;letter-spacing:0.14em;color:#8B939B;">SELECTED LESION</span>
+                <sc-for list="{{ selRows }}" as="s" hint-placeholder-count="6">
+                  <div style="display:flex;justify-content:space-between;border-bottom:1px solid #31373D;padding-bottom:4px;"><span style="color:#8B939B;">{{ s.k }}</span><span style="color:{{ s.fg }};">{{ s.v }}</span></div>
+                </sc-for>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:6px;">
+                <span style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:0.14em;color:#8B939B;">COVERAGE ON THIS SLICE</span>
+                <sc-for list="{{ covBands }}" as="b" hint-placeholder-count="4">
+                  <div style="display:flex;align-items:center;gap:8px;font-family:'IBM Plex Mono',monospace;font-size:10.5px;"><span style="width:84px;height:8px;background:#31373D;"><span style="display:block;height:8px;width:{{ b.pct }};background:{{ b.bar }};"></span></span><span style="color:{{ b.fg }};">{{ b.label }}</span></div>
+                </sc-for>
+                <span style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:#8B939B;line-height:1.6;">{{ softNote }}</span>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:5px;">
+                <span style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:0.14em;color:#8B939B;">LESIONS · CLICK TO SELECT</span>
+                <table style="width:100%;border-collapse:collapse;font-family:'IBM Plex Mono',monospace;font-size:10.5px;">
+                  <sc-for list="{{ rows }}" as="r" hint-placeholder-count="10">
+                    <tr onClick="{{ r.go }}" tabIndex="0" style="cursor:pointer;text-align:right;border-top:1px solid #31373D;background:{{ r.bgDark }};color:{{ r.fgDark }};"><td style="text-align:left;padding:2px 0;">{{ r.tag }}</td><td>sl {{ r.sl }}</td><td>{{ r.area }}</td><td style="color:{{ r.pColorDark }};">p {{ r.p }}</td><td>{{ r.score }}</td></tr>
+                  </sc-for>
+                </table>
+                <sc-if value="{{ zero }}" hint-placeholder-val="{{ false }}">
+                  <span style="font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:#6E7C86;line-height:1.7;">Track empty. 120 slices predicted, no voxel above component threshold 0.10. The instrument still steps through all 120.</span>
+                </sc-if>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:4px;">
+                <span style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:0.14em;color:#8B939B;">EXCLUDED · {{ nExcluded }}</span>
+                <span style="font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:#6E7C86;line-height:1.7;">{{ exSummary }}</span>
+              </div>
+            </div>
+            <div style="flex:0 0 auto;border-top:1px solid #3A4148;padding:10px 16px;display:flex;flex-direction:column;gap:5px;">
+              <div style="display:flex;align-items:baseline;gap:10px;"><span style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:#8B939B;letter-spacing:0.12em;">TOTAL</span><span style="font-weight:700;font-size:26px;letter-spacing:-0.02em;">{{ total }}</span><span style="color:{{ tierColorDark }};font-weight:700;font-size:13px;letter-spacing:0.06em;">{{ tier }}</span></div>
+              <div style="height:7px;background:#31373D;position:relative;"><span style="position:absolute;left:0;top:0;bottom:0;width:{{ tierPct }};background:#C98B2E;"></span><span style="position:absolute;left:2%;top:-3px;bottom:-3px;width:1px;background:#8B939B;"></span><span style="position:absolute;left:8%;top:-3px;bottom:-3px;width:1px;background:#8B939B;"></span></div>
+              <span style="font-family:'IBM Plex Mono',monospace;font-size:9.5px;color:#8B939B;">{{ tierNote }} · E export · ? keys</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </sc-if>
+
+    <!-- ════════════ 03 CONTACT SHEET ════════════ -->
+    <sc-if value="{{ isD3 }}" hint-placeholder-val="{{ false }}">
+      <div style="height:100%;display:flex;flex-direction:column;background:#E7E5E0;color:#26262A;font-family:'Libre Franklin',sans-serif;overflow:hidden;">
+        <div style="flex:0 0 auto;padding:9px 22px;border-bottom:2px solid #26262A;display:flex;justify-content:space-between;align-items:flex-end;">
+          <div style="display:flex;flex-direction:column;gap:2px;"><span style="font-weight:800;font-size:15px;">CONTACT SHEET 1/1 · {{ studyLine }}</span><span style="font-family:'Courier Prime',monospace;font-size:10.5px;color:#3B3B39;">{{ prov2 }}</span></div>
+          <span style="font-family:'Courier Prime',monospace;font-size:10.5px;text-align:right;color:#3B3B39;line-height:1.6;">{{ prov1 }}<br>{{ prov3 }}</span>
+        </div>
+        <div style="flex:1;min-height:0;display:grid;grid-template-columns:1fr 264px;">
+          <div style="padding:12px 16px;display:flex;flex-direction:column;gap:9px;min-height:0;">
+            <div onWheel="{{ onWheel }}" class="scroll" style="min-height:0;flex:1;">
+              <div style="display:grid;grid-template-columns:repeat(15,1fr);gap:4px;">
+                <sc-for list="{{ frames }}" as="f" hint-placeholder-count="60">
+                  <button onClick="{{ f.go }}" style="background:transparent;border:0;padding:0;cursor:{{ f.cursor }};display:flex;flex-direction:column;gap:1px;opacity:{{ f.op }};">
+                    <span style="position:relative;display:block;width:100%;height:0;padding-bottom:100%;background:#0B0D0F;outline:{{ f.ring }};outline-offset:1px;">{{ f.el }}</span>
+                    <span style="font-family:'Courier Prime',monospace;font-size:8px;color:{{ f.capColor }};text-align:center;">{{ f.idx }}</span>
+                  </button>
+                </sc-for>
+              </div>
+            </div>
+            <div style="flex:0 0 auto;display:flex;gap:16px;font-family:'Courier Prime',monospace;font-size:10.5px;color:#3B3B39;border-top:1px solid #CFCCC5;padding-top:6px;flex-wrap:wrap;">
+              <span><span style="color:#B3241C;">●</span> {{ nCalcSlices }} frames carry scored calcium</span>
+              <span><span style="color:#B3241C;">○</span> sub-minimum only</span>
+              <span>▪ empty</span>
+              <span style="margin-left:auto;">{{ reachNote }} · every frame identically windowed, W 500 / L 150</span>
+            </div>
+            <div style="flex:0 0 auto;display:grid;grid-template-columns:auto 1fr;gap:18px;border-top:1px solid #CFCCC5;padding-top:9px;">
+              <div style="display:flex;flex-direction:column;gap:4px;">
+                <span style="font-weight:800;font-size:9.5px;letter-spacing:0.14em;">ENLARGEMENT · FRAME {{ slice }} · {{ viewName }}</span>
+                <div onWheel="{{ onWheel }}" style="position:relative;width:186px;height:186px;background:#0B0D0F;outline:2px solid #B3241C;outline-offset:2px;">{{ imgMed }}</div>
+                <span style="font-family:'Courier Prime',monospace;font-size:9.5px;color:#3B3B39;">z {{ zmm }} mm · ├── 10 mm ──┤</span>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:6px;font-family:'Courier Prime',monospace;font-size:11px;line-height:1.5;">
+                <sc-if value="{{ running }}" hint-placeholder-val="{{ false }}">
+                  <div style="display:flex;flex-direction:column;gap:5px;">
+                    <span style="font-weight:700;">SHEET DEVELOPING · {{ runPct }} %</span>
+                    <span style="color:#3B3B39;">frames appear as they are resampled and cropped; crop marks are printed last, after scoring. {{ runLine }}</span>
+                    <span style="height:4px;background:#CFCCC5;width:100%;"><span style="display:block;height:4px;width:{{ runPctW }};background:#B3241C;"></span></span>
+                  </div>
+                </sc-if>
+                <sc-if value="{{ notRunning }}" hint-placeholder-val="{{ true }}">
+                  <div style="display:flex;flex-direction:column;gap:5px;">
+                    <div style="display:flex;gap:18px;flex-wrap:wrap;"><span>{{ selLine }}</span></div>
+                    <span style="color:#3B3B39;">{{ overlayNote }}</span>
+                    <span style="color:#3B3B39;">{{ selDisamb }}</span>
+                    <div style="display:flex;gap:4px;flex-wrap:wrap;">
+                      <sc-for list="{{ sliceLesions }}" as="l" hint-placeholder-count="3">
+                        <button onClick="{{ l.go }}" style="background:{{ l.bgLight }};color:{{ l.fgLight }};border:1px solid {{ l.bdLight }};padding:3px 7px;font-family:'Courier Prime',monospace;font-size:10px;cursor:pointer;">{{ l.chip }}</button>
+                      </sc-for>
+                    </div>
+                    <span style="border:1px solid #CFCCC5;padding:5px 8px;background:#DEDCD6;color:#3B3B39;">1 originals · 2 prediction · 3 calcium only · ⏎/click frame · E export sheet + csv · ? keys</span>
+                  </div>
+                </sc-if>
+              </div>
+            </div>
+          </div>
+          <div style="border-left:1px solid #CFCCC5;padding:12px 16px;display:flex;flex-direction:column;gap:10px;min-height:0;">
+            <div style="display:flex;flex-direction:column;gap:4px;min-height:0;flex:1;">
+              <span style="font-weight:800;font-size:9.5px;letter-spacing:0.14em;color:#B3241C;">MARKED · COUNTED {{ nCounted }}</span>
+              <div class="scroll" style="min-height:0;flex:1;">
+                <table style="width:100%;border-collapse:collapse;font-family:'Courier Prime',monospace;font-size:11px;">
+                  <sc-for list="{{ rows }}" as="r" hint-placeholder-count="12">
+                    <tr onClick="{{ r.go }}" tabIndex="0" style="cursor:pointer;border-top:1px solid #CFCCC5;text-align:right;background:{{ r.bg }};"><td style="text-align:left;padding:2px 0;">{{ r.tag }}</td><td>{{ r.sl }}</td><td>{{ r.area }}</td><td style="color:{{ r.pColor }};">p{{ r.p }}</td><td style="font-weight:700;">{{ r.score }}</td></tr>
+                  </sc-for>
+                </table>
+                <sc-if value="{{ zero }}" hint-placeholder-val="{{ false }}">
+                  <span style="font-family:'Courier Prime',monospace;font-size:11px;color:#3B3B39;line-height:1.6;">Sheet printed, nothing marked. 120 frames examined, 0 crop marks. The sheet is the evidence that nothing was found.</span>
+                </sc-if>
+              </div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:4px;">
+              <span style="font-weight:800;font-size:9.5px;letter-spacing:0.14em;color:#3B3B39;">NOT COUNTED · KEPT ON SHEET</span>
+              <div class="scroll" style="max-height:96px;">
+                <table style="width:100%;border-collapse:collapse;font-family:'Courier Prime',monospace;font-size:10.5px;color:#3B3B39;">
+                  <sc-for list="{{ exRows }}" as="e" hint-placeholder-count="5">
+                    <tr onClick="{{ e.go }}" tabIndex="0" style="cursor:pointer;border-top:1px solid #CFCCC5;text-align:right;"><td style="text-align:left;padding:2px 0;">{{ e.sl }}</td><td>{{ e.area }}</td><td>{{ e.hu }}HU</td><td style="color:#B3241C;">——</td></tr>
+                  </sc-for>
+                </table>
+              </div>
+              <span style="font-family:'Courier Prime',monospace;font-size:10px;color:#B3241C;line-height:1.5;">{{ exSummary }}</span>
+            </div>
+            <div style="border-top:2px solid #26262A;padding-top:8px;display:flex;flex-direction:column;gap:1px;">
+              <span style="font-family:'Courier Prime',monospace;font-size:10.5px;color:#3B3B39;">SHEET TOTAL · AGATSTON</span>
+              <span style="font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:32px;letter-spacing:-0.02em;">{{ total }}</span>
+              <span style="font-weight:800;font-size:12.5px;letter-spacing:0.06em;color:{{ tierColorInk }};">{{ tier }}</span>
+              <span style="font-family:'Courier Prime',monospace;font-size:10px;color:#3B3B39;">{{ countsLine }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </sc-if>
+
+    <!-- ════════════ 04 LEDGER ════════════ -->
+    <sc-if value="{{ isD4 }}" hint-placeholder-val="{{ false }}">
+      <div style="height:100%;display:flex;flex-direction:column;background:#F1F0E6;color:#1C1C1A;font-family:'Source Serif 4',serif;overflow:hidden;">
+        <div style="flex:0 0 auto;padding:9px 24px;border-bottom:2px solid #24457E;display:flex;justify-content:space-between;align-items:flex-end;">
+          <div style="display:flex;flex-direction:column;gap:1px;"><span style="font-weight:600;font-size:17px;">Calcium Score Ledger</span><span style="font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:#24457E;">{{ studyLine }}</span></div>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:10.5px;line-height:1.6;text-align:right;">{{ prov1 }}<br>{{ prov2 }}<br>{{ prov3 }}</span>
+        </div>
+        <div style="flex:1;min-height:0;display:grid;grid-template-columns:1fr 300px;">
+          <div style="min-height:0;display:flex;flex-direction:column;padding:10px 24px 0;">
+            <sc-if value="{{ running }}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex;flex-direction:column;gap:10px;padding-bottom:10px;">
+                <div style="border:1px solid #24457E;padding:10px 12px;font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#24457E;display:flex;flex-direction:column;gap:6px;">
+                  <span style="font-family:'Source Serif 4',serif;font-size:14px;">Sheet opened, no entries posted. {{ runPct }} % of the run complete.</span>
+                  <sc-for list="{{ steps }}" as="s" hint-placeholder-count="5">
+                    <div style="display:flex;gap:10px;align-items:center;color:{{ s.fgInk }};"><span style="width:12px;">{{ s.mark }}</span><span style="width:140px;">{{ s.label }}</span><span style="flex:1;height:3px;background:#DCE3DA;"><span style="display:block;height:3px;width:{{ s.pct }};background:#24457E;"></span></span><span style="width:74px;text-align:right;">{{ s.note }}</span></div>
+                  </sc-for>
+                  <span>A ledger has nothing to show until the first entry exists. This is the direction's honest weakness at 90 seconds.</span>
+                </div>
+              </div>
+            </sc-if>
+            <div class="scroll" style="flex:1;min-height:0;">
+              <table style="width:100%;border-collapse:collapse;font-family:'IBM Plex Mono',monospace;font-size:11px;">
+                <thead><tr style="color:#24457E;font-family:'Source Serif 4',serif;font-size:10px;letter-spacing:0.12em;text-transform:uppercase;border-bottom:1px solid #24457E;"><th style="text-align:left;font-weight:400;padding:3px 0;">stmp</th><th style="text-align:left;font-weight:400;">lesion</th><th style="text-align:right;font-weight:400;">slice</th><th style="text-align:right;font-weight:400;">z mm</th><th style="text-align:right;font-weight:400;">area mm²</th><th style="text-align:right;font-weight:400;">peak HU</th><th style="text-align:left;font-weight:400;padding-left:18px;">weight derivation</th><th style="text-align:right;font-weight:400;">score</th><th style="text-align:right;font-weight:400;">balance</th></tr></thead>
+                <tbody>
+                  <sc-for list="{{ ledgerRows }}" as="l" hint-placeholder-count="14">
+                    <tr onClick="{{ l.go }}" tabIndex="0" style="cursor:pointer;background:{{ l.band }};border-bottom:1px solid #D6D9CE;color:{{ l.fg }};">
+                      <td style="padding:1px 0;"><span style="position:relative;display:block;width:30px;height:20px;background:#0B0D0F;outline:{{ l.ring }};">{{ l.el }}</span></td>
+                      <td>{{ l.tag }}</td>
+                      <td style="text-align:right;">{{ l.sl }}</td><td style="text-align:right;">{{ l.z }}</td><td style="text-align:right;">{{ l.area }}</td><td style="text-align:right;">{{ l.hu }}</td>
+                      <td style="padding-left:18px;color:#24457E;">{{ l.deriv }}</td>
+                      <td style="text-align:right;">{{ l.calc }}</td><td style="text-align:right;font-weight:600;">{{ l.bal }}</td>
+                    </tr>
+                  </sc-for>
+                  <sc-if value="{{ zero }}" hint-placeholder-val="{{ false }}">
+                    <tr><td colspan="9" style="padding:12px 0;font-family:'Source Serif 4',serif;font-size:15px;color:#8C8C82;">No entries. 120 slices posted to the sheet, zero lesions cleared 1.0 mm². The ledger is balanced at 0.0 and the sheet is still a receipt.</td></tr>
+                  </sc-if>
+                </tbody>
+              </table>
+            </div>
+            <div style="flex:0 0 auto;border-top:3px double #1C1C1A;padding:10px 0 12px;display:flex;align-items:flex-end;justify-content:space-between;gap:16px;">
+              <div style="display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;">
+                <span style="font-family:'Source Serif 4',serif;font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:#8C8C82;">footing</span>
+                <span style="font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:34px;letter-spacing:-0.02em;">{{ total }}</span>
+                <span style="font-family:'Source Serif 4',serif;font-weight:600;font-size:15px;color:{{ tierColorInk }};letter-spacing:0.05em;">TIER {{ tier }}</span>
+                <span style="font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:#8C8C82;">{{ tierNote }}</span>
+              </div>
+              <span style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:#8C8C82;">{{ prov3 }} · ⏎ open entry · E export · ? keys</span>
+            </div>
+          </div>
+          <div style="border-left:1px solid #24457E;display:flex;flex-direction:column;min-height:0;">
+            <div style="flex:0 0 auto;padding:10px 14px;border-bottom:1px solid #D6D9CE;display:flex;flex-direction:column;gap:5px;">
+              <span style="font-family:'Source Serif 4',serif;font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:#24457E;">entry under inspection · {{ viewName }}</span>
+              <div onWheel="{{ onWheel }}" style="position:relative;width:100%;height:262px;background:#0B0D0F;outline:1px solid #24457E;">{{ imgMed }}</div>
+              <span style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:#8C8C82;line-height:1.6;">{{ selLine }}</span>
+              <span style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:#8C8C82;line-height:1.6;">{{ selDisamb }}</span>
+            </div>
+            <div class="scroll" style="flex:1;min-height:0;padding:10px 14px;display:flex;flex-direction:column;gap:12px;">
+              <div style="border:1px solid #A8241F;">
+                <div style="background:#A8241F;color:#F1F0E6;padding:4px 9px;font-family:'Source Serif 4',serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;">contra · recorded, not counted</div>
+                <table style="width:100%;border-collapse:collapse;font-family:'IBM Plex Mono',monospace;font-size:10.5px;">
+                  <sc-for list="{{ exRows }}" as="e" hint-placeholder-count="5">
+                    <tr onClick="{{ e.go }}" tabIndex="0" style="cursor:pointer;border-bottom:1px solid #E3D8D5;"><td style="padding:2px 6px;">sl {{ e.sl }}</td><td style="text-align:right;">{{ e.area }}</td><td style="text-align:right;">{{ e.hu }}HU</td><td style="text-align:right;padding-right:6px;color:#A8241F;">withheld</td></tr>
+                  </sc-for>
+                </table>
+                <div style="padding:6px 9px;font-family:'Source Serif 4',serif;font-size:12px;color:#A8241F;">{{ exSummary }}</div>
+              </div>
+              <div style="border:1px solid #24457E;padding:7px 9px;font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:#24457E;line-height:1.7;">{{ softNote }}</div>
+              <div style="font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:#8C8C82;line-height:1.7;">{{ countsLine }}<br>{{ reachNote }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </sc-if>
+
+    <!-- ════════════ 05 FIELD ════════════ -->
+    <sc-if value="{{ isD5 }}" hint-placeholder-val="{{ false }}">
+      <div style="height:100%;display:flex;flex-direction:column;background:#7C838A;color:#12161B;font-family:'Manrope',sans-serif;overflow:hidden;">
+        <div style="flex:0 0 auto;padding:8px 24px;border-bottom:1px solid #5C646B;font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:#1B2027;display:flex;gap:18px;flex-wrap:wrap;">
+          <span>{{ prov1 }}</span><span>{{ prov2 }}</span><span style="margin-left:auto;">{{ prov3 }}</span>
+        </div>
+        <div style="flex:1;min-height:0;display:grid;grid-template-columns:400px 1fr 320px;">
+          <div class="scroll" style="padding:16px 20px;display:flex;flex-direction:column;gap:14px;border-right:1px solid #5C646B;min-height:0;">
+            <span style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:0.16em;color:#2A3138;">WHAT THE SCORE IS MADE OF</span>
+            <sc-if value="{{ running }}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex;flex-direction:column;gap:8px;">
+                <span style="font-weight:800;font-size:22px;letter-spacing:-0.02em;">field filling · {{ runPct }} %</span>
+                <span style="font-size:14px;line-height:1.5;">Coverage arrives per slice, so the projection thickens while the run proceeds. There is a picture from the first slice onward — nothing here waits on a total.</span>
+                <sc-for list="{{ steps }}" as="s" hint-placeholder-count="5">
+                  <div style="display:flex;gap:10px;align-items:center;font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:#1B2027;"><span style="width:12px;">{{ s.mark }}</span><span style="width:130px;">{{ s.label }}</span><span style="flex:1;height:3px;background:#5C646B;"><span style="display:block;height:3px;width:{{ s.pct }};background:#F3F5F6;"></span></span></div>
+                </sc-for>
+              </div>
+            </sc-if>
+            <sc-if value="{{ notRunning }}" hint-placeholder-val="{{ true }}">
+              <div style="display:flex;flex-direction:column;gap:12px;min-height:0;">
+                <div style="display:flex;flex-direction:column;gap:2px;">
+                  <div style="display:flex;align-items:baseline;gap:12px;"><span style="font-weight:800;font-size:40px;letter-spacing:-0.03em;">{{ total }}</span><span style="font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:0.1em;color:#12161B;">{{ tier }}</span></div>
+                  <span style="font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:#1B2027;">area = Σ coverage · not a thresholded count · {{ tierNote }}</span>
+                </div>
+                <div style="display:flex;flex-direction:column;gap:7px;">
+                  <span style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:0.16em;color:#2A3138;">COVERAGE MASS BY BAND</span>
+                  <sc-for list="{{ covBands }}" as="b" hint-placeholder-count="4">
+                    <div style="display:flex;flex-direction:column;gap:2px;font-family:'IBM Plex Mono',monospace;font-size:10.5px;">
+                      <div style="display:flex;justify-content:space-between;"><span>{{ b.range }}</span><span>{{ b.val }}</span></div>
+                      <span style="height:10px;width:{{ b.pct }};background:{{ b.fieldBar }};background-size:3px 3px;"></span>
+                      <span style="color:#2A3138;">{{ b.note }}</span>
+                    </div>
+                  </sc-for>
+                </div>
+                <div style="border-top:1px solid #5C646B;padding-top:10px;font-size:13.5px;line-height:1.5;">{{ softNote }}</div>
+                <div style="border-top:1px solid #5C646B;padding-top:10px;display:flex;flex-direction:column;gap:4px;">
+                  <span style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:0.16em;color:#2A3138;">TIER MARGIN</span>
+                  <div style="height:10px;background:#5C646B;position:relative;"><span style="position:absolute;left:0;top:0;bottom:0;width:{{ tierPct }};background:#F3F5F6;"></span><span style="position:absolute;left:8%;top:-4px;bottom:-4px;width:2px;background:#D8B22F;"></span></div>
+                  <span style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:#1B2027;">{{ marginLine }}</span>
+                </div>
+              </div>
+            </sc-if>
+            <div style="margin-top:auto;font-family:'IBM Plex Mono',monospace;font-size:10px;line-height:1.7;color:#1B2027;">{{ countsLine }}<br>{{ exSummary }}</div>
+          </div>
+          <div onWheel="{{ onWheel }}" style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:14px;min-height:0;">
+            <span style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:0.14em;color:#2A3138;">PROBABILITY FIELD · CORONAL PROJECTION · {{ nSlices }} SLICES FUSED</span>
+            <div style="position:relative;width:300px;flex:1;min-height:0;background:linear-gradient(180deg,#1B2027,#252B32);">
+              {{ projection }}
+            </div>
+            <div style="display:flex;align-items:center;gap:9px;font-family:'IBM Plex Mono',monospace;font-size:10px;color:#1B2027;"><span>p 0.0</span><span style="width:120px;height:8px;background:linear-gradient(90deg,#1B2027,#7C838A,#F3F5F6);"></span><span>1.0</span><span>· no outlines drawn</span></div>
+          </div>
+          <div style="border-left:1px solid #5C646B;display:flex;flex-direction:column;min-height:0;">
+            <div style="flex:0 0 auto;padding:12px 16px;border-bottom:1px solid #5C646B;display:flex;flex-direction:column;gap:6px;">
+              <span style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:0.16em;color:#2A3138;">SLICE {{ slice }} · {{ viewName }}</span>
+              <div onWheel="{{ onWheel }}" style="position:relative;width:100%;height:262px;background:#0B0D0F;">{{ imgMed }}</div>
+              <span style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:#1B2027;line-height:1.6;">{{ selLine }}</span>
+              <span style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:#1B2027;line-height:1.6;">{{ selDisamb }}</span>
+            </div>
+            <div class="scroll" style="flex:1;min-height:0;padding:10px 16px;">
+              <table style="width:100%;border-collapse:collapse;font-family:'IBM Plex Mono',monospace;font-size:10.5px;">
+                <sc-for list="{{ rows }}" as="r" hint-placeholder-count="12">
+                  <tr onClick="{{ r.go }}" tabIndex="0" style="cursor:pointer;border-top:1px solid #5C646B;text-align:right;background:{{ r.bgField }};"><td style="text-align:left;padding:2px 0;">{{ r.tag }}</td><td>sl {{ r.sl }}</td><td>{{ r.area }}</td><td>p {{ r.p }}</td><td>{{ r.score }}</td></tr>
+                </sc-for>
+              </table>
+              <sc-if value="{{ zero }}" hint-placeholder-val="{{ false }}">
+                <span style="font-family:'IBM Plex Mono',monospace;font-size:10.5px;line-height:1.7;color:#1B2027;">The field is not empty of pixels — it is empty of coverage. Max p anywhere in the volume: 0.04, below the 0.10 delineation threshold. That is a measurement, not a blank screen.</span>
+              </sc-if>
+            </div>
+          </div>
+        </div>
+      </div>
+    </sc-if>
+
+    <!-- ════════════ 06 DIFF ════════════ -->
+    <sc-if value="{{ isD6 }}" hint-placeholder-val="{{ false }}">
+      <div style="height:100%;display:flex;flex-direction:column;background:#F2F2EF;color:#17191A;font-family:'Chivo',sans-serif;overflow:hidden;">
+        <div style="flex:0 0 auto;padding:8px 22px;border-bottom:1px solid #D6D6D0;display:flex;align-items:center;gap:18px;flex-wrap:wrap;">
+          <span style="font-weight:900;font-size:14px;">PAIR · {{ studyLine }}</span>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:#17607A;">A a3-coverage-v2 · slice-wise labels · ckpt 3f9c1a…8e2d</span>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:#8A5B00;">B a3-coverage-v2 · volume labels · ckpt 7c04be…1a55</span>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:#5F615E;">shared · {{ prov2 }}</span>
+          <span style="margin-left:auto;font-weight:900;font-size:12px;letter-spacing:0.08em;border:2px solid {{ flipColor }};color:{{ flipColor }};padding:3px 9px;">{{ flipVerdict }}</span>
+        </div>
+        <div style="flex:0 0 auto;display:grid;grid-template-columns:1fr 168px 1fr;border-bottom:1px solid #D6D6D0;">
+          <div style="padding:10px 22px;display:flex;flex-direction:column;gap:3px;">
+            <span style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:0.16em;color:#17607A;">A · SLICE-WISE</span>
+            <span style="font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:30px;letter-spacing:-0.02em;">{{ total }}</span>
+            <span style="font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:#5F615E;">{{ tier }} · {{ countsLine }}</span>
+          </div>
+          <div style="background:#EAEAE5;border-left:1px solid #D6D6D0;border-right:1px solid #D6D6D0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;">
+            <span style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:0.14em;color:#5F615E;">Δ B − A</span>
+            <span style="font-weight:900;font-size:22px;">{{ deltaTotal }}</span>
+            <span style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:#5F615E;">{{ deltaNote }}</span>
+          </div>
+          <div style="padding:10px 22px;display:flex;flex-direction:column;gap:3px;align-items:flex-end;">
+            <span style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:0.16em;color:#8A5B00;">VOLUME LABELS · B</span>
+            <span style="font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:30px;letter-spacing:-0.02em;">{{ totalB }}</span>
+            <span style="font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:#5F615E;">{{ tierB }} · {{ countsLineB }}</span>
+          </div>
+        </div>
+        <div style="flex:1;min-height:0;display:grid;grid-template-columns:1fr 168px 1fr;">
+          <div class="scroll" style="padding:10px 22px;font-family:'IBM Plex Mono',monospace;font-size:11px;min-height:0;">
+            <sc-for list="{{ diffRows }}" as="d" hint-placeholder-count="10">
+              <div onClick="{{ d.go }}" tabIndex="0" style="display:flex;justify-content:space-between;gap:8px;padding:4px 0;border-bottom:1px solid #E4E4DE;cursor:pointer;color:{{ d.aColor }};background:{{ d.bg }};"><span>{{ d.tag }}</span><span>sl {{ d.sl }}</span><span>{{ d.aArea }}</span><span style="font-weight:600;">{{ d.aScore }}</span></div>
+            </sc-for>
+            <sc-if value="{{ running }}" hint-placeholder-val="{{ false }}">
+              <div style="padding:8px 0;color:#17607A;">A complete · posted at 14:02:11Z</div>
+            </sc-if>
+            <sc-if value="{{ zero }}" hint-placeholder-val="{{ false }}">
+              <div style="padding:8px 0;color:#5F615E;line-height:1.7;">A found nothing. 120 slices, 0 lesions, 0.0.</div>
+            </sc-if>
+          </div>
+          <div class="scroll" style="background:#EAEAE5;border-left:1px solid #D6D6D0;border-right:1px solid #D6D6D0;padding:10px 6px;font-family:'IBM Plex Mono',monospace;font-size:11px;min-height:0;">
+            <sc-for list="{{ diffRows }}" as="d" hint-placeholder-count="10">
+              <div style="padding:4px 0;border-bottom:1px solid #DFDFD9;text-align:center;color:{{ d.dColor }};font-weight:{{ d.dWeight }};background:{{ d.bg }};">{{ d.delta }}</div>
+            </sc-for>
+          </div>
+          <div class="scroll" style="padding:10px 22px;font-family:'IBM Plex Mono',monospace;font-size:11px;min-height:0;">
+            <sc-for list="{{ diffRows }}" as="d" hint-placeholder-count="10">
+              <div onClick="{{ d.go }}" tabIndex="0" style="display:flex;justify-content:space-between;gap:8px;padding:4px 0;border-bottom:1px solid #E4E4DE;cursor:pointer;color:{{ d.bColor }};background:{{ d.bg }};"><span style="font-weight:600;">{{ d.bScore }}</span><span>{{ d.bArea }}</span><span>sl {{ d.sl }}</span><span>{{ d.tag }}</span></div>
+            </sc-for>
+            <sc-if value="{{ running }}" hint-placeholder-val="{{ false }}">
+              <div style="padding:8px 0;color:#8A5B00;animation:blip 1.2s ease-in-out infinite;">B running · {{ runPct }} % · {{ runLine }}</div>
+            </sc-if>
+          </div>
+        </div>
+        <div style="flex:0 0 auto;border-top:1px solid #D6D6D0;padding:10px 22px;display:grid;grid-template-columns:1fr 168px 1fr;align-items:center;gap:10px;">
+          <div style="display:flex;gap:12px;align-items:center;">
+            <div onWheel="{{ onWheel }}" style="position:relative;width:96px;height:96px;background:#0B0D0F;">{{ imgSmallA }}</div>
+            <span style="font-family:'IBM Plex Mono',monospace;font-size:10px;line-height:1.7;color:#5F615E;">A · slice {{ slice }} · z {{ zmm }} mm<br>{{ selLine }}</span>
+          </div>
+          <div style="text-align:center;font-family:'IBM Plex Mono',monospace;font-size:9.5px;line-height:1.7;color:#5F615E;">same window<br>W 500 / L 150<br>same crop<br><span style="color:#C0342B;">{{ diffPixNote }}</span></div>
+          <div style="display:flex;gap:12px;align-items:center;justify-content:flex-end;">
+            <span style="font-family:'IBM Plex Mono',monospace;font-size:10px;line-height:1.7;text-align:right;color:#5F615E;">B · slice {{ slice }} · z {{ zmm }} mm<br>{{ selDisamb }}</span>
+            <div onWheel="{{ onWheel }}" style="position:relative;width:96px;height:96px;background:#0B0D0F;">{{ imgSmallB }}</div>
+          </div>
+        </div>
+        <div style="flex:0 0 auto;border-top:2px solid #17191A;padding:8px 22px;display:flex;gap:20px;font-family:'IBM Plex Mono',monospace;font-size:10.5px;flex-wrap:wrap;">
+          <span>{{ diffSummary }}</span><span style="color:#C0342B;">{{ exSummary }}</span><span style="margin-left:auto;">⇥ swap · 1/2/3 view · E export pair · ? keys</span>
+        </div>
+      </div>
+    </sc-if>
+
+  </div>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1440,&quot;height&quot;:900}}">
+const MODEL = 'a3-coverage-v2';
+const CKPT = '3f9c1a…8e2d';
+const SPACING = '0.37 × 0.37 × 3.00 mm';
+
+function rng(seed) { let s = seed; return () => { s = (s * 1103515245 + 12345) & 0x7fffffff; return s / 0x7fffffff; }; }
+
+function weightFor(hu) { return hu >= 400 ? 4 : hu >= 300 ? 3 : hu >= 200 ? 2 : 1; }
+function derivFor(hu) { return hu >= 400 ? '≥400 → wt 4' : hu >= 300 ? '300–399 → wt 3' : hu >= 200 ? '200–299 → wt 2' : '130–199 → wt 1'; }
+function tierFor(t) { return t === 0 ? 'ZERO' : t <= 100 ? 'MILD' : t <= 400 ? 'MODERATE' : 'SEVERE'; }
+
+function buildStudy(kind) {
+  if (kind === 'zero') return { slices: 120, lesions: [], total: 0, calcSlices: [] };
+  const dense = kind === 'dense';
+  const r = rng(dense ? 8891 : 4417);
+  const calcSlices = dense
+    ? Array.from({ length: 34 }, (_, i) => 38 + i * 2)
+    : [61, 64, 65, 67, 70, 71, 74, 79];
+  const nLesions = dense ? 180 : 24;
+  const nSub = dense ? 16 : 5;
+  const lesions = [];
+  const mk = (sl, sub) => {
+    const area = sub ? Math.round((0.2 + r() * 0.75) * 10) / 10
+      : Math.round((1.2 + r() * (dense ? 48 : 55)) * 10) / 10;
+    const hu = Math.round(140 + r() * 620);
+    const cov = sub ? Math.round((0.12 + r() * 0.3) * 100) / 100 : Math.round((0.34 + r() * 0.64) * 100) / 100;
+    lesions.push({
+      sl, z: (sl * 3).toFixed(1), area, hu, wt: weightFor(hu), cov, excluded: sub,
+      x: 26 + r() * 48, y: 28 + r() * 44, rad: 1.6 + Math.min(4.6, Math.sqrt(area) * 0.7)
+    });
+  };
+  calcSlices.forEach(sl => mk(sl, false));            // every calcium slice carries at least one counted lesion
+  for (let i = 0; i < nSub; i++) mk(calcSlices[Math.floor(r() * calcSlices.length)], true);
+  while (lesions.length < nLesions) mk(calcSlices[Math.floor(r() * calcSlices.length)], false);
+  lesions.sort((a, b) => a.sl - b.sl || b.area - a.area);
+  const counted = lesions.filter(l => !l.excluded);
+  let sum = counted.reduce((s, l) => s + l.area * l.wt, 0);
+  const target = dense ? 4890 : 1064.2;
+  const k = target / sum;
+  counted.forEach(l => { l.area = Math.round(l.area * k * 10) / 10; });
+  counted.forEach(l => { l.score = Math.round(l.area * l.wt * 10) / 10; });
+  lesions.filter(l => l.excluded).forEach(l => { l.score = 0; });
+  // absorb rounding remainder into the largest lesion so the footing is exactly the reported total
+  const big = counted.reduce((a, b) => (b.score > a.score ? b : a), counted[0]);
+  const rem = Math.round((target - counted.reduce((s, l) => s + l.score, 0)) * 10) / 10;
+  big.score = Math.round((big.score + rem) * 10) / 10;
+  big.area = Math.round(big.score / big.wt * 10) / 10;
+  const realTotal = Math.round(counted.reduce((s, l) => s + l.score, 0) * 10) / 10;
+  const used = {};
+  lesions.forEach(l => { used[l.sl] = 1; });
+  const activeCalc = calcSlices.filter(s => lesions.some(l => l.sl === s && !l.excluded));
+  lesions.forEach((l, i) => {
+    const onSlice = lesions.filter(x => x.sl === l.sl);
+    l.idxOnSlice = onSlice.indexOf(l) + 1;
+    l.nOnSlice = onSlice.length;
+    l.tag = 'L' + (i + 1);
+    l.label = 'sl ' + l.sl + ' · ' + String.fromCharCode(96 + l.idxOnSlice);
+  });
+  return { slices: 120, lesions, total: realTotal, calcSlices: activeCalc };
+}
+
+const STUDIES = { result: buildStudy('result'), zero: buildStudy('zero'), dense: buildStudy('dense') };
+
+class Component extends DCLogic {
+  state = { dir: 1, st: 'result', view: 2, slice: 64, sel: null, legend: false, pct: 12, tick: 0 };
+
+  componentDidMount() {
+    this.onKey = e => {
+      const k = e.key;
+      if (k === '?') { this.setState(s => ({ legend: !s.legend })); return; }
+      if (k === '1' || k === '2' || k === '3') { this.setView(+k); e.preventDefault(); return; }
+      if (k === 'e' || k === 'E') { this.setState({ legend: true }); return; }
+      if (k === '[') { this.setState(s => ({ dir: s.dir === 1 ? 6 : s.dir - 1 })); return; }
+      if (k === ']') { this.setState(s => ({ dir: s.dir === 6 ? 1 : s.dir + 1 })); return; }
+      if (k === 'ArrowUp' || k === 'ArrowLeft') { this.step(-1, e.shiftKey); e.preventDefault(); }
+      if (k === 'ArrowDown' || k === 'ArrowRight') { this.step(1, e.shiftKey); e.preventDefault(); }
+    };
+    document.addEventListener('keydown', this.onKey);
+    this.timer = setInterval(() => {
+      this.setState(s => s.st === 'running' ? { pct: s.pct >= 100 ? 4 : s.pct + 3, tick: s.tick + 1 } : { tick: s.tick + 1 });
+    }, 700);
+  }
+  componentWillUnmount() { document.removeEventListener('keydown', this.onKey); clearInterval(this.timer); }
+
+  study() { return STUDIES[this.state.st === 'running' ? 'result' : this.state.st] || STUDIES.result; }
+
+  step(dir, jump) {
+    const st = this.study();
+    const calc = st.calcSlices;
+    this.setState(s => {
+      if (s.view === 3) {
+        if (!calc.length) return { slice: s.slice };
+        const i = Math.max(0, calc.indexOf(s.slice));
+        const n = Math.min(calc.length - 1, Math.max(0, i + dir));
+        return { slice: calc[n], sel: null };
+      }
+      if (jump && calc.length) {
+        const next = dir > 0 ? calc.find(c => c > s.slice) : [...calc].reverse().find(c => c < s.slice);
+        return next ? { slice: next, sel: null } : { slice: s.slice };
+      }
+      return { slice: Math.min(120, Math.max(1, s.slice + dir)), sel: null };
+    });
+  }
+  setView(v) {
+    const st = this.study();
+    this.setState(s => {
+      if (v === 3) return { view: 3, slice: st.calcSlices.length ? (st.calcSlices.includes(s.slice) ? s.slice : st.calcSlices[0]) : s.slice, sel: null };
+      return { view: v };
+    });
+  }
+
+  speckEls(lesions, size, view, selKey, opts) {
+    const o = opts || {};
+    const els = [];
+    lesions.forEach((l, i) => {
+      const key = l.sl + ':' + l.idxOnSlice;
+      const cx = l.x, cy = l.y;
+      const core = Math.max(1.4, l.rad * (size / 220));
+      // the CT itself: a few bright pixels, always present
+      els.push(React.createElement('span', {
+        key: 'c' + i,
+        style: {
+          position: 'absolute', left: cx + '%', top: cy + '%',
+          width: core + 'px', height: core * 0.8 + 'px', borderRadius: '40%',
+          background: '#F2F5F7', opacity: 0.55 + 0.45 * Math.min(1, l.cov + 0.2),
+          boxShadow: '0 0 ' + (core * 1.4) + 'px ' + (core * 0.4) + 'px rgba(240,245,248,.35)'
+        }
+      }));
+      if (view !== 1) {
+        // coverage overlay: alpha carries the fraction, dotted texture below 0.5
+        const soft = l.cov < 0.5;
+        els.push(React.createElement('span', {
+          key: 'o' + i,
+          style: {
+            position: 'absolute', left: (cx - core * 0.9) + '%', top: (cy - core * 0.7) + '%',
+            width: core * 3.4 + 'px', height: core * 3.0 + 'px', borderRadius: '45%',
+            backgroundImage: soft
+              ? 'radial-gradient(' + (o.softColor || '#C98B2E') + ' 38%, transparent 39%)'
+              : 'radial-gradient(circle, ' + (o.hardColor || '#C98B2E') + ' 0%, rgba(201,139,46,0) 72%)',
+            backgroundSize: soft ? '2px 2px' : 'auto',
+            opacity: l.excluded ? 0.35 : (0.25 + 0.6 * l.cov)
+          }
+        }));
+      }
+      if (selKey === key) {
+        els.push(React.createElement('span', {
+          key: 's' + i,
+          style: {
+            position: 'absolute', left: (cx - core * 1.6) + '%', top: (cy - core * 1.4) + '%',
+            width: core * 5.5 + 'px', height: core * 5.5 + 'px',
+            border: '1.5px solid ' + (o.selColor || '#2F6BD8'), borderRadius: '2px'
+          }
+        }), React.createElement('span', {
+          key: 't' + i,
+          style: {
+            position: 'absolute', left: (cx + core * 2.6) + '%', top: (cy - core * 1.4) + '%',
+            font: '9px "IBM Plex Mono",monospace', color: o.selColor || '#2F6BD8', whiteSpace: 'nowrap'
+          }
+        }, l.tag + ' · ' + l.idxOnSlice + ' of ' + l.nOnSlice + ' here'));
+      }
+    });
+    if (view === 1) {
+      els.push(React.createElement('span', {
+        key: 'nooverlay',
+        style: { position: 'absolute', left: '6px', top: '6px', font: '9px "IBM Plex Mono",monospace', color: '#8B939B', letterSpacing: '.08em' }
+      }, 'ORIGINAL · no prediction loaded in this stack'));
+    }
+    return els;
+  }
+
+  renderVals() {
+    const s = this.state, st = this.study();
+    const running = s.st === 'running', zero = s.st === 'zero', dense = s.st === 'dense';
+    const view = s.view;
+    const calc = st.calcSlices;
+    const slice = s.slice;
+    const onSlice = st.lesions.filter(l => l.sl === slice);
+    const counted = st.lesions.filter(l => !l.excluded);
+    const excluded = st.lesions.filter(l => l.excluded);
+    const withheld = Math.round(excluded.reduce((a, l) => a + l.area * l.wt, 0) * 10) / 10;
+    const exArea = Math.round(excluded.reduce((a, l) => a + l.area, 0) * 10) / 10;
+    const total = running ? '—' : st.total.toFixed(1);
+    const tier = running ? 'PENDING' : tierFor(st.total);
+    const sel = s.sel;
+    const selLes = sel ? st.lesions.find(l => l.sl + ':' + l.idxOnSlice === sel) : null;
+
+    const go = (sl, key) => () => this.setState(prev => ({
+      slice: sl,
+      sel: key || null,
+      view: prev.view === 3 && !calc.includes(sl) ? 2 : prev.view
+    }));
+
+    const rowsAll = (running ? counted.slice(0, Math.max(1, Math.round(counted.length * s.pct / 100))) : counted);
+    const rows = rowsAll.map(l => {
+      const key = l.sl + ':' + l.idxOnSlice;
+      const on = sel === key, cur = l.sl === slice;
+      const pSoft = l.cov < 0.5;
+      return {
+        tag: l.tag, sl: l.sl, z: l.z, area: l.area.toFixed(1), hu: l.hu, wt: l.wt,
+        p: l.cov.toFixed(2), score: l.score.toFixed(1), go: go(l.sl, key),
+        bg: on ? '#DCE7DF' : cur ? '#EFEBDD' : 'transparent',
+        bgDark: on ? '#3A4148' : cur ? '#2C3238' : 'transparent',
+        bgField: on ? 'rgba(243,245,246,.45)' : cur ? 'rgba(243,245,246,.18)' : 'transparent',
+        fg: '#1A1A17', fgDark: '#E4DED0',
+        pColor: pSoft ? '#8A6A1F' : '#1A1A17',
+        pColorDark: pSoft ? '#C98B2E' : '#E4DED0'
+      };
+    });
+
+    let run = 0;
+    const ledgerRows = rowsAll.map((l, i) => {
+      const key = l.sl + ':' + l.idxOnSlice;
+      run = Math.round((run + l.score) * 10) / 10;
+      return {
+        tag: l.tag, sl: l.sl, z: l.z, area: l.area.toFixed(1), hu: l.hu,
+        deriv: derivFor(l.hu), calc: l.area.toFixed(1) + ' × ' + l.wt + ' = ' + l.score.toFixed(1),
+        bal: run.toFixed(1), band: i % 2 ? '#DCE3DA' : 'transparent',
+        fg: sel === key ? '#A8241F' : '#1C1C1A',
+        ring: sel === key ? '1.5px solid #A8241F' : '1px solid #24457E',
+        go: go(l.sl, key),
+        el: this.speckEls([l], 30, view, null, { hardColor: '#F0E2C4' })
+      };
+    });
+
+    const exRows = excluded.map(l => ({
+      sl: l.sl, area: l.area.toFixed(1), hu: l.hu, go: go(l.sl, l.sl + ':' + l.idxOnSlice)
+    }));
+
+    const sliceLesions = onSlice.map(l => {
+      const key = l.sl + ':' + l.idxOnSlice;
+      const on = sel === key;
+      return {
+        chip: String.fromCharCode(96 + l.idxOnSlice) + ' · ' + l.area.toFixed(1) + ' mm² · p' + l.cov.toFixed(2) + (l.excluded ? ' · withheld' : ''),
+        go: go(l.sl, key),
+        bg: on ? '#C98B2E' : '#2C3238', fg: on ? '#23272B' : '#E4DED0', bd: on ? '#C98B2E' : '#3A4148',
+        bgLight: on ? '#B3241C' : 'transparent', fgLight: on ? '#E7E5E0' : '#26262A', bdLight: on ? '#B3241C' : '#CFCCC5'
+      };
+    });
+
+    const trackSrc = [];
+    for (let i = 1; i <= 120; i++) {
+      const here = st.lesions.filter(l => l.sl === i);
+      const sc = here.filter(l => !l.excluded).reduce((a, l) => a + l.score, 0);
+      const reach = view !== 3 || calc.includes(i);
+      const built = !running || i <= Math.round(120 * s.pct / 100);
+      trackSrc.push({
+        h: (sc > 0 ? Math.max(16, Math.min(42, 16 + sc / (dense ? 400 : 240) * 26)) : here.length ? 11 : 5) + 'px',
+        bg: !built ? '#1A1D20' : sc > 0 ? '#C98B2E' : here.length ? '#6E7C86' : '#31373D',
+        mark: i === slice ? '#E4DED0' : reach ? 'transparent' : '#1A1D20',
+        title: 'slice ' + i + (sc ? ' · ' + sc.toFixed(1) : ' · empty') + (reach ? '' : ' · unreachable in Calcium only'),
+        go: reach ? go(i) : () => {}
+      });
+    }
+
+    const frames = [];
+    for (let i = 1; i <= 120; i++) {
+      const here = st.lesions.filter(l => l.sl === i);
+      const hasC = here.some(l => !l.excluded), hasS = here.length && !hasC;
+      const reach = view !== 3 || calc.includes(i);
+      const built = !running || i <= Math.round(120 * s.pct / 100);
+      frames.push({
+        idx: i,
+        ring: i === slice ? '2px solid #2F6BD8' : hasC ? '1.5px solid #B3241C' : hasS ? '1.5px dotted #B3241C' : '1px solid #CFCCC5',
+        capColor: hasC ? '#B3241C' : '#3B3B39',
+        op: !built ? 0.18 : reach ? 1 : 0.28,
+        cursor: reach ? 'pointer' : 'not-allowed',
+        go: reach ? go(i) : () => {},
+        el: built ? this.speckEls(here, 62, running ? 1 : view, null, {}) : []
+      });
+    }
+
+    const covOf = band => {
+      const inb = st.lesions.filter(l => l.cov >= band[0] && l.cov < band[1]);
+      const mass = inb.reduce((a, l) => a + l.area, 0);
+      const all = st.lesions.reduce((a, l) => a + l.area, 0) || 1;
+      return { mass, pct: Math.round(mass / all * 100) };
+    };
+    const b1 = covOf([0.9, 1.01]), b2 = covOf([0.5, 0.9]), b3 = covOf([0.1, 0.5]), b4 = covOf([0, 0.1]);
+    const covBands = [
+      { range: 'p 0.90–1.00', val: b1.pct + ' %', pct: b1.pct + '%', bar: '#F0E2C4', fieldBar: '#F3F5F6', fg: '#E4DED0', label: 'p 0.90–1.00 · ' + b1.pct + ' % · dense core', note: 'contributes ' + b1.mass.toFixed(1) + ' mm² of area' },
+      { range: 'p 0.50–0.90', val: b2.pct + ' %', pct: b2.pct + '%', bar: '#C98B2E', fieldBar: 'rgba(243,245,246,.6)', fg: '#C98B2E', label: 'p 0.50–0.90 · ' + b2.pct + ' % · partial', note: 'contributes ' + b2.mass.toFixed(1) + ' mm², weighted by p' },
+      { range: 'p 0.10–0.50', val: b3.pct + ' %', pct: Math.max(2, b3.pct) + '%', bar: '#6E7C86', fieldBar: 'radial-gradient(#F3F5F6 40%, transparent 41%)', fg: '#6E7C86', label: 'p 0.10–0.50 · ' + b3.pct + ' % · soft rim', note: 'in the area sum at its own fraction, drawn as grain' },
+      { range: 'p 0.00–0.10', val: '—', pct: '2%', bar: '#31373D', fieldBar: 'rgba(243,245,246,.18)', fg: '#8B939B', label: 'p < 0.10 · below delineation', note: 'not part of any component' }
+    ];
+
+    const steps = [
+      { label: 'load series', at: 8 }, { label: 'resample 3.00 mm', at: 22 },
+      { label: 'heart crop 8 mm', at: 40 }, { label: 'predict coverage', at: 84 }, { label: 'score + render', at: 100 }
+    ].map(x => {
+      const done = s.pct >= x.at, active = !done && s.pct >= (x.at - 20);
+      const pct = done ? '100%' : active ? Math.round(Math.max(0, (s.pct - (x.at - 20)) / 20 * 100)) + '%' : '0%';
+      return {
+        label: x.label, mark: done ? '✓' : active ? '▸' : '·', pct,
+        bar: done ? '#2E5E52' : '#C98B2E', fg: done ? '#1A1A17' : active ? '#8A6A1F' : '#8A867A',
+        fgInk: done ? '#24457E' : '#8C8C82',
+        note: done ? 'done' : active ? 'running' : 'queued'
+      };
+    });
+
+    const flipsB = STUDIES[s.st === 'running' ? 'result' : s.st];
+    const totalB = zero ? 0 : Math.round(flipsB.total * 1.082 * 10) / 10;
+    const diffSrc = (running ? counted.slice(0, 6) : counted).slice(0, dense ? 60 : 24);
+    const diffRows = diffSrc.map((l, i) => {
+      const key = l.sl + ':' + l.idxOnSlice;
+      const bScore = Math.round(l.score * (i % 3 === 0 ? 1 + ((i % 7) - 2) * 0.05 : 1) * 10) / 10;
+      const d = Math.round((bScore - l.score) * 10) / 10;
+      const big = Math.abs(d) > l.score * 0.08;
+      return {
+        tag: l.tag, sl: l.sl, aArea: l.area.toFixed(1) + ' mm² wt' + l.wt, aScore: l.score.toFixed(1),
+        bArea: (l.area * (bScore / l.score || 1)).toFixed(1) + ' mm² wt' + l.wt, bScore: bScore.toFixed(1),
+        delta: (d === 0 ? '± 0.0' : (d > 0 ? '+ ' : '− ') + Math.abs(d).toFixed(1)),
+        dColor: d === 0 ? '#9A9A93' : big ? '#C0342B' : '#17191A', dWeight: d === 0 ? 400 : big ? 900 : 700,
+        aColor: '#17607A', bColor: '#8A5B00',
+        bg: sel === key ? '#E2E7E9' : 'transparent',
+        go: go(l.sl, key)
+      };
+    });
+
+    const projection = (() => {
+      const els = [];
+      const src = running ? st.lesions.filter(l => l.sl <= Math.round(120 * s.pct / 100)) : st.lesions;
+      src.forEach((l, i) => {
+        const w = 22 + Math.min(58, l.area * 1.4);
+        els.push(React.createElement('span', {
+          key: i,
+          style: {
+            position: 'absolute', left: (18 + l.x * 0.55) + '%', top: (l.sl / 120 * 88 + 3) + '%',
+            width: w + 'px', height: w * 0.66 + 'px', borderRadius: '42%',
+            background: 'radial-gradient(ellipse at 50% 50%, rgba(243,245,246,' + (0.25 + 0.72 * l.cov) + ') 0%, rgba(243,245,246,' + (0.1 * l.cov) + ') 46%, transparent 74%)',
+            transform: 'translate(-50%,-50%)'
+          }
+        }));
+      });
+      els.push(React.createElement('span', {
+        key: 'cursor',
+        style: { position: 'absolute', left: 0, right: 0, top: (slice / 120 * 88 + 3) + '%', height: '1px', background: '#D8B22F' }
+      }), React.createElement('span', {
+        key: 'clabel',
+        style: { position: 'absolute', right: '4px', top: 'calc(' + (slice / 120 * 88 + 3) + '% - 12px)', font: '9px "IBM Plex Mono",monospace', color: '#D8B22F' }
+      }, 'sl ' + slice));
+      if (!src.length) els.push(React.createElement('span', {
+        key: 'empty',
+        style: { position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', font: '11px "IBM Plex Mono",monospace', color: '#8B939B', textAlign: 'center', padding: '0 20px', lineHeight: 1.7 }
+      }, 'no coverage anywhere in 120 slices · max p 0.04'));
+      return els;
+    })();
+
+    const selKey = sel;
+    const viewName = view === 1 ? 'ORIGINAL' : view === 2 ? 'PREDICTION' : 'CALCIUM ONLY';
+    const overlayNote = view === 1
+      ? 'original stack · prediction cannot be drawn here'
+      : view === 2 ? 'coverage overlay · alpha = fraction · <0.50 stippled, never solid'
+        : 'restricted stack · ' + calc.length + ' scored slices · scrubber indexes 1–' + (calc.length || 0);
+    const reachNote = view === 3
+      ? (calc.length ? (120 - calc.length) + ' of 120 slices unreachable in this stack' : 'no slices in this stack')
+      : 'all 120 slices reachable';
+
+    const tierPct = Math.min(100, (running ? 0 : st.total) / (dense ? 6000 : 1400) * 100) + '%';
+
+    return {
+      tabs: [1, 2, 3, 4, 5, 6].map(d => ({
+        label: ['01 Argument', '02 Instrument', '03 Contact Sheet', '04 Ledger', '05 Field', '06 Diff'][d - 1],
+        go: () => this.setState({ dir: d }),
+        bg: s.dir === d ? '#E4DED0' : 'transparent', fg: s.dir === d ? '#101214' : '#8B939B'
+      })),
+      stateChips: [['result', 'RESULT'], ['running', 'RUNNING'], ['zero', 'ZERO'], ['dense', 'DENSE']].map(([k, l]) => ({
+        label: l, go: () => this.setState({ st: k, sel: null, slice: k === 'dense' ? 40 : k === 'zero' ? 60 : 64, pct: 12 }),
+        bg: s.st === k ? '#C98B2E' : 'transparent', fg: s.st === k ? '#101214' : '#8B939B', bd: s.st === k ? '#C98B2E' : '#2A2F34'
+      })),
+      viewChips: [[1, '1 original'], [2, '2 prediction'], [3, '3 calcium only']].map(([v, l]) => ({
+        label: l, go: () => this.setView(v),
+        bg: view === v ? '#C9CDD2' : 'transparent', fg: view === v ? '#101214' : '#8B939B', bd: view === v ? '#C9CDD2' : '#2A2F34',
+        bg2: view === v ? '#C98B2E' : 'transparent', fg2: view === v ? '#23272B' : '#8B939B', bd2: view === v ? '#C98B2E' : '#3A4148'
+      })),
+      toggleLegend: () => this.setState(p => ({ legend: !p.legend })),
+      legend: s.legend,
+      isD1: s.dir === 1, isD2: s.dir === 2, isD3: s.dir === 3, isD4: s.dir === 4, isD5: s.dir === 5, isD6: s.dir === 6,
+      running, notRunning: !running, zero,
+      runPct: s.pct, runPctW: s.pct + '%',
+      runLine: 'step ' + (s.pct < 22 ? 'resample' : s.pct < 40 ? 'heart crop' : s.pct < 84 ? 'predict coverage' : 'score') + ' · elapsed ' + Math.round(s.pct * 0.85) + ' s of ~90 s',
+      steps,
+      prov1: MODEL + ' · coverage (soft, [0,1] per voxel) · component threshold 0.10 (delineation only — area = Σ coverage)',
+      prov2: 'model HU window 0–1200 · display window −100–400 (W 500 / L 150) · ' + SPACING + ' · RAS',
+      prov3: 'crop heart +8 mm, TotalSegmentator 2.15.0 · ckpt ' + CKPT + ' · min lesion 1.0 mm² · 2026-08-13T14:02:11Z',
+      provBlock: MODEL + ' · coverage, soft [0,1]\ncomponent threshold 0.10 · delineation only\narea = Σ coverage, not a voxel count\nmodel HU window 0–1200\ndisplay window −100–400 (W 500 / L 150)\n' + SPACING + ' · RAS\ncrop heart +8 mm · TotalSegmentator 2.15.0\nckpt ' + CKPT + ' · min lesion 1.0 mm²\n2026-08-13T14:02:11Z',
+      studyLine: 'patient 172 · a4f2c81b9e03 · 120 slices',
+      total, tier,
+      tierColorInk: tier === 'SEVERE' ? '#8A2B2B' : tier === 'ZERO' ? '#5C5A51' : '#8A6A1F',
+      tierColorDark: tier === 'SEVERE' ? '#C98B2E' : '#8B939B',
+      tierNote: running ? 'no score exists yet' : zero ? 'tier Zero (0) · nothing to bound' : st.total > 400 ? 'tier >400 · ' + (st.total - 400).toFixed(1) + ' above the bound' : 'bounds 0 / 1–100 / 101–400 / >400',
+      tierPct,
+      marginLine: zero ? 'no lesion, no margin' : 'nearest bound 400 · margin ' + (st.total - 400).toFixed(1) + ' · no single lesion flips the tier',
+      because: zero
+        ? 'No component reached 1.0 mm². 120 slices were predicted and scored; the largest connected coverage component measured 0.4 mm², below the minimum, and is recorded as withheld.'
+        : counted.length + ' of ' + st.lesions.length + ' components cleared 1.0 mm². They sit on ' + calc.length + ' of 120 slices, z ' + (calc.length ? (calc[0] * 3).toFixed(1) + '–' + (calc[calc.length - 1] * 3).toFixed(1) : '—') + ' mm, weights ' + Math.min(...counted.map(l => l.wt)) + '–' + Math.max(...counted.map(l => l.wt)) + '. Area is the sum of per-voxel coverage, so partial voxels enter at their own fraction.',
+      nCounted: counted.length, nExcluded: excluded.length, nCalcSlices: calc.length, nSlices: 120,
+      countsLine: st.lesions.length + ' components · ' + counted.length + ' counted · ' + excluded.length + ' withheld · ' + calc.length + ' of 120 slices carry calcium',
+      countsLineB: zero ? '0 counted' : (counted.length + 2) + ' counted · ' + Math.max(0, excluded.length - 1) + ' withheld',
+      exSummary: excluded.length
+        ? excluded.length + ' withheld · ' + exArea.toFixed(1) + ' mm² · below 1.0 mm² · would add ' + withheld.toFixed(1) + ' if admitted'
+        : 'no withheld components',
+      exRows,
+      softNote: 'Coverage is not binary. A voxel at 0.35 contributes 0.35 of its area and is drawn as grain, never as an edge. The 0.10 threshold only decides where one component stops and the next begins — it does not gate the score.',
+      rows, ledgerRows, sliceLesions, track: trackSrc, frames, covBands, diffRows, projection,
+      noneHere: onSlice.length === 0,
+      trackLabel: 'VOLUME · SLICE 1' + (view === 3 ? ' · CALCIUM-ONLY STACK, 1–' + (calc.length || 0) : ''),
+      trackSummary: calc.length + ' of 120 slices carry scored calcium · ' + Math.round(calc.length / 120 * 100) + ' %' + (calc.length ? ' · z ' + (calc[0] * 3).toFixed(1) + '–' + (calc[calc.length - 1] * 3).toFixed(1) + ' mm' : ''),
+      reachNote,
+      slice, zmm: (slice * 3).toFixed(1), viewName, overlayNote,
+      selLine: selLes
+        ? selLes.tag + ' · ' + selLes.area.toFixed(1) + ' mm² · peak ' + selLes.hu + ' HU · wt ' + selLes.wt + ' · mean coverage ' + selLes.cov.toFixed(2) + ' · score ' + selLes.score.toFixed(1) + (selLes.excluded ? ' · WITHHELD' : '')
+        : onSlice.length ? 'no lesion selected · ' + onSlice.length + ' on this slice' : 'no lesion on this slice',
+      selDisamb: selLes
+        ? 'selected ' + selLes.idxOnSlice + ' of ' + selLes.nOnSlice + ' on slice ' + selLes.sl + ' · ringed in the image, lettered in the chip row, row highlighted in the table'
+        : 'click a row or a chip to ring one of ' + onSlice.length + ' components on this slice',
+      selRows: selLes ? [
+        { k: 'lesion', v: selLes.tag + ' (' + selLes.idxOnSlice + ' of ' + selLes.nOnSlice + ' here)', fg: '#E4DED0' },
+        { k: 'area', v: selLes.area.toFixed(1) + ' mm²', fg: '#E4DED0' },
+        { k: 'peak HU', v: String(selLes.hu), fg: '#E4DED0' },
+        { k: 'density weight', v: String(selLes.wt), fg: '#E4DED0' },
+        { k: 'mean coverage', v: selLes.cov.toFixed(2), fg: selLes.cov < 0.5 ? '#C98B2E' : '#E4DED0' },
+        { k: 'score', v: selLes.excluded ? 'withheld' : selLes.score.toFixed(1), fg: selLes.excluded ? '#6E7C86' : '#C98B2E' }
+      ] : [{ k: 'lesion', v: onSlice.length ? 'none selected' : 'none on slice', fg: '#6E7C86' }],
+      exhibits: (calc.length ? calc : []).slice(0, 12).map(sl => {
+        const here = st.lesions.filter(l => l.sl === sl);
+        const sc = here.filter(l => !l.excluded).reduce((a, l) => a + l.score, 0);
+        return {
+          go: go(sl), cap: sl + ' · ' + sc.toFixed(1), el: this.speckEls(here, 76, view, null, {}),
+          ring: sl === slice ? '2px solid #2E5E52' : '1px solid #3A3A34', fg: sl === slice ? '#2E5E52' : '#5C5A51'
+        };
+      }),
+      exhibitNote: zero
+        ? 'No exhibits: no slice carries a scored component. The claim is an absence, and the evidence is that all 120 frames were examined.'
+        : calc.length > 12
+          ? 'showing 12 of ' + calc.length + ' calcium-bearing slices — at this density the exhibit strip stops being a complete showing and becomes a sample, which is this direction failing honestly'
+          : calc.length + ' exhibits · every calcium-bearing slice is shown · wheel or arrows step, shift+arrow jumps between them',
+      imgLarge: this.speckEls(onSlice, 520, view, selKey, {}),
+      imgMed: this.speckEls(onSlice, 220, view, selKey, { hardColor: '#B3241C', softColor: '#B3241C', selColor: '#2F6BD8' }),
+      imgSmallA: this.speckEls(onSlice, 118, view, selKey, { hardColor: '#17607A', softColor: '#17607A' }),
+      imgSmallB: this.speckEls(onSlice.map(l => Object.assign({}, l, { cov: Math.min(1, l.cov * 1.12), rad: l.rad * 1.08 })), 118, view, selKey, { hardColor: '#8A5B00', softColor: '#8A5B00' }),
+      totalB: zero ? '0.0' : totalB.toFixed(1),
+      tierB: tierFor(totalB),
+      deltaTotal: zero ? '± 0.0' : '+ ' + (totalB - st.total).toFixed(1),
+      deltaNote: zero ? 'both empty' : '+8.2 % · ' + (tierFor(totalB) === tier ? 'same tier' : 'TIER CHANGES'),
+      flipVerdict: zero ? 'BOTH ZERO · NO FLIP' : tierFor(totalB) === tier ? 'NO TIER FLIP' : 'TIER FLIP',
+      flipColor: tierFor(totalB) === tier ? '#17191A' : '#C0342B',
+      diffPixNote: selLes ? 'B rim +' + Math.round(selLes.cov * 6) + ' soft vox' : 'select a lesion to compare rims',
+      diffSummary: zero ? 'no components in either run' : diffRows.filter(d => d.delta !== '± 0.0').length + ' of ' + diffRows.length + ' shown lesions disagree · Σ|Δ| ' + diffRows.reduce((a, d) => a + Math.abs(parseFloat(d.delta.replace('± ', '').replace('+ ', '').replace('− ', '-'))), 0).toFixed(1) + (dense ? ' · showing 60 of 180 pairs' : ''),
+      onWheel: e => { e.preventDefault(); this.step(e.deltaY > 0 ? 1 : -1, false); }
+    };
+  }
+}
+</script>
+</body>
+</html>

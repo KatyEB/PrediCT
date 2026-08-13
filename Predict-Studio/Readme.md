@@ -23,7 +23,7 @@ predict_software/Predict-Studio/
 │   ├── paths.py      # Centralized DICOM hashing and path registry
 │   ├── pipeline.py   # Pure imaging routines (load, resample, crop, inference)
 │   ├── scoring.py    # Agatston math & connected components (no torch, no file I/O)
-│   ├── render.py     # Matplotlib PNG slice overlays
+│   ├── render.py     # PIL PNG slice overlays
 │   ├── registry.py   # YAML manifest validation & SHA256 locking
 │   └── run.py        # Pipeline orchestrator & CLI entrypoint
 ├── models/

@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;1,6..72,400&family=IBM+Plex+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;700&family=Libre+Franklin:wght@400;600;800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=Manrope:wght@400;600;800&family=Chivo:wght@400;700;900&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  html, body { margin: 0; padding: 0; background: #E9E6DE; }
+  a { color: #2E5E52; }
+  a:hover { color: #14322B; }
+  ::selection { background: #D9D2C2; }
+</style>
+</helmet>
+
+<div style="min-height:100vh;background:#E9E6DE;font-family:'Newsreader',Georgia,serif;color:#191916;padding:64px 40px 120px;">
+<div style="max-width:1160px;margin:0 auto;display:flex;flex-direction:column;gap:56px;">
+
+  <header style="display:flex;flex-direction:column;gap:24px;border-bottom:1px solid #191916;padding-bottom:28px;">
+    <div style="display:flex;justify-content:space-between;align-items:baseline;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:#5C5A51;">
+      <span>PrediCT Studio — interface directions</span>
+      <span>six theses · 2026-08-13</span>
+    </div>
+    <h1 style="margin:0;font-size:60px;line-height:1.02;font-weight:400;letter-spacing:-0.02em;max-width:20ch;">Six things this interface could believe it is for.</h1>
+    <p style="margin:0;max-width:66ch;font-size:19px;line-height:1.55;color:#3A382F;text-wrap:pretty;">Each direction below starts from a different answer to one question: what is the person in front of the screen actually doing? The palette follows from that answer rather than the reverse. All six carry the same five non-negotiables, listed at the foot of each block — model identity visible without interaction, exclusions shown as exclusions, soft prediction values rendered soft, one screenshot sufficient to reconstruct the number, keyboard operable at 1440×900.</p>
+    <div style="display:flex;flex-wrap:wrap;gap:8px;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:0.06em;">
+      <a href="#d1" style="border:1px solid #C4BDAB;padding:6px 11px;text-decoration:none;">01 The Argument</a>
+      <a href="#d2" style="border:1px solid #C4BDAB;padding:6px 11px;text-decoration:none;">02 The Instrument</a>
+      <a href="#d3" style="border:1px solid #C4BDAB;padding:6px 11px;text-decoration:none;">03 The Contact Sheet</a>
+      <a href="#d4" style="border:1px solid #C4BDAB;padding:6px 11px;text-decoration:none;">04 The Ledger</a>
+      <a href="#d5" style="border:1px solid #C4BDAB;padding:6px 11px;text-decoration:none;">05 The Field</a>
+      <a href="#d6" style="border:1px solid #C4BDAB;padding:6px 11px;text-decoration:none;">06 The Diff</a>
+    </div>
+  </header>
+
+  <!-- 01 -->
+  <section id="d1" style="display:flex;flex-direction:column;gap:26px;">
+    <div style="display:grid;grid-template-columns:88px 1fr;gap:28px;align-items:start;border-top:3px solid #191916;padding-top:20px;">
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:34px;font-weight:600;line-height:1;">01</div>
+      <div style="display:flex;flex-direction:column;gap:12px;">
+        <h2 style="margin:0;font-family:'Newsreader',serif;font-weight:400;font-size:40px;line-height:1.05;letter-spacing:-0.01em;">The Argument</h2>
+        <p style="margin:0;max-width:62ch;font-size:22px;line-height:1.4;color:#191916;">The user is not looking at a scan — they are deciding whether to accept a claim, so the screen is shaped like the claim and its warrant.</p>
+        <p style="margin:0;max-width:70ch;font-size:16px;line-height:1.6;color:#4A483E;">One column, read top to bottom, in the order a skeptic asks questions: <em>what do you claim</em> → <em>on what grounds</em> → <em>show me</em> → <em>what did you throw away</em> → <em>what produced this</em>. Images appear as evidence exhibits, sized and captioned, not as a workspace. There is no viewport to fly around in; the page is finite and ends.</p>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1.05fr 1fr 1fr;gap:32px;border-top:1px solid #C4BDAB;border-bottom:1px solid #C4BDAB;padding:18px 0;">
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:#77746A;">Palette</div>
+        <div style="display:flex;flex-direction:column;gap:5px;font-family:'IBM Plex Mono',monospace;font-size:11px;">
+          <div style="display:flex;align-items:center;gap:9px;"><span style="width:26px;height:14px;background:#F4F1EA;border:1px solid #C4BDAB;"></span>#F4F1EA Manuscript</div>
+          <div style="display:flex;align-items:center;gap:9px;"><span style="width:26px;height:14px;background:#1A1A17;"></span>#1A1A17 Ink</div>
+          <div style="display:flex;align-items:center;gap:9px;"><span style="width:26px;height:14px;background:#C9C3B4;"></span>#C9C3B4 Rule</div>
+          <div style="display:flex;align-items:center;gap:9px;"><span style="width:26px;height:14px;background:#2E5E52;"></span>#2E5E52 Verdigris (counted)</div>
+          <div style="display:flex;align-items:center;gap:9px;"><span style="width:26px;height:14px;background:#8A2B2B;"></span>#8A2B2B Iron Gall (excluded)</div>
+          <div style="display:flex;align-items:center;gap:9px;"><span style="width:26px;height:14px;background:#0E0F10;"></span>#0E0F10 Well (image inset)</div>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:#77746A;">Type</div>
+        <div style="font-family:'Newsreader',serif;font-size:26px;line-height:1.1;">Newsreader 400 <span style="font-size:12px;font-family:'IBM Plex Mono',monospace;color:#77746A;">claims, prose</span></div>
+        <div style="font-family:'Libre Franklin',sans-serif;font-weight:800;font-size:12px;letter-spacing:0.1em;text-transform:uppercase;">Libre Franklin 800 <span style="font-weight:400;font-family:'IBM Plex Mono',monospace;text-transform:none;letter-spacing:0;color:#77746A;">section stubs</span></div>
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:13px;">IBM Plex Mono <span style="font-size:11px;color:#77746A;">every number, tabular</span></div>
+        <div style="font-size:14px;line-height:1.5;color:#4A483E;">Density: loose at the top, tightening downward. The claim breathes at 60px; provenance sets at 11px solid. Space encodes rank.</div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:#77746A;">Light or dark, and why</div>
+        <div style="font-size:15px;line-height:1.55;color:#3A382F;">Light. Greyscale perception is protected where it matters — each slice sits in a #0E0F10 well with a fixed HU window and a printed scale bar, so the image is on a dark ground even though the document is not. The rest of the page is argument, and argument reads better on paper.</div>
+      </div>
+    </div>
+
+    <pre style="margin:0;overflow-x:auto;background:#F4F1EA;border:1px solid #C9C3B4;padding:22px 24px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:11.5px;line-height:1.5;color:#1A1A17;">┌────────────────────────────────────────────────────────────────────────────┐
+│ PrediCT Studio        study 0417-B   ·   run 3 of 3   ·   2026-08-13 14:02  │
+├────────────────────────────────────────────────────────────────────────────┤
+│                                                                            │
+│  This study scores      1 0 6 4 . 2         SEVERE      tier 4 of 4         │
+│                                             ( >400 )    98|102 boundary far │
+│                                                                            │
+│  ── BECAUSE ──────────────────────────────────────────────────────────────  │
+│  19 of 24 candidate lesions cleared 1 mm² at threshold 0.50. They lie on    │
+│  8 of 120 slices, between z 174.0 and z 237.0 mm. Density weights 2–4.      │
+│                                                                            │
+│  ── SHOWN ────────────────────────────────────────────────────────────────  │
+│  ┌──────┐┌──────┐┌──────┐┌──────┐┌──────┐┌──────┐┌──────┐┌──────┐          │
+│  │ ▓▓ · ││  ▓▓  ││ ▓ ▓· ││  ▓   ││ ▓▓▓  ││ ·▓   ││ ▓▓   ││  ·   │          │
+│  └──────┘└──────┘└──────┘└──────┘└──────┘└──────┘└──────┘└──────┘          │
+│   sl 61   sl 64   sl 65   sl 67   sl 70   sl 71   sl 74   sl 79             │
+│  240 px wells · HU 130–1500 · prediction ≥0.50 solid, 0.20–0.50 stippled    │
+│  [ o ] originals   [ p ] overlay   [ c ] calcium only   ← → step exhibit    │
+│                                                                            │
+│  ── COUNTED ──────────────────────────────────────────────────────────────  │
+│  slice   z mm     area mm²   peak HU   wt    score                          │
+│    61   183.0        12.4       412     3     37.2                          │
+│    64   192.0        31.9       501     4    127.6                          │
+│    65   195.0         4.1       288     2      8.2   …19 rows              │
+│                                                       ────────              │
+│                                                        1064.2               │
+│                                                                            │
+│  ── EXCLUDED · recorded, not counted ─────────────────────────────────────  │
+│    58   174.0         0.6       198     1       ——   below 1 mm² minimum    │
+│    77   231.0         0.9       214     1       ——   below 1 mm² minimum    │
+│                                       5 candidates, 2.7 mm², 0.0 score      │
+│                                                                            │
+│  ── PRODUCED BY ──────────────────────────────────────────────────────────  │
+│  cacnet-v4   softmax probability   τ 0.50   HU window 130–1500              │
+│  spacing 0.39 × 0.39 × 3.00 mm   orientation LPS   crop centroid-v2         │
+│  ckpt 9f4c1a7e   2026-08-13T14:02:11Z            [ e ] export study bundle  │
+└────────────────────────────────────────────────────────────────────────────┘</pre>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:32px;">
+      <div style="display:flex;flex-direction:column;gap:8px;"><div style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:#77746A;">Remembered by</div><div style="font-size:16px;line-height:1.55;">The word <em>because</em> set as a section rule, directly under the total. The interface commits to a reason out loud.</div></div>
+      <div style="display:flex;flex-direction:column;gap:8px;"><div style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:#77746A;">Sacrifices</div><div style="font-size:16px;line-height:1.55;">Exploration. Eight exhibits are chosen for you; browsing all 120 slices is a secondary view. Repeat daily use will feel slow — this is a thing you read, not operate.</div></div>
+      <div style="display:flex;flex-direction:column;gap:8px;"><div style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:#77746A;">The risk</div><div style="font-size:16px;line-height:1.55;">Prose in a medical tool. Justified because the audience is three readers deciding trust, and a sentence can carry a warrant that a widget cannot.</div></div>
+    </div>
+    <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;line-height:1.7;color:#5C5A51;border-left:2px solid #C4BDAB;padding-left:14px;">provenance: footer block, always rendered · exclusions: own section with its own subtotal · soft values: stipple band 0.20–0.50 · screenshot: whole page is the receipt · keys: o / p / c / ← → / e</div>
+  </section>
+
+  <!-- 02 -->
+  <section id="d2" style="display:flex;flex-direction:column;gap:26px;">
+    <div style="display:grid;grid-template-columns:88px 1fr;gap:28px;align-items:start;border-top:3px solid #191916;padding-top:20px;">
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:34px;font-weight:600;line-height:1;">02</div>
+      <div style="display:flex;flex-direction:column;gap:12px;">
+        <h2 style="margin:0;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:40px;line-height:1.05;letter-spacing:-0.02em;">The Instrument</h2>
+        <p style="margin:0;max-width:62ch;font-size:22px;line-height:1.4;">The user is operating a machine over a fixed 120-position axis, and the most interesting fact in the data is which eight positions fired.</p>
+        <p style="margin:0;max-width:70ch;font-size:16px;line-height:1.6;color:#4A483E;">The whole volume is permanently on screen as a 120-cell ribbon — one cell per slice, always the same width, never scrolled. Sparsity becomes the primary graphic: 112 empty cells and 8 loaded ones. You do not navigate to find calcium; you see the distribution and jump to it. Everything is driven from the keyboard, and the ribbon is the cursor.</p>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1.05fr 1fr 1fr;gap:32px;border-top:1px solid #C4BDAB;border-bottom:1px solid #C4BDAB;padding:18px 0;">
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:#77746A;">Palette</div>
+        <div style="display:flex;flex-direction:column;gap:5px;font-family:'IBM Plex Mono',monospace;font-size:11px;">
+          <div style="display:flex;align-items:center;gap:9px;"><span style="width:26px;height:14px;background:#23272B;"></span>#23272B Graphite (chrome)</div>
+          <div style="display:flex;align-items:center;gap:9px;"><span style="width:26px;height:14px;background:#31373D;"></span>#31373D Slate (cell empty)</div>
+          <div style="display:flex;align-items:center;gap:9px;"><span style="width:26px;height:14px;background:#E4DED0;"></span>#E4DED0 Filament (type)</div>
+          <div style="display:flex;align-items:center;gap:9px;"><span style="width:26px;height:14px;background:#C98B2E;"></span>#C98B2E Amber (loaded cell)</div>
+          <div style="display:flex;align-items:center;gap:9px;"><span style="width:26px;height:14px;background:#6E7C86;"></span>#6E7C86 Zinc (sub-threshold)</div>
+          <div style="display:flex;align-items:center;gap:9px;"><span style="width:26px;height:14px;background:#000000;"></span>#000000 Aperture (image ground)</div>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:#77746A;">Type</div>
+        <div style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:26px;line-height:1.1;">Space Grotesk 700 <span style="font-size:12px;font-family:'IBM Plex Mono',monospace;font-weight:400;color:#77746A;">readouts</span></div>
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;">Space Grotesk 400 caps <span style="color:#77746A;">panel labels</span></div>
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:13px;">IBM Plex Mono 500 <span style="font-size:11px;color:#77746A;">ribbon indices, HU</span></div>
+        <div style="font-size:14px;line-height:1.5;color:#4A483E;">Density: hard 8px grid everywhere, no soft padding. Chrome is thin and constant; the image gets whatever is left.</div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:#77746A;">Light or dark, and why</div>
+        <div style="font-size:15px;line-height:1.55;color:#3A382F;">Dark, but warm graphite rather than the 2004 near-black, and deliberately not the same value as the image ground. The slice sits on true #000; the chrome sits on #23272B. That separation tells you where the data stops, which the conventional all-black viewer never does.</div>
+      </div>
+    </div>
+
+    <pre style="margin:0;overflow-x:auto;background:#23272B;border:1px solid #3A4148;padding:22px 24px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:11.5px;line-height:1.5;color:#E4DED0;">┌────────────────────────────────────────────────────────────────────────────┐
+│ cacnet-v4 · softmax · τ0.50 · HU130–1500 · 0.39×0.39×3.00 LPS · 9f4c1a7e   │
+├────────────────────────────────────────────────────────────────────────────┤
+│ VOLUME   1 ································································· 120 │
+│  ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁  │
+│  ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░  │
+│  ─────────────────────────────────────────▌█▌·█▌█▌▐█▌·█▌██·─────────────── │
+│                                      ▲ 58   61 64 65 67 70 71 74 79        │
+│  full bar = counted lesion   half = sub-threshold   ▲ = cursor              │
+│  8 of 120 slices loaded · 6.7 % of volume · z 174.0 → 237.0 mm              │
+├──────────────────────────────────────────────┬─────────────────────────────┤
+│                                              │ SLICE 64        z 192.0 mm  │
+│                                              │ ─────────────────────────── │
+│              ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒               │ lesions here          3     │
+│           ▒▒▒▒░░░░░░░░░░░░░░░▒▒▒▒            │ area              31.9 mm²  │
+│         ▒▒░░░░░░░░░░░▓▓·░░░░░░░░▒▒           │ peak HU            501      │
+│        ▒░░░░░░░░░░░░░▓█▓░░░░░░░░░▒           │ weight             4        │
+│        ▒░░░░░░░·▓░░░░░▓░░░░░░░░░░▒           │ slice score      127.6      │
+│         ▒▒░░░░░░░░░░░░░░░░░░░░░▒▒            │ ─────────────────────────── │
+│           ▒▒▒▒░░░░░░░░░░░░░▒▒▒▒              │ SOFT VOXELS                 │
+│              ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒                 │ 0.20–0.35  ····  41 vox     │
+│                                              │ 0.35–0.50  ▒▒▒▒  17 vox     │
+│  █ p≥0.50 counted   ▓ 0.35–0.50   · 0.20–0.35│ ≥0.50      ████  63 vox     │
+│  512×512 · 240 mm FOV · scale ├──10 mm──┤    │ counted at τ0.50 only       │
+├──────────────────────────────────────────────┴─────────────────────────────┤
+│ TOTAL 1064.2   SEVERE ████████████████████████████·  >400                  │
+│ 0 ── 100 ─────── 400 ──────────────────────────────▲ tier margin +664.2     │
+│ 19 counted · 5 excluded (<1 mm², 2.7 mm² recorded, list: x)                 │
+├────────────────────────────────────────────────────────────────────────────┤
+│ ←→ slice  ⇧←→ next loaded  o/p/c view  t threshold  x exclusions  e export  │
+└────────────────────────────────────────────────────────────────────────────┘</pre>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:32px;">
+      <div style="display:flex;flex-direction:column;gap:8px;"><div style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:#77746A;">Remembered by</div><div style="font-size:16px;line-height:1.55;">The ribbon. A 1440-wide bar where 112 cells are dark and 8 are amber — the sparsity of the study readable in one glance, from across the room.</div></div>
+      <div style="display:flex;flex-direction:column;gap:8px;"><div style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:#77746A;">Sacrifices</div><div style="font-size:16px;line-height:1.55;">Anatomical context and the lesion table as a table. You see one slice at a time and a per-slice readout; comparing lesion 4 against lesion 17 means a second view.</div></div>
+      <div style="display:flex;flex-direction:column;gap:8px;"><div style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:#77746A;">The risk</div><div style="font-size:16px;line-height:1.55;">Spending a full-width band on 120 mostly-empty cells. Justified because emptiness is the finding: a reviewer should feel how little of the volume the score rests on.</div></div>
+    </div>
+    <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;line-height:1.7;color:#5C5A51;border-left:2px solid #C4BDAB;padding-left:14px;">provenance: title bar, single line, never collapses · exclusions: half-height ribbon cells + always-visible count · soft values: three-tier voxel legend with counts, per slice · keys: full set on the status bar</div>
+  </section>
+
+  <!-- 03 -->
+  <section id="d3" style="display:flex;flex-direction:column;gap:26px;">
+    <div style="display:grid;grid-template-columns:88px 1fr;gap:28px;align-items:start;border-top:3px solid #191916;padding-top:20px;">
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:34px;font-weight:600;line-height:1;">03</div>
+      <div style="display:flex;flex-direction:column;gap:12px;">
+        <h2 style="margin:0;font-family:'Libre Franklin',sans-serif;font-weight:800;font-size:40px;line-height:1.05;letter-spacing:-0.02em;">The Contact Sheet</h2>
+        <p style="margin:0;max-width:62ch;font-size:22px;line-height:1.4;">The user is inspecting a specimen, and the honest unit of inspection is the whole volume at once, not a slice at a time.</p>
+        <p style="margin:0;max-width:70ch;font-size:16px;line-height:1.6;color:#4A483E;">All 120 slices print as a photographic contact sheet, 12 across, every frame identically windowed and captioned with its index. The eight frames with calcium carry registration marks in the margin. Scrolling is replaced by looking. The model's output is not a layer you toggle — it is a red crop mark drawn on the sheet, the way a picture editor marks a frame.</p>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1.05fr 1fr 1fr;gap:32px;border-top:1px solid #C4BDAB;border-bottom:1px solid #C4BDAB;padding:18px 0;">
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:#77746A;">Palette</div>
+        <div style="display:flex;flex-direction:column;gap:5px;font-family:'IBM Plex Mono',monospace;font-size:11px;">
+          <div style="display:flex;align-items:center;gap:9px;"><span style="width:26px;height:14px;background:#E7E5E0;border:1px solid #CFCCC5;"></span>#E7E5E0 Bromide (sheet)</div>
+          <div style="display:flex;align-items:center;gap:9px;"><span style="width:26px;height:14px;background:#CFCCC5;"></span>#CFCCC5 Sleeve (gutters)</div>
+          <div style="display:flex;align-items:center;gap:9px;"><span style="width:26px;height:14px;background:#101214;"></span>#101214 Emulsion (frame ground)</div>
+          <div style="display:flex;align-items:center;gap:9px;"><span style="width:26px;height:14px;background:#B3241C;"></span>#B3241C Registration (marked frames)</div>
+          <div style="display:flex;align-items:center;gap:9px;"><span style="width:26px;height:14px;background:#3B3B39;"></span>#3B3B39 Pencil (captions)</div>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:#77746A;">Type</div>
+        <div style="font-family:'Libre Franklin',sans-serif;font-weight:800;font-size:24px;line-height:1.1;">Libre Franklin 800 <span style="font-size:12px;font-family:'IBM Plex Mono',monospace;font-weight:400;color:#77746A;">sheet headings</span></div>
+        <div style="font-family:'Courier Prime',monospace;font-size:14px;">Courier Prime <span style="font-size:11px;color:#77746A;">frame captions, marginalia</span></div>
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:13px;font-weight:500;">IBM Plex Mono 500 <span style="font-size:11px;font-weight:400;color:#77746A;">totals and provenance</span></div>
+        <div style="font-size:14px;line-height:1.5;color:#4A483E;">Density: extreme and even. 120 frames on one screen, 4 px gutters, no card, no shadow. Whitespace exists only in the margins.</div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:#77746A;">Light or dark, and why</div>
+        <div style="font-size:15px;line-height:1.55;color:#3A382F;">Light sheet, dark frames. Every frame is a #101214 tile with a hard edge, so each slice keeps its own dark surround at exactly the size where greyscale judgement is possible; the sheet between them is paper. The trap of a light medical UI is grey pixels on a light field — here no pixel ever touches the paper.</div>
+      </div>
+    </div>
+
+    <pre style="margin:0;overflow-x:auto;background:#E7E5E0;border:1px solid #CFCCC5;padding:22px 24px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:11.5px;line-height:1.5;color:#26262A;">┌────────────────────────────────────────────────────────────────────────────┐
+│ STUDY 0417-B  CONTACT SHEET 1/1        cacnet-v4 · softmax · τ0.50          │
+│ 120 frames · 512² · 3.00 mm · HU 130–1500 · LPS · centroid-v2 · 9f4c1a7e    │
+├──────────────────────────────────────────────────────────┬─────────────────┤
+│ ▪01 ▪02 ▪03 ▪04 ▪05 ▪06 ▪07 ▪08 ▪09 ▪10 ▪11 ▪12          │ MARKED FRAMES   │
+│ ▪13 ▪14 ▪15 ▪16 ▪17 ▪18 ▪19 ▪20 ▪21 ▪22 ▪23 ▪24          │ ─────────────── │
+│ ▪25 ▪26 ▪27 ▪28 ▪29 ▪30 ▪31 ▪32 ▪33 ▪34 ▪35 ▪36          │ 61  12.4  37.2  │
+│ ▪37 ▪38 ▪39 ▪40 ▪41 ▪42 ▪43 ▪44 ▪45 ▪46 ▪47 ▪48          │ 64  31.9 127.6  │
+│ ▪49 ▪50 ▪51 ▪52 ▪53 ▪54 ▪55 ▪56 ▪57 ◦58 ▪59 ▪60          │ 65   4.1   8.2  │
+│ ●61 ▪62 ▪63 ●64 ●65 ▪66 ●67 ▪68 ▪69 ●70                  │ 67  22.0  88.0  │
+│ ●71 ▪72 ▪73 ●74 ▪75 ▪76 ◦77 ▪78 ●79 ▪80 ▪81 ▪82          │ 70  40.6 162.4  │
+│ ▪83 ▪84 ▪85 ▪86 ▪87 ▪88 ▪89 ▪90 ▪91 ▪92 ▪93 ▪94          │ 71  55.1 220.4  │
+│ ▪95 ▪96 ▪97 ▪98 ▪99 100 101 102 103 104 105 106          │ 74  84.2 336.8  │
+│ 107 108 109 110 111 112 113 114 115 116 117 118          │ 79  20.9  83.6  │
+│ 119 120                                                  │ ─────────────── │
+│                                                          │ ◦ NOT COUNTED   │
+│ ● 8 frames contain counted calcium   ◦ 2 sub-threshold    │ 58   0.6   ——   │
+│ ▪ empty at τ0.50                                         │ 77   0.9   ——   │
+│                                                          │ +3 more, x       │
+├──────────────────────────────────────────────────────────┴─────────────────┤
+│ ENLARGEMENT  frame 64  z 192.0 mm      ┌──────────────────────────────────┐ │
+│ ┌────────────────────────────┐         │ 3 lesions · 31.9 mm² · pk HU 501 │ │
+│ │        ░░░░░░░░░░          │  ✎ red  │ weight 4 · slice score 127.6     │ │
+│ │     ░░░░░▓█▓░░░░░░░        │  crop   │ soft 0.20–0.50 hatched, 58 vox   │ │
+│ │     ░░·▓░░░▓░░░░░░░        │  marks  │ hatched voxels are NOT in 127.6  │ │
+│ │        ░░░░░░░░░░          │  = p≥τ  │ ├── 10 mm ──┤  HU 130–1500       │ │
+│ └────────────────────────────┘         └──────────────────────────────────┘ │
+├────────────────────────────────────────────────────────────────────────────┤
+│ SHEET TOTAL  1064.2   AGATSTON   SEVERE >400     19 counted / 5 excluded    │
+│ o originals · p overlay · c marked only · ⏎ enlarge · e export sheet + csv   │
+└────────────────────────────────────────────────────────────────────────────┘</pre>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:32px;">
+      <div style="display:flex;flex-direction:column;gap:8px;"><div style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:#77746A;">Remembered by</div><div style="font-size:16px;line-height:1.55;">Eight red-marked frames in a field of 120 grey ones. The sparsity is a photograph of itself, and it prints.</div></div>
+      <div style="display:flex;flex-direction:column;gap:8px;"><div style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:#77746A;">Sacrifices</div><div style="font-size:16px;line-height:1.55;">Detail. At 12-across, a frame is roughly 90 px and a calcium speck is two pixels — you trust the marks and enlarge to verify. Also gives up the smooth scrub through z.</div></div>
+      <div style="display:flex;flex-direction:column;gap:8px;"><div style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:#77746A;">The risk</div><div style="font-size:16px;line-height:1.55;">Treating a diagnostic volume as photographic contact strips, with editor's crop marks standing in for a segmentation mask. Justified because the sheet answers the reviewer's first question — where in the body is this score coming from — without a single interaction.</div></div>
+    </div>
+    <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;line-height:1.7;color:#5C5A51;border-left:2px solid #C4BDAB;padding-left:14px;">provenance: two-line sheet header, printed with the sheet · exclusions: hollow frame marks plus a NOT COUNTED margin list · soft values: hatched, with the sentence stating they are not in the total · keys: o / p / c / ⏎ / x / e</div>
+  </section>
+
+  <!-- 04 -->
+  <section id="d4" style="display:flex;flex-direction:column;gap:26px;">
+    <div style="display:grid;grid-template-columns:88px 1fr;gap:28px;align-items:start;border-top:3px solid #191916;padding-top:20px;">
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:34px;font-weight:600;line-height:1;">04</div>
+      <div style="display:flex;flex-direction:column;gap:12px;">
+        <h2 style="margin:0;font-family:'Source Serif 4',serif;font-weight:600;font-size:40px;line-height:1.05;letter-spacing:-0.01em;">The Ledger</h2>
+        <p style="margin:0;max-width:62ch;font-size:22px;line-height:1.4;">The user is auditing arithmetic: 1064.2 is a sum, and the interface exists so that every term in it can be checked and footed by hand.</p>
+        <p style="margin:0;max-width:70ch;font-size:16px;line-height:1.6;color:#4A483E;">Borrowed from double-entry bookkeeping. The lesion table is not a sidebar — it is the screen. Every row shows its own multiplication (area × weight = score) rather than a finished figure, a running balance climbs down the right edge, and excluded candidates get a parallel column that foots to its own subtotal, so nothing leaves the books. Images shrink to 64 px stamps in the left gutter: proof that a row corresponds to a picture, not a place to look at anatomy.</p>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1.05fr 1fr 1fr;gap:32px;border-top:1px solid #C4BDAB;border-bottom:1px solid #C4BDAB;padding:18px 0;">
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:#77746A;">Palette</div>
+        <div style="display:flex;flex-direction:column;gap:5px;font-family:'IBM Plex Mono',monospace;font-size:11px;">
+          <div style="display:flex;align-items:center;gap:9px;"><span style="width:26px;height:14px;background:#F1F0E6;border:1px solid #CFCCC5;"></span>#F1F0E6 Bond</div>
+          <div style="display:flex;align-items:center;gap:9px;"><span style="width:26px;height:14px;background:#DCE3DA;"></span>#DCE3DA Banding (alt rows)</div>
+          <div style="display:flex;align-items:center;gap:9px;"><span style="width:26px;height:14px;background:#24457E;"></span>#24457E Rule Blue (grid, heads)</div>
+          <div style="display:flex;align-items:center;gap:9px;"><span style="width:26px;height:14px;background:#1C1C1A;"></span>#1C1C1A Entry</div>
+          <div style="display:flex;align-items:center;gap:9px;"><span style="width:26px;height:14px;background:#A8241F;"></span>#A8241F Foot Red (totals, exclusions)</div>
+          <div style="display:flex;align-items:center;gap:9px;"><span style="width:26px;height:14px;background:#8C8C82;"></span>#8C8C82 Void (nil values)</div>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:#77746A;">Type</div>
+        <div style="font-family:'Source Serif 4',serif;font-weight:600;font-size:26px;line-height:1.1;">Source Serif 4 <span style="font-size:12px;font-family:'IBM Plex Mono',monospace;font-weight:400;color:#77746A;">sheet titles, footings</span></div>
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:13px;font-weight:500;">IBM Plex Mono 500 <span style="font-size:11px;font-weight:400;color:#77746A;">every entry, right-aligned, tabular</span></div>
+        <div style="font-family:'Source Serif 4',serif;font-size:12px;letter-spacing:0.12em;text-transform:uppercase;">Source Serif caps <span style="font-family:'IBM Plex Mono',monospace;letter-spacing:0;text-transform:none;color:#77746A;">column heads</span></div>
+        <div style="font-size:14px;line-height:1.5;color:#4A483E;">Density: 26 px rows, hairline blue grid, zero padding inside cells. The only generous space on the page is above the footing.</div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:#77746A;">Light or dark, and why</div>
+        <div style="font-size:15px;line-height:1.55;color:#3A382F;">Light, and the greyscale constraint is dismissed on purpose: this direction admits it is bad at looking at images and does not pretend otherwise. The 64 px stamps are identification thumbnails, drawn on their own black tiles with a fixed window; any real inspection hands off to the enlargement view or to direction 02.</div>
+      </div>
+    </div>
+
+    <pre style="margin:0;overflow-x:auto;background:#F1F0E6;border:1px solid #24457E;padding:22px 24px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:11.5px;line-height:1.5;color:#1C1C1A;">┌────────────────────────────────────────────────────────────────────────────┐
+│ CALCIUM SCORE LEDGER   study 0417-B   run 3   sheet 1 of 1                  │
+│ model cacnet-v4 · softmax probability · threshold τ 0.50 · HU 130–1500      │
+│ voxel 0.39 × 0.39 × 3.00 mm · LPS · crop centroid-v2 · ckpt 9f4c1a7e        │
+╞═════╤══════╤═══════╤═════════╤════╤═══════════════════╤═════════╤══════════╡
+│ STMP│SLICE │  z mm │ area mm²│ pk │ WEIGHT DERIVATION │  SCORE  │ BALANCE  │
+├─────┼──────┼───────┼─────────┼────┼───────────────────┼─────────┼──────────┤
+│ ▪   │  61  │ 183.0 │   12.4  │412 │ 400–500 → wt 3    │ 12.4×3  │          │
+│     │      │       │         │    │                   │  = 37.2 │    37.2  │
+│ ▪   │  64  │ 192.0 │   31.9  │501 │ ≥500   → wt 4     │ 31.9×4  │          │
+│     │      │       │         │    │                   │ = 127.6 │   164.8  │
+│ ▪   │  65  │ 195.0 │    4.1  │288 │ 200–299 → wt 2    │  4.1×2  │          │
+│     │      │       │         │    │                   │  =  8.2 │   173.0  │
+│ ▪   │  67  │ 201.0 │   22.0  │455 │ 400–500 → wt 3    │ 22.0×3  │   239.0  │
+│ ▪   │  70  │ 210.0 │   40.6  │612 │ ≥500   → wt 4     │= 162.4  │   401.4  │
+│ ·   │  ··  │  ···  │   ···   │··· │  ··· 14 rows ···  │  ···    │    ···   │
+│ ▪   │  79  │ 237.0 │   20.9  │388 │ 300–399 → wt 3    │ =  83.6 │  1064.2  │
+├─────┴──────┴───────┴─────────┴────┴───────────────────┴─────────┼──────────┤
+│ CARRIED FORWARD   19 entries counted                            │  1064.2  │
+╞═════════════════════════════════════════════════════════════════╧══════════╡
+│ CONTRA · RECORDED, NOT COUNTED   (area below 1 mm² clinical minimum)        │
+├─────┬──────┬───────┬─────────┬────┬───────────────────┬─────────┬──────────┤
+│ ▫   │  58  │ 174.0 │    0.6  │198 │ 130–199 → wt 1    │  ——     │   0.0    │
+│ ▫   │  77  │ 231.0 │    0.9  │214 │ 200–299 → wt 2    │  ——     │   0.0    │
+│ ▫   │  ··  │  ···  │   ···   │··· │   3 more rows     │  ——     │   0.0    │
+│ SUBTOTAL WITHHELD   5 entries · 2.7 mm² · would add 6.9 if admitted         │
+╞════════════════════════════════════════════════════════════════════════════╡
+│ SOFT MASS NOT ADMITTED   voxels 0.20 ≤ p < 0.50 : 1 384 vox ≡ 11.2 mm²     │
+│ admitting them at τ0.35 would foot to 1 121.6 → tier SEVERE (unchanged)     │
+╞════════════════════════════════════════════════════════════════════════════╡
+│ FOOTING   1064.2   AGATSTON      TIER  SEVERE   ( >400 · next bound none )  │
+│ prepared 2026-08-13T14:02:11Z    ⏎ open entry   x contra   t τ   e export    │
+└────────────────────────────────────────────────────────────────────────────┘</pre>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:32px;">
+      <div style="display:flex;flex-direction:column;gap:8px;"><div style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:#77746A;">Remembered by</div><div style="font-size:16px;line-height:1.55;">The contra section, and the line that says what the withheld rows <em>would</em> have added. The exclusion is quantified instead of merely disclosed.</div></div>
+      <div style="display:flex;flex-direction:column;gap:8px;"><div style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:#77746A;">Sacrifices</div><div style="font-size:16px;line-height:1.55;">The image, almost entirely. Nobody will catch a segmentation error here. It also spends two rows per lesion to show the multiplication, so a 24-lesion study scrolls.</div></div>
+      <div style="display:flex;flex-direction:column;gap:8px;"><div style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:#77746A;">The risk</div><div style="font-size:16px;line-height:1.55;">Accounting-form clichés — rule blue, red footings, banded rows — in a deep-learning tool. Justified because the reviewer's real objection is arithmetic, and accountancy has a 500-year-old grammar for showing that a total is honest.</div></div>
+    </div>
+    <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;line-height:1.7;color:#5C5A51;border-left:2px solid #C4BDAB;padding-left:14px;">provenance: three-line sheet head above the rules · exclusions: contra section with its own subtotal and counterfactual · soft values: soft-mass band, stated in mm² and in what it would change · keys: ⏎ / x / t / e</div>
+  </section>
+
+  <!-- 05 -->
+  <section id="d5" style="display:flex;flex-direction:column;gap:26px;">
+    <div style="display:grid;grid-template-columns:88px 1fr;gap:28px;align-items:start;border-top:3px solid #191916;padding-top:20px;">
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:34px;font-weight:600;line-height:1;">05</div>
+      <div style="display:flex;flex-direction:column;gap:12px;">
+        <h2 style="margin:0;font-family:'Manrope',sans-serif;font-weight:800;font-size:40px;line-height:1.05;letter-spacing:-0.03em;">The Field</h2>
+        <p style="margin:0;max-width:62ch;font-size:22px;line-height:1.4;">The protagonist is the uncertainty, not the number: the user is asking how much of this score is a decision the model made and how much is a decision the threshold made.</p>
+        <p style="margin:0;max-width:70ch;font-size:16px;line-height:1.6;color:#4A483E;">There is no single score in the hero position. There is a short spine of scores — the total at τ 0.30, 0.40, 0.50, 0.60, 0.70 — with the tier each one lands in, and the current setting marked. The volume appears once, as a fused coronal projection of the probability field: a column of soft light, not 120 slices. Slices exist, but as a drill-down. Probability is rendered as luminance and grain, never as an outline, because an outline is a claim of certainty the model did not make.</p>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1.05fr 1fr 1fr;gap:32px;border-top:1px solid #C4BDAB;border-bottom:1px solid #C4BDAB;padding:18px 0;">
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:#77746A;">Palette</div>
+        <div style="display:flex;flex-direction:column;gap:5px;font-family:'IBM Plex Mono',monospace;font-size:11px;">
+          <div style="display:flex;align-items:center;gap:9px;"><span style="width:26px;height:14px;background:#7C838A;"></span>#7C838A Field (mid-grey ground)</div>
+          <div style="display:flex;align-items:center;gap:9px;"><span style="width:26px;height:14px;background:#5C646B;"></span>#5C646B Recess (panels)</div>
+          <div style="display:flex;align-items:center;gap:9px;"><span style="width:26px;height:14px;background:#F3F5F6;"></span>#F3F5F6 Certain (p→1.0)</div>
+          <div style="display:flex;align-items:center;gap:9px;"><span style="width:26px;height:14px;background:#1B2027;"></span>#1B2027 Absent (p→0.0)</div>
+          <div style="display:flex;align-items:center;gap:9px;"><span style="width:26px;height:14px;background:#2F6BD8;"></span>#2F6BD8 Threshold (the cut)</div>
+          <div style="display:flex;align-items:center;gap:9px;"><span style="width:26px;height:14px;background:#D8B22F;"></span>#D8B22F Boundary (tier margin)</div>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:#77746A;">Type</div>
+        <div style="font-family:'Manrope',sans-serif;font-weight:800;font-size:26px;line-height:1.1;letter-spacing:-0.02em;">Manrope 800 <span style="font-size:12px;font-family:'IBM Plex Mono',monospace;font-weight:400;letter-spacing:0;color:#77746A;">score spine</span></div>
+        <div style="font-family:'Manrope',sans-serif;font-weight:400;font-size:15px;">Manrope 400 <span style="font-size:11px;font-family:'IBM Plex Mono',monospace;color:#77746A;">captions, hedges</span></div>
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:13px;">IBM Plex Mono <span style="font-size:11px;color:#77746A;">probabilities, provenance</span></div>
+        <div style="font-size:14px;line-height:1.5;color:#4A483E;">Density: sparse and centred. One graphic, one spine, one provenance strip. Numbers are large but never alone — every figure carries the condition it holds under.</div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:#77746A;">Light or dark, and why</div>
+        <div style="font-size:15px;line-height:1.55;color:#3A382F;">Neither: a mid-grey ground at roughly 45 % luminance. On black, a 0.35 voxel reads as faintly present; on white it reads as faintly absent. Against mid-grey, soft values can move in both directions and a partial value looks partial. This is the direction where the greyscale question is answered by refusing both defaults.</div>
+      </div>
+    </div>
+
+    <pre style="margin:0;overflow-x:auto;background:#7C838A;border:1px solid #5C646B;padding:22px 24px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:11.5px;line-height:1.5;color:#12161B;">┌────────────────────────────────────────────────────────────────────────────┐
+│ cacnet-v4  probability volume  ·  HU 130–1500  ·  0.39×0.39×3.00 LPS        │
+│ centroid-v2  ·  ckpt 9f4c1a7e  ·  2026-08-13T14:02:11Z  ·  nothing binary   │
+├─────────────────────────────────┬──────────────────────────────────────────┤
+│  THE SCORE DEPENDS ON THE CUT   │  PROBABILITY FIELD · coronal projection   │
+│                                 │  120 slices fused · max p along y         │
+│  τ 0.30    1 121.6   SEVERE     │                                          │
+│  τ 0.40    1 093.0   SEVERE     │        ·                                 │
+│ ▸τ 0.50    1 064.2   SEVERE ◂   │       ░▒░          ░·                    │
+│  τ 0.60      —  912.8  SEVERE   │      ░▒█▒░       ·▒░                     │
+│  τ 0.70      —  742.1  SEVERE   │       ▒█▓        ▒█▒·                    │
+│                                 │        ░▒▒·     ░▓▒                      │
+│  tier is stable across the       │          ·░░   ░▒·                      │
+│  whole sweep. the number is not.│            ░▒▒▒▒░                        │
+│  spread 379.5 (35.7 % of τ0.50) │             ·░·                          │
+│                                 │                                          │
+│  ── nearest tier boundary ────  │  p  0.0 ▁▂▃▄▅▆▇█ 1.0   no outlines drawn  │
+│  400 is 664.2 below the total.  │  z ├───────────────────────────────┤ 360mm│
+│  no lesion decision flips it.   │  grain = uncertainty; solid = p ≥ 0.9     │
+├─────────────────────────────────┴──────────────────────────────────────────┤
+│ WHERE THE MASS SITS                                                        │
+│ p 0.90–1.00  ████████████████████████  63 % of scored area   certain core   │
+│ p 0.50–0.90  ██████████                27 %                  counted, soft  │
+│ p 0.20–0.50  ▒▒▒▒                      10 % ≡ 11.2 mm²       NOT counted    │
+│ p 0.00–0.20  ·                          —                    ignored        │
+├────────────────────────────────────────────────────────────────────────────┤
+│ 24 candidates · 19 counted · 5 held out below 1 mm² (2.7 mm², listed: x)     │
+│ t sweep τ   ⏎ enter slice view   x held-out list   s per-lesion p   e export │
+└────────────────────────────────────────────────────────────────────────────┘</pre>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:32px;">
+      <div style="display:flex;flex-direction:column;gap:8px;"><div style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:#77746A;">Remembered by</div><div style="font-size:16px;line-height:1.55;">Five totals stacked where a hero number would be, with the tier repeating unchanged beside them. The interface argues that the tier is the finding and the number is a setting.</div></div>
+      <div style="display:flex;flex-direction:column;gap:8px;"><div style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:#77746A;">Sacrifices</div><div style="font-size:16px;line-height:1.55;">A quotable answer. Asked "what did it score", this screen replies "under which threshold" — correct, and tiring on the hundredth study. Per-slice inspection is demoted to a keystroke.</div></div>
+      <div style="display:flex;flex-direction:column;gap:8px;"><div style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:#77746A;">The risk</div><div style="font-size:16px;line-height:1.55;">A mid-grey interface, which looks unfinished for the first ten minutes. Justified because it is the only ground on which a 0.35 can look like a 0.35 — and partial values are the project's scientific point.</div></div>
+    </div>
+    <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;line-height:1.7;color:#5C5A51;border-left:2px solid #C4BDAB;padding-left:14px;">provenance: two-line header including output type · exclusions: held-out count and area on the status line · soft values: the entire premise — grain, luminance ramp, mass histogram, τ sweep · keys: t / ⏎ / x / s / e</div>
+  </section>
+
+  <!-- 06 -->
+  <section id="d6" style="display:flex;flex-direction:column;gap:26px;">
+    <div style="display:grid;grid-template-columns:88px 1fr;gap:28px;align-items:start;border-top:3px solid #191916;padding-top:20px;">
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:34px;font-weight:600;line-height:1;">06</div>
+      <div style="display:flex;flex-direction:column;gap:12px;">
+        <h2 style="margin:0;font-family:'Chivo',sans-serif;font-weight:900;font-size:40px;line-height:1.05;letter-spacing:-0.02em;">The Diff</h2>
+        <p style="margin:0;max-width:62ch;font-size:22px;line-height:1.4;">The unit of study is not one run but a pair, because the actual research question is which labelling strategy produced the difference.</p>
+        <p style="margin:0;max-width:70ch;font-size:16px;line-height:1.6;color:#4A483E;">Two mirrored columns, strategy A and strategy B, with a narrow disagreement gutter down the middle carrying the delta for every lesion and every slice. Agreement is drawn quietly; disagreement is the only thing with contrast. A tier flip anywhere in the pair is escalated to the header, because a flip is the only difference that changes a decision. Single-run mode exists and looks like a diff with an empty right column, which is honest about what this tool is for.</p>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1.05fr 1fr 1fr;gap:32px;border-top:1px solid #C4BDAB;border-bottom:1px solid #C4BDAB;padding:18px 0;">
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:#77746A;">Palette</div>
+        <div style="display:flex;flex-direction:column;gap:5px;font-family:'IBM Plex Mono',monospace;font-size:11px;">
+          <div style="display:flex;align-items:center;gap:9px;"><span style="width:26px;height:14px;background:#F2F2EF;border:1px solid #CFCCC5;"></span>#F2F2EF Bench (ground)</div>
+          <div style="display:flex;align-items:center;gap:9px;"><span style="width:26px;height:14px;background:#17607A;"></span>#17607A Strategy A</div>
+          <div style="display:flex;align-items:center;gap:9px;"><span style="width:26px;height:14px;background:#8A5B00;"></span>#8A5B00 Strategy B</div>
+          <div style="display:flex;align-items:center;gap:9px;"><span style="width:26px;height:14px;background:#9A9A93;"></span>#9A9A93 Agreement (quiet)</div>
+          <div style="display:flex;align-items:center;gap:9px;"><span style="width:26px;height:14px;background:#C0342B;"></span>#C0342B Flip (tier change)</div>
+          <div style="display:flex;align-items:center;gap:9px;"><span style="width:26px;height:14px;background:#0F1112;"></span>#0F1112 Frame ground</div>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:#77746A;">Type</div>
+        <div style="font-family:'Chivo',sans-serif;font-weight:900;font-size:26px;line-height:1.1;">Chivo 900 <span style="font-size:12px;font-family:'IBM Plex Mono',monospace;font-weight:400;color:#77746A;">deltas, verdicts</span></div>
+        <div style="font-family:'Chivo',sans-serif;font-weight:400;font-size:15px;">Chivo 400 <span style="font-size:11px;font-family:'IBM Plex Mono',monospace;color:#77746A;">strategy labels, notes</span></div>
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:13px;">IBM Plex Mono <span style="font-size:11px;color:#77746A;">both ledgers, aligned row for row</span></div>
+        <div style="font-size:14px;line-height:1.5;color:#4A483E;">Density: strict mirror symmetry, identical row heights left and right so the eye can scan the gutter alone. Only the delta column is allowed to be loud.</div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:#77746A;">Light or dark, and why</div>
+        <div style="font-size:15px;line-height:1.55;color:#3A382F;">Light, because the primary object is a comparison of numbers and text, and two dark image panels side by side would dominate a screen where they are secondary. Both slice panels are #0F1112 tiles with the same window and the same zoom — comparison is only valid if the two frames are identically treated, so the tile is the constraint, not the theme.</div>
+      </div>
+    </div>
+
+    <pre style="margin:0;overflow-x:auto;background:#F2F2EF;border:1px solid #CFCCC5;padding:22px 24px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:11.5px;line-height:1.5;color:#17191A;">┌────────────────────────────────────────────────────────────────────────────┐
+│ study 0417-B   PAIR   A: binary-label v4  ·  B: soft-label v4               │
+│ shared: HU 130–1500 · 0.39×0.39×3.00 LPS · centroid-v2 · τ 0.50             │
+│ differs: label strategy · ckpt A 9f4c1a7e / B 3b81d02c    ⚠ NO TIER FLIP    │
+├──────────────────────────────┬──────────────┬──────────────────────────────┤
+│ A  BINARY LABELS             │    Δ  B − A  │             SOFT LABELS  B    │
+│ ──────────────────────────── │ ──────────── │ ──────────────────────────── │
+│ TOTAL            1 064.2     │    + 87.4    │     1 151.6            TOTAL │
+│ tier               SEVERE    │   same tier  │       SEVERE            tier │
+│ lesions counted        19     │      + 2     │          21        counted   │
+│ excluded <1 mm²         5     │      − 1     │           4        excluded  │
+│ ──────────────────────────── │ ──────────── │ ──────────────────────────── │
+│ sl 61   12.4mm²   wt3  37.2  │    + 0.0     │  37.2  wt3   12.4mm²   sl 61 │
+│ sl 64   31.9mm²   wt4 127.6  │    + 8.0     │ 135.6  wt4   33.9mm²   sl 64 │
+│ sl 65    4.1mm²   wt2   8.2  │   + 12.3 ▲   │  20.5  wt2    8.2mm²   sl 65 │
+│ sl 67   22.0mm²   wt3  88.0  │    − 3.0     │  85.0  wt3   21.2mm²   sl 67 │
+│ sl 70   40.6mm²   wt4 162.4  │    + 0.0     │ 162.4  wt4   40.6mm²   sl 70 │
+│ sl 71   ·· agree, 6 rows collapsed ·· press a to expand ····················│
+│ sl 77      ——  excluded 0.9  │  ADMITTED ▲  │   3.6  wt2    1.8mm²   sl 77 │
+│ sl 84      —— absent         │   NEW  ▲     │   9.0  wt3    3.0mm²   sl 84 │
+├──────────────────────────────┴──────────────┴──────────────────────────────┤
+│ SLICE 65 · z 195.0 mm · same window, same zoom, same crop                   │
+│ ┌───────────────────────┐   disagreement   ┌───────────────────────┐        │
+│ │      ░░░░░░░░         │   ▒ = B only     │      ░░░░░░░░         │        │
+│ │    ░░░▓█▓░░░░░        │   ▓ = A only     │    ░░░▓█▓▒▒░░░        │        │
+│ │    ░░·░░░░░░░         │   soft edge      │    ░░·▒░░░░░░         │        │
+│ └───────────────────────┘   grew by 4 vox  └───────────────────────┘        │
+│ A: hard edge at p≥0.50        B: p 0.35–0.50 rendered soft, now above τ      │
+├────────────────────────────────────────────────────────────────────────────┤
+│ 3 of 24 lesions disagree · Σ|Δ| 23.3 · worst 12.3 at sl 65 · no tier change  │
+│ ⇥ swap sides · a expand agreements · x exclusions both runs · e export pair  │
+└────────────────────────────────────────────────────────────────────────────┘</pre>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:32px;">
+      <div style="display:flex;flex-direction:column;gap:8px;"><div style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:#77746A;">Remembered by</div><div style="font-size:16px;line-height:1.55;">The header verdict: <em>NO TIER FLIP</em>. The screen leads with the only comparison that would change what anyone does.</div></div>
+      <div style="display:flex;flex-direction:column;gap:8px;"><div style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:#77746A;">Sacrifices</div><div style="font-size:16px;line-height:1.55;">Room. Two of everything at 1440 px means both images are small and both ledgers are abbreviated, and agreements collapse by default — you have to ask to see what matched.</div></div>
+      <div style="display:flex;flex-direction:column;gap:8px;"><div style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:#77746A;">The risk</div><div style="font-size:16px;line-height:1.55;">Collapsing agreement, which hides most of the data by default. Justified because the paper's finding lives entirely in the disagreements, and every collapsed row is one keystroke from visible.</div></div>
+    </div>
+    <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;line-height:1.7;color:#5C5A51;border-left:2px solid #C4BDAB;padding-left:14px;">provenance: three-line pair header split into shared and differing settings · exclusions: kept as rows, with ADMITTED / NEW markers when a strategy changes their status · soft values: rendered soft in both panels; B's soft edge is called out in words · keys: ⇥ / a / x / e</div>
+  </section>
+
+  <footer style="display:flex;flex-direction:column;gap:20px;border-top:3px solid #191916;padding-top:24px;">
+    <h3 style="margin:0;font-size:26px;font-weight:400;">How these divide up</h3>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:24px;font-size:15px;line-height:1.55;color:#3A382F;">
+      <div><strong style="font-weight:500;">Protagonist.</strong> The reasoning chain (01) · the volume as a fixed axis (02) · the image population (03) · the arithmetic (04) · the uncertainty (05) · the delta between strategies (06).</div>
+      <div><strong style="font-weight:500;">Form of the volume.</strong> Chosen exhibits (01) · a 120-cell index (02) · a printed sheet (03) · identification stamps (04) · one fused projection (05) · two matched tiles (06).</div>
+      <div><strong style="font-weight:500;">Ground.</strong> Paper with dark wells (01, 03, 06) · warm graphite separated from the image black (02) · paper that admits it is not for looking (04) · mid-grey so partial values read partial (05).</div>
+    </div>
+    <p style="margin:0;max-width:74ch;font-size:16px;line-height:1.6;color:#4A483E;">Two are combinable without losing their thesis: 02 as the working instrument with 01 as its export view, or 05's threshold sweep as a band inside 04's footing. 03 and 06 are whole-screen commitments and do not merge with anything.</p>
+  </footer>
+
+</div>
+</div>
+</x-dc>
+</body>
+</html>

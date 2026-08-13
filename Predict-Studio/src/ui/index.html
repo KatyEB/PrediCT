@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PrediCT Studio</title>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="app.css">
+</head>
+<body>
+  <!-- A: PROVENANCE STRIP -->
+  <div id="provenance-strip" class="band band-a">
+    <span id="prov-1"></span>
+    <span id="prov-2"></span>
+    <span id="prov-3"></span>
+  </div>
+
+  <!-- B: VOLUME TRACK -->
+  <div class="band band-b">
+    <div class="track-header">
+      <span id="track-left-label">VOLUME · SLICE <span id="track-slice-num">0</span></span>
+      <span id="track-right-label"></span>
+    </div>
+    <div id="volume-track" class="track-bars">
+      <!-- Bars dynamically generated -->
+    </div>
+    <div class="track-footer">
+      <span class="legend-accent">█ carries scored calcium</span>
+      <span class="legend-muted">▌ sub-minimum, recorded not counted</span>
+      <span id="track-legend-cursor">▲ cursor slice 0</span>
+      <span id="track-legend-reach">all slices reachable</span>
+    </div>
+  </div>
+
+  <!-- C & D container -->
+  <div class="band-c-d">
+    <!-- C: VIEWPORT -->
+    <div id="viewport" class="pane-c">
+      <div id="image-box">
+        <img id="img-ct" src="" alt="" draggable="false" />
+        <img id="img-mask" src="" alt="" draggable="false" />
+        <canvas id="canvas-ring"></canvas>
+      </div>
+      <div id="viewport-caption">
+        <span id="vp-dim"></span><br>
+        <span id="vp-hu"></span><br>
+        <span id="vp-overlay"></span>
+      </div>
+      <div id="view-chips">
+        <button id="btn-view-1" class="view-chip">1 original</button>
+        <button id="btn-view-2" class="view-chip active">2 prediction</button>
+        <button id="btn-view-3" class="view-chip">3 calcium only</button>
+      </div>
+    </div>
+
+    <!-- D: RIGHT RAIL -->
+    <div class="pane-d">
+      <div class="rail-header">
+        <div class="rail-header-title">
+          <span id="rail-slice-num" class="grotesk-19">SLICE 0</span>
+          <span id="rail-z-mm" class="mono-11">z 0 mm</span>
+        </div>
+        <div id="rail-lesion-chips" class="chips-container">
+          <!-- Lesion chips -->
+        </div>
+      </div>
+      
+      <div class="rail-body scrollable">
+        <div class="section">
+          <div class="section-title">SELECTED LESION</div>
+          <div id="selected-lesion-rows">
+            <!-- Key value rows -->
+          </div>
+        </div>
+
+        <div id="coverage-section" class="section" style="display: none;">
+          <div class="section-title">COVERAGE ON THIS SLICE</div>
+          <div id="coverage-bars">
+            <!-- Coverage bars -->
+          </div>
+          <div class="coverage-note">
+            Coverage is not binary. A voxel at 0.35 contributes 0.35 of its area and is drawn as grain, never as an edge. The 0.10 threshold only decides where one component stops and the next begins — it does not gate the score.
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">LESIONS · CLICK TO SELECT</div>
+          <table class="lesions-table">
+            <tbody id="lesions-table-body">
+              <!-- Rows -->
+            </tbody>
+          </table>
+          <div id="empty-state-msg" style="display:none;" class="empty-note">
+            No component reached 1.0 mm². Slices were predicted and scored; the largest connected coverage component measured 0.0 mm², below the minimum, and is recorded as withheld.
+          </div>
+        </div>
+
+        <div class="section">
+          <div id="excluded-title" class="section-title">EXCLUDED · 0</div>
+          <div id="excluded-summary" class="excluded-summary">
+            0 withheld · 0.0 mm² · below 1.0 mm² · would add 0.0 if admitted
+          </div>
+        </div>
+      </div>
+
+      <div class="rail-footer">
+        <div class="footer-total-row">
+          <span class="total-label">TOTAL</span>
+          <span id="total-score" class="grotesk-26">0</span>
+          <span id="total-tier" class="tier-label">ZERO</span>
+        </div>
+        <div class="tier-bar-container">
+          <div id="tier-fill" class="tier-fill"></div>
+          <div class="tier-tick" style="left:7.14%"></div> <!-- 100 / 1400 -->
+          <div class="tier-tick" style="left:28.57%"></div> <!-- 400 / 1400 -->
+        </div>
+        <div id="tier-note" class="tier-note">bounds 0 / 1–100 / 101–400 / >400 · E export · ? keys</div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Overlay elements (legends, export, etc) -->
+  <div id="overlay-keys" class="overlay" style="display:none;">
+    <div class="overlay-box">
+      <div class="overlay-title">INTERACTION CONTRACT · IDENTICAL IN ALL SIX</div>
+      wheel over image — step one slice<br>
+      ↑ ↓ ← → — step one slice<br>
+      shift + arrow — next / prev slice with calcium<br>
+      1 / 2 / 3 — Original · Prediction · Calcium only<br>
+      click lesion row — jump to slice, select lesion<br>
+      click slice index — jump to that slice<br>
+      E — export menu · ? — this legend<br>
+    </div>
+  </div>
+  
+  <script src="app.js"></script>
+</body>
+</html>

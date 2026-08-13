@@ -15,7 +15,7 @@ from pathlib import Path
 import hashlib
 import SimpleITK as sitk
 
-ROOT = Path(__file__).resolve().parent.parent
+ROOT = Path(__file__).resolve().parent.parent.parent
 DATA = ROOT / "data"
 MODELS = ROOT / "models"
 
