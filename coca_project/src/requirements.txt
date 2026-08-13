@@ -1,5 +1,0 @@
-numpy
-pandas
-SimpleITK
-opencv-python
-tqdm
