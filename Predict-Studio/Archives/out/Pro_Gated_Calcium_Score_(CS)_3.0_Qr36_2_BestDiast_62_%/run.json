@@ -1,6 +1,0 @@
-{
-  "model_weights": "/pscratch/sd/s/soham95/predict_software/Predict-Studio/models/approach1_roi_cropped/best_model.pth",
-  "date": "2026-08-12T22:51:26.227395",
-  "agatston_total": 1068.3676,
-  "calcium_volume_mm3": 945.4313999999999
-}

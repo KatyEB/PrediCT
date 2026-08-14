@@ -439,10 +439,7 @@ function renderInstrument() {
   const { w } = paintPane('i-pane', vp.clientWidth - 28, vp.clientHeight - 28);
   const sp = r.spacing || [0.37, 0.37, 3.0];
   const barPx = Math.round((10 / sp[0]) * (w / state.imgW));
-  document.getElementById('i-caption').textContent =
-    `${state.imgW} × ${state.imgH} · ${sp[0].toFixed(2)} mm in-plane · 10 mm ≈ ${barPx} px on screen\n` +
-    `display window baked into the PNG · model saw ${r.hu_window[0]}…${r.hu_window[1]} HU\n` +
-    overlayNote();
+  document.getElementById('i-caption').textContent = '';
 
   // ── rail head
   document.getElementById('i-slice').textContent = `SLICE ${state.slice}`;
