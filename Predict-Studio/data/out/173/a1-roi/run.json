@@ -1,5 +1,5 @@
 {
-  "agatston_total": 853.9822000000001,
+  "agatston_total": 853.9822220113756,
   "risk_category": "severe",
   "n_lesions": 10,
   "n_lesions_all": 12,
@@ -15,16 +15,22 @@
   "study_id": "173",
   "model_id": "a1-roi",
   "cropped": true,
+  "shape": [
+    46,
+    429,
+    452
+  ],
+  "output": "binary",
   "hu_window": [
     0,
     1200
   ],
   "spacing": [
-    0.37,
-    0.37,
+    0.3700000047683716,
+    0.3700000047683716,
     3.0
   ],
   "sha256": "3fd07f9aad53c75be76b1279c8d861d82f8e25ffc817c414e4e7b2aab92be0af",
   "locator_version": "2.15.0",
-  "date": "2026-08-13T01:05:36.291591"
+  "date": "2026-08-13T21:55:34.120244"
 }
