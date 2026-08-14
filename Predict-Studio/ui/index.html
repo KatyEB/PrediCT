@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PrediCT Studio</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,300;6..72,400;6..72,500&family=IBM+Plex+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;700&family=Libre+Franklin:wght@400;600;800&display=swap">
+<link rel="stylesheet" href="app.css">
+
+<!-- Tab bar. Two directions from the design prototypes: Argument and Instrument.
+     Both read the same state; only the presentation differs. -->
+<div id="tabs">
+  <span class="tabs-label">PrediCT STUDIO</span>
+  <button data-dir="1">01 Argument</button>
+  <button data-dir="2">02 Instrument</button>
+  <span class="tabs-spacer"></span>
+  <span class="tabs-label">VIEW</span>
+  <button data-view="1">1 original</button>
+  <button data-view="2">2 prediction</button>
+  <button data-view="3">3 calcium only</button>
+  <span class="tabs-study" id="tabs-study"></span>
+</div>
+
+<div id="err" hidden></div>
+
+<!-- ══════════════ 01 ARGUMENT ══════════════ -->
+<div id="d1" class="dir">
+  <div class="a-prov"><span>PrediCT STUDIO · THE ARGUMENT</span><span id="a-prov1"></span></div>
+  <div class="a-prov2"><span id="a-prov2"></span><span id="a-prov3"></span></div>
+
+  <div class="a-body">
+    <div class="a-main">
+      <div class="a-claim">
+        <div class="a-claim-num">
+          <span class="a-kicker">THIS STUDY SCORES</span>
+          <span class="a-total" id="a-total">—</span>
+        </div>
+        <div class="a-claim-tier">
+          <span class="a-tier" id="a-tier"></span>
+          <span class="a-tiernote" id="a-tiernote"></span>
+        </div>
+      </div>
+
+      <div class="a-section">
+        <div class="a-rule"><span class="a-kicker green">BECAUSE</span><i></i></div>
+        <p class="a-because" id="a-because"></p>
+      </div>
+
+      <div class="a-section a-shown">
+        <div class="a-rule">
+          <span class="a-kicker green">SHOWN · <b id="a-viewname"></b></span><i></i>
+          <span class="a-note" id="a-overlay"></span>
+        </div>
+        <div class="a-exhibit-row">
+          <div class="a-exhibit-main">
+            <div class="pane" id="a-pane" data-pane="a">
+              <img class="pane-ct" alt="">
+              <img class="pane-mask" alt="">
+              <canvas class="pane-ring"></canvas>
+              <div class="pane-labels"></div>
+            </div>
+            <span class="a-note" id="a-panecap"></span>
+          </div>
+          <div class="a-exhibit-side">
+            <div class="a-strip" id="a-strip"></div>
+            <span class="a-note" id="a-stripnote"></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="a-section a-grow">
+        <div class="a-rule"><span class="a-kicker green">COUNTED · <b id="a-ncounted"></b></span><i></i>
+          <span class="a-note">click a row to select its lesion</span></div>
+        <div class="scroll a-tablewrap">
+          <table class="a-table">
+            <thead><tr>
+              <th class="l">lesion</th><th>slice</th><th>z mm</th><th>area mm²</th>
+              <th>peak HU</th><th>wt</th><th>mean p</th><th>score</th>
+            </tr></thead>
+            <tbody id="a-rows"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="a-side">
+      <div class="a-side-sec a-grow">
+        <div class="a-kicker red">EXCLUDED · RECORDED, NOT COUNTED</div>
+        <div class="scroll a-exwrap"><table class="a-extable"><tbody id="a-exrows"></tbody></table></div>
+        <div class="a-exsummary" id="a-exsummary"></div>
+      </div>
+      <div class="a-side-sec">
+        <div class="a-kicker green">SOFT COVERAGE · HOW AREA IS FORMED</div>
+        <div class="a-soft" id="a-soft"></div>
+      </div>
+      <div class="a-side-sec a-produced">
+        <div class="a-kicker">PRODUCED BY</div>
+        <div class="a-provblock" id="a-provblock"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ 02 INSTRUMENT ══════════════ -->
+<div id="d2" class="dir">
+  <div class="i-prov">
+    <span id="i-prov1"></span><span id="i-prov2"></span><span id="i-prov3" class="push"></span>
+  </div>
+
+  <div class="i-track-block">
+    <div class="i-track-head"><span id="i-tracklabel"></span><span id="i-tracksummary"></span></div>
+    <div class="i-track" id="i-track"></div>
+    <div class="i-track-legend">
+      <span class="accent">█ carries scored calcium</span>
+      <span class="muted2">▌ sub-minimum, recorded not counted</span>
+      <span id="i-cursor"></span>
+      <span id="i-reach"></span>
+    </div>
+  </div>
+
+  <div class="i-body">
+    <div class="i-viewport" id="i-viewport">
+      <div class="pane" id="i-pane" data-pane="i">
+        <img class="pane-ct" alt="">
+        <img class="pane-mask" alt="">
+        <canvas class="pane-ring"></canvas>
+        <div class="pane-labels"></div>
+      </div>
+      <div class="i-caption" id="i-caption"></div>
+    </div>
+
+    <div class="i-rail">
+      <div class="i-rail-head">
+        <div class="i-rail-title"><span id="i-slice">SLICE —</span><span id="i-z"></span></div>
+        <div class="i-chips" id="i-chips"></div>
+      </div>
+
+      <div class="scroll i-rail-body">
+        <div class="i-sec">
+          <span class="i-label">SELECTED LESION</span>
+          <div id="i-sel"></div>
+        </div>
+        <div class="i-sec" id="i-bands-sec">
+          <span class="i-label">COVERAGE ON THIS SLICE</span>
+          <div id="i-bands"></div>
+          <span class="i-softnote" id="i-softnote"></span>
+        </div>
+        <div class="i-sec">
+          <span class="i-label">LESIONS · CLICK TO SELECT</span>
+          <table class="i-table"><tbody id="i-rows"></tbody></table>
+          <span class="i-empty" id="i-empty" hidden></span>
+        </div>
+        <div class="i-sec">
+          <span class="i-label">EXCLUDED · <b id="i-nex"></b></span>
+          <span class="i-exsummary" id="i-exsummary"></span>
+        </div>
+      </div>
+
+      <div class="i-foot">
+        <div class="i-foot-row">
+          <span class="i-label">TOTAL</span>
+          <span class="i-total" id="i-total">—</span>
+          <span class="i-tier" id="i-tier"></span>
+        </div>
+        <div class="i-tierbar"><i id="i-tierfill"></i><u style="left:7.1%"></u><u style="left:28.6%"></u></div>
+        <span class="i-tiernote" id="i-tiernote"></span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="app.js"></script>
