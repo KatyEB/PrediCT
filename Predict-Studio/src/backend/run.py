@@ -26,9 +26,9 @@ import csv
 import sys
 # Make sure we can import 'src' even if the script is executed directly from another directory
 _current_dir = Path(__file__).resolve().parent
-_parent_dir = _current_dir.parent
-if str(_parent_dir) not in sys.path:
-    sys.path.insert(0, str(_parent_dir))
+_project_root = _current_dir.parent.parent
+if str(_project_root) not in sys.path:
+    sys.path.insert(0, str(_project_root))
 
 from src.backend.paths import upload_dir, work_dir, out_dir, study_id_from_series
 from src.backend.registry import load_manifest

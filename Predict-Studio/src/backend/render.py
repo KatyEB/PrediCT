@@ -71,7 +71,10 @@ def save_slices(ct_array: np.ndarray, prob: np.ndarray, out_dir: Path, manifest:
             raise ValueError(f"unknown mode: {mode}")
             
         rgba = np.stack([r, g, b, alpha], axis=-1)
-        Image.fromarray(rgba, mode="RGBA").save(mask_dir / f"slice_{z:03d}.png")
+        mask_image = Image.fromarray(rgba, mode="RGBA")
+        ct_image = Image.fromarray(ct_norm, mode="L").convert("RGBA")
+        composite = Image.alpha_composite(ct_image, mask_image)
+        composite.convert("RGB").save(mask_dir / f"slice_{z:03d}.png")
         
         # 3. Collect metadata
         slice_rows = lesions_by_slice.get(z, [])
