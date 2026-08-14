@@ -1,0 +1,618 @@
+[
+  {
+    "idx": 0,
+    "z_mm": 0.0,
+    "n_lesions": 0,
+    "n_lesions_all": 0,
+    "slice_score": 0,
+    "has_calcium": false,
+    "coverage_hist": [
+      0,
+      0,
+      0,
+      0
+    ]
+  },
+  {
+    "idx": 1,
+    "z_mm": 3.0,
+    "n_lesions": 0,
+    "n_lesions_all": 0,
+    "slice_score": 0,
+    "has_calcium": false,
+    "coverage_hist": [
+      0,
+      0,
+      0,
+      0
+    ]
+  },
+  {
+    "idx": 2,
+    "z_mm": 6.0,
+    "n_lesions": 0,
+    "n_lesions_all": 0,
+    "slice_score": 0,
+    "has_calcium": false,
+    "coverage_hist": [
+      0,
+      0,
+      0,
+      0
+    ]
+  },
+  {
+    "idx": 3,
+    "z_mm": 9.0,
+    "n_lesions": 0,
+    "n_lesions_all": 0,
+    "slice_score": 0,
+    "has_calcium": false,
+    "coverage_hist": [
+      0,
+      0,
+      0,
+      0
+    ]
+  },
+  {
+    "idx": 4,
+    "z_mm": 12.0,
+    "n_lesions": 0,
+    "n_lesions_all": 0,
+    "slice_score": 0,
+    "has_calcium": false,
+    "coverage_hist": [
+      0,
+      0,
+      0,
+      0
+    ]
+  },
+  {
+    "idx": 5,
+    "z_mm": 15.0,
+    "n_lesions": 2,
+    "n_lesions_all": 3,
+    "slice_score": 27.746042563145664,
+    "has_calcium": true,
+    "coverage_hist": [
+      2,
+      5,
+      0,
+      76
+    ]
+  },
+  {
+    "idx": 6,
+    "z_mm": 18.0,
+    "n_lesions": 1,
+    "n_lesions_all": 1,
+    "slice_score": 6.938800889525562,
+    "has_calcium": true,
+    "coverage_hist": [
+      2,
+      0,
+      0,
+      25
+    ]
+  },
+  {
+    "idx": 7,
+    "z_mm": 21.0,
+    "n_lesions": 1,
+    "n_lesions_all": 1,
+    "slice_score": 1.3788185204175611,
+    "has_calcium": true,
+    "coverage_hist": [
+      0,
+      0,
+      1,
+      10
+    ]
+  },
+  {
+    "idx": 8,
+    "z_mm": 24.0,
+    "n_lesions": 0,
+    "n_lesions_all": 0,
+    "slice_score": 0,
+    "has_calcium": false,
+    "coverage_hist": [
+      0,
+      0,
+      0,
+      0
+    ]
+  },
+  {
+    "idx": 9,
+    "z_mm": 27.0,
+    "n_lesions": 0,
+    "n_lesions_all": 0,
+    "slice_score": 0,
+    "has_calcium": false,
+    "coverage_hist": [
+      0,
+      0,
+      0,
+      0
+    ]
+  },
+  {
+    "idx": 10,
+    "z_mm": 30.0,
+    "n_lesions": 0,
+    "n_lesions_all": 0,
+    "slice_score": 0,
+    "has_calcium": false,
+    "coverage_hist": [
+      0,
+      0,
+      0,
+      0
+    ]
+  },
+  {
+    "idx": 11,
+    "z_mm": 33.0,
+    "n_lesions": 0,
+    "n_lesions_all": 0,
+    "slice_score": 0,
+    "has_calcium": false,
+    "coverage_hist": [
+      0,
+      0,
+      0,
+      0
+    ]
+  },
+  {
+    "idx": 12,
+    "z_mm": 36.0,
+    "n_lesions": 0,
+    "n_lesions_all": 0,
+    "slice_score": 0,
+    "has_calcium": false,
+    "coverage_hist": [
+      0,
+      0,
+      0,
+      0
+    ]
+  },
+  {
+    "idx": 13,
+    "z_mm": 39.0,
+    "n_lesions": 0,
+    "n_lesions_all": 0,
+    "slice_score": 0,
+    "has_calcium": false,
+    "coverage_hist": [
+      0,
+      0,
+      0,
+      0
+    ]
+  },
+  {
+    "idx": 14,
+    "z_mm": 42.0,
+    "n_lesions": 0,
+    "n_lesions_all": 0,
+    "slice_score": 0,
+    "has_calcium": false,
+    "coverage_hist": [
+      0,
+      0,
+      0,
+      0
+    ]
+  },
+  {
+    "idx": 15,
+    "z_mm": 45.0,
+    "n_lesions": 0,
+    "n_lesions_all": 0,
+    "slice_score": 0,
+    "has_calcium": false,
+    "coverage_hist": [
+      0,
+      0,
+      0,
+      0
+    ]
+  },
+  {
+    "idx": 16,
+    "z_mm": 48.0,
+    "n_lesions": 0,
+    "n_lesions_all": 0,
+    "slice_score": 0,
+    "has_calcium": false,
+    "coverage_hist": [
+      0,
+      0,
+      0,
+      0
+    ]
+  },
+  {
+    "idx": 17,
+    "z_mm": 51.0,
+    "n_lesions": 0,
+    "n_lesions_all": 0,
+    "slice_score": 0,
+    "has_calcium": false,
+    "coverage_hist": [
+      0,
+      0,
+      0,
+      0
+    ]
+  },
+  {
+    "idx": 18,
+    "z_mm": 54.0,
+    "n_lesions": 0,
+    "n_lesions_all": 0,
+    "slice_score": 0,
+    "has_calcium": false,
+    "coverage_hist": [
+      0,
+      0,
+      0,
+      0
+    ]
+  },
+  {
+    "idx": 19,
+    "z_mm": 57.0,
+    "n_lesions": 0,
+    "n_lesions_all": 0,
+    "slice_score": 0,
+    "has_calcium": false,
+    "coverage_hist": [
+      0,
+      0,
+      0,
+      0
+    ]
+  },
+  {
+    "idx": 20,
+    "z_mm": 60.0,
+    "n_lesions": 1,
+    "n_lesions_all": 1,
+    "slice_score": 63.20715526380678,
+    "has_calcium": true,
+    "coverage_hist": [
+      5,
+      3,
+      4,
+      150
+    ]
+  },
+  {
+    "idx": 21,
+    "z_mm": 63.0,
+    "n_lesions": 1,
+    "n_lesions_all": 1,
+    "slice_score": 140.2351195691474,
+    "has_calcium": true,
+    "coverage_hist": [
+      4,
+      4,
+      1,
+      255
+    ]
+  },
+  {
+    "idx": 22,
+    "z_mm": 66.0,
+    "n_lesions": 1,
+    "n_lesions_all": 1,
+    "slice_score": 129.56079634479815,
+    "has_calcium": true,
+    "coverage_hist": [
+      1,
+      8,
+      1,
+      234
+    ]
+  },
+  {
+    "idx": 23,
+    "z_mm": 69.0,
+    "n_lesions": 1,
+    "n_lesions_all": 1,
+    "slice_score": 118.6246134274202,
+    "has_calcium": true,
+    "coverage_hist": [
+      2,
+      4,
+      1,
+      215
+    ]
+  },
+  {
+    "idx": 24,
+    "z_mm": 72.0,
+    "n_lesions": 1,
+    "n_lesions_all": 1,
+    "slice_score": 111.10458025629657,
+    "has_calcium": true,
+    "coverage_hist": [
+      1,
+      2,
+      1,
+      202
+    ]
+  },
+  {
+    "idx": 25,
+    "z_mm": 75.0,
+    "n_lesions": 2,
+    "n_lesions_all": 2,
+    "slice_score": 35.80432779434635,
+    "has_calcium": true,
+    "coverage_hist": [
+      4,
+      3,
+      1,
+      130
+    ]
+  },
+  {
+    "idx": 26,
+    "z_mm": 78.0,
+    "n_lesions": 0,
+    "n_lesions_all": 0,
+    "slice_score": 0,
+    "has_calcium": false,
+    "coverage_hist": [
+      0,
+      0,
+      0,
+      0
+    ]
+  },
+  {
+    "idx": 27,
+    "z_mm": 81.0,
+    "n_lesions": 0,
+    "n_lesions_all": 0,
+    "slice_score": 0,
+    "has_calcium": false,
+    "coverage_hist": [
+      0,
+      0,
+      0,
+      0
+    ]
+  },
+  {
+    "idx": 28,
+    "z_mm": 84.0,
+    "n_lesions": 0,
+    "n_lesions_all": 0,
+    "slice_score": 0,
+    "has_calcium": false,
+    "coverage_hist": [
+      0,
+      0,
+      0,
+      0
+    ]
+  },
+  {
+    "idx": 29,
+    "z_mm": 87.0,
+    "n_lesions": 0,
+    "n_lesions_all": 0,
+    "slice_score": 0,
+    "has_calcium": false,
+    "coverage_hist": [
+      0,
+      0,
+      0,
+      0
+    ]
+  },
+  {
+    "idx": 30,
+    "z_mm": 90.0,
+    "n_lesions": 2,
+    "n_lesions_all": 3,
+    "slice_score": 34.349096799806546,
+    "has_calcium": true,
+    "coverage_hist": [
+      4,
+      4,
+      5,
+      72
+    ]
+  },
+  {
+    "idx": 31,
+    "z_mm": 93.0,
+    "n_lesions": 4,
+    "n_lesions_all": 4,
+    "slice_score": 140.8818935421168,
+    "has_calcium": true,
+    "coverage_hist": [
+      7,
+      7,
+      6,
+      290
+    ]
+  },
+  {
+    "idx": 32,
+    "z_mm": 96.0,
+    "n_lesions": 3,
+    "n_lesions_all": 3,
+    "slice_score": 95.98382749267336,
+    "has_calcium": true,
+    "coverage_hist": [
+      3,
+      2,
+      4,
+      207
+    ]
+  },
+  {
+    "idx": 33,
+    "z_mm": 99.0,
+    "n_lesions": 1,
+    "n_lesions_all": 1,
+    "slice_score": 34.590446350552476,
+    "has_calcium": true,
+    "coverage_hist": [
+      1,
+      1,
+      0,
+      63
+    ]
+  },
+  {
+    "idx": 34,
+    "z_mm": 102.0,
+    "n_lesions": 1,
+    "n_lesions_all": 1,
+    "slice_score": 5.468227761259018,
+    "has_calcium": true,
+    "coverage_hist": [
+      0,
+      1,
+      0,
+      20
+    ]
+  },
+  {
+    "idx": 35,
+    "z_mm": 105.0,
+    "n_lesions": 0,
+    "n_lesions_all": 0,
+    "slice_score": 0,
+    "has_calcium": false,
+    "coverage_hist": [
+      0,
+      0,
+      0,
+      0
+    ]
+  },
+  {
+    "idx": 36,
+    "z_mm": 108.0,
+    "n_lesions": 0,
+    "n_lesions_all": 0,
+    "slice_score": 0,
+    "has_calcium": false,
+    "coverage_hist": [
+      0,
+      0,
+      0,
+      0
+    ]
+  },
+  {
+    "idx": 37,
+    "z_mm": 111.0,
+    "n_lesions": 0,
+    "n_lesions_all": 0,
+    "slice_score": 0,
+    "has_calcium": false,
+    "coverage_hist": [
+      0,
+      0,
+      0,
+      0
+    ]
+  },
+  {
+    "idx": 38,
+    "z_mm": 114.0,
+    "n_lesions": 0,
+    "n_lesions_all": 0,
+    "slice_score": 0,
+    "has_calcium": false,
+    "coverage_hist": [
+      0,
+      0,
+      0,
+      0
+    ]
+  },
+  {
+    "idx": 39,
+    "z_mm": 117.0,
+    "n_lesions": 0,
+    "n_lesions_all": 0,
+    "slice_score": 0,
+    "has_calcium": false,
+    "coverage_hist": [
+      0,
+      0,
+      0,
+      0
+    ]
+  },
+  {
+    "idx": 40,
+    "z_mm": 120.0,
+    "n_lesions": 0,
+    "n_lesions_all": 0,
+    "slice_score": 0,
+    "has_calcium": false,
+    "coverage_hist": [
+      0,
+      0,
+      0,
+      0
+    ]
+  },
+  {
+    "idx": 41,
+    "z_mm": 123.0,
+    "n_lesions": 0,
+    "n_lesions_all": 0,
+    "slice_score": 0,
+    "has_calcium": false,
+    "coverage_hist": [
+      0,
+      0,
+      0,
+      0
+    ]
+  },
+  {
+    "idx": 42,
+    "z_mm": 126.0,
+    "n_lesions": 0,
+    "n_lesions_all": 0,
+    "slice_score": 0,
+    "has_calcium": false,
+    "coverage_hist": [
+      0,
+      0,
+      0,
+      0
+    ]
+  },
+  {
+    "idx": 43,
+    "z_mm": 129.0,
+    "n_lesions": 0,
+    "n_lesions_all": 0,
+    "slice_score": 0,
+    "has_calcium": false,
+    "coverage_hist": [
+      0,
+      0,
+      0,
+      0
+    ]
+  }
+]

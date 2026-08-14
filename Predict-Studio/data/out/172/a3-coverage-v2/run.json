@@ -1,0 +1,43 @@
+{
+  "agatston_total": 945.8737465753126,
+  "risk_category": "severe",
+  "n_lesions": 22,
+  "n_lesions_all": 24,
+  "slices_with_calcium": [
+    5,
+    6,
+    7,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    30,
+    31,
+    32,
+    33,
+    34
+  ],
+  "study_id": "172",
+  "model_id": "a3-coverage-v2",
+  "cropped": true,
+  "shape": [
+    44,
+    358,
+    403
+  ],
+  "output": "coverage",
+  "hu_window": [
+    0,
+    1200
+  ],
+  "spacing": [
+    0.3700000047683716,
+    0.3700000047683716,
+    3.0
+  ],
+  "sha256": "c83170af5772581f0f75f2fe903da2adc400d53ce0c577fa8ec376258afcbe97",
+  "locator_version": "2.15.0",
+  "date": "2026-08-13T11:14:33.034615"
+}

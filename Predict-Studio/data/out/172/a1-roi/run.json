@@ -1,0 +1,43 @@
+{
+  "agatston_total": 1064.1237274277692,
+  "risk_category": "severe",
+  "n_lesions": 24,
+  "n_lesions_all": 25,
+  "slices_with_calcium": [
+    5,
+    6,
+    7,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    30,
+    31,
+    32,
+    33,
+    34
+  ],
+  "study_id": "172",
+  "model_id": "a1-roi",
+  "cropped": true,
+  "shape": [
+    44,
+    358,
+    403
+  ],
+  "output": "binary",
+  "hu_window": [
+    0,
+    1200
+  ],
+  "spacing": [
+    0.3700000047683716,
+    0.3700000047683716,
+    3.0
+  ],
+  "sha256": "3fd07f9aad53c75be76b1279c8d861d82f8e25ffc817c414e4e7b2aab92be0af",
+  "locator_version": "2.15.0",
+  "date": "2026-08-13T11:18:01.954093"
+}

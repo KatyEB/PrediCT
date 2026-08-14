@@ -1,1 +1,0 @@
-References about cardiac imaging
