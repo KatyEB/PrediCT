@@ -10,7 +10,7 @@ Run:  python -m pytest tests/test_grouping.py -v
 """
 import sys
 from pathlib import Path
-sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent.parent))  # repo root
 
 import numpy as np
 from src.backend.scoring import score, totals

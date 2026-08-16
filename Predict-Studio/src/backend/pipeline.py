@@ -53,8 +53,16 @@ def resample(image: sitk.Image, target_spacing_mm: tuple[float, float, float]) -
     resampler.SetInterpolator(sitk.sitkLinear)
     return resampler.Execute(image)
 
-def crop_heart(image: sitk.Image, margin_mm: int, fast: bool = False) -> sitk.Image:
-    """Crop the volume around the heart using TotalSegmentator."""
+def crop_heart(image: sitk.Image, margin_mm: int, fast: bool = False) -> tuple[sitk.Image, sitk.Image]:
+    """Crop the volume around the heart using TotalSegmentator.
+
+    Returns:
+        (cropped_image, cropped_heart_mask) — the mask is cropped with the SAME
+        indices as the image, so the two share a grid exactly. It is returned
+        rather than discarded because mesh.py needs the heart shape for the 3D
+        view; a bounding box alone would give a 3D box, not a heart. It is
+        display context only and no score reads it.
+    """
     print(f"Locating heart (fast={fast}) and cropping...")
     try:
         from totalsegmentator.python_api import totalsegmentator
@@ -76,6 +84,7 @@ def crop_heart(image: sitk.Image, margin_mm: int, fast: bool = False) -> sitk.Im
         totalsegmentator(str(tmp_in), str(tmp_out_dir), roi_subset=["heart"], fast=fast)
         
         mask_img = sitk.ReadImage(str(tmp_out_dir / "heart.nii.gz"))
+        mask_img.CopyInformation(image)   # TS writes its own header; keep ours
         mask_array = sitk.GetArrayFromImage(mask_img)
 
     if not mask_array.any():
@@ -96,7 +105,10 @@ def crop_heart(image: sitk.Image, margin_mm: int, fast: bool = False) -> sitk.Im
     y_min, y_max = max(0, y_min - y_margin), min(mask_array.shape[1], y_max + y_margin + 1)
     x_min, x_max = max(0, x_min - x_margin), min(mask_array.shape[2], x_max + x_margin + 1)
     
-    return image[x_min:x_max, y_min:y_max, z_min:z_max]
+    # Both crops use identical indices. Slicing them apart, or in two places,
+    # is how image and label silently drift out of alignment.
+    box = (slice(x_min, x_max), slice(y_min, y_max), slice(z_min, z_max))
+    return image[box], mask_img[box]
 
 def normalize(array: np.ndarray, hu_window: tuple[float, float]) -> np.ndarray:
     """Clip and scale array to [0, 1]. Array shape is arbitrary."""

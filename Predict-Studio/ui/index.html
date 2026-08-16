@@ -6,6 +6,22 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,300;6..72,400;6..72,500&family=IBM+Plex+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;700&family=Libre+Franklin:wght@400;600;800&display=swap">
 <link rel="stylesheet" href="app.css">
 
+<!-- three.js, as ES modules from a CDN. No bundler, no npm, consistent with the
+     rest of Studio. BEFORE ANY OFFLINE OR CLINICAL USE, vendor these locally —
+     a viewer that needs the public internet to draw a heart is not a tool a
+     hospital can rely on:
+       mkdir -p ui/vendor/addons/controls ui/vendor/addons/loaders
+       curl -o ui/vendor/three.module.js            https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js
+       curl -o ui/vendor/addons/controls/OrbitControls.js https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/controls/OrbitControls.js
+       curl -o ui/vendor/addons/loaders/PLYLoader.js      https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/loaders/PLYLoader.js
+     then point the two entries below at ./vendor/. Nothing else changes. -->
+<script type="importmap">
+{ "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+} }
+</script>
+
 <!-- Tab bar. Two directions from the design prototypes: Argument and Instrument.
      Both read the same state; only the presentation differs. -->
 <div id="tabs">
@@ -13,6 +29,7 @@
   <button data-dir="1">01 Argument</button>
   <button data-dir="2">02 Instrument</button>
   <button data-dir="3">03 Contact Sheet</button>
+  <button data-dir="4">04 Anatomy</button>
   <span class="tabs-spacer"></span>
   <span class="tabs-label">VIEW</span>
   <button data-view="1">1 original</button>
@@ -241,4 +258,79 @@
   </div>
 </div>
 
+<!-- ══════════════ 04 ANATOMY ══════════════ -->
+<div id="d4" class="dir">
+  <div class="i-prov">
+    <span id="v-prov1"></span><span id="v-mode"></span><span id="v-prov3" class="push"></span>
+  </div>
+
+  <div class="v-body">
+    <div class="v-stage">
+      <div id="v-canvas"></div>
+      <div class="v-axes"><span class="oS">S</span><span class="oI">I</span></div>
+      <div class="v-hint" id="v-counts"></div>
+      <div class="v-err" id="v-err" hidden></div>
+    </div>
+
+    <div class="i-rail">
+      <div class="i-rail-head">
+        <div class="i-rail-title"><span>ANATOMY</span></div>
+        <div class="v-cams" id="v-cams">
+          <button data-cam="A">anterior</button><button data-cam="P">posterior</button>
+          <button data-cam="R">right</button><button data-cam="L">left</button>
+          <button data-cam="S">superior</button>
+        </div>
+      </div>
+
+      <div class="scroll i-rail-body">
+        <div class="i-sec">
+          <span class="i-label">SURFACES · CLICK TO TOGGLE</span>
+          <div class="v-layers" id="v-layers"></div>
+          <div class="v-layers">
+            <button id="v-heart"><i style="background:#6E7C86"></i>heart shell<em>context, smoothed</em></button>
+            <button id="v-plane"><i style="background:#FFFFFF"></i>slice plane<em>follows the 2D viewer</em></button>
+          </div>
+        </div>
+
+        <div class="i-sec">
+          <span class="i-label">SELECTED LESION</span>
+          <div id="v-sel"></div>
+        </div>
+
+        <div class="i-sec">
+          <span class="i-label">HOW TO READ THIS</span>
+          <span class="v-note">
+            Surfaces are drawn from the predicted probability volume. The stepping
+            you can see is 3 mm slice spacing against 0.37 mm pixels — the real
+            resolution of the scan, not a rendering artefact. Nothing here is
+            smoothed except the heart shell, which is context only.
+            Drag to rotate, scroll to zoom, click a surface to select its lesion
+            and jump the 2D viewer to it.
+          </span>
+        </div>
+
+        <div class="i-sec">
+          <span class="i-label red">NOT COMPUTED</span>
+          <span class="v-warn">
+            Calcium is <b>not attributed to a named vessel</b> (LM / LAD / LCX / RCA).
+            That requires coronary centreline extraction or atlas registration,
+            neither of which is implemented in this pipeline. Totals and per-lesion
+            detail are reported; vessel-level scores are not.
+          </span>
+        </div>
+      </div>
+
+      <div class="i-foot">
+        <div class="i-foot-row">
+          <span class="i-label">TOTAL</span>
+          <span class="i-total" id="v-total">—</span>
+          <span class="i-tier" id="v-tier"></span>
+        </div>
+        <span class="i-tiernote" id="v-tiernote"></span>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script src="app.js"></script>
+<script type="module" src="view3d.js"></script>

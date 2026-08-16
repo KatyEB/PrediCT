@@ -249,6 +249,7 @@ function render() {
   document.getElementById('d1').classList.toggle('on', state.dir === 1);
   document.getElementById('d2').classList.toggle('on', state.dir === 2);
   document.getElementById('d3').classList.toggle('on', state.dir === 3);
+  document.getElementById('d4').classList.toggle('on', state.dir === 4);
   document.querySelectorAll('#tabs button[data-dir]').forEach(b =>
     b.classList.toggle('on', Number(b.dataset.dir) === state.dir));
   document.querySelectorAll('#tabs button[data-view]').forEach(b =>
@@ -258,9 +259,45 @@ function render() {
 
   if (state.dir === 1) renderArgument(); 
   else if (state.dir === 2) renderInstrument();
-  else renderContactSheet();
+  else if (state.dir === 3) renderContactSheet();
+  else renderAnatomy();
   preload(state.slice);
 }
+
+/* 04 Anatomy. view3d.js is an ES module and therefore deferred, so it may not
+   have registered window.View3D by the time the tab is first clicked. Mount
+   lazily on first entry and no earlier — WebGL context and ~1 MB of meshes are
+   not worth creating for a session that never opens this tab. */
+function renderAnatomy() {
+  const man = state.run.mesh;
+  const err = document.getElementById('v-err');
+
+  document.getElementById('v-prov1').textContent = prov(1);
+  document.getElementById('v-prov3').textContent = prov(3);
+  document.getElementById('v-total').textContent = state.run.agatston_total.toFixed(1);
+  const tier = tierOf(state.run.agatston_total);
+  const tEl = document.getElementById('v-tier');
+  tEl.textContent = tier;
+  tEl.classList.toggle('severe', tier === 'SEVERE');
+  document.getElementById('v-tiernote').textContent =
+    tierNote(state.run.agatston_total) + ' · scored in 2D, per slice — this view measures nothing';
+
+  if (!man) {
+    err.hidden = false;
+    err.textContent =
+      'run.json has no "mesh" block, so this study was produced before meshing ' +
+      'existed. Re-run it to generate surfaces. Nothing is drawn rather than ' +
+      'something approximate.';
+    return;
+  }
+  if (!window.View3D) { setTimeout(render, 50); return; }   // module still loading
+  window.View3D.mount(BASE, man).then(() => window.View3D.update());
+}
+
+/* The explicit contract view3d.js reads. It is a separate module with its own
+   scope, so what it may touch is listed here rather than left to whatever
+   happens to be in the global lexical environment. */
+window.PrediCT = { state, group3d, counted3d, goToLesion, ctUrl, maskUrl, render };
 
 function preload(i) {
   for (let d = -3; d <= 3; d++) {

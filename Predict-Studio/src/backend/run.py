@@ -36,6 +36,7 @@ from src.backend.pipeline import load, resample, crop_heart, normalize, predict,
 from src.backend.scoring import score, totals
 from src.backend.grouping import lesion_3d_table
 from src.backend.render import save_slices
+from src.backend.mesh import build_meshes
 
 # Scoring conventions, not model properties — they belong here, not in a
 # manifest. Both are written into run.json so any output folder records what
@@ -67,12 +68,24 @@ def run(study_id: str, model_id: str, crop: bool = None, progress=None, custom_i
     w = work_dir(study_id)
     w.mkdir(parents=True, exist_ok=True)
     ct_path = w / "ct.nii.gz"
+    # The heart mask is cached beside the CT because it is produced by the same
+    # (slow) crop stage. If the CT is cached and this is not, the study was
+    # prepared before meshing existed: report None rather than re-running
+    # TotalSegmentator behind the caller's back or faking a shape.
+    heart_path = w / "heart.nii.gz"
     
     image = None
+    heart_img = None
     if ct_path.exists():
         p("cached", 0.3)
         image = sitk.ReadImage(str(ct_path))
         # Note: cached image already has RAS orientation applied from prior prep.
+        if heart_path.exists():
+            heart_img = sitk.ReadImage(str(heart_path))
+        else:
+            print("NOTE: no cached heart mask for this study — 3D view will "
+                  "show lesions without the heart shell. Delete data/work/"
+                  f"{study_id}/ and re-run to generate one.")
     else:
         p("load", 0.05)
         load_path = custom_input if custom_input else upload_dir(study_id)
@@ -83,13 +96,17 @@ def run(study_id: str, model_id: str, crop: bool = None, progress=None, custom_i
         
         if crop:
             p("crop", 0.3)
-            image = crop_heart(image, m["margin_mm"], fast=m.get("ts_fast", False))
+            image, heart_img = crop_heart(image, m["margin_mm"], fast=m.get("ts_fast", False))
         else:
             print("WARNING: cropping OFF — models trained on cropped volumes.")
             
         # Orient to RAS AFTER cropping to match training pipeline order!
         print("Reorienting to RAS...")
         image = sitk.DICOMOrient(image, m["orientation"])
+        # The mask must take the identical reorientation or the heart shell
+        # will be mirrored relative to the lesions in the 3D view.
+        if heart_img is not None:
+            heart_img = sitk.DICOMOrient(heart_img, m["orientation"])
         
         # Ensure spacing didn't permute in a way that alters the volume area calculations
         spc = image.GetSpacing()
@@ -102,6 +119,8 @@ def run(study_id: str, model_id: str, crop: bool = None, progress=None, custom_i
             f"expected RAS direction cosines, got {image.GetDirection()}"
         
         sitk.WriteImage(image, str(ct_path))
+        if heart_img is not None:
+            sitk.WriteImage(heart_img, str(heart_path))
 
     array = sitk.GetArrayFromImage(image)                 # (Z, Y, X)
     x = normalize(np.transpose(array, (2, 1, 0)), tuple(m["hu_window"])) # (X, Y, Z)
@@ -160,6 +179,14 @@ def run(study_id: str, model_id: str, crop: bool = None, progress=None, custom_i
         "date": datetime.now().isoformat()
     }
     
+    p("mesh", 0.88)
+    heart_array = sitk.GetArrayFromImage(heart_img) if heart_img is not None else None
+    if heart_array is not None:
+        assert heart_array.shape == array.shape, \
+            f"heart mask {heart_array.shape} does not share the CT grid {array.shape}"
+    run_provenance["mesh"] = build_meshes(prob, heart_array, image.GetSpacing(),
+                                          m["output"], o)
+
     with open(o / "run.json", "w") as f:
         json.dump(run_provenance, f, indent=2)
         
