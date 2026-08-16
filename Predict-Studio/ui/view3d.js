@@ -306,13 +306,14 @@ function wire(man) {
     box.appendChild(b);
   });
 
-  const toggle = (id, obj) => {
+  const toggle = (id, obj, defaultOn = true) => {
     const b = el(id); if (!b) return;
-    b.classList.add('on');
+    obj().visible = defaultOn;
+    b.classList.toggle('on', defaultOn);
     b.onclick = () => { obj().visible = !obj().visible; b.classList.toggle('on', obj().visible); draw(); };
   };
-  if (heartMesh) toggle('v-heart', () => heartMesh); else el('v-heart').disabled = true;
-  toggle('v-plane', () => planeMesh);
+  if (heartMesh) toggle('v-heart', () => heartMesh, true); else el('v-heart').disabled = true;
+  toggle('v-plane', () => planeMesh, false);
 
   document.querySelectorAll('#v-cams button').forEach(b =>
     b.onclick = () => resetCamera(man, b.dataset.cam));
