@@ -1,5 +1,5 @@
 {
-  "agatston_total": 1064.1237274277692,
+  "agatston_total": 1064.1237,
   "risk_category": "severe",
   "n_lesions": 24,
   "n_lesions_all": 25,
@@ -38,11 +38,53 @@
     1200
   ],
   "spacing": [
-    0.3700000047683716,
-    0.3700000047683716,
+    0.37,
+    0.37,
     3.0
   ],
   "sha256": "3fd07f9aad53c75be76b1279c8d861d82f8e25ffc817c414e4e7b2aab92be0af",
   "locator_version": "2.15.0",
-  "date": "2026-08-16T00:18:06.552012"
+  "date": "2026-08-16T01:34:46.786768",
+  "mesh": {
+    "axes": {
+      "x": "R",
+      "y": "A",
+      "z": "S"
+    },
+    "units": "mm",
+    "origin": "centre of voxel (0,0,0); no display flip applied",
+    "extent_mm": [
+      148.74,
+      132.09,
+      129.0
+    ],
+    "spacing_mm": [
+      0.37,
+      0.37,
+      3.0
+    ],
+    "output_mode": "binary",
+    "levels": [
+      0.5
+    ],
+    "surfaces": [
+      {
+        "level": 0.5,
+        "file": "mesh/lesions_p050.ply",
+        "n_vertices": 3998,
+        "n_faces": 7936,
+        "bytes": 151374,
+        "smoothed": false
+      }
+    ],
+    "heart": {
+      "file": "mesh/heart.ply",
+      "n_vertices": 9356,
+      "n_faces": 18712,
+      "bytes": 355760,
+      "smoothed": true,
+      "downsample_xy": 8
+    },
+    "note": "Lesion surfaces are unsmoothed: 3.0 mm slices against 0.37 mm pixels produce visible stepping, which is the true resolution of the data. Isosurface levels are for display only and are not used by any score."
+  }
 }

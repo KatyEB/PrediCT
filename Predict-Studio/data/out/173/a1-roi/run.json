@@ -37,5 +37,40 @@
   ],
   "sha256": "3fd07f9aad53c75be76b1279c8d861d82f8e25ffc817c414e4e7b2aab92be0af",
   "locator_version": "2.15.0",
-  "date": "2026-08-16T00:18:21.095919"
+  "date": "2026-08-16T01:39:14.658422",
+  "mesh": {
+    "axes": {
+      "x": "R",
+      "y": "A",
+      "z": "S"
+    },
+    "units": "mm",
+    "origin": "centre of voxel (0,0,0); no display flip applied",
+    "extent_mm": [
+      166.87,
+      158.36,
+      135.0
+    ],
+    "spacing_mm": [
+      0.3700000047683716,
+      0.3700000047683716,
+      3.0
+    ],
+    "output_mode": "binary",
+    "levels": [
+      0.5
+    ],
+    "surfaces": [
+      {
+        "level": 0.5,
+        "file": "mesh/lesions_p050.ply",
+        "n_vertices": 3614,
+        "n_faces": 7196,
+        "bytes": 137146,
+        "smoothed": false
+      }
+    ],
+    "heart": null,
+    "note": "Lesion surfaces are unsmoothed: 3.0 mm slices against 0.37 mm pixels produce visible stepping, which is the true resolution of the data. Isosurface levels are for display only and are not used by any score."
+  }
 }
