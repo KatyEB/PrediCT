@@ -3,6 +3,8 @@
   "risk_category": "severe",
   "n_lesions": 10,
   "n_lesions_all": 12,
+  "n_lesions_3d": 8,
+  "n_lesions_3d_all": 8,
   "slices_with_calcium": [
     10,
     11,
@@ -21,6 +23,9 @@
     452
   ],
   "output": "binary",
+  "threshold": 0.5,
+  "min_area_mm2": 1.0,
+  "max_gap_slices": 0,
   "hu_window": [
     0,
     1200
@@ -32,5 +37,5 @@
   ],
   "sha256": "3fd07f9aad53c75be76b1279c8d861d82f8e25ffc817c414e4e7b2aab92be0af",
   "locator_version": "2.15.0",
-  "date": "2026-08-13T21:55:34.120244"
+  "date": "2026-08-16T00:18:21.095919"
 }
