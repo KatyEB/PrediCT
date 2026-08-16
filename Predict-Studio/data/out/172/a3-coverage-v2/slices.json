@@ -102,7 +102,7 @@
     "z_mm": 21.0,
     "n_lesions": 1,
     "n_lesions_all": 1,
-    "slice_score": 1.3788183898595439,
+    "slice_score": 1.3788185204175611,
     "has_calcium": true,
     "coverage_hist": [
       0,
@@ -298,7 +298,7 @@
     "z_mm": 63.0,
     "n_lesions": 1,
     "n_lesions_all": 1,
-    "slice_score": 140.2351362805736,
+    "slice_score": 140.2351195691474,
     "has_calcium": true,
     "coverage_hist": [
       4,
@@ -340,7 +340,7 @@
     "z_mm": 72.0,
     "n_lesions": 1,
     "n_lesions_all": 1,
-    "slice_score": 111.10458861200968,
+    "slice_score": 111.10459696772278,
     "has_calcium": true,
     "coverage_hist": [
       1,

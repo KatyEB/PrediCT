@@ -1,5 +1,5 @@
 {
-  "agatston_total": 853.9822220113756,
+  "agatston_total": 853.9822000000001,
   "risk_category": "severe",
   "n_lesions": 10,
   "n_lesions_all": 12,
@@ -14,7 +14,7 @@
     34,
     35
   ],
-  "study_id": "173",
+  "study_id": "Pro_Gated_Calcium_Score_(CS)_3.0_Qr36_2_BestSyst_255_ms",
   "model_id": "a1-roi",
   "cropped": true,
   "shape": [
@@ -31,13 +31,13 @@
     1200
   ],
   "spacing": [
-    0.3700000047683716,
-    0.3700000047683716,
+    0.37,
+    0.37,
     3.0
   ],
   "sha256": "3fd07f9aad53c75be76b1279c8d861d82f8e25ffc817c414e4e7b2aab92be0af",
   "locator_version": "2.15.0",
-  "date": "2026-08-16T01:39:14.658422",
+  "date": "2026-08-16T01:40:39.067638",
   "mesh": {
     "axes": {
       "x": "R",
@@ -52,8 +52,8 @@
       135.0
     ],
     "spacing_mm": [
-      0.3700000047683716,
-      0.3700000047683716,
+      0.37,
+      0.37,
       3.0
     ],
     "output_mode": "binary",
@@ -70,7 +70,14 @@
         "smoothed": false
       }
     ],
-    "heart": null,
+    "heart": {
+      "file": "mesh/heart.ply",
+      "n_vertices": 12032,
+      "n_faces": 24052,
+      "bytes": 457293,
+      "smoothed": true,
+      "downsample_xy": 8
+    },
     "note": "Lesion surfaces are unsmoothed: 3.0 mm slices against 0.37 mm pixels produce visible stepping, which is the true resolution of the data. Isosurface levels are for display only and are not used by any score."
   }
 }
