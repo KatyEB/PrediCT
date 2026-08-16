@@ -1,8 +1,10 @@
 {
-  "agatston_total": 945.8737465753126,
+  "agatston_total": 945.8737683785015,
   "risk_category": "severe",
   "n_lesions": 22,
   "n_lesions_all": 24,
+  "n_lesions_3d": 13,
+  "n_lesions_3d_all": 15,
   "slices_with_calcium": [
     5,
     6,
@@ -28,6 +30,9 @@
     403
   ],
   "output": "coverage",
+  "threshold": 0.1,
+  "min_area_mm2": 1.0,
+  "max_gap_slices": 0,
   "hu_window": [
     0,
     1200
@@ -39,5 +44,5 @@
   ],
   "sha256": "c83170af5772581f0f75f2fe903da2adc400d53ce0c577fa8ec376258afcbe97",
   "locator_version": "2.15.0",
-  "date": "2026-08-13T11:14:33.034615"
+  "date": "2026-08-16T00:01:12.787905"
 }
