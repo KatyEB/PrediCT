@@ -32,7 +32,7 @@
  * Called by: app.js, when state.dir === 4.
  */
 import * as THREE from 'three';
-import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { TrackballControls } from 'three/addons/controls/TrackballControls.js';
 import { PLYLoader } from 'three/addons/loaders/PLYLoader.js';
 
 // ── palette ──────────────────────────────────────────────────────────────
@@ -57,6 +57,7 @@ let surfaces = [];                  // [{level, mesh, on}]
 let heartMesh = null, planeMesh = null, planeTex = null;
 let ready = false, loading = false, frameQueued = false;
 let lastSel = null, lastSlice = -1, lastView = -1;
+let isTypingCoords = false;
 
 const el = id => document.getElementById(id);
 const P = () => window.PrediCT;
@@ -76,10 +77,21 @@ export async function mount(base, meshManifest) {
   renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
   host.appendChild(renderer.domElement);
 
-  controls = new OrbitControls(camera, renderer.domElement);
-  controls.enableDamping = true;
-  controls.dampingFactor = 0.08;
-  controls.addEventListener('change', () => draw());
+  controls = new TrackballControls(camera, renderer.domElement);
+  controls.staticMoving = true; 
+  controls.rotateSpeed = 4.0;
+  controls.zoomSpeed = 1.2;
+  controls.panSpeed = 0.8;
+  controls.addEventListener('change', () => {
+    updateCoordsUI();
+    draw();
+  });
+
+  // TrackballControls does not auto-update on drag. We must tick it.
+  renderer.domElement.addEventListener('pointermove', (e) => {
+    if (e.buttons > 0) { controls.update(); draw(); }
+  });
+  renderer.domElement.addEventListener('wheel', () => { controls.update(); draw(); });
 
   raycaster = new THREE.Raycaster();
 
@@ -260,9 +272,6 @@ function resetCamera(man, which) {
   const d = Math.max(ex, ey, ez) * 2.1;
   const v = VIEWS[which] || VIEWS.A;
   camera.position.set(v[0] * d, v[1] * d, v[2] * d);
-  // z is superior, so z-up is right for every lateral view. Looking straight
-  // down z makes "up" undefined, so the superior view uses anterior-up instead
-  // — which is also how an axial slice is conventionally shown.
   camera.up.set(...(which === 'S' ? [0, 1, 0] : [0, 0, 1]));
   controls.target.set(0, 0, 0);
   controls.update();
@@ -277,12 +286,55 @@ function draw() {
     const host = el('v-canvas');
     const w = host.clientWidth, h = host.clientHeight;
     if (w && h) {
-      renderer.setSize(w, h, false);
-      camera.aspect = w / h;
-      camera.updateProjectionMatrix();
+      if (renderer.domElement.width !== w || renderer.domElement.height !== h) {
+        renderer.setSize(w, h, false);
+        camera.aspect = w / h;
+        camera.updateProjectionMatrix();
+        if (controls.handleResize) controls.handleResize();
+      }
     }
     controls.update();
     renderer.render(scene, camera);
+  });
+}
+
+function updateCoordsUI() {
+  if (isTypingCoords) return;
+  const x = el('v-cam-x'), y = el('v-cam-y'), z = el('v-cam-z');
+  if (x && y && z && camera) {
+    const euler = new THREE.Euler().setFromQuaternion(camera.quaternion, 'XYZ');
+    x.value = Math.round(THREE.MathUtils.radToDeg(euler.x));
+    y.value = Math.round(THREE.MathUtils.radToDeg(euler.y));
+    z.value = Math.round(THREE.MathUtils.radToDeg(euler.z));
+  }
+}
+
+function wireCoords() {
+  const x = el('v-cam-x'), y = el('v-cam-y'), z = el('v-cam-z');
+  if (!x || !y || !z) return;
+
+  const apply = () => {
+    const vx = parseFloat(x.value), vy = parseFloat(y.value), vz = parseFloat(z.value);
+    if (!isNaN(vx) && !isNaN(vy) && !isNaN(vz)) {
+      const euler = new THREE.Euler(
+        THREE.MathUtils.degToRad(vx),
+        THREE.MathUtils.degToRad(vy),
+        THREE.MathUtils.degToRad(vz),
+        'XYZ'
+      );
+      const dir = new THREE.Vector3(0, 0, -1).applyEuler(euler);
+      const dist = camera.position.length();
+      camera.position.copy(dir.multiplyScalar(-dist));
+      controls.update();
+      draw();
+    }
+  };
+
+  [x, y, z].forEach(input => {
+    input.addEventListener('focus', () => { isTypingCoords = true; });
+    input.addEventListener('blur', () => { isTypingCoords = false; updateCoordsUI(); });
+    // 'change' fires when user presses Enter or clicks spinner arrows
+    input.addEventListener('change', apply);
   });
 }
 
@@ -319,6 +371,7 @@ function wire(man) {
     b.onclick = () => resetCamera(man, b.dataset.cam));
 
   el('v-canvas').addEventListener('wheel', e => e.stopPropagation(), { passive: true });
+  wireCoords();
 }
 
 function writeRail() {
