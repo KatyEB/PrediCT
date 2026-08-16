@@ -83,6 +83,11 @@
     </div>
 
     <div class="a-side">
+      <div class="a-side-sec">
+        <div class="a-kicker green">LESION INDEX · 3D</div>
+        <div class="scroll a-l3dwrap"><table class="a-extable"><tbody id="a-l3drows"></tbody></table></div>
+        <div class="a-exsummary" id="a-l3dsummary"></div>
+      </div>
       <div class="a-side-sec a-grow">
         <div class="a-kicker red">EXCLUDED · RECORDED, NOT COUNTED</div>
         <div class="scroll a-exwrap"><table class="a-extable"><tbody id="a-exrows"></tbody></table></div>
@@ -112,6 +117,7 @@
     <div class="i-track-legend">
       <span class="accent">█ carries scored calcium</span>
       <span class="muted2">▌ sub-minimum, recorded not counted</span>
+      <span class="accent" id="i-legend3d" hidden>▢ slices of the selected lesion</span>
       <span id="i-cursor"></span>
       <span id="i-reach"></span>
     </div>
@@ -135,6 +141,11 @@
       </div>
 
       <div class="scroll i-rail-body">
+        <div class="i-sec" id="i-l3d-sec">
+          <span class="i-label">LESION · SPANS SLICES</span>
+          <div id="i-l3d"></div>
+          <div class="i-l3d-slices" id="i-l3d-slices"></div>
+        </div>
         <div class="i-sec">
           <span class="i-label">SELECTED LESION</span>
           <div id="i-sel"></div>

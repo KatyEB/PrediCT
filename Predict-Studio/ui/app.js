@@ -35,15 +35,19 @@ const SOFT_NOTE =
   'is drawn as grain, never as an edge. The 0.10 threshold only decides where ' +
   'one component stops and the next begins — it does not gate the score.';
 
+let ACCENT_COLOR = '#C98B2E';
+
 // ── state ────────────────────────────────────────────────────────────────
 const state = {
   dir: 2,          // 1 argument, 2 instrument
   view: 2,         // 1 original, 2 prediction, 3 calcium only
   slice: 0,
   sel: null,       // "sliceIdx:lesionId"
+  sel3d: null,     // "L004" — the selected 3D lesion, or null
   run: null,
   slices: [],
   lesions: [],
+  lesions3d: [],
   imgW: 0,
   imgH: 0,
   covCache: {},    // slice idx -> [n,n,n,n] recovered from the mask alpha channel
@@ -52,14 +56,18 @@ const state = {
 // ── load ─────────────────────────────────────────────────────────────────
 async function boot() {
   try {
-    const [run, slices, csv] = await Promise.all([
+    ACCENT_COLOR = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#C98B2E';
+    
+    const [run, slices, csv, csv3d] = await Promise.all([
       getJson(`${BASE}/run.json`),
       getJson(`${BASE}/slices.json`),
       getText(`${BASE}/lesions.csv`),
+      getText(`${BASE}/lesions_3d.csv`),
     ]);
     state.run = run;
     state.slices = slices;
     state.lesions = parseCsv(csv);
+    state.lesions3d = parseCsv(csv3d);
 
     // Image dimensions are read from the first CT PNG. run.json may or may not
     // carry "shape" depending on which patches have landed, and volumes are
@@ -143,6 +151,18 @@ function meanCoverage(l) {
 
 const counted = () => state.lesions.filter(l => l.included);
 const excluded = () => state.lesions.filter(l => !l.included);
+
+// Every per-slice component belonging to a 3D lesion, in slice order.
+const membersOf = key => state.lesions
+  .filter(l => l.lesion_3d_key === key)
+  .sort((a, b) => a.slice_idx - b.slice_idx);
+
+const group3d = key => state.lesions3d.find(g => g.lesion_3d_key === key) || null;
+
+// Slices a 3D lesion appears on — used to mark the volume track.
+const slicesOf = key => membersOf(key).map(l => l.slice_idx);
+
+const counted3d = () => state.lesions3d.filter(g => g.included);
 const onSlice = i => state.lesions.filter(l => l.slice_idx === i);
 const calcSlices = () => state.slices.filter(s => s.has_calcium).map(s => s.idx);
 const keyOf = l => `${l.slice_idx}:${l.lesion_id}`;
@@ -168,10 +188,20 @@ function step(d) {
 function goTo(sliceIdx, key) {
   state.slice = sliceIdx;
   state.sel = key || null;
-  // Selecting a lesion on a slice outside the calcium-only stack would strand
-  // the cursor, so drop back to the prediction view.
+  // Selecting a component always implies its 3D lesion. There is no state in
+  // which a component is selected and its lesion is not.
+  const l = key ? state.lesions.find(x => keyOf(x) === key) : null;
+  state.sel3d = l ? l.lesion_3d_key : null;
   if (state.view === 3 && !calcSlices().includes(sliceIdx)) state.view = 2;
   render();
+}
+
+function goToLesion(key3d) {
+  const g = group3d(key3d);
+  if (!g) return;
+  const m = membersOf(key3d).find(l => l.slice_idx === g.peak_slice_idx)
+         || membersOf(key3d)[0];
+  goTo(m.slice_idx, keyOf(m));
 }
 
 function wire() {
@@ -195,7 +225,7 @@ function wire() {
   document.addEventListener('keydown', e => {
     if (e.key === 'ArrowDown' || e.key === 'ArrowRight') { step(1); e.preventDefault(); }
     if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') { step(-1); e.preventDefault(); }
-    if (e.key === 'Escape') { state.sel = null; render(); }
+    if (e.key === 'Escape') { state.sel = null; state.sel3d = null; render(); }
     if (e.key === '1' || e.key === '2' || e.key === '3') {
       document.querySelector(`#tabs button[data-view="${e.key}"]`).click();
     }
@@ -261,16 +291,31 @@ function paintPane(paneId, boxW, boxH) {
   cv.width = Math.round(w); cv.height = Math.round(h);
   const g = cv.getContext('2d');
   g.clearRect(0, 0, cv.width, cv.height);
-  const sel = selLesion();
-  if (sel && sel.slice_idx === state.slice && state.view !== 1) {
+
+  // Two rings, one rule: solid = the component you selected, dashed = the same
+  // 3D lesion on the slice you are looking at now. Both are drawn in array
+  // coordinates and flipped here, the only place that conversion happens.
+  const drawRing = (l, dashed) => {
     const sx = cv.width / state.imgW, sy = cv.height / state.imgH;
-    let x0 = sel.bbox_x0, x1 = sel.bbox_x1, y0 = sel.bbox_y0, y1 = sel.bbox_y1;
+    let x0 = l.bbox_x0, x1 = l.bbox_x1, y0 = l.bbox_y0, y1 = l.bbox_y1;
     if (FLIP_X) { const a = state.imgW - 1 - x1, b = state.imgW - 1 - x0; x0 = a; x1 = b; }
     if (FLIP_Y) { const a = state.imgH - 1 - y1, b = state.imgH - 1 - y0; y0 = a; y1 = b; }
     const m = 3;
-    g.strokeStyle = '#4FA8C5';
+    g.setLineDash(dashed ? [3, 3] : []);
+    g.strokeStyle = dashed ? ACCENT_COLOR : '#4FA8C5';
     g.lineWidth = 1.5;
     g.strokeRect(x0 * sx - m, y0 * sy - m, (x1 - x0 + 1) * sx + 2 * m, (y1 - y0 + 1) * sy + 2 * m);
+    g.setLineDash([]);
+  };
+
+  const sel = selLesion();
+  if (state.view !== 1) {
+    if (state.sel3d) {
+      membersOf(state.sel3d)
+        .filter(l => l.slice_idx === state.slice && (!sel || keyOf(l) !== state.sel))
+        .forEach(l => drawRing(l, true));
+    }
+    if (sel && sel.slice_idx === state.slice) drawRing(sel, false);
   }
   return { w, h };
 }
@@ -322,13 +367,26 @@ function renderArgument() {
 
   const zs = cs.map(i => sliceMeta(i).z_mm);
   const wts = cnt.map(l => l.density_weight);
-  document.getElementById('a-because').textContent = cnt.length === 0
-    ? `No component reached 1.0 mm². ${state.slices.length} slices were predicted and scored; every connected component measured below the minimum and is recorded as withheld.`
-    : `${cnt.length} of ${state.lesions.length} components cleared 1.0 mm². They sit on ${cs.length} of ${state.slices.length} slices, ` +
-      `z ${Math.min(...zs).toFixed(1)}–${Math.max(...zs).toFixed(1)} mm, weights ${Math.min(...wts)}–${Math.max(...wts)}. ` +
-      (outputType() === 'coverage'
+  const zmin = Math.min(...zs).toFixed(1);
+  const zmax = Math.max(...zs).toFixed(1);
+  const wmin = Math.min(...wts);
+  const wmax = Math.max(...wts);
+
+  let becauseStr = '';
+  if (cnt.length === 0) {
+    becauseStr = `No component reached 1.0 mm². ${state.slices.length} slices were predicted and scored; every connected component measured below the minimum and is recorded as withheld.`;
+  } else {
+    becauseStr = `${cnt.length} of ${state.lesions.length} components cleared 1.0 mm². `;
+    if (counted3d().length === cnt.length) {
+      becauseStr += `They sit on ${cs.length} of ${state.slices.length} slices, z ${zmin}–${zmax} mm, weights ${wmin}–${wmax}. No lesion in this study spans more than one slice. `;
+    } else {
+      becauseStr += `They group into ${counted3d().length} lesions across ${cs.length} of ${state.slices.length} slices, z ${zmin}–${zmax} mm, weights ${wmin}–${wmax}. `;
+    }
+    becauseStr += (outputType() === 'coverage'
         ? 'Area is the sum of per-voxel coverage, so partial voxels enter at their own fraction.'
         : 'Area is a count of voxels above threshold, so each boundary voxel is either fully counted or fully discarded.');
+  }
+  document.getElementById('a-because').textContent = becauseStr;
 
   document.getElementById('a-viewname').textContent = viewName();
   document.getElementById('a-overlay').textContent = overlayNote();
@@ -358,12 +416,19 @@ function renderArgument() {
   // counted table
   const tb = document.getElementById('a-rows');
   tb.innerHTML = '';
-  cnt.forEach(l => {
+  const orderedCnt = [...cnt].sort((a, b) =>
+    a.lesion_3d_id - b.lesion_3d_id || a.slice_idx - b.slice_idx);
+  let prevCnt = null;
+  orderedCnt.forEach(l => {
+    const first = l.lesion_3d_key !== prevCnt; prevCnt = l.lesion_3d_key;
     const p = meanCoverage(l);
     const tr = document.createElement('tr');
     tr.className = keyOf(l) === state.sel ? 'on' : l.slice_idx === state.slice ? 'cur' : '';
+    tr.classList.toggle('g3-first', first);
+    tr.classList.toggle('g3-on', l.lesion_3d_key === state.sel3d);
     tr.innerHTML =
-      `<td class="l">L${l.lesion_id}</td><td>${l.slice_idx}</td><td>${l.z_mm.toFixed(1)}</td>` +
+      `<td class="g3">${first ? l.lesion_3d_key : ''}</td>` +
+      `<td class="l">sl ${l.slice_idx}</td><td>${l.z_mm.toFixed(1)}</td>` +
       `<td>${l.area_mm2.toFixed(2)}</td><td>${l.peak_hu}</td><td>${l.density_weight}</td>` +
       `<td class="${p != null && p < 0.5 ? 'soft' : ''}">${p == null ? '—' : p.toFixed(2)}</td>` +
       `<td>${l.agatston.toFixed(1)}</td>`;
@@ -371,6 +436,26 @@ function renderArgument() {
     tb.appendChild(tr);
   });
   document.getElementById('a-ncounted').textContent = cnt.length;
+
+  // lesion 3d index
+  const lb = document.getElementById('a-l3drows');
+  lb.innerHTML = '';
+  counted3d().forEach(g => {
+    const tr = document.createElement('tr');
+    tr.className = g.lesion_3d_key === state.sel3d ? 'on' : '';
+    tr.innerHTML =
+      `<td class="l">${g.lesion_3d_key}</td>` +
+      `<td>${g.n_slices} sl</td>` +
+      `<td>${g.span_mm.toFixed(0)} mm</td>` +
+      `<td>${g.total_agatston.toFixed(1)}</td>`;
+    tr.onclick = () => goToLesion(g.lesion_3d_key);
+    lb.appendChild(tr);
+  });
+  const spans = counted3d().filter(g => g.n_slices > 1).length;
+  document.getElementById('a-l3dsummary').textContent =
+    counted3d().length === 0 ? 'no scored lesion'
+    : `${counted3d().length} lesions · ${spans} span more than one slice · ` +
+      `largest ${Math.max(...counted3d().map(g => g.n_slices))} slices`;
 
   // excluded
   const eb = document.getElementById('a-exrows');
@@ -424,11 +509,13 @@ function renderInstrument() {
     b.style.borderBottomColor = sc > 0 ? 'var(--accent)' : any ? 'var(--muted-2)' : 'transparent';
     b.style.opacity = reach ? 1 : .3;
     if (s.idx === state.slice) b.classList.add('cur');
+    if (state.sel3d && slicesOf(state.sel3d).includes(s.idx)) b.classList.add('in3d');
     b.title = `slice ${s.idx} · z ${s.z_mm.toFixed(1)} mm · ${sc ? sc.toFixed(1) : 'empty'}` +
               (reach ? '' : ' · unreachable in calcium-only');
     if (reach) b.onclick = () => goTo(s.idx);
     track.appendChild(b);
   });
+  document.getElementById('i-legend3d').hidden = !state.sel3d;
   document.getElementById('i-cursor').textContent = `▲ cursor slice ${state.slice}`;
   document.getElementById('i-reach').textContent = state.view === 3
     ? `${state.slices.length - cs.length} of ${state.slices.length} slices unreachable in this stack`
@@ -453,16 +540,48 @@ function renderInstrument() {
       const p = meanCoverage(l);
       const b = document.createElement('button');
       b.className = (keyOf(l) === state.sel ? 'on ' : '') + (l.included ? '' : 'ex');
-      b.textContent = `${String.fromCharCode(97 + n)} · ${l.area_mm2.toFixed(2)} mm²` +
+      b.textContent = `${String.fromCharCode(97 + n)} · ${l.lesion_3d_key} · ${l.area_mm2.toFixed(2)} mm²` +
                       (p == null ? '' : ` · p${p.toFixed(2)}`) + (l.included ? '' : ' · withheld');
       b.onclick = () => goTo(l.slice_idx, keyOf(l));
       chips.appendChild(b);
     });
   }
 
+  // ── selected 3D lesion
+  const kv = (k, v, cls) => `<div class="i-kv"><span>${k}</span><span class="${cls || ''}">${v}</span></div>`;
+  const l3dSec = document.getElementById('i-l3d-sec');
+  const g3 = state.sel3d ? group3d(state.sel3d) : null;
+  l3dSec.hidden = !g3;
+  if (g3) {
+    const mem = membersOf(state.sel3d);
+    document.getElementById('i-l3d').innerHTML =
+      kv('lesion', g3.lesion_3d_key) +
+      kv('slices', `${g3.n_slices} (${g3.slice_min}–${g3.slice_max})`) +
+      kv('z extent', `${g3.span_mm.toFixed(1)} mm`) +
+      kv('components', g3.n_components_included === g3.n_components
+          ? g3.n_components
+          : `${g3.n_components_included} of ${g3.n_components} counted`) +
+      kv('total area', `${g3.total_area_mm2.toFixed(2)} mm²`) +
+      kv('peak HU', `${g3.max_peak_hu} (slice ${g3.peak_slice_idx})`) +
+      kv('lesion score', g3.total_agatston.toFixed(2), 'score');
+
+    const box = document.getElementById('i-l3d-slices');
+    box.innerHTML = '';
+    const peak = Math.max(...mem.map(l => l.agatston), 1);
+    mem.forEach(l => {
+      const b = document.createElement('button');
+      b.className = (l.slice_idx === state.slice ? 'on ' : '') + (l.included ? '' : 'ex');
+      b.innerHTML =
+        `<span class="sl">sl ${l.slice_idx}</span>` +
+        `<i><b style="width:${Math.round(l.agatston / peak * 100)}%"></b></i>` +
+        `<span class="sc">${l.included ? l.agatston.toFixed(1) : 'withheld'}</span>`;
+      b.onclick = () => goTo(l.slice_idx, keyOf(l));
+      box.appendChild(b);
+    });
+  }
+
   // ── selected lesion
   const sel = selLesion();
-  const kv = (k, v, cls) => `<div class="i-kv"><span>${k}</span><span class="${cls || ''}">${v}</span></div>`;
   const selBox = document.getElementById('i-sel');
   if (!sel) {
     selBox.innerHTML = kv('lesion', here.length ? 'none selected' : 'none on slice', 'withheld');
@@ -501,13 +620,21 @@ function renderInstrument() {
   // ── lesion table
   const tb = document.getElementById('i-rows');
   tb.innerHTML = '';
-  state.lesions.forEach(l => {
+  const ordered = [...state.lesions].sort((a, b) =>
+    a.lesion_3d_id - b.lesion_3d_id || a.slice_idx - b.slice_idx);
+  
+  let prev = null;
+  ordered.forEach(l => {
+    const first = l.lesion_3d_key !== prev; prev = l.lesion_3d_key;
     const p = meanCoverage(l);
     const tr = document.createElement('tr');
     tr.className = [keyOf(l) === state.sel ? 'on' : l.slice_idx === state.slice ? 'cur' : '',
                     l.included ? '' : 'ex'].filter(Boolean).join(' ');
+    tr.classList.toggle('g3-first', first);
+    tr.classList.toggle('g3-on', l.lesion_3d_key === state.sel3d);
     tr.innerHTML =
-      `<td class="l">L${l.lesion_id}</td><td>sl ${l.slice_idx}</td>` +
+      `<td class="g3">${first ? l.lesion_3d_key : ''}</td>` +
+      `<td class="l">sl ${l.slice_idx}</td>` +
       `<td>${l.area_mm2.toFixed(2)}</td>` +
       `<td class="${p != null && p < 0.5 ? 'soft' : ''}">${p == null ? '—' : 'p ' + p.toFixed(2)}</td>` +
       `<td>${l.included ? l.agatston.toFixed(1) : '—'}</td>`;
@@ -553,7 +680,8 @@ function prov(n) {
     return `model HU window ${r.hu_window[0]}–${r.hu_window[1]} · ${sp} mm · RAS`;
   }
   return `crop heart +8 mm, TotalSegmentator ${r.locator_version} · ckpt ${String(r.sha256).slice(0, 12)} · ` +
-         `min lesion 1.0 mm² · ${r.date}`;
+         `min lesion 1.0 mm² · ${r.date}` +
+         ` · 3D link: in-plane overlap, max gap ${state.run.max_gap_slices} slice(s)`;
 }
 
 function provBlock() { return [prov(1), prov(2), prov(3)].join('\n'); }

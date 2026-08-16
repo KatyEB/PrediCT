@@ -34,7 +34,16 @@ from src.backend.paths import upload_dir, work_dir, out_dir, study_id_from_serie
 from src.backend.registry import load_manifest
 from src.backend.pipeline import load, resample, crop_heart, normalize, predict, save_nifti
 from src.backend.scoring import score, totals
+from src.backend.grouping import lesion_3d_table
 from src.backend.render import save_slices
+
+# Scoring conventions, not model properties — they belong here, not in a
+# manifest. Both are written into run.json so any output folder records what
+# actually ran.
+MIN_AREA_MM2   = 1.0   # clinical minimum lesion, conventionally >=3 contiguous px
+MAX_GAP_SLICES = 0     # 3D lesion linking only (grouping.py). 0 = strictly
+                       # adjacent slices. Unswept — raise it only on a measured
+                       # gap-frequency count, see the 3D-lesion brief.
 
 def write_csv(rows: list[dict], path: Path):
     if not rows:
@@ -119,9 +128,20 @@ def run(study_id: str, model_id: str, crop: bool = None, progress=None, custom_i
     save_nifti(image, o / "ct.nii.gz")
 
     p("score", 0.8)
-    rows = score(prob, array, image.GetSpacing(), m["output"], m["threshold"])
-    write_csv(rows, o / "lesions.csv")
+    rows = score(prob, array, image.GetSpacing(), m["output"], m["threshold"],
+                 min_area_mm2=MIN_AREA_MM2, max_gap_slices=MAX_GAP_SLICES)
+    groups = lesion_3d_table(rows, image.GetSpacing()[2])
     summary = totals(rows)
+
+    # Grouping is descriptive. If it ever changes a number, something has leaked
+    # from grouping.py into the area or weight terms — stop rather than publish.
+    assert abs(sum(g["total_agatston"] for g in groups) - summary["agatston_total"]) < 1e-9, \
+        "3D rollup disagrees with the per-slice total — grouping has affected scoring"
+    assert sum(g["n_components"] for g in groups) == len(rows), \
+        "3D rollup lost or duplicated a component"
+
+    write_csv(rows, o / "lesions.csv")
+    write_csv(groups, o / "lesions_3d.csv")
     
     run_provenance = {
         **summary,
@@ -130,6 +150,9 @@ def run(study_id: str, model_id: str, crop: bool = None, progress=None, custom_i
         "cropped": crop,
         "shape": list(array.shape),
         "output": m["output"],
+        "threshold": m["threshold"],
+        "min_area_mm2": MIN_AREA_MM2,
+        "max_gap_slices": MAX_GAP_SLICES,
         "hu_window": m["hu_window"],
         "spacing": list(image.GetSpacing()),
         "sha256": m.get("sha256"),

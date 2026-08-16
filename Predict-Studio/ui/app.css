@@ -191,6 +191,7 @@ button { font: inherit; cursor: pointer; }
 .i-track button { flex: 1; min-width: 0; border: 0; padding: 0;
                   border-bottom: 3px solid transparent; }
 .i-track button.cur { border-top: 1px solid var(--ink); }
+.i-track button.in3d { outline: 1px solid var(--accent); outline-offset: 1px; }
 .accent { color: var(--accent); }
 .muted2 { color: var(--muted-2); }
 
@@ -234,6 +235,21 @@ button { font: inherit; cursor: pointer; }
 .i-softnote { font-family: 'IBM Plex Mono', monospace; font-size: 10px;
               color: var(--muted); line-height: 1.6; }
 
+.i-l3d-slices { display: flex; flex-direction: column; gap: 2px; }
+.i-l3d-slices button {
+  display: flex; align-items: center; justify-content: space-between; gap: 8px;
+  background: transparent; border: 0; padding: 4px;
+  font-family: 'IBM Plex Mono', monospace; font-size: 10.5px; color: var(--ink);
+}
+.i-l3d-slices button.on { background: var(--accent); color: var(--bg); }
+.i-l3d-slices button.ex { color: var(--muted-2); }
+.i-l3d-slices button .sl { width: 40px; text-align: left; }
+.i-l3d-slices button .sc { width: 50px; text-align: right; }
+.i-l3d-slices button i { width: 84px; height: 8px; background: var(--rule-2); display: block; flex: 0 0 auto; }
+.i-l3d-slices button i b { display: block; height: 8px; background: var(--accent); }
+.i-l3d-slices button.on i b { background: var(--bg); }
+.i-l3d-slices button.ex i b { background: var(--muted-2); }
+
 .i-table { width: 100%; border-collapse: collapse;
            font-family: 'IBM Plex Mono', monospace; font-size: 10.5px; }
 .i-table tr { cursor: pointer; border-top: 1px solid var(--rule-2); }
@@ -244,6 +260,9 @@ button { font: inherit; cursor: pointer; }
 .i-table tr.ex { color: var(--muted-2); }
 .i-table tr.on td { color: var(--bg); }
 .i-table td.soft { color: var(--accent); }
+
+.g3-first td { border-top: 1px solid var(--rule-2); }
+.g3-on td { background: color-mix(in srgb, var(--accent) 8%, transparent); }
 .i-empty, .i-exsummary { font-family: 'IBM Plex Mono', monospace; font-size: 10.5px;
                          color: var(--muted-2); line-height: 1.7; }
 
