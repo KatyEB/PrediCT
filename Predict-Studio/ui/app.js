@@ -223,11 +223,21 @@ function wire() {
   document.getElementById('a-pane').addEventListener('wheel', onWheel, { passive: false });
 
   document.addEventListener('keydown', e => {
-    if (e.key === 'ArrowDown' || e.key === 'ArrowRight') { step(1); e.preventDefault(); }
-    if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') { step(-1); e.preventDefault(); }
-    if (e.key === 'Escape') { state.sel = null; state.sel3d = null; render(); }
-    if (e.key === '1' || e.key === '2' || e.key === '3') {
-      document.querySelector(`#tabs button[data-view="${e.key}"]`).click();
+    const cols = state.dir === 3 ? currentColumnCount() : 1;
+    if (e.key === 'ArrowDown') { step(cols); e.preventDefault(); }
+    else if (e.key === 'ArrowRight') { step(1); e.preventDefault(); }
+    else if (e.key === 'ArrowUp') { step(-cols); e.preventDefault(); }
+    else if (e.key === 'ArrowLeft') { step(-1); e.preventDefault(); }
+    else if (e.key === 'Escape') { state.sel = null; state.sel3d = null; render(); }
+    else if (e.key === 'Home') {
+      const c = calcSlices(); if (c.length) goTo(c[0]); e.preventDefault();
+    }
+    else if (e.key === 'End') {
+      const c = calcSlices(); if (c.length) goTo(c[c.length - 1]); e.preventDefault();
+    }
+    else if (e.key === '1' || e.key === '2' || e.key === '3') {
+      const btn = document.querySelector(`#tabs button[data-view="${e.key}"]`);
+      if (btn) btn.click();
     }
   });
 
@@ -238,6 +248,7 @@ function wire() {
 function render() {
   document.getElementById('d1').classList.toggle('on', state.dir === 1);
   document.getElementById('d2').classList.toggle('on', state.dir === 2);
+  document.getElementById('d3').classList.toggle('on', state.dir === 3);
   document.querySelectorAll('#tabs button[data-dir]').forEach(b =>
     b.classList.toggle('on', Number(b.dataset.dir) === state.dir));
   document.querySelectorAll('#tabs button[data-view]').forEach(b =>
@@ -245,7 +256,9 @@ function render() {
   document.getElementById('tabs-study').textContent =
     `study ${STUDY} · ${MODEL} · ${state.slices.length} slices`;
 
-  if (state.dir === 1) renderArgument(); else renderInstrument();
+  if (state.dir === 1) renderArgument(); 
+  else if (state.dir === 2) renderInstrument();
+  else renderContactSheet();
   preload(state.slice);
 }
 
@@ -657,6 +670,148 @@ function renderInstrument() {
   document.getElementById('i-tierfill').style.width =
     Math.min(100, total / TIER_SCALE_MAX * 100) + '%';
   document.getElementById('i-tiernote').textContent = tierNote(total) + ' · ↑↓ step · 1/2/3 view · esc clear';
+}
+
+// ══ 03 CONTACT SHEET ═════════════════════════════════════════════════════
+
+function currentColumnCount() {
+  const grid = document.getElementById('cs-grid');
+  if (!grid || !grid.children.length) return 1;
+  const cols = getComputedStyle(grid).gridTemplateColumns.split(' ').length;
+  return cols || 1;
+}
+
+function renderContactSheet() {
+  const r = state.run, cs = calcSlices(), ex = excluded();
+  const total = r.agatston_total, tier = tierOf(total);
+  const here = onSlice(state.slice);
+  const meta = sliceMeta(state.slice);
+
+  document.getElementById('cs-prov1').textContent = prov(1);
+  document.getElementById('cs-prov2').textContent = prov(2);
+  document.getElementById('cs-prov3').textContent = prov(3);
+
+  // grid
+  const grid = document.getElementById('cs-grid');
+  const sel3dSlices = state.sel3d ? slicesOf(state.sel3d) : [];
+  
+  if (grid.children.length !== state.slices.length) {
+    grid.innerHTML = '';
+    state.slices.forEach(s => {
+      const b = document.createElement('button');
+      b.className = 'cs-frame';
+      b.id = 'cs-frame-' + s.idx;
+      b.innerHTML =
+        `<span class="pane"><img class="pane-ct" loading="lazy" decoding="async" src="${ctUrl(s.idx)}" alt="">` +
+        `<img class="pane-mask" loading="lazy" decoding="async" src="${maskUrl(s.idx)}" alt=""></span>` +
+        `<span class="cs-cap">${s.idx}</span>`;
+      b.onclick = () => goTo(s.idx);
+      
+      const maskImg = b.querySelector('.pane-mask');
+      maskImg.onerror = () => b.classList.add('cs-missing');
+      
+      grid.appendChild(b);
+    });
+  }
+  
+  let nCounted = 0, nSubmin = 0, nEmpty = 0;
+  
+  state.slices.forEach(s => {
+    const b = document.getElementById('cs-frame-' + s.idx);
+    b.className = 'cs-frame'; 
+    if (s.idx === state.slice) b.classList.add('cs-cursor');
+    if (state.sel3d && sel3dSlices.includes(s.idx)) b.classList.add('cs-in3d');
+    
+    // View 3 dims unreachable frames
+    b.style.opacity = (state.view !== 3 || s.has_calcium) ? 1 : 0.3;
+    const pane = b.querySelector('.pane');
+    pane.className = 'pane' + (state.view === 1 ? ' view-1' : '');
+
+    const hasCalc = s.has_calcium;
+    const any = onSlice(s.idx).length > 0;
+    if (hasCalc) { b.classList.add('cs-counted'); nCounted++; }
+    else if (any) { b.classList.add('cs-submin'); nSubmin++; }
+    else { nEmpty++; }
+  });
+
+  document.getElementById('cs-n-counted').textContent = nCounted;
+  document.getElementById('cs-n-submin').textContent = nSubmin;
+  document.getElementById('cs-n-empty').textContent = nEmpty;
+  document.getElementById('cs-legend-note').textContent = `all ${state.slices.length} slices reachable · every frame windowed -100–400 HU`;
+
+  // Enlargement pane
+  paintPane('cs-pane', 186, 186);
+  document.getElementById('cs-slice').textContent = `FRAME ${state.slice} — `;
+  document.getElementById('cs-z').textContent = `z ${meta.z_mm.toFixed(1)} mm`;
+
+  // Chips
+  const chips = document.getElementById('cs-chips');
+  chips.innerHTML = '';
+  if (!here.length) {
+    chips.innerHTML = '<span class="none">no lesion on this slice</span>';
+  } else {
+    here.forEach((l, n) => {
+      const p = meanCoverage(l);
+      const b = document.createElement('button');
+      b.className = (keyOf(l) === state.sel ? 'on ' : '') + (l.included ? '' : 'ex');
+      b.textContent = `${String.fromCharCode(97 + n)} · ${l.lesion_3d_key} · ${l.area_mm2.toFixed(2)} mm²` +
+                      (p == null ? '' : ` · p${p.toFixed(2)}`) + (l.included ? '' : ' · withheld');
+      b.onclick = () => goTo(l.slice_idx, keyOf(l));
+      chips.appendChild(b);
+    });
+  }
+
+  // 3D Lesion Info
+  const l3dInfo = document.getElementById('cs-l3d-info');
+  const g3 = state.sel3d ? group3d(state.sel3d) : null;
+  if (g3) {
+    l3dInfo.textContent = `${g3.lesion_3d_key} · ${g3.n_slices} frames · slices ${g3.slice_min}–${g3.slice_max} · ${g3.span_mm.toFixed(1)} mm · ${g3.total_agatston.toFixed(1)} Agatston`;
+  } else {
+    l3dInfo.textContent = '';
+  }
+
+  // ── lesion table
+  const cnt = counted();
+  const tb = document.getElementById('cs-rows');
+  tb.innerHTML = '';
+  const ordered = [...cnt].sort((a, b) =>
+    a.lesion_3d_id - b.lesion_3d_id || a.slice_idx - b.slice_idx);
+  
+  let prev = null;
+  ordered.forEach(l => {
+    const first = l.lesion_3d_key !== prev; prev = l.lesion_3d_key;
+    const p = meanCoverage(l);
+    const tr = document.createElement('tr');
+    tr.className = [keyOf(l) === state.sel ? 'on' : l.slice_idx === state.slice ? 'cur' : '',
+                    l.included ? '' : 'ex'].filter(Boolean).join(' ');
+    tr.classList.toggle('g3-first', first);
+    tr.classList.toggle('g3-on', l.lesion_3d_key === state.sel3d);
+    tr.innerHTML =
+      `<td class="g3">${first ? l.lesion_3d_key : ''}</td>` +
+      `<td class="l">sl ${l.slice_idx}</td>` +
+      `<td>${l.area_mm2.toFixed(2)}</td>` +
+      `<td class="${p != null && p < 0.5 ? 'soft' : ''}">${p == null ? '—' : 'p ' + p.toFixed(2)}</td>` +
+      `<td>${l.included ? l.agatston.toFixed(1) : '—'}</td>`;
+    tr.onclick = () => goTo(l.slice_idx, keyOf(l));
+    tb.appendChild(tr);
+  });
+  
+  document.getElementById('cs-ncounted-text').textContent = cnt.length;
+  const empty = document.getElementById('cs-empty');
+  empty.hidden = cnt.length > 0;
+  empty.textContent = `No components counted.`;
+  
+  document.getElementById('cs-nex').textContent = ex.length;
+  document.getElementById('cs-exsummary').textContent = exSummary();
+
+  // ── footer
+  document.getElementById('cs-total').textContent = total.toFixed(1);
+  const tEl = document.getElementById('cs-tier');
+  tEl.textContent = tier;
+  tEl.classList.toggle('severe', tier === 'SEVERE');
+  document.getElementById('cs-tierfill').style.width =
+    Math.min(100, total / TIER_SCALE_MAX * 100) + '%';
+  document.getElementById('cs-tiernote').textContent = tierNote(total) + ' · ↑↓ step · 1/2/3 view · esc clear';
 }
 
 // ── shared text ──────────────────────────────────────────────────────────

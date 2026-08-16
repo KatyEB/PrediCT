@@ -263,6 +263,7 @@ button { font: inherit; cursor: pointer; }
 
 .g3-first td { border-top: 1px solid var(--rule-2); }
 .g3-on td { background: color-mix(in srgb, var(--accent) 8%, transparent); }
+.a-table td.g3, .i-table td.g3 { text-align: left; }
 .i-empty, .i-exsummary { font-family: 'IBM Plex Mono', monospace; font-size: 10.5px;
                          color: var(--muted-2); line-height: 1.7; }
 
@@ -277,3 +278,49 @@ button { font: inherit; cursor: pointer; }
 .i-tierbar i { position: absolute; left: 0; top: 0; bottom: 0; background: var(--accent); }
 .i-tierbar u { position: absolute; top: -3px; bottom: -3px; width: 1px; background: var(--muted); }
 .i-tiernote { font-family: 'IBM Plex Mono', monospace; font-size: 9.5px; color: var(--muted); }
+
+/* ══ 03 CONTACT SHEET ═════════════════════════════════════ */
+#d3 { background: var(--bg); color: var(--ink); font-family: 'Space Grotesk', sans-serif; }
+.cs-body { flex: 1; min-height: 0; display: grid; grid-template-columns: 1fr 340px; overflow: hidden; }
+.cs-main { display: flex; flex-direction: column; min-height: 0; border-right: 1px solid var(--rule); }
+
+.cs-grid-wrap { flex: 1; min-height: 0; padding: 16px; }
+.cs-grid { 
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(64px, 1fr)); 
+  gap: 4px; max-width: 1050px; 
+}
+.cs-frame {
+  position: relative; background: transparent; border: 0; padding: 0;
+  width: 100%; padding-bottom: 100%; overflow: hidden;
+}
+.cs-frame .pane { position: absolute; inset: 0; }
+.cs-cap {
+  position: absolute; bottom: 2px; left: 4px; font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px; color: rgba(228, 222, 208, 0.7); z-index: 2; pointer-events: none;
+}
+
+.cs-frame.cs-counted .pane::after { content: ''; position: absolute; inset: 0; pointer-events: none; box-shadow: inset 0 0 0 2px var(--prediction); }
+.cs-frame.cs-submin .pane::after { content: ''; position: absolute; inset: 0; pointer-events: none; border: 1px dashed var(--muted-2); }
+.cs-frame.cs-cursor { outline: 2px solid var(--ink); outline-offset: 2px; z-index: 5; }
+
+.cs-frame.cs-in3d .pane { box-shadow: 0 0 0 1px var(--accent); }
+.cs-frame.cs-in3d .cs-cap { color: var(--accent); font-weight: bold; }
+
+.cs-frame.cs-missing { background: #332222; }
+.cs-frame.cs-missing::after { 
+  content: '?'; position: absolute; inset: 0; display: flex; 
+  align-items: center; justify-content: center; color: var(--prediction); 
+}
+
+.cs-legend {
+  flex: 0 0 auto; padding: 8px 16px; border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule);
+  display: flex; gap: 16px; font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: var(--muted);
+}
+.cs-legend-empty { color: var(--muted); }
+.cs-legend .push { margin-left: auto; color: var(--muted-2); }
+
+.cs-enlargement { flex: 0 0 auto; display: flex; height: 210px; }
+.cs-enlargement-pane { width: 210px; padding: 12px; display: flex; align-items: center; justify-content: center; background: #000; }
+#cs-pane { max-width: 100%; max-height: 100%; }
+.cs-enlargement-info { flex: 1; min-width: 0; padding: 12px 16px; display: flex; flex-direction: column; gap: 10px; }
+.cs-l3d-info { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--ink); margin-top: auto; }

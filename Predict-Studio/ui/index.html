@@ -12,6 +12,7 @@
   <span class="tabs-label">PrediCT STUDIO</span>
   <button data-dir="1">01 Argument</button>
   <button data-dir="2">02 Instrument</button>
+  <button data-dir="3">03 Contact Sheet</button>
   <span class="tabs-spacer"></span>
   <span class="tabs-label">VIEW</span>
   <button data-view="1">1 original</button>
@@ -174,6 +175,67 @@
         </div>
         <div class="i-tierbar"><i id="i-tierfill"></i><u style="left:7.1%"></u><u style="left:28.6%"></u></div>
         <span class="i-tiernote" id="i-tiernote"></span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ 03 CONTACT SHEET ══════════════ -->
+<div id="d3" class="dir">
+  <div class="i-prov">
+    <span id="cs-prov1"></span><span id="cs-prov2"></span><span id="cs-prov3" class="push"></span>
+  </div>
+
+  <div class="cs-body">
+    <div class="cs-main">
+      <div class="scroll cs-grid-wrap">
+        <div class="cs-grid" id="cs-grid"></div>
+      </div>
+      <div class="cs-legend">
+        <span class="accent">● <b id="cs-n-counted">0</b> frames carry scored calcium</span>
+        <span class="muted2">○ <b id="cs-n-submin">0</b> sub-minimum only</span>
+        <span class="cs-legend-empty">▪ <b id="cs-n-empty">0</b> empty</span>
+        <span class="push" id="cs-legend-note"></span>
+      </div>
+      
+      <div class="cs-enlargement">
+        <div class="cs-enlargement-pane">
+          <div class="pane" id="cs-pane" data-pane="cs">
+            <img class="pane-ct" alt="">
+            <img class="pane-mask" alt="">
+            <canvas class="pane-ring"></canvas>
+            <div class="pane-labels"></div>
+          </div>
+        </div>
+        <div class="cs-enlargement-info">
+          <div class="i-rail-title"><span id="cs-slice">FRAME —</span><span id="cs-z"></span></div>
+          <div class="i-chips" id="cs-chips"></div>
+          <div class="cs-l3d-info" id="cs-l3d-info"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="i-rail">
+      <div class="scroll i-rail-body">
+        <div class="i-sec">
+          <span class="i-label">COUNTED · <b id="cs-ncounted-text"></b></span>
+          <table class="i-table"><tbody id="cs-rows"></tbody></table>
+          <span class="i-empty" id="cs-empty" hidden></span>
+        </div>
+        <div class="i-sec">
+          <span class="i-label">WITHHELD · <b id="cs-nex"></b></span>
+          <span class="i-exsummary" id="cs-exsummary"></span>
+        </div>
+      </div>
+
+      <div class="i-foot">
+        <div class="i-foot-row">
+          <span class="i-label">TOTAL</span>
+          <span class="i-total" id="cs-total">—</span>
+          <span class="i-tier" id="cs-tier"></span>
+        </div>
+        <div class="i-tierbar"><i id="cs-tierfill"></i><u style="left:7.1%"></u><u style="left:28.6%"></u></div>
+        <span class="i-tiernote" id="cs-tiernote"></span>
       </div>
     </div>
   </div>
