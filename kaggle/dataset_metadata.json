@@ -1,0 +1,13 @@
+{
+  "title": "EAT Segmentation - nnU-Net Training Dataset",
+  "id": "shreeeeyyyyy/eat-segmentation-nnunet",
+  "licenses": [{"name": "other"}],
+  "keywords": ["medicine", "imaging", "segmentation", "cardiac", "ct"],
+  "collaborators": [],
+  "data": [
+    {
+      "description": "nnU-Net v2 Dataset001_EAT — cardiac ROI CT crops and epicardial/paracardial fat labels from 153 COCA patients (SAM2 pseudo-labels)",
+      "sources": [{"sourceType": "local", "path": "../../nnunet/raw/Dataset001_EAT"}]
+    }
+  ]
+}

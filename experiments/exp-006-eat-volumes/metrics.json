@@ -1,0 +1,283 @@
+{
+  "n_patients": 26,
+  "n_score1": 14,
+  "n_score2": 12,
+  "eat_mean_ml": 130.7,
+  "eat_median_ml": 126.6,
+  "eat_std_ml": 49.5,
+  "eat_min_ml": 55.8,
+  "eat_max_ml": 299.9,
+  "pat_mean_ml": 599.0,
+  "pat_median_ml": 512.0,
+  "n_flagged": 1,
+  "flagged_ids": [
+    "288f6ef3589f"
+  ],
+  "commandeur_2018_median_ml": 78,
+  "commandeur_2018_iqr": [
+    48,
+    117
+  ],
+  "per_patient": [
+    {
+      "scan_id": "0ab03d38800c",
+      "quality_score": 1,
+      "eat_ml": 69.5,
+      "pat_ml": 359.8,
+      "total_fat_ml": 429.3,
+      "pericardium_sac_ml": 911.7,
+      "eat_fraction": 0.162,
+      "flagged": false
+    },
+    {
+      "scan_id": "0ad6cd5125d1",
+      "quality_score": 2,
+      "eat_ml": 113.9,
+      "pat_ml": 470.4,
+      "total_fat_ml": 584.3,
+      "pericardium_sac_ml": 909.1,
+      "eat_fraction": 0.195,
+      "flagged": false
+    },
+    {
+      "scan_id": "0c144ac0947c",
+      "quality_score": 2,
+      "eat_ml": 89.8,
+      "pat_ml": 418.8,
+      "total_fat_ml": 508.6,
+      "pericardium_sac_ml": 1310.9,
+      "eat_fraction": 0.177,
+      "flagged": false
+    },
+    {
+      "scan_id": "24c9620c55c4",
+      "quality_score": 2,
+      "eat_ml": 151.6,
+      "pat_ml": 743.6,
+      "total_fat_ml": 895.2,
+      "pericardium_sac_ml": 713.2,
+      "eat_fraction": 0.169,
+      "flagged": false
+    },
+    {
+      "scan_id": "2685b4cfaa58",
+      "quality_score": 1,
+      "eat_ml": 138.7,
+      "pat_ml": 726.3,
+      "total_fat_ml": 865.0,
+      "pericardium_sac_ml": 1055.5,
+      "eat_fraction": 0.16,
+      "flagged": false
+    },
+    {
+      "scan_id": "288f6ef3589f",
+      "quality_score": 1,
+      "eat_ml": 299.9,
+      "pat_ml": 841.9,
+      "total_fat_ml": 1141.8,
+      "pericardium_sac_ml": 1221.7,
+      "eat_fraction": 0.263,
+      "flagged": true
+    },
+    {
+      "scan_id": "2c32123450a2",
+      "quality_score": 2,
+      "eat_ml": 166.3,
+      "pat_ml": 784.1,
+      "total_fat_ml": 950.4,
+      "pericardium_sac_ml": 1251.9,
+      "eat_fraction": 0.175,
+      "flagged": false
+    },
+    {
+      "scan_id": "35183abeeb90",
+      "quality_score": 2,
+      "eat_ml": 145.3,
+      "pat_ml": 449.4,
+      "total_fat_ml": 594.7,
+      "pericardium_sac_ml": 1181.1,
+      "eat_fraction": 0.244,
+      "flagged": false
+    },
+    {
+      "scan_id": "48be8c6bef75",
+      "quality_score": 1,
+      "eat_ml": 130.0,
+      "pat_ml": 742.5,
+      "total_fat_ml": 872.5,
+      "pericardium_sac_ml": 1054.9,
+      "eat_fraction": 0.149,
+      "flagged": false
+    },
+    {
+      "scan_id": "50b72de94fbd",
+      "quality_score": 2,
+      "eat_ml": 55.8,
+      "pat_ml": 478.6,
+      "total_fat_ml": 534.3,
+      "pericardium_sac_ml": 700.0,
+      "eat_fraction": 0.104,
+      "flagged": false
+    },
+    {
+      "scan_id": "55e5446d3909",
+      "quality_score": 1,
+      "eat_ml": 71.4,
+      "pat_ml": 239.8,
+      "total_fat_ml": 311.2,
+      "pericardium_sac_ml": 866.4,
+      "eat_fraction": 0.229,
+      "flagged": false
+    },
+    {
+      "scan_id": "589239324d0f",
+      "quality_score": 2,
+      "eat_ml": 141.9,
+      "pat_ml": 412.4,
+      "total_fat_ml": 554.3,
+      "pericardium_sac_ml": 1131.8,
+      "eat_fraction": 0.256,
+      "flagged": false
+    },
+    {
+      "scan_id": "5e491c442c9f",
+      "quality_score": 1,
+      "eat_ml": 114.4,
+      "pat_ml": 650.4,
+      "total_fat_ml": 764.8,
+      "pericardium_sac_ml": 845.0,
+      "eat_fraction": 0.15,
+      "flagged": false
+    },
+    {
+      "scan_id": "925c287bd698",
+      "quality_score": 2,
+      "eat_ml": 169.3,
+      "pat_ml": 1182.4,
+      "total_fat_ml": 1351.7,
+      "pericardium_sac_ml": 1283.5,
+      "eat_fraction": 0.125,
+      "flagged": false
+    },
+    {
+      "scan_id": "ab73e336f087",
+      "quality_score": 1,
+      "eat_ml": 139.4,
+      "pat_ml": 818.4,
+      "total_fat_ml": 957.8,
+      "pericardium_sac_ml": 835.7,
+      "eat_fraction": 0.146,
+      "flagged": false
+    },
+    {
+      "scan_id": "b7fe6c8df2de",
+      "quality_score": 1,
+      "eat_ml": 123.2,
+      "pat_ml": 873.9,
+      "total_fat_ml": 997.1,
+      "pericardium_sac_ml": 1123.4,
+      "eat_fraction": 0.124,
+      "flagged": false
+    },
+    {
+      "scan_id": "c6a86c876863",
+      "quality_score": 2,
+      "eat_ml": 72.0,
+      "pat_ml": 416.8,
+      "total_fat_ml": 488.8,
+      "pericardium_sac_ml": 780.1,
+      "eat_fraction": 0.147,
+      "flagged": false
+    },
+    {
+      "scan_id": "c9e72c3512e7",
+      "quality_score": 2,
+      "eat_ml": 95.7,
+      "pat_ml": 173.2,
+      "total_fat_ml": 269.0,
+      "pericardium_sac_ml": 808.7,
+      "eat_fraction": 0.356,
+      "flagged": false
+    },
+    {
+      "scan_id": "d755207025e1",
+      "quality_score": 1,
+      "eat_ml": 212.2,
+      "pat_ml": 494.2,
+      "total_fat_ml": 706.5,
+      "pericardium_sac_ml": 869.1,
+      "eat_fraction": 0.3,
+      "flagged": false
+    },
+    {
+      "scan_id": "dab548002038",
+      "quality_score": 2,
+      "eat_ml": 101.1,
+      "pat_ml": 404.7,
+      "total_fat_ml": 505.8,
+      "pericardium_sac_ml": 709.3,
+      "eat_fraction": 0.2,
+      "flagged": false
+    },
+    {
+      "scan_id": "e1190d07add9",
+      "quality_score": 1,
+      "eat_ml": 115.9,
+      "pat_ml": 839.0,
+      "total_fat_ml": 954.9,
+      "pericardium_sac_ml": 1742.8,
+      "eat_fraction": 0.121,
+      "flagged": false
+    },
+    {
+      "scan_id": "ea041f6d23d2",
+      "quality_score": 1,
+      "eat_ml": 143.0,
+      "pat_ml": 529.8,
+      "total_fat_ml": 672.7,
+      "pericardium_sac_ml": 1057.3,
+      "eat_fraction": 0.213,
+      "flagged": false
+    },
+    {
+      "scan_id": "ef75c9c16e8f",
+      "quality_score": 2,
+      "eat_ml": 161.0,
+      "pat_ml": 877.4,
+      "total_fat_ml": 1038.4,
+      "pericardium_sac_ml": 1012.6,
+      "eat_fraction": 0.155,
+      "flagged": false
+    },
+    {
+      "scan_id": "f80c78e43274",
+      "quality_score": 1,
+      "eat_ml": 163.5,
+      "pat_ml": 345.5,
+      "total_fat_ml": 508.9,
+      "pericardium_sac_ml": 954.4,
+      "eat_fraction": 0.321,
+      "flagged": false
+    },
+    {
+      "scan_id": "f90e5ea147b9",
+      "quality_score": 1,
+      "eat_ml": 123.0,
+      "pat_ml": 417.1,
+      "total_fat_ml": 540.1,
+      "pericardium_sac_ml": 770.3,
+      "eat_fraction": 0.228,
+      "flagged": false
+    },
+    {
+      "scan_id": "f966f429ee58",
+      "quality_score": 1,
+      "eat_ml": 89.3,
+      "pat_ml": 884.0,
+      "total_fat_ml": 973.3,
+      "pericardium_sac_ml": 1684.1,
+      "eat_fraction": 0.092,
+      "flagged": false
+    }
+  ]
+}

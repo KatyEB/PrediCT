@@ -1,0 +1,2767 @@
+{
+  "n_train": 131,
+  "n_val": 22,
+  "dataset_dir": "/Users/shreyaschitransh/code/eat-segmentation/nnunet/raw/Dataset001_EAT",
+  "dataset_size_mb": 714.2,
+  "eat_mean_ml": 120.0,
+  "eat_median_ml": 115.3,
+  "pat_mean_ml": 549.2,
+  "train_cases": [
+    {
+      "scan_id": "008ddde695d8",
+      "case_name": "EAT_0001",
+      "shape": [
+        291,
+        254,
+        46
+      ],
+      "spacing": [
+        0.699999988079071,
+        0.699999988079071,
+        3.0
+      ],
+      "epi_fat_vox": 90479,
+      "para_fat_vox": 666412,
+      "epi_fat_ml": 133.0,
+      "para_fat_ml": 979.6
+    },
+    {
+      "scan_id": "01243e5fa947",
+      "case_name": "EAT_0002",
+      "shape": [
+        230,
+        193,
+        44
+      ],
+      "spacing": [
+        0.699999988079071,
+        0.699999988079071,
+        3.0
+      ],
+      "epi_fat_vox": 38177,
+      "para_fat_vox": 193420,
+      "epi_fat_ml": 56.1,
+      "para_fat_ml": 284.3
+    },
+    {
+      "scan_id": "0166fa175469",
+      "case_name": "EAT_0003",
+      "shape": [
+        246,
+        198,
+        46
+      ],
+      "spacing": [
+        0.699999988079071,
+        0.699999988079071,
+        3.0
+      ],
+      "epi_fat_vox": 55557,
+      "para_fat_vox": 358125,
+      "epi_fat_ml": 81.7,
+      "para_fat_ml": 526.4
+    },
+    {
+      "scan_id": "01f481cbaa28",
+      "case_name": "EAT_0004",
+      "shape": [
+        228,
+        202,
+        48
+      ],
+      "spacing": [
+        0.699999988079071,
+        0.699999988079071,
+        3.0
+      ],
+      "epi_fat_vox": 10931,
+      "para_fat_vox": 163533,
+      "epi_fat_ml": 16.1,
+      "para_fat_ml": 240.4
+    },
+    {
+      "scan_id": "02429ab0c227",
+      "case_name": "EAT_0005",
+      "shape": [
+        224,
+        207,
+        44
+      ],
+      "spacing": [
+        0.699999988079071,
+        0.699999988079071,
+        3.0
+      ],
+      "epi_fat_vox": 26173,
+      "para_fat_vox": 173327,
+      "epi_fat_ml": 38.5,
+      "para_fat_ml": 254.8
+    },
+    {
+      "scan_id": "0262c9e351e5",
+      "case_name": "EAT_0006",
+      "shape": [
+        233,
+        212,
+        46
+      ],
+      "spacing": [
+        0.699999988079071,
+        0.699999988079071,
+        3.0
+      ],
+      "epi_fat_vox": 52933,
+      "para_fat_vox": 234285,
+      "epi_fat_ml": 77.8,
+      "para_fat_ml": 344.4
+    },
+    {
+      "scan_id": "026c18875fa1",
+      "case_name": "EAT_0007",
+      "shape": [
+        193,
+        177,
+        34
+      ],
+      "spacing": [
+        0.699999988079071,
+        0.699999988079071,
+        3.0
+      ],
+      "epi_fat_vox": 56036,
+      "para_fat_vox": 168077,
+      "epi_fat_ml": 82.4,
+      "para_fat_ml": 247.1
+    },
+    {
+      "scan_id": "02b03b547f16",
+      "case_name": "EAT_0008",
+      "shape": [
+        235,
+        253,
+        46
+      ],
+      "spacing": [
+        0.699999988079071,
+        0.699999988079071,
+        3.0
+      ],
+      "epi_fat_vox": 150374,
+      "para_fat_vox": 277556,
+      "epi_fat_ml": 221.0,
+      "para_fat_ml": 408.0
+    },
+    {
+      "scan_id": "02bdc0aad52f",
+      "case_name": "EAT_0009",
+      "shape": [
+        303,
+        256,
+        36
+      ],
+      "spacing": [
+        0.699999988079071,
+        0.699999988079071,
+        3.0
+      ],
+      "epi_fat_vox": 87545,
+      "para_fat_vox": 383264,
+      "epi_fat_ml": 128.7,
+      "para_fat_ml": 563.4
+    },
+    {
+      "scan_id": "02f231c02141",
+      "case_name": "EAT_0010",
+      "shape": [
+        243,
+        234,
+        51
+      ],
+      "spacing": [
+        0.699999988079071,
+        0.699999988079071,
+        3.0
+      ],
+      "epi_fat_vox": 138360,
+      "para_fat_vox": 277816,
+      "epi_fat_ml": 203.4,
+      "para_fat_ml": 408.4
+    },
+    {
+      "scan_id": "035590a82ea9",
+      "case_name": "EAT_0011",
+      "shape": [
+        269,
+        227,
+        46
+      ],
+      "spacing": [
+        0.699999988079071,
+        0.699999988079071,
+        3.0
+      ],
+      "epi_fat_vox": 57943,
+      "para_fat_vox": 314284,
+      "epi_fat_ml": 85.2,
+      "para_fat_ml": 462.0
+    },
+    {
+      "scan_id": "048a4226c764",
+      "case_name": "EAT_0012",
+      "shape": [
+        260,
+        247,
+        46
+      ],
+      "spacing": [
+        0.699999988079071,
+        0.699999988079071,
+        3.0
+      ],
+      "epi_fat_vox": 108637,
+      "para_fat_vox": 311413,
+      "epi_fat_ml": 159.7,
+      "para_fat_ml": 457.8
+    },
+    {
+      "scan_id": "05ccfd17cd29",
+      "case_name": "EAT_0013",
+      "shape": [
+        223,
+        223,
+        47
+      ],
+      "spacing": [
+        0.699999988079071,
+        0.699999988079071,
+        3.0
+      ],
+      "epi_fat_vox": 47263,
+      "para_fat_vox": 349827,
+      "epi_fat_ml": 69.5,
+      "para_fat_ml": 514.2
+    },
+    {
+      "scan_id": "05ee3cf14d49",
+      "case_name": "EAT_0014",
+      "shape": [
+        265,
+        210,
+        56
+      ],
+      "spacing": [
+        0.699999988079071,
+        0.699999988079071,
+        3.0
+      ],
+      "epi_fat_vox": 80730,
+      "para_fat_vox": 438873,
+      "epi_fat_ml": 118.7,
+      "para_fat_ml": 645.1
+    },
+    {
+      "scan_id": "060fe557437c",
+      "case_name": "EAT_0015",
+      "shape": [
+        272,
+        212,
+        50
+      ],
+      "spacing": [
+        0.699999988079071,
+        0.699999988079071,
+        3.0
+      ],
+      "epi_fat_vox": 135700,
+      "para_fat_vox": 547521,
+      "epi_fat_ml": 199.5,
+      "para_fat_ml": 804.9
+    },
+    {
+      "scan_id": "06436a52579a",
+      "case_name": "EAT_0016",
+      "shape": [
+        278,
+        234,
+        48
+      ],
+      "spacing": [
+        0.699999988079071,
+        0.699999988079071,
+        3.0
+      ],
+      "epi_fat_vox": 104152,
+      "para_fat_vox": 575375,
+      "epi_fat_ml": 153.1,
+      "para_fat_ml": 845.8
+    },
+    {
+      "scan_id": "06dc546dc6fb",
+      "case_name": "EAT_0017",
+      "shape": [
+        230,
+        213,
+        45
+      ],
+      "spacing": [
+        0.699999988079071,
+        0.699999988079071,
+        3.0
+      ],
+      "epi_fat_vox": 104447,
+      "para_fat_vox": 360955,
+      "epi_fat_ml": 153.5,
+      "para_fat_ml": 530.6
+    },
+    {
+      "scan_id": "074b00fbb230",
+      "case_name": "EAT_0018",
+      "shape": [
+        246,
+        204,
+        49
+      ],
+      "spacing": [
+        0.699999988079071,
+        0.699999988079071,
+        3.0
+      ],
+      "epi_fat_vox": 62383,
+      "para_fat_vox": 315654,
+      "epi_fat_ml": 91.7,
+      "para_fat_ml": 464.0
+    },
+    {
+      "scan_id": "076319beb15f",
+      "case_name": "EAT_0019",
+      "shape": [
+        224,
+        202,
+        46
+      ],
+      "spacing": [
+        0.699999988079071,
+        0.699999988079071,
+        3.0
+      ],
+      "epi_fat_vox": 46006,
+      "para_fat_vox": 331948,
+      "epi_fat_ml": 67.6,
+      "para_fat_ml": 488.0
+    },
+    {
+      "scan_id": "08d8ea0795af",
+      "case_name": "EAT_0020",
+      "shape": [
+        261,
+        204,
+        44
+      ],
+      "spacing": [
+        0.699999988079071,
+        0.699999988079071,
+        3.0
+      ],
+      "epi_fat_vox": 98791,
+      "para_fat_vox": 274576,
+      "epi_fat_ml": 145.2,
+      "para_fat_ml": 403.6
+    },
+    {
+      "scan_id": "09709100e93c",
+      "case_name": "EAT_0021",
+      "shape": [
+        276,
+        263,
+        52
+      ],
+      "spacing": [
+        0.699999988079071,
+        0.699999988079071,
+        3.0
+      ],
+      "epi_fat_vox": 180072,
+      "para_fat_vox": 581357,
+      "epi_fat_ml": 264.7,
+      "para_fat_ml": 854.6
+    },
+    {
+      "scan_id": "097c8845f73e",
+      "case_name": "EAT_0022",
+      "shape": [
+        260,
+        212,
+        52
+      ],
+      "spacing": [
+        0.699999988079071,
+        0.699999988079071,
+        3.0
+      ],
+      "epi_fat_vox": 85529,
+      "para_fat_vox": 569031,
+      "epi_fat_ml": 125.7,
+      "para_fat_ml": 836.5
+    },
+    {
+      "scan_id": "0ab03d38800c",
+      "case_name": "EAT_0023",
+      "shape": [
+        267,
+        226,
+        51
+      ],
+      "spacing": [
+        0.699999988079071,
+        0.699999988079071,
+        3.0
+      ],
+      "epi_fat_vox": 47280,
+      "para_fat_vox": 244766,
+      "epi_fat_ml": 69.5,
+      "para_fat_ml": 359.8
+    },
+    {
+      "scan_id": "0ab5f0d6b6cb",
+      "case_name": "EAT_0024",
+      "shape": [
+        280,
+        245,
+        44
+      ],
+      "spacing": [
+        0.699999988079071,
+        0.699999988079071,
+        3.0
+      ],
+      "epi_fat_vox": 212982,
+      "para_fat_vox": 621431,
+      "epi_fat_ml": 313.1,
+      "para_fat_ml": 913.5
+    },
+    {
+      "scan_id": "0ad6cd5125d1",
+      "case_name": "EAT_0025",
+      "shape": [
+        236,
+        222,
+        47
+      ],
+      "spacing": [
+        0.699999988079071,
+        0.699999988079071,
+        3.0
+      ],
+      "epi_fat_vox": 77482,
+      "para_fat_vox": 319986,
+      "epi_fat_ml": 113.9,
+      "para_fat_ml": 470.4
+    },
+    {
+      "scan_id": "0b16badec3e2",
+      "case_name": "EAT_0026",
+      "shape": [
+        221,
+        206,
+        56
+      ],
+      "spacing": [
+        0.699999988079071,
+        0.699999988079071,
+        3.0
+      ],
+      "epi_fat_vox": 25960,
+      "para_fat_vox": 107867,
+      "epi_fat_ml": 38.2,
+      "para_fat_ml": 158.6
+    },
+    {
+      "scan_id": "0bd84261a5a7",
+      "case_name": "EAT_0027",
+      "shape": [
+        218,
+        195,
+        46
+      ],
+      "spacing": [
+        0.699999988079071,
+        0.699999988079071,
+        3.0
+      ],
+      "epi_fat_vox": 55296,
+      "para_fat_vox": 306548,
+      "epi_fat_ml": 81.3,
+      "para_fat_ml": 450.6
+    },
+    {
+      "scan_id": "0df9892745aa",
+      "case_name": "EAT_0028",
+      "shape": [
+        234,
+        197,
+        51
+      ],
+      "spacing": [
+        0.699999988079071,
+        0.699999988079071,
+        3.0
+      ],
+      "epi_fat_vox": 55328,
+      "para_fat_vox": 323625,
+      "epi_fat_ml": 81.3,
+      "para_fat_ml": 475.7
+    },
+    {
+      "scan_id": "0ee78fc3c274",
+      "case_name": "EAT_0029",
+      "shape": [
+        242,
+        214,
+        46
+      ],
+      "spacing": [
+        0.699999988079071,
+        0.699999988079071,
+        3.0
+      ],
+      "epi_fat_vox": 74190,
+      "para_fat_vox": 511333,
+      "epi_fat_ml": 109.1,
+      "para_fat_ml": 751.7
+    },
+    {
+      "scan_id": "0f1c4c50ec6a",
+      "case_name": "EAT_0030",
+      "shape": [
+        241,
+        240,
+        43
+      ],
+      "spacing": [
+        0.699999988079071,
+        0.699999988079071,
+        3.0
+      ],
+      "epi_fat_vox": 115785,
+      "para_fat_vox": 563921,
+      "epi_fat_ml": 170.2,
+      "para_fat_ml": 829.0
+    },
+    {
+      "scan_id": "0f6a1f7beebf",
+      "case_name": "EAT_0031",
+      "shape": [
+        272,
+        238,
+        36
+      ],
+      "spacing": [
+        0.699999988079071,
+        0.699999988079071,
+        3.0
+      ],
+      "epi_fat_vox": 65163,
+      "para_fat_vox": 305666,
+      "epi_fat_ml": 95.8,
+      "para_fat_ml": 449.3
+    },
+    {
+      "scan_id": "10be9da21995",
+      "case_name": "EAT_0032",
+      "shape": [
+        256,
+        199,
+        45
+      ],
+      "spacing": [
+        0.699999988079071,
+        0.699999988079071,
+        3.0
+      ],
+      "epi_fat_vox": 100676,
+      "para_fat_vox": 419969,
+      "epi_fat_ml": 148.0,
+      "para_fat_ml": 617.4
+    },
+    {
+      "scan_id": "10ee2d1bc4db",
+      "case_name": "EAT_0033",
+      "shape": [
+        243,
+        239,
+        57
+      ],
+      "spacing": [
+        0.699999988079071,
+        0.699999988079071,
+        3.0
+      ],
+      "epi_fat_vox": 68972,
+      "para_fat_vox": 434981,
+      "epi_fat_ml": 101.4,
+      "para_fat_ml": 639.4
+    },
+    {
+      "scan_id": "122df4f20384",
+      "case_name": "EAT_0034",
+      "shape": [
+        256,
+        265,
+        53
+      ],
+      "spacing": [
+        0.699999988079071,
+        0.699999988079071,
+        3.0
+      ],
+      "epi_fat_vox": 81899,
+      "para_fat_vox": 696213,
+      "epi_fat_ml": 120.4,
+      "para_fat_ml": 1023.4
+    },
+    {
+      "scan_id": "12b3ddc445a7",
+      "case_name": "EAT_0035",
+      "shape": [
+        264,
+        222,
+        54
+      ],
+      "spacing": [
+        0.699999988079071,
+        0.699999988079071,
+        3.0
+      ],
+      "epi_fat_vox": 69120,
+      "para_fat_vox": 400447,
+      "epi_fat_ml": 101.6,
+      "para_fat_ml": 588.7
+    },
+    {
+      "scan_id": "131377f7f8d2",
+      "case_name": "EAT_0036",
+      "shape": [
+        251,
+        220,
+        40
+      ],
+      "spacing": [
+        0.699999988079071,
+        0.699999988079071,
+        3.0
+      ],
+      "epi_fat_vox": 81752,
+      "para_fat_vox": 287489,
+      "epi_fat_ml": 120.2,
+      "para_fat_ml": 422.6
+    },
+    {
+      "scan_id": "14903e91fdc0",
+      "case_name": "EAT_0037",
+      "shape": [
+        230,
+        184,
+        46
+      ],
+      "spacing": [
+        0.699999988079071,
+        0.699999988079071,
+        3.0
+      ],
+      "epi_fat_vox": 53571,
+      "para_fat_vox": 330362,
+      "epi_fat_ml": 78.7,
+      "para_fat_ml": 485.6
+    },
+    {
+      "scan_id": "14f755ae4e16",
+      "case_name": "EAT_0038",
+      "shape": [
+        253,
+        215,
+        41
+      ],
+      "spacing": [
+        0.699999988079071,
+        0.699999988079071,
+        3.0
+      ],
+      "epi_fat_vox": 109226,
+      "para_fat_vox": 329013,
+      "epi_fat_ml": 160.6,
+      "para_fat_ml": 483.6
+    },
+    {
+      "scan_id": "150174e3670f",
+      "case_name": "EAT_0039",
+      "shape": [
+        248,
+        215,
+        45
+      ],
+      "spacing": [
+        0.699999988079071,
+        0.699999988079071,
+        3.0
+      ],
+      "epi_fat_vox": 69987,
+      "para_fat_vox": 367610,
+      "epi_fat_ml": 102.9,
+      "para_fat_ml": 540.4
+    },
+    {
+      "scan_id": "15607f7d1db8",
+      "case_name": "EAT_0040",
+      "shape": [
+        241,
+        216,
+        42
+      ],
+      "spacing": [
+        0.699999988079071,
+        0.699999988079071,
+        3.0
+      ],
+      "epi_fat_vox": 60801,
+      "para_fat_vox": 401752,
+      "epi_fat_ml": 89.4,
+      "para_fat_ml": 590.6
+    },
+    {
+      "scan_id": "15aa18be53ef",
+      "case_name": "EAT_0041",
+      "shape": [
+        214,
+        180,
+        46
+      ],
+      "spacing": [
+        0.699999988079071,
+        0.699999988079071,
+        3.0
+      ],
+      "epi_fat_vox": 76252,
+      "para_fat_vox": 183656,
+      "epi_fat_ml": 112.1,
+      "para_fat_ml": 270.0
+    },
+    {
+      "scan_id": "16333563bb62",
+      "case_name": "EAT_0042",
+      "shape": [
+        245,
+        227,
+        43
+      ],
+      "spacing": [
+        0.699999988079071,
+        0.699999988079071,
+        3.0
+      ],
+      "epi_fat_vox": 94926,
+      "para_fat_vox": 348548,
+      "epi_fat_ml": 139.5,
+      "para_fat_ml": 512.4
+    },
+    {
+      "scan_id": "164dbf3e7eae",
+      "case_name": "EAT_0043",
+      "shape": [
+        245,
+        201,
+        46
+      ],
+      "spacing": [
+        0.699999988079071,
+        0.699999988079071,
+        3.0
+      ],
+      "epi_fat_vox": 41829,
+      "para_fat_vox": 239701,
+      "epi_fat_ml": 61.5,
+      "para_fat_ml": 352.4
+    },
+    {
+      "scan_id": "165ab74346a1",
+      "case_name": "EAT_0044",
+      "shape": [
+        304,
+        222,
+        51
+      ],
+      "spacing": [
+        0.699999988079071,
+        0.699999988079071,
+        3.0
+      ],
+      "epi_fat_vox": 51322,
+      "para_fat_vox": 291450,
+      "epi_fat_ml": 75.4,
+      "para_fat_ml": 428.4
+    },
+    {
+      "scan_id": "168b88bc956b",
+      "case_name": "EAT_0045",
+      "shape": [
+        256,
+        198,
+        45
+      ],
+      "spacing": [
+        0.699999988079071,
+        0.699999988079071,
+        3.0
+      ],
+      "epi_fat_vox": 32370,
+      "para_fat_vox": 389529,
+      "epi_fat_ml": 47.6,
+      "para_fat_ml": 572.6
+    },
+    {
+      "scan_id": "16a8c98c0ab5",
+      "case_name": "EAT_0046",
+      "shape": [
+        280,
+        218,
+        48
+      ],
+      "spacing": [
+        0.699999988079071,
+        0.699999988079071,
+        3.0
+      ],
+      "epi_fat_vox": 125768,
+      "para_fat_vox": 574881,
+      "epi_fat_ml": 184.9,
+      "para_fat_ml": 845.1
+    },
+    {
+      "scan_id": "16a97ade7a32",
+      "case_name": "EAT_0047",
+      "shape": [
+        272,
+        204,
+        35
+      ],
+      "spacing": [
+        0.699999988079071,
+        0.699999988079071,
+        3.0
+      ],
+      "epi_fat_vox": 80879,
+      "para_fat_vox": 456804,
+      "epi_fat_ml": 118.9,
+      "para_fat_ml": 671.5
+    },
+    {
+      "scan_id": "16be8bc64eba",
+      "case_name": "EAT_0048",
+      "shape": [
+        301,
+        259,
+        45
+      ],
+      "spacing": [
+        0.699999988079071,
+        0.699999988079071,
+        3.0
+      ],
+      "epi_fat_vox": 112609,
+      "para_fat_vox": 770976,
+      "epi_fat_ml": 165.5,
+      "para_fat_ml": 1133.3
+    },
+    {
+      "scan_id": "178ced13ee67",
+      "case_name": "EAT_0049",
+      "shape": [
+        237,
+        216,
+        43
+      ],
+      "spacing": [
+        0.699999988079071,
+        0.699999988079071,
+        3.0
+      ],
+      "epi_fat_vox": 92705,
+      "para_fat_vox": 404271,
+      "epi_fat_ml": 136.3,
+      "para_fat_ml": 594.3
+    },
+    {
+      "scan_id": "17b0dd4a7a1e",
+      "case_name": "EAT_0050",
+      "shape": [
+        255,
+        216,
+        41
+      ],
+      "spacing": [
+        0.699999988079071,
+        0.699999988079071,
+        3.0
+      ],
+      "epi_fat_vox": 53582,
+      "para_fat_vox": 386248,
+      "epi_fat_ml": 78.8,
+      "para_fat_ml": 567.8
+    },
+    {
+      "scan_id": "17bf70f367e8",
+      "case_name": "EAT_0051",
+      "shape": [
+        232,
+        233,
+        39
+      ],
+      "spacing": [
+        0.699999988079071,
+        0.699999988079071,
+        3.0
+      ],
+      "epi_fat_vox": 55668,
+      "para_fat_vox": 306746,
+      "epi_fat_ml": 81.8,
+      "para_fat_ml": 450.9
+    },
+    {
+      "scan_id": "17f5fae5271e",
+      "case_name": "EAT_0052",
+      "shape": [
+        260,
+        202,
+        49
+      ],
+      "spacing": [
+        0.699999988079071,
+        0.699999988079071,
+        3.0
+      ],
+      "epi_fat_vox": 92407,
+      "para_fat_vox": 348107,
+      "epi_fat_ml": 135.8,
+      "para_fat_ml": 511.7
+    },
+    {
+      "scan_id": "18d9725b9676",
+      "case_name": "EAT_0053",
+      "shape": [
+        267,
+        246,
+        49
+      ],
+      "spacing": [
+        0.699999988079071,
+        0.699999988079071,
+        3.0
+      ],
+      "epi_fat_vox": 150752,
+      "para_fat_vox": 481475,
+      "epi_fat_ml": 221.6,
+      "para_fat_ml": 707.8
+    },
+    {
+      "scan_id": "190d85703e85",
+      "case_name": "EAT_0054",
+      "shape": [
+        259,
+        224,
+        46
+      ],
+      "spacing": [
+        0.699999988079071,
+        0.699999988079071,
+        3.0
+      ],
+      "epi_fat_vox": 100874,
+      "para_fat_vox": 394709,
+      "epi_fat_ml": 148.3,
+      "para_fat_ml": 580.2
+    },
+    {
+      "scan_id": "196f662222a7",
+      "case_name": "EAT_0055",
+      "shape": [
+        307,
+        254,
+        46
+      ],
+      "spacing": [
+        0.699999988079071,
+        0.699999988079071,
+        3.0
+      ],
+      "epi_fat_vox": 48816,
+      "para_fat_vox": 465834,
+      "epi_fat_ml": 71.8,
+      "para_fat_ml": 684.8
+    },
+    {
+      "scan_id": "198d677ade82",
+      "case_name": "EAT_0056",
+      "shape": [
+        251,
+        216,
+        60
+      ],
+      "spacing": [
+        0.699999988079071,
+        0.699999988079071,
+        3.0
+      ],
+      "epi_fat_vox": 18545,
+      "para_fat_vox": 83538,
+      "epi_fat_ml": 27.3,
+      "para_fat_ml": 122.8
+    },
+    {
+      "scan_id": "19a753eb799d",
+      "case_name": "EAT_0057",
+      "shape": [
+        216,
+        189,
+        45
+      ],
+      "spacing": [
+        0.699999988079071,
+        0.699999988079071,
+        3.0
+      ],
+      "epi_fat_vox": 12750,
+      "para_fat_vox": 162945,
+      "epi_fat_ml": 18.7,
+      "para_fat_ml": 239.5
+    },
+    {
+      "scan_id": "19af32b6750c",
+      "case_name": "EAT_0058",
+      "shape": [
+        265,
+        233,
+        55
+      ],
+      "spacing": [
+        0.699999988079071,
+        0.699999988079071,
+        3.0
+      ],
+      "epi_fat_vox": 77465,
+      "para_fat_vox": 213350,
+      "epi_fat_ml": 113.9,
+      "para_fat_ml": 313.6
+    },
+    {
+      "scan_id": "1a70bc9973d5",
+      "case_name": "EAT_0059",
+      "shape": [
+        288,
+        233,
+        54
+      ],
+      "spacing": [
+        0.699999988079071,
+        0.699999988079071,
+        3.0
+      ],
+      "epi_fat_vox": 79059,
+      "para_fat_vox": 673203,
+      "epi_fat_ml": 116.2,
+      "para_fat_ml": 989.6
+    },
+    {
+      "scan_id": "1a8d62216fc0",
+      "case_name": "EAT_0060",
+      "shape": [
+        211,
+        178,
+        51
+      ],
+      "spacing": [
+        0.699999988079071,
+        0.699999988079071,
+        3.0
+      ],
+      "epi_fat_vox": 28711,
+      "para_fat_vox": 274004,
+      "epi_fat_ml": 42.2,
+      "para_fat_ml": 402.8
+    },
+    {
+      "scan_id": "1b0dd670de9d",
+      "case_name": "EAT_0061",
+      "shape": [
+        254,
+        237,
+        46
+      ],
+      "spacing": [
+        0.699999988079071,
+        0.699999988079071,
+        3.0
+      ],
+      "epi_fat_vox": 96293,
+      "para_fat_vox": 364132,
+      "epi_fat_ml": 141.6,
+      "para_fat_ml": 535.3
+    },
+    {
+      "scan_id": "1b58bb7c4520",
+      "case_name": "EAT_0062",
+      "shape": [
+        259,
+        239,
+        46
+      ],
+      "spacing": [
+        0.699999988079071,
+        0.699999988079071,
+        3.0
+      ],
+      "epi_fat_vox": 114922,
+      "para_fat_vox": 509458,
+      "epi_fat_ml": 168.9,
+      "para_fat_ml": 748.9
+    },
+    {
+      "scan_id": "1b5d0b4a4f5c",
+      "case_name": "EAT_0063",
+      "shape": [
+        213,
+        210,
+        37
+      ],
+      "spacing": [
+        0.699999988079071,
+        0.699999988079071,
+        3.0
+      ],
+      "epi_fat_vox": 56763,
+      "para_fat_vox": 228726,
+      "epi_fat_ml": 83.4,
+      "para_fat_ml": 336.2
+    },
+    {
+      "scan_id": "1c3edf29cfa8",
+      "case_name": "EAT_0064",
+      "shape": [
+        243,
+        236,
+        44
+      ],
+      "spacing": [
+        0.699999988079071,
+        0.699999988079071,
+        3.0
+      ],
+      "epi_fat_vox": 106976,
+      "para_fat_vox": 509273,
+      "epi_fat_ml": 157.3,
+      "para_fat_ml": 748.6
+    },
+    {
+      "scan_id": "1cabca3f801d",
+      "case_name": "EAT_0065",
+      "shape": [
+        251,
+        234,
+        34
+      ],
+      "spacing": [
+        0.699999988079071,
+        0.699999988079071,
+        3.0
+      ],
+      "epi_fat_vox": 72020,
+      "para_fat_vox": 312219,
+      "epi_fat_ml": 105.9,
+      "para_fat_ml": 459.0
+    },
+    {
+      "scan_id": "1d422c38052d",
+      "case_name": "EAT_0066",
+      "shape": [
+        234,
+        213,
+        46
+      ],
+      "spacing": [
+        0.699999988079071,
+        0.699999988079071,
+        3.0
+      ],
+      "epi_fat_vox": 83529,
+      "para_fat_vox": 336880,
+      "epi_fat_ml": 122.8,
+      "para_fat_ml": 495.2
+    },
+    {
+      "scan_id": "1d94a0f68807",
+      "case_name": "EAT_0067",
+      "shape": [
+        244,
+        240,
+        46
+      ],
+      "spacing": [
+        0.699999988079071,
+        0.699999988079071,
+        3.0
+      ],
+      "epi_fat_vox": 43030,
+      "para_fat_vox": 256041,
+      "epi_fat_ml": 63.3,
+      "para_fat_ml": 376.4
+    },
+    {
+      "scan_id": "1da080bb1863",
+      "case_name": "EAT_0068",
+      "shape": [
+        254,
+        245,
+        44
+      ],
+      "spacing": [
+        0.699999988079071,
+        0.699999988079071,
+        3.0
+      ],
+      "epi_fat_vox": 64331,
+      "para_fat_vox": 465916,
+      "epi_fat_ml": 94.6,
+      "para_fat_ml": 684.9
+    },
+    {
+      "scan_id": "1e1b3da746d7",
+      "case_name": "EAT_0069",
+      "shape": [
+        295,
+        229,
+        53
+      ],
+      "spacing": [
+        0.699999988079071,
+        0.699999988079071,
+        3.0
+      ],
+      "epi_fat_vox": 126667,
+      "para_fat_vox": 456415,
+      "epi_fat_ml": 186.2,
+      "para_fat_ml": 670.9
+    },
+    {
+      "scan_id": "1eccf08ca24a",
+      "case_name": "EAT_0070",
+      "shape": [
+        260,
+        218,
+        46
+      ],
+      "spacing": [
+        0.699999988079071,
+        0.699999988079071,
+        3.0
+      ],
+      "epi_fat_vox": 102795,
+      "para_fat_vox": 466437,
+      "epi_fat_ml": 151.1,
+      "para_fat_ml": 685.7
+    },
+    {
+      "scan_id": "1f14c50c94ca",
+      "case_name": "EAT_0071",
+      "shape": [
+        284,
+        224,
+        48
+      ],
+      "spacing": [
+        0.699999988079071,
+        0.699999988079071,
+        3.0
+      ],
+      "epi_fat_vox": 26192,
+      "para_fat_vox": 207686,
+      "epi_fat_ml": 38.5,
+      "para_fat_ml": 305.3
+    },
+    {
+      "scan_id": "1f5ac8f77564",
+      "case_name": "EAT_0072",
+      "shape": [
+        269,
+        243,
+        43
+      ],
+      "spacing": [
+        0.699999988079071,
+        0.699999988079071,
+        3.0
+      ],
+      "epi_fat_vox": 149661,
+      "para_fat_vox": 534666,
+      "epi_fat_ml": 220.0,
+      "para_fat_ml": 786.0
+    },
+    {
+      "scan_id": "1f78c6955930",
+      "case_name": "EAT_0073",
+      "shape": [
+        250,
+        211,
+        38
+      ],
+      "spacing": [
+        0.699999988079071,
+        0.699999988079071,
+        3.0
+      ],
+      "epi_fat_vox": 99618,
+      "para_fat_vox": 436003,
+      "epi_fat_ml": 146.4,
+      "para_fat_ml": 640.9
+    },
+    {
+      "scan_id": "207d8105198b",
+      "case_name": "EAT_0074",
+      "shape": [
+        246,
+        222,
+        46
+      ],
+      "spacing": [
+        0.699999988079071,
+        0.699999988079071,
+        3.0
+      ],
+      "epi_fat_vox": 53436,
+      "para_fat_vox": 266416,
+      "epi_fat_ml": 78.6,
+      "para_fat_ml": 391.6
+    },
+    {
+      "scan_id": "21727f4aab57",
+      "case_name": "EAT_0075",
+      "shape": [
+        213,
+        204,
+        47
+      ],
+      "spacing": [
+        0.699999988079071,
+        0.699999988079071,
+        3.0
+      ],
+      "epi_fat_vox": 36486,
+      "para_fat_vox": 238127,
+      "epi_fat_ml": 53.6,
+      "para_fat_ml": 350.0
+    },
+    {
+      "scan_id": "2334ac651ead",
+      "case_name": "EAT_0076",
+      "shape": [
+        220,
+        192,
+        43
+      ],
+      "spacing": [
+        0.699999988079071,
+        0.699999988079071,
+        3.0
+      ],
+      "epi_fat_vox": 59126,
+      "para_fat_vox": 237824,
+      "epi_fat_ml": 86.9,
+      "para_fat_ml": 349.6
+    },
+    {
+      "scan_id": "23cfd7aa83af",
+      "case_name": "EAT_0077",
+      "shape": [
+        273,
+        225,
+        49
+      ],
+      "spacing": [
+        0.699999988079071,
+        0.699999988079071,
+        3.0
+      ],
+      "epi_fat_vox": 200019,
+      "para_fat_vox": 438930,
+      "epi_fat_ml": 294.0,
+      "para_fat_ml": 645.2
+    },
+    {
+      "scan_id": "2459faf70f16",
+      "case_name": "EAT_0078",
+      "shape": [
+        274,
+        208,
+        51
+      ],
+      "spacing": [
+        0.699999988079071,
+        0.699999988079071,
+        3.0
+      ],
+      "epi_fat_vox": 109824,
+      "para_fat_vox": 436788,
+      "epi_fat_ml": 161.4,
+      "para_fat_ml": 642.1
+    },
+    {
+      "scan_id": "24cdb4748679",
+      "case_name": "EAT_0079",
+      "shape": [
+        244,
+        235,
+        42
+      ],
+      "spacing": [
+        0.699999988079071,
+        0.699999988079071,
+        3.0
+      ],
+      "epi_fat_vox": 92002,
+      "para_fat_vox": 455648,
+      "epi_fat_ml": 135.2,
+      "para_fat_ml": 669.8
+    },
+    {
+      "scan_id": "2615158ca8a9",
+      "case_name": "EAT_0080",
+      "shape": [
+        284,
+        260,
+        48
+      ],
+      "spacing": [
+        0.699999988079071,
+        0.699999988079071,
+        3.0
+      ],
+      "epi_fat_vox": 23917,
+      "para_fat_vox": 135588,
+      "epi_fat_ml": 35.2,
+      "para_fat_ml": 199.3
+    },
+    {
+      "scan_id": "264bb870cadb",
+      "case_name": "EAT_0081",
+      "shape": [
+        244,
+        227,
+        34
+      ],
+      "spacing": [
+        0.699999988079071,
+        0.699999988079071,
+        3.0
+      ],
+      "epi_fat_vox": 82582,
+      "para_fat_vox": 286390,
+      "epi_fat_ml": 121.4,
+      "para_fat_ml": 421.0
+    },
+    {
+      "scan_id": "2650b6044248",
+      "case_name": "EAT_0082",
+      "shape": [
+        223,
+        166,
+        46
+      ],
+      "spacing": [
+        0.699999988079071,
+        0.699999988079071,
+        3.0
+      ],
+      "epi_fat_vox": 48246,
+      "para_fat_vox": 67771,
+      "epi_fat_ml": 70.9,
+      "para_fat_ml": 99.6
+    },
+    {
+      "scan_id": "2659bb0c3c29",
+      "case_name": "EAT_0083",
+      "shape": [
+        239,
+        185,
+        56
+      ],
+      "spacing": [
+        0.699999988079071,
+        0.699999988079071,
+        3.0
+      ],
+      "epi_fat_vox": 19094,
+      "para_fat_vox": 217282,
+      "epi_fat_ml": 28.1,
+      "para_fat_ml": 319.4
+    },
+    {
+      "scan_id": "2685b4cfaa58",
+      "case_name": "EAT_0084",
+      "shape": [
+        277,
+        228,
+        49
+      ],
+      "spacing": [
+        0.699999988079071,
+        0.699999988079071,
+        3.0
+      ],
+      "epi_fat_vox": 94386,
+      "para_fat_vox": 494079,
+      "epi_fat_ml": 138.7,
+      "para_fat_ml": 726.3
+    },
+    {
+      "scan_id": "2739e5b6154d",
+      "case_name": "EAT_0085",
+      "shape": [
+        227,
+        205,
+        53
+      ],
+      "spacing": [
+        0.699999988079071,
+        0.699999988079071,
+        3.0
+      ],
+      "epi_fat_vox": 42473,
+      "para_fat_vox": 344044,
+      "epi_fat_ml": 62.4,
+      "para_fat_ml": 505.7
+    },
+    {
+      "scan_id": "27a096dc08c2",
+      "case_name": "EAT_0086",
+      "shape": [
+        229,
+        215,
+        44
+      ],
+      "spacing": [
+        0.699999988079071,
+        0.699999988079071,
+        3.0
+      ],
+      "epi_fat_vox": 83094,
+      "para_fat_vox": 330634,
+      "epi_fat_ml": 122.1,
+      "para_fat_ml": 486.0
+    },
+    {
+      "scan_id": "27bca925b169",
+      "case_name": "EAT_0087",
+      "shape": [
+        265,
+        249,
+        40
+      ],
+      "spacing": [
+        0.699999988079071,
+        0.699999988079071,
+        3.0
+      ],
+      "epi_fat_vox": 130801,
+      "para_fat_vox": 466339,
+      "epi_fat_ml": 192.3,
+      "para_fat_ml": 685.5
+    },
+    {
+      "scan_id": "2805eddaccee",
+      "case_name": "EAT_0088",
+      "shape": [
+        224,
+        198,
+        53
+      ],
+      "spacing": [
+        0.699999988079071,
+        0.699999988079071,
+        3.0
+      ],
+      "epi_fat_vox": 89699,
+      "para_fat_vox": 225080,
+      "epi_fat_ml": 131.9,
+      "para_fat_ml": 330.9
+    },
+    {
+      "scan_id": "2851213ebb14",
+      "case_name": "EAT_0089",
+      "shape": [
+        311,
+        272,
+        47
+      ],
+      "spacing": [
+        0.699999988079071,
+        0.699999988079071,
+        3.0
+      ],
+      "epi_fat_vox": 152476,
+      "para_fat_vox": 951824,
+      "epi_fat_ml": 224.1,
+      "para_fat_ml": 1399.2
+    },
+    {
+      "scan_id": "288765dfe3f8",
+      "case_name": "EAT_0090",
+      "shape": [
+        254,
+        222,
+        52
+      ],
+      "spacing": [
+        0.699999988079071,
+        0.699999988079071,
+        3.0
+      ],
+      "epi_fat_vox": 95945,
+      "para_fat_vox": 590277,
+      "epi_fat_ml": 141.0,
+      "para_fat_ml": 867.7
+    },
+    {
+      "scan_id": "288f6ef3589f",
+      "case_name": "EAT_0091",
+      "shape": [
+        263,
+        243,
+        49
+      ],
+      "spacing": [
+        0.699999988079071,
+        0.699999988079071,
+        3.0
+      ],
+      "epi_fat_vox": 204012,
+      "para_fat_vox": 572755,
+      "epi_fat_ml": 299.9,
+      "para_fat_ml": 841.9
+    },
+    {
+      "scan_id": "28e42ab8f738",
+      "case_name": "EAT_0092",
+      "shape": [
+        260,
+        222,
+        43
+      ],
+      "spacing": [
+        0.699999988079071,
+        0.699999988079071,
+        3.0
+      ],
+      "epi_fat_vox": 44229,
+      "para_fat_vox": 356910,
+      "epi_fat_ml": 65.0,
+      "para_fat_ml": 524.7
+    },
+    {
+      "scan_id": "28fe65877c2e",
+      "case_name": "EAT_0093",
+      "shape": [
+        233,
+        216,
+        34
+      ],
+      "spacing": [
+        0.699999988079071,
+        0.699999988079071,
+        3.0
+      ],
+      "epi_fat_vox": 43495,
+      "para_fat_vox": 247387,
+      "epi_fat_ml": 63.9,
+      "para_fat_ml": 363.7
+    },
+    {
+      "scan_id": "29189868dd80",
+      "case_name": "EAT_0094",
+      "shape": [
+        234,
+        204,
+        48
+      ],
+      "spacing": [
+        0.699999988079071,
+        0.699999988079071,
+        3.0
+      ],
+      "epi_fat_vox": 93758,
+      "para_fat_vox": 322029,
+      "epi_fat_ml": 137.8,
+      "para_fat_ml": 473.4
+    },
+    {
+      "scan_id": "2942e5402ce0",
+      "case_name": "EAT_0095",
+      "shape": [
+        210,
+        206,
+        54
+      ],
+      "spacing": [
+        0.699999988079071,
+        0.699999988079071,
+        3.0
+      ],
+      "epi_fat_vox": 39654,
+      "para_fat_vox": 188958,
+      "epi_fat_ml": 58.3,
+      "para_fat_ml": 277.8
+    },
+    {
+      "scan_id": "29beaa91d620",
+      "case_name": "EAT_0096",
+      "shape": [
+        285,
+        250,
+        46
+      ],
+      "spacing": [
+        0.699999988079071,
+        0.699999988079071,
+        3.0
+      ],
+      "epi_fat_vox": 109342,
+      "para_fat_vox": 576382,
+      "epi_fat_ml": 160.7,
+      "para_fat_ml": 847.3
+    },
+    {
+      "scan_id": "2b270e3c7aed",
+      "case_name": "EAT_0097",
+      "shape": [
+        243,
+        190,
+        46
+      ],
+      "spacing": [
+        0.699999988079071,
+        0.699999988079071,
+        3.0
+      ],
+      "epi_fat_vox": 30869,
+      "para_fat_vox": 372935,
+      "epi_fat_ml": 45.4,
+      "para_fat_ml": 548.2
+    },
+    {
+      "scan_id": "2b631a68698f",
+      "case_name": "EAT_0098",
+      "shape": [
+        210,
+        193,
+        46
+      ],
+      "spacing": [
+        0.699999988079071,
+        0.699999988079071,
+        3.0
+      ],
+      "epi_fat_vox": 16783,
+      "para_fat_vox": 167159,
+      "epi_fat_ml": 24.7,
+      "para_fat_ml": 245.7
+    },
+    {
+      "scan_id": "2b6fef34cf6d",
+      "case_name": "EAT_0099",
+      "shape": [
+        291,
+        247,
+        47
+      ],
+      "spacing": [
+        0.699999988079071,
+        0.699999988079071,
+        3.0
+      ],
+      "epi_fat_vox": 78424,
+      "para_fat_vox": 333891,
+      "epi_fat_ml": 115.3,
+      "para_fat_ml": 490.8
+    },
+    {
+      "scan_id": "2c075f1297ae",
+      "case_name": "EAT_0100",
+      "shape": [
+        274,
+        222,
+        51
+      ],
+      "spacing": [
+        0.699999988079071,
+        0.699999988079071,
+        3.0
+      ],
+      "epi_fat_vox": 53885,
+      "para_fat_vox": 194729,
+      "epi_fat_ml": 79.2,
+      "para_fat_ml": 286.3
+    },
+    {
+      "scan_id": "2c32123450a2",
+      "case_name": "EAT_0101",
+      "shape": [
+        292,
+        257,
+        43
+      ],
+      "spacing": [
+        0.699999988079071,
+        0.699999988079071,
+        3.0
+      ],
+      "epi_fat_vox": 113158,
+      "para_fat_vox": 533397,
+      "epi_fat_ml": 166.3,
+      "para_fat_ml": 784.1
+    },
+    {
+      "scan_id": "2cda653bf857",
+      "case_name": "EAT_0102",
+      "shape": [
+        257,
+        226,
+        34
+      ],
+      "spacing": [
+        0.699999988079071,
+        0.699999988079071,
+        3.0
+      ],
+      "epi_fat_vox": 94757,
+      "para_fat_vox": 373215,
+      "epi_fat_ml": 139.3,
+      "para_fat_ml": 548.6
+    },
+    {
+      "scan_id": "2d4d149b8111",
+      "case_name": "EAT_0103",
+      "shape": [
+        237,
+        195,
+        43
+      ],
+      "spacing": [
+        0.699999988079071,
+        0.699999988079071,
+        3.0
+      ],
+      "epi_fat_vox": 64481,
+      "para_fat_vox": 381487,
+      "epi_fat_ml": 94.8,
+      "para_fat_ml": 560.8
+    },
+    {
+      "scan_id": "2e146111e7b4",
+      "case_name": "EAT_0104",
+      "shape": [
+        241,
+        216,
+        43
+      ],
+      "spacing": [
+        0.699999988079071,
+        0.699999988079071,
+        3.0
+      ],
+      "epi_fat_vox": 75500,
+      "para_fat_vox": 509158,
+      "epi_fat_ml": 111.0,
+      "para_fat_ml": 748.5
+    },
+    {
+      "scan_id": "2f5627d2958e",
+      "case_name": "EAT_0105",
+      "shape": [
+        301,
+        250,
+        46
+      ],
+      "spacing": [
+        0.699999988079071,
+        0.699999988079071,
+        3.0
+      ],
+      "epi_fat_vox": 70723,
+      "para_fat_vox": 199954,
+      "epi_fat_ml": 104.0,
+      "para_fat_ml": 293.9
+    },
+    {
+      "scan_id": "2f99fcdb0504",
+      "case_name": "EAT_0106",
+      "shape": [
+        288,
+        262,
+        45
+      ],
+      "spacing": [
+        0.699999988079071,
+        0.699999988079071,
+        3.0
+      ],
+      "epi_fat_vox": 128672,
+      "para_fat_vox": 499770,
+      "epi_fat_ml": 189.1,
+      "para_fat_ml": 734.7
+    },
+    {
+      "scan_id": "2fd91c0bb3b4",
+      "case_name": "EAT_0107",
+      "shape": [
+        253,
+        210,
+        45
+      ],
+      "spacing": [
+        0.699999988079071,
+        0.699999988079071,
+        3.0
+      ],
+      "epi_fat_vox": 132123,
+      "para_fat_vox": 314613,
+      "epi_fat_ml": 194.2,
+      "para_fat_ml": 462.5
+    },
+    {
+      "scan_id": "302f495d5aaa",
+      "case_name": "EAT_0108",
+      "shape": [
+        265,
+        224,
+        55
+      ],
+      "spacing": [
+        0.699999988079071,
+        0.699999988079071,
+        3.0
+      ],
+      "epi_fat_vox": 64591,
+      "para_fat_vox": 386231,
+      "epi_fat_ml": 94.9,
+      "para_fat_ml": 567.8
+    },
+    {
+      "scan_id": "30318b7fac89",
+      "case_name": "EAT_0109",
+      "shape": [
+        235,
+        236,
+        42
+      ],
+      "spacing": [
+        0.699999988079071,
+        0.699999988079071,
+        3.0
+      ],
+      "epi_fat_vox": 148288,
+      "para_fat_vox": 380544,
+      "epi_fat_ml": 218.0,
+      "para_fat_ml": 559.4
+    },
+    {
+      "scan_id": "30b713316b50",
+      "case_name": "EAT_0110",
+      "shape": [
+        243,
+        238,
+        47
+      ],
+      "spacing": [
+        0.699999988079071,
+        0.699999988079071,
+        3.0
+      ],
+      "epi_fat_vox": 74647,
+      "para_fat_vox": 302022,
+      "epi_fat_ml": 109.7,
+      "para_fat_ml": 444.0
+    },
+    {
+      "scan_id": "30e2831d6af0",
+      "case_name": "EAT_0111",
+      "shape": [
+        268,
+        227,
+        45
+      ],
+      "spacing": [
+        0.699999988079071,
+        0.699999988079071,
+        3.0
+      ],
+      "epi_fat_vox": 101988,
+      "para_fat_vox": 428238,
+      "epi_fat_ml": 149.9,
+      "para_fat_ml": 629.5
+    },
+    {
+      "scan_id": "3106d1a99280",
+      "case_name": "EAT_0112",
+      "shape": [
+        275,
+        253,
+        46
+      ],
+      "spacing": [
+        0.699999988079071,
+        0.699999988079071,
+        3.0
+      ],
+      "epi_fat_vox": 32767,
+      "para_fat_vox": 500370,
+      "epi_fat_ml": 48.2,
+      "para_fat_ml": 735.5
+    },
+    {
+      "scan_id": "31136138b3d5",
+      "case_name": "EAT_0113",
+      "shape": [
+        234,
+        194,
+        46
+      ],
+      "spacing": [
+        0.699999988079071,
+        0.699999988079071,
+        3.0
+      ],
+      "epi_fat_vox": 86759,
+      "para_fat_vox": 186177,
+      "epi_fat_ml": 127.5,
+      "para_fat_ml": 273.7
+    },
+    {
+      "scan_id": "315c21396c43",
+      "case_name": "EAT_0114",
+      "shape": [
+        227,
+        223,
+        46
+      ],
+      "spacing": [
+        0.699999988079071,
+        0.699999988079071,
+        3.0
+      ],
+      "epi_fat_vox": 43446,
+      "para_fat_vox": 209712,
+      "epi_fat_ml": 63.9,
+      "para_fat_ml": 308.3
+    },
+    {
+      "scan_id": "31c5b267eadf",
+      "case_name": "EAT_0115",
+      "shape": [
+        286,
+        274,
+        50
+      ],
+      "spacing": [
+        0.699999988079071,
+        0.699999988079071,
+        3.0
+      ],
+      "epi_fat_vox": 78309,
+      "para_fat_vox": 550079,
+      "epi_fat_ml": 115.1,
+      "para_fat_ml": 808.6
+    },
+    {
+      "scan_id": "50b72de94fbd",
+      "case_name": "EAT_0116",
+      "shape": [
+        229,
+        194,
+        52
+      ],
+      "spacing": [
+        0.699999988079071,
+        0.699999988079071,
+        3.0
+      ],
+      "epi_fat_vox": 37948,
+      "para_fat_vox": 325546,
+      "epi_fat_ml": 55.8,
+      "para_fat_ml": 478.6
+    },
+    {
+      "scan_id": "520fc2e938e4",
+      "case_name": "EAT_0117",
+      "shape": [
+        277,
+        265,
+        43
+      ],
+      "spacing": [
+        0.699999988079071,
+        0.699999988079071,
+        3.0
+      ],
+      "epi_fat_vox": 95951,
+      "para_fat_vox": 541947,
+      "epi_fat_ml": 141.0,
+      "para_fat_ml": 796.7
+    },
+    {
+      "scan_id": "55e5446d3909",
+      "case_name": "EAT_0118",
+      "shape": [
+        228,
+        211,
+        45
+      ],
+      "spacing": [
+        0.699999988079071,
+        0.699999988079071,
+        3.0
+      ],
+      "epi_fat_vox": 48558,
+      "para_fat_vox": 163151,
+      "epi_fat_ml": 71.4,
+      "para_fat_ml": 239.8
+    },
+    {
+      "scan_id": "5e491c442c9f",
+      "case_name": "EAT_0119",
+      "shape": [
+        247,
+        215,
+        46
+      ],
+      "spacing": [
+        0.699999988079071,
+        0.699999988079071,
+        3.0
+      ],
+      "epi_fat_vox": 77793,
+      "para_fat_vox": 442465,
+      "epi_fat_ml": 114.4,
+      "para_fat_ml": 650.4
+    },
+    {
+      "scan_id": "8fb8876bd5cb",
+      "case_name": "EAT_0120",
+      "shape": [
+        222,
+        215,
+        47
+      ],
+      "spacing": [
+        0.699999988079071,
+        0.699999988079071,
+        3.0
+      ],
+      "epi_fat_vox": 73239,
+      "para_fat_vox": 345105,
+      "epi_fat_ml": 107.7,
+      "para_fat_ml": 507.3
+    },
+    {
+      "scan_id": "925c287bd698",
+      "case_name": "EAT_0121",
+      "shape": [
+        291,
+        259,
+        44
+      ],
+      "spacing": [
+        0.699999988079071,
+        0.699999988079071,
+        3.0
+      ],
+      "epi_fat_vox": 115162,
+      "para_fat_vox": 804355,
+      "epi_fat_ml": 169.3,
+      "para_fat_ml": 1182.4
+    },
+    {
+      "scan_id": "ab73e336f087",
+      "case_name": "EAT_0122",
+      "shape": [
+        262,
+        228,
+        44
+      ],
+      "spacing": [
+        0.699999988079071,
+        0.699999988079071,
+        3.0
+      ],
+      "epi_fat_vox": 94831,
+      "para_fat_vox": 556706,
+      "epi_fat_ml": 139.4,
+      "para_fat_ml": 818.4
+    },
+    {
+      "scan_id": "b7fe6c8df2de",
+      "case_name": "EAT_0123",
+      "shape": [
+        289,
+        232,
+        53
+      ],
+      "spacing": [
+        0.699999988079071,
+        0.699999988079071,
+        3.0
+      ],
+      "epi_fat_vox": 83798,
+      "para_fat_vox": 594508,
+      "epi_fat_ml": 123.2,
+      "para_fat_ml": 873.9
+    },
+    {
+      "scan_id": "bc5561666d48",
+      "case_name": "EAT_0124",
+      "shape": [
+        219,
+        183,
+        34
+      ],
+      "spacing": [
+        0.699999988079071,
+        0.699999988079071,
+        3.0
+      ],
+      "epi_fat_vox": 51785,
+      "para_fat_vox": 142283,
+      "epi_fat_ml": 76.1,
+      "para_fat_ml": 209.2
+    },
+    {
+      "scan_id": "c6a86c876863",
+      "case_name": "EAT_0125",
+      "shape": [
+        226,
+        204,
+        44
+      ],
+      "spacing": [
+        0.699999988079071,
+        0.699999988079071,
+        3.0
+      ],
+      "epi_fat_vox": 49011,
+      "para_fat_vox": 283526,
+      "epi_fat_ml": 72.0,
+      "para_fat_ml": 416.8
+    },
+    {
+      "scan_id": "d755207025e1",
+      "case_name": "EAT_0126",
+      "shape": [
+        228,
+        228,
+        42
+      ],
+      "spacing": [
+        0.699999988079071,
+        0.699999988079071,
+        3.0
+      ],
+      "epi_fat_vox": 144358,
+      "para_fat_vox": 336222,
+      "epi_fat_ml": 212.2,
+      "para_fat_ml": 494.2
+    },
+    {
+      "scan_id": "dab548002038",
+      "case_name": "EAT_0127",
+      "shape": [
+        229,
+        205,
+        42
+      ],
+      "spacing": [
+        0.699999988079071,
+        0.699999988079071,
+        3.0
+      ],
+      "epi_fat_vox": 68756,
+      "para_fat_vox": 275315,
+      "epi_fat_ml": 101.1,
+      "para_fat_ml": 404.7
+    },
+    {
+      "scan_id": "e1190d07add9",
+      "case_name": "EAT_0128",
+      "shape": [
+        283,
+        274,
+        46
+      ],
+      "spacing": [
+        0.699999988079071,
+        0.699999988079071,
+        3.0
+      ],
+      "epi_fat_vox": 78844,
+      "para_fat_vox": 570781,
+      "epi_fat_ml": 115.9,
+      "para_fat_ml": 839.0
+    },
+    {
+      "scan_id": "f80c78e43274",
+      "case_name": "EAT_0129",
+      "shape": [
+        255,
+        215,
+        45
+      ],
+      "spacing": [
+        0.699999988079071,
+        0.699999988079071,
+        3.0
+      ],
+      "epi_fat_vox": 111194,
+      "para_fat_vox": 235003,
+      "epi_fat_ml": 163.5,
+      "para_fat_ml": 345.5
+    },
+    {
+      "scan_id": "f90e5ea147b9",
+      "case_name": "EAT_0130",
+      "shape": [
+        220,
+        198,
+        55
+      ],
+      "spacing": [
+        0.699999988079071,
+        0.699999988079071,
+        3.0
+      ],
+      "epi_fat_vox": 83679,
+      "para_fat_vox": 283727,
+      "epi_fat_ml": 123.0,
+      "para_fat_ml": 417.1
+    },
+    {
+      "scan_id": "f966f429ee58",
+      "case_name": "EAT_0131",
+      "shape": [
+        296,
+        279,
+        49
+      ],
+      "spacing": [
+        0.699999988079071,
+        0.699999988079071,
+        3.0
+      ],
+      "epi_fat_vox": 60761,
+      "para_fat_vox": 601375,
+      "epi_fat_ml": 89.3,
+      "para_fat_ml": 884.0
+    }
+  ],
+  "val_cases": [
+    {
+      "scan_id": "0024645fda6a",
+      "case_name": "EAT_0132",
+      "shape": [
+        287,
+        257,
+        48
+      ],
+      "spacing": [
+        0.699999988079071,
+        0.699999988079071,
+        3.0
+      ],
+      "epi_fat_vox": 118373,
+      "para_fat_vox": 542099,
+      "epi_fat_ml": 174.0,
+      "para_fat_ml": 796.9
+    },
+    {
+      "scan_id": "00a011f0efec",
+      "case_name": "EAT_0133",
+      "shape": [
+        266,
+        284,
+        48
+      ],
+      "spacing": [
+        0.699999988079071,
+        0.699999988079071,
+        3.0
+      ],
+      "epi_fat_vox": 94511,
+      "para_fat_vox": 592590,
+      "epi_fat_ml": 138.9,
+      "para_fat_ml": 871.1
+    },
+    {
+      "scan_id": "0681aabbc76d",
+      "case_name": "EAT_0134",
+      "shape": [
+        253,
+        181,
+        51
+      ],
+      "spacing": [
+        0.699999988079071,
+        0.699999988079071,
+        3.0
+      ],
+      "epi_fat_vox": 33895,
+      "para_fat_vox": 185528,
+      "epi_fat_ml": 49.8,
+      "para_fat_ml": 272.7
+    },
+    {
+      "scan_id": "0c144ac0947c",
+      "case_name": "EAT_0135",
+      "shape": [
+        288,
+        258,
+        46
+      ],
+      "spacing": [
+        0.699999988079071,
+        0.699999988079071,
+        3.0
+      ],
+      "epi_fat_vox": 61103,
+      "para_fat_vox": 284901,
+      "epi_fat_ml": 89.8,
+      "para_fat_ml": 418.8
+    },
+    {
+      "scan_id": "12d01478482b",
+      "case_name": "EAT_0136",
+      "shape": [
+        239,
+        198,
+        48
+      ],
+      "spacing": [
+        0.699999988079071,
+        0.699999988079071,
+        3.0
+      ],
+      "epi_fat_vox": 63324,
+      "para_fat_vox": 393466,
+      "epi_fat_ml": 93.1,
+      "para_fat_ml": 578.4
+    },
+    {
+      "scan_id": "14d87a39eff9",
+      "case_name": "EAT_0137",
+      "shape": [
+        269,
+        236,
+        58
+      ],
+      "spacing": [
+        0.699999988079071,
+        0.699999988079071,
+        3.0
+      ],
+      "epi_fat_vox": 115091,
+      "para_fat_vox": 522939,
+      "epi_fat_ml": 169.2,
+      "para_fat_ml": 768.7
+    },
+    {
+      "scan_id": "16537eb714c0",
+      "case_name": "EAT_0138",
+      "shape": [
+        292,
+        233,
+        51
+      ],
+      "spacing": [
+        0.699999988079071,
+        0.699999988079071,
+        3.0
+      ],
+      "epi_fat_vox": 176386,
+      "para_fat_vox": 516220,
+      "epi_fat_ml": 259.3,
+      "para_fat_ml": 758.8
+    },
+    {
+      "scan_id": "1ad07c4e8854",
+      "case_name": "EAT_0139",
+      "shape": [
+        271,
+        271,
+        49
+      ],
+      "spacing": [
+        0.699999988079071,
+        0.699999988079071,
+        3.0
+      ],
+      "epi_fat_vox": 155617,
+      "para_fat_vox": 482062,
+      "epi_fat_ml": 228.8,
+      "para_fat_ml": 708.6
+    },
+    {
+      "scan_id": "1b1560527d0c",
+      "case_name": "EAT_0140",
+      "shape": [
+        219,
+        192,
+        50
+      ],
+      "spacing": [
+        0.699999988079071,
+        0.699999988079071,
+        3.0
+      ],
+      "epi_fat_vox": 15228,
+      "para_fat_vox": 78375,
+      "epi_fat_ml": 22.4,
+      "para_fat_ml": 115.2
+    },
+    {
+      "scan_id": "1bf4a6f7dedd",
+      "case_name": "EAT_0141",
+      "shape": [
+        238,
+        220,
+        42
+      ],
+      "spacing": [
+        0.699999988079071,
+        0.699999988079071,
+        3.0
+      ],
+      "epi_fat_vox": 90202,
+      "para_fat_vox": 344205,
+      "epi_fat_ml": 132.6,
+      "para_fat_ml": 506.0
+    },
+    {
+      "scan_id": "24c9620c55c4",
+      "case_name": "EAT_0142",
+      "shape": [
+        228,
+        198,
+        44
+      ],
+      "spacing": [
+        0.699999988079071,
+        0.699999988079071,
+        3.0
+      ],
+      "epi_fat_vox": 103123,
+      "para_fat_vox": 505844,
+      "epi_fat_ml": 151.6,
+      "para_fat_ml": 743.6
+    },
+    {
+      "scan_id": "279d7ae30381",
+      "case_name": "EAT_0143",
+      "shape": [
+        200,
+        196,
+        43
+      ],
+      "spacing": [
+        0.699999988079071,
+        0.699999988079071,
+        3.0
+      ],
+      "epi_fat_vox": 63009,
+      "para_fat_vox": 235163,
+      "epi_fat_ml": 92.6,
+      "para_fat_ml": 345.7
+    },
+    {
+      "scan_id": "2844f88f8567",
+      "case_name": "EAT_0144",
+      "shape": [
+        211,
+        177,
+        49
+      ],
+      "spacing": [
+        0.699999988079071,
+        0.699999988079071,
+        3.0
+      ],
+      "epi_fat_vox": 24180,
+      "para_fat_vox": 114763,
+      "epi_fat_ml": 35.5,
+      "para_fat_ml": 168.7
+    },
+    {
+      "scan_id": "2fa99c4cc649",
+      "case_name": "EAT_0145",
+      "shape": [
+        248,
+        231,
+        44
+      ],
+      "spacing": [
+        0.699999988079071,
+        0.699999988079071,
+        3.0
+      ],
+      "epi_fat_vox": 47700,
+      "para_fat_vox": 207790,
+      "epi_fat_ml": 70.1,
+      "para_fat_ml": 305.5
+    },
+    {
+      "scan_id": "30700d1bb687",
+      "case_name": "EAT_0146",
+      "shape": [
+        243,
+        216,
+        55
+      ],
+      "spacing": [
+        0.699999988079071,
+        0.699999988079071,
+        3.0
+      ],
+      "epi_fat_vox": 63619,
+      "para_fat_vox": 362113,
+      "epi_fat_ml": 93.5,
+      "para_fat_ml": 532.3
+    },
+    {
+      "scan_id": "31fe516a4350",
+      "case_name": "EAT_0147",
+      "shape": [
+        257,
+        249,
+        44
+      ],
+      "spacing": [
+        0.699999988079071,
+        0.699999988079071,
+        3.0
+      ],
+      "epi_fat_vox": 179398,
+      "para_fat_vox": 478373,
+      "epi_fat_ml": 263.7,
+      "para_fat_ml": 703.2
+    },
+    {
+      "scan_id": "35183abeeb90",
+      "case_name": "EAT_0148",
+      "shape": [
+        253,
+        271,
+        49
+      ],
+      "spacing": [
+        0.699999988079071,
+        0.699999988079071,
+        3.0
+      ],
+      "epi_fat_vox": 98875,
+      "para_fat_vox": 305703,
+      "epi_fat_ml": 145.3,
+      "para_fat_ml": 449.4
+    },
+    {
+      "scan_id": "48be8c6bef75",
+      "case_name": "EAT_0149",
+      "shape": [
+        263,
+        229,
+        46
+      ],
+      "spacing": [
+        0.699999988079071,
+        0.699999988079071,
+        3.0
+      ],
+      "epi_fat_vox": 88402,
+      "para_fat_vox": 505118,
+      "epi_fat_ml": 130.0,
+      "para_fat_ml": 742.5
+    },
+    {
+      "scan_id": "589239324d0f",
+      "case_name": "EAT_0150",
+      "shape": [
+        238,
+        226,
+        49
+      ],
+      "spacing": [
+        0.699999988079071,
+        0.699999988079071,
+        3.0
+      ],
+      "epi_fat_vox": 96502,
+      "para_fat_vox": 280574,
+      "epi_fat_ml": 141.9,
+      "para_fat_ml": 412.4
+    },
+    {
+      "scan_id": "c9e72c3512e7",
+      "case_name": "EAT_0151",
+      "shape": [
+        227,
+        191,
+        39
+      ],
+      "spacing": [
+        0.699999988079071,
+        0.699999988079071,
+        3.0
+      ],
+      "epi_fat_vox": 65127,
+      "para_fat_vox": 117857,
+      "epi_fat_ml": 95.7,
+      "para_fat_ml": 173.2
+    },
+    {
+      "scan_id": "ea041f6d23d2",
+      "case_name": "EAT_0152",
+      "shape": [
+        251,
+        251,
+        46
+      ],
+      "spacing": [
+        0.699999988079071,
+        0.699999988079071,
+        3.0
+      ],
+      "epi_fat_vox": 97252,
+      "para_fat_vox": 360375,
+      "epi_fat_ml": 143.0,
+      "para_fat_ml": 529.8
+    },
+    {
+      "scan_id": "ef75c9c16e8f",
+      "case_name": "EAT_0153",
+      "shape": [
+        269,
+        241,
+        49
+      ],
+      "spacing": [
+        0.699999988079071,
+        0.699999988079071,
+        3.0
+      ],
+      "epi_fat_vox": 109554,
+      "para_fat_vox": 596848,
+      "epi_fat_ml": 161.0,
+      "para_fat_ml": 877.4
+    }
+  ]
+}

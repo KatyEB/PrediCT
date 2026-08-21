@@ -1,0 +1,15 @@
+experiment:
+  id: exp-006
+  name: eat-volumes
+
+fat_hu:
+  lo: -200   # ADR-001
+  hi: -30
+
+data:
+  masks_dir: "data/COCA_dataset/pericardium_masks"
+  # Expected EAT volume ranges from literature
+  # Commandeur 2018: median ~78 mL (IQR ~48-117 mL), suspected CAD population
+  # Flag as outlier if outside [15, 250] mL
+  expected_lo_ml: 15
+  expected_hi_ml: 250

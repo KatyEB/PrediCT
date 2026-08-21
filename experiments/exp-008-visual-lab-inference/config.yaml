@@ -1,0 +1,33 @@
+experiment:
+  id: exp-008
+  name: visual-lab-inference
+  description: "nnU-Net 2D fold 0 inference on Visual Lab 20 patients — Decision Point 2"
+  date_started: 2026-06-19
+
+data:
+  dicom_dir: "data/Dicom _ Treino"
+  gt_fat_range_dir: "data/GroundTruth-FatRange/Ground Truth - Fat Range"
+  nifti_dir: "data/visual_lab_nifti"       # intermediate: full-volume NIfTIs
+  heart_masks_dir: "data/visual_lab_nifti/heart_masks"
+  nnunet_input_dir: "data/visual_lab_nifti/nnunet_input"   # cardiac ROI crops
+  nnunet_gt_dir: "data/visual_lab_nifti/nnunet_gt"         # GT label crops
+  nnunet_pred_dir: "data/visual_lab_nifti/nnunet_pred"     # predictions
+
+nnunet:
+  dataset_id: 1
+  config: "2d"
+  fold: 0
+  trainer: "nnUNetTrainer_250epochs"
+  checkpoint: "checkpoint_final"   # use checkpoint_final (250 epoch) or checkpoint_best
+
+cardiac_roi:
+  dilation_vox: [29, 29, 7]   # same as training
+
+labels:
+  background: 0
+  epicardial_fat: 1    # RED in BMP (r > g, r > b)
+  paracardial_fat: 2   # GREEN in BMP (g > r, g > b); blue = pericardium (excluded)
+
+decision_point_2:
+  epi_dice_threshold: 0.75
+  para_dice_threshold: 0.65

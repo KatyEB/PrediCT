@@ -7,3 +7,10 @@ weekly/
 experiments/template/
 CLAUDE.md
 README.md
+# nnU-Net data directories (large, generated locally)
+nnunet/preprocessed/
+nnunet/results/
+# Kaggle credentials never committed
+.kaggle/
+kaggle/.env
+nnunet/

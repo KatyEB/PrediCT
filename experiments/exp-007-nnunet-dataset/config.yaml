@@ -1,0 +1,27 @@
+experiment:
+  id: exp-007
+  name: nnunet-dataset
+
+nnunet:
+  dataset_id: 1           # Dataset001_EAT
+  dataset_name: "EAT"
+  description: "Epicardial and paracardial fat segmentation from non-contrast cardiac CT (COCA dataset)"
+  modality: "CT"
+  labels:
+    background: 0
+    epicardial_fat: 1     # pericardium_mask & fat_HU
+    paracardial_fat: 2    # cardiac_ROI & fat_HU & NOT pericardium_mask
+
+fat_hu:
+  lo: -200
+  hi: -30
+
+cardiac_roi:
+  dilation_vox: [29, 29, 7]   # ~20mm margin at 0.7/0.7/3.0mm spacing
+
+data:
+  splits_file: "data/splits_v1.json"
+  masks_dir: "data/COCA_dataset/pericardium_masks"
+
+output:
+  nnunet_raw: "nnunet/raw"

@@ -1,0 +1,31 @@
+experiment: exp-009-qualitative-viz
+description: Qualitative visualization of ensemble nnU-Net EAT predictions on COCA NCCT patients
+
+patients:
+  # epi-low (P10, P20)
+  - {id: c2793a1fbc55, epi_mL: 53,  para_mL: 106, group: epi_low}
+  - {id: f42d112233bc, epi_mL: 69,  para_mL: 84,  group: epi_low}
+  # epi-median (P45, P50, P55)
+  - {id: 8e814e7d4511, epi_mL: 105, para_mL: 100, group: epi_median}
+  - {id: 62c2491b6d68, epi_mL: 111, para_mL: 104, group: epi_median}
+  - {id: d7c9b9cbda9d, epi_mL: 120, para_mL: 132, group: epi_median}
+  # epi-high (P80, P90)
+  - {id: b66d885c8ff4, epi_mL: 161, para_mL: 162, group: epi_high}
+  - {id: d3420d87434d, epi_mL: 197, para_mL: 217, group: epi_high}
+  # para-high (P85, P95)
+  - {id: 465c369f138d, epi_mL: 156, para_mL: 209, group: para_high}
+  - {id: d5a6b47f1f3f, epi_mL: 232, para_mL: 261, group: para_high}
+
+paths:
+  nnunet_input:   data/COCA_dataset/nnunet_input
+  nnunet_pred:    data/COCA_dataset/nnunet_pred_ensemble
+  peri_masks:     data/COCA_dataset/pericardium_masks
+  output_dir:     experiments/exp-009-qualitative-viz/figures
+
+visualization:
+  hu_window: [-160, 240]   # soft-tissue/mediastinal window
+  epi_color: [1.0, 0.2, 0.2]   # red
+  para_color: [0.2, 0.6, 1.0]  # blue
+  peri_color: [1.0, 1.0, 0.0]  # yellow
+  alpha: 0.45
+  n_slices: 4   # axial slices per patient (evenly spaced across heart)

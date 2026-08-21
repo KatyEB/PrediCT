@@ -1,0 +1,28 @@
+experiment:
+  id: exp-010
+  name: validation-harness-fix
+  description: "Quick wins on the Visual Lab external-Dice validation harness (no retraining)"
+  date_started: 2026-07-10
+
+reuses:
+  predictions: "data/visual_lab_nifti/nnunet_pred"        # exp-008 fold-0, --disable_tta
+  predictions_tta: "data/visual_lab_nifti/nnunet_pred_tta" # quick win C, fold-0 with TTA
+  inputs: "data/visual_lab_nifti/nnunet_input"
+  heart_masks: "data/visual_lab_nifti/heart_masks"
+  gt_bmp_dir: "data/GroundTruth-FatRange/Ground Truth - Fat Range"
+
+cardiac_roi:
+  dilation_vox: [29, 29, 7]   # same as training / exp-008
+
+labels:
+  background: 0
+  epicardial_fat: 1
+  paracardial_fat: 2
+
+fat_hu: [-200, -30]
+
+quick_wins:
+  alignment_objective: "cardiac-region fat (dilated heart), both stack orientations"
+  surface_dice_tolerance_mm: 2.0
+  para_shell_mm: 10.0
+  para_pericardium_proxy: "filled epi prediction (VL has no SAM2 pericardium mask)"

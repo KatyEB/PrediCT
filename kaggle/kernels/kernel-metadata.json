@@ -1,0 +1,14 @@
+{
+  "id": "shreeeeyyyyy/eat-nnunet-train",
+  "title": "EAT Segmentation - nnU-Net Training",
+  "code_file": "../notebooks/nnunet_train.py",
+  "language": "python",
+  "kernel_type": "script",
+  "is_private": true,
+  "enable_gpu": true,
+  "enable_tpu": false,
+  "enable_internet": true,
+  "dataset_sources": ["shreeeeyyyyy/eat-segmentation-nnunet"],
+  "competition_sources": [],
+  "kernel_sources": []
+}
