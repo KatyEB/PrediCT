@@ -27,6 +27,22 @@
       <button id="sidebar-toggle" class="material-symbols-outlined icon-btn">menu</button>
       <span class="sidebar-title">Studies</span>
     </div>
+
+    <div class="sidebar-run">
+      <h3 class="run-title">Run Pipeline</h3>
+      <input type="text" id="run-path" placeholder="Absolute path to DICOMs" class="run-input">
+      <select id="run-model" class="run-input">
+        <option value="">Loading models...</option>
+      </select>
+      <button id="run-btn" class="run-btn">Run</button>
+      <div id="run-progress-container" class="run-progress-container" hidden>
+        <div class="run-progress-bar">
+          <div id="run-progress-fill" class="run-progress-fill"></div>
+        </div>
+        <span id="run-progress-text" class="run-progress-text">0%</span>
+      </div>
+    </div>
+
     <div class="scroll sidebar-list" id="sidebar-list">
       <!-- Studies will be populated here -->
     </div>

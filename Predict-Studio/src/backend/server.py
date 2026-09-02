@@ -57,26 +57,44 @@ async def upload_study(files: List[UploadFile] = File(...)):
 
 @app.get("/studies")
 def get_studies():
-    uploads = DATA / "uploads"
-    if not uploads.exists():
+    out_dir = DATA / "out"
+    if not out_dir.exists():
         return []
-    return [d.name for d in uploads.iterdir() if d.is_dir() and not d.name.startswith("temp_")]
+    
+    results = []
+    for d in out_dir.iterdir():
+        if d.is_dir() and not d.name.startswith("."):
+            model = "a1-roi"
+            for md in d.iterdir():
+                if md.is_dir():
+                    model = md.name
+                    break
+            results.append({"id": d.name, "model": model})
+    # Sort results by id as a fallback
+    results.sort(key=lambda x: x["id"])
+    return results
 
 @app.get("/models")
 def get_models():
-    # Convert Path objects to strings before returning so FastAPI can serialize them
-    models = list_models()
-    for m in models:
-        if 'weights_path' in m:
-            m['weights_path'] = str(m['weights_path'])
-    return models
+    models_dir = Path("models")
+    if not models_dir.exists():
+        return []
+    return [{"id": d.name} for d in models_dir.iterdir() if d.is_dir() and not d.name.startswith(".")]
 
 class JobRequest(BaseModel):
-    study_id: str
+    study_id: str | None = None
+    input_path: str | None = None
     model_id: str
 
 @app.post("/jobs")
 def start_job(req: JobRequest):
+    if not req.study_id and not req.input_path:
+        raise HTTPException(status_code=400, detail="Must provide study_id or input_path")
+        
+    if req.input_path:
+        # Infer study_id from the parent folder name (usually the patient ID)
+        req.study_id = Path(req.input_path).parent.name
+
     job_id = uuid.uuid4().hex[:12]
     
     JOBS[job_id] = {
@@ -93,7 +111,8 @@ def start_job(req: JobRequest):
                 job["stage"] = stage
                 job["pct"] = pct
                 
-            run(study_id=req.study_id, model_id=req.model_id, progress=progress)
+            run(study_id=req.study_id, model_id=req.model_id, progress=progress, 
+                custom_input=Path(req.input_path) if req.input_path else None)
             job["status"] = "done"
             job["pct"] = 1.0
             job["stage"] = "done"
@@ -113,15 +132,20 @@ def get_job(job_id: str):
 
 # Mount static files
 data_dir = Path("data")
-ui_dir = Path("src/ui")
+ui_dir = Path("ui")
 
 if data_dir.exists():
     app.mount("/data", StaticFiles(directory=str(data_dir)), name="data")
     
 if ui_dir.exists():
-    app.mount("/", StaticFiles(directory=str(ui_dir), html=True), name="ui")
+    app.mount("/ui", StaticFiles(directory=str(ui_dir), html=True), name="ui")
+
+from fastapi.responses import RedirectResponse
+@app.get("/")
+def read_root():
+    return RedirectResponse(url="/ui/index.html")
 
 if __name__ == "__main__":
     import uvicorn
-    print("\n  PrediCT Studio -> http://127.0.0.1:8000\n")
-    uvicorn.run(app, host="127.0.0.1", port=8000, log_level="warning")
+    print("\n  PrediCT Studio -> http://127.0.0.1:8080\n")
+    uvicorn.run(app, host="127.0.0.1", port=8080, log_level="warning")

@@ -59,6 +59,7 @@ async function boot() {
     ACCENT_COLOR = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#C98B2E';
 
     loadSidebar();
+    initRunForm();
 
     const [run, slices, csv, csv3d] = await Promise.all([
       getJson(`${BASE}/run.json`),
@@ -528,9 +529,18 @@ function renderInstrument() {
     const any = onSlice(s.idx).length > 0;
     const reach = state.view !== 3 || s.has_calcium;
     const b = document.createElement('button');
-    b.style.height = (sc > 0 ? Math.max(16, 16 + sc / maxScore * 26) : any ? 11 : 5) + 'px';
-    b.style.background = sc > 0 ? 'var(--accent)' : any ? 'var(--muted-2)' : 'var(--rule-2)';
-    b.style.borderBottomColor = sc > 0 ? 'var(--accent)' : any ? 'var(--muted-2)' : 'transparent';
+    b.style.height = (sc > 0 ? Math.max(16, 16 + sc / maxScore * 26) : any ? 16 : 5) + 'px';
+    if (sc > 0) {
+      b.style.background = 'var(--accent)';
+      b.style.border = '0';
+    } else if (any) {
+      b.style.background = 'transparent';
+      b.style.border = '2px solid var(--accent)';
+      b.style.boxSizing = 'border-box';
+    } else {
+      b.style.background = 'var(--rule-2)';
+      b.style.border = '0';
+    }
     b.style.opacity = reach ? 1 : .3;
     if (s.idx === state.slice) b.classList.add('cur');
     if (state.sel3d && slicesOf(state.sel3d).includes(s.idx)) b.classList.add('in3d');
@@ -873,33 +883,17 @@ async function loadSidebar() {
   }
 
   try {
-    const res = await fetch('/data/out/');
+    const res = await fetch('/studies');
     if (!res.ok) return;
-    const text = await res.text();
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(text, 'text/html');
-    const links = Array.from(doc.querySelectorAll('a'))
-                       .map(a => a.getAttribute('href').replace(/\/$/, ''))
-                       .filter(h => h !== '..' && h !== '' && !h.startsWith('?'));
+    const studies = await res.json();
     
     const list = document.getElementById('sidebar-list');
     if (!list) return;
     list.innerHTML = '';
     
-    for (const studyId of links) {
-      // Find the first model available for this study
-      let modelId = 'a1-roi'; // fallback
-      try {
-        const mRes = await fetch(`/data/out/${studyId}/`);
-        if (mRes.ok) {
-           const mText = await mRes.text();
-           const mDoc = parser.parseFromString(mText, 'text/html');
-           const mLinks = Array.from(mDoc.querySelectorAll('a'))
-                       .map(a => a.getAttribute('href').replace(/\/$/, ''))
-                       .filter(h => h !== '..' && h !== '' && !h.startsWith('?'));
-           if (mLinks.length > 0) modelId = mLinks[0];
-        }
-      } catch (e) {}
+    for (const s of studies) {
+      const studyId = s.id;
+      const modelId = s.model;
 
       const el = document.createElement('div');
       el.className = `study-item ${studyId === STUDY ? 'active' : ''}`;
@@ -918,3 +912,96 @@ async function loadSidebar() {
 }
 
 boot();
+
+async function initRunForm() {
+  const modelSelect = document.getElementById('run-model');
+  const pathInput = document.getElementById('run-path');
+  const runBtn = document.getElementById('run-btn');
+  const progressContainer = document.getElementById('run-progress-container');
+  const progressFill = document.getElementById('run-progress-fill');
+  const progressText = document.getElementById('run-progress-text');
+
+  if (!runBtn) return;
+
+  // Fetch models
+  try {
+    const res = await fetch('/models');
+    if (res.ok) {
+      const models = await res.json();
+      modelSelect.innerHTML = '';
+      for (const m of models) {
+        const opt = document.createElement('option');
+        opt.value = m.id;
+        opt.textContent = m.id;
+        modelSelect.appendChild(opt);
+      }
+    } else {
+        modelSelect.innerHTML = '<option value="">Error loading models</option>';
+    }
+  } catch (e) {
+    console.error("Could not fetch models for run form", e);
+    modelSelect.innerHTML = '<option value="">Error loading models</option>';
+  }
+
+  // Handle run click
+  runBtn.onclick = async () => {
+    const path = pathInput.value.trim();
+    const model = modelSelect.value;
+    if (!path || !model) return;
+
+    runBtn.disabled = true;
+    progressContainer.hidden = false;
+    progressFill.style.width = '0%';
+    progressText.textContent = '0%';
+
+    try {
+      const res = await fetch('/jobs', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ input_path: path, model_id: model })
+      });
+      
+      if (!res.ok) {
+        throw new Error(await res.text());
+      }
+      
+      const { job_id } = await res.json();
+      
+      // Poll progress
+      const poll = setInterval(async () => {
+        try {
+          const statusRes = await fetch(`/jobs/${job_id}`);
+          if (statusRes.ok) {
+            const statusJson = await statusRes.json();
+            const pct = Math.round(statusJson.pct * 100);
+            progressFill.style.width = `${pct}%`;
+            progressText.textContent = `${pct}% - ${statusJson.stage}`;
+            
+            if (statusJson.status === 'done') {
+              clearInterval(poll);
+              // Wait a moment for UX
+              setTimeout(() => {
+                // Determine study ID from the parent folder (usually patient ID)
+                const parts = path.split(/[\\/]/).filter(p => p);
+                const folderName = parts.length > 1 ? parts[parts.length - 2] : parts[0];
+                window.location.href = `?study=${folderName}&model=${model}`;
+              }, 500);
+            } else if (statusJson.status === 'failed') {
+              clearInterval(poll);
+              progressText.textContent = 'Failed!';
+              progressFill.style.backgroundColor = 'var(--md-sys-color-error)';
+              runBtn.disabled = false;
+            }
+          }
+        } catch (pollErr) {
+          console.error("Polling error", pollErr);
+        }
+      }, 500);
+      
+    } catch (e) {
+      alert("Failed to start job: " + e.message);
+      runBtn.disabled = false;
+      progressContainer.hidden = true;
+    }
+  };
+}
