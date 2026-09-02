@@ -1,341 +1,380 @@
 <!DOCTYPE html>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>PrediCT Studio</title>
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,300;6..72,400;6..72,500&family=IBM+Plex+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;700&family=Libre+Franklin:wght@400;600;800&display=swap">
-<link rel="stylesheet" href="app.css">
+<html lang="en">
 
-<!-- three.js, as ES modules from a CDN. No bundler, no npm, consistent with the
-     rest of Studio. BEFORE ANY OFFLINE OR CLINICAL USE, vendor these locally —
-     a viewer that needs the public internet to draw a heart is not a tool a
-     hospital can rely on:
-       mkdir -p ui/vendor/addons/controls ui/vendor/addons/loaders
-       curl -o ui/vendor/three.module.js            https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js
-       curl -o ui/vendor/addons/controls/OrbitControls.js https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/controls/OrbitControls.js
-       curl -o ui/vendor/addons/loaders/PLYLoader.js      https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/loaders/PLYLoader.js
-     then point the two entries below at ./vendor/. Nothing else changes. -->
-<script type="importmap">
-{ "imports": {
-    "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
-    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
-} }
-</script>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PrediCT Studio — Google Health AI</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Roboto:wght@400;500;700&family=Roboto+Mono:wght@400;500;600&display=swap">
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+  <link rel="stylesheet" href="app.css">
 
-<!-- Tab bar. Two directions from the design prototypes: Argument and Instrument.
-     Both read the same state; only the presentation differs. -->
-<div id="tabs">
-  <span class="tabs-label">PrediCT STUDIO</span>
-  <button data-dir="1">01 Argument</button>
-  <button data-dir="2">02 Instrument</button>
-  <button data-dir="3">03 Contact Sheet</button>
-  <button data-dir="4">04 Anatomy</button>
-  <span class="tabs-spacer"></span>
-  <span class="tabs-label">VIEW</span>
-  <button data-view="1">1 original</button>
-  <button data-view="2">2 prediction</button>
-  <button data-view="3">3 calcium only</button>
-  <span class="tabs-study" id="tabs-study"></span>
-</div>
+  <script type="importmap">
+  { "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+  } }
+  </script>
+</head>
 
-<div id="err" hidden></div>
+<body>
 
-<!-- ══════════════ 01 ARGUMENT ══════════════ -->
-<div id="d1" class="dir">
-  <div class="a-prov"><span>PrediCT STUDIO · THE ARGUMENT</span><span id="a-prov1"></span></div>
-  <div class="a-prov2"><span id="a-prov2"></span><span id="a-prov3"></span></div>
+  <!-- Workspace Header & Tab Bar -->
+  <header id="tabs">
+    <div class="tabs-label">
+      <span class="material-symbols-outlined tabs-label-icon">clinical_notes</span>
+      <span>PrediCT Studio</span>
+    </div>
 
-  <div class="a-body">
-    <div class="a-main">
-      <div class="a-claim">
-        <div class="a-claim-num">
-          <span class="a-kicker">THIS STUDY SCORES</span>
-          <span class="a-total" id="a-total">—</span>
+    <button data-dir="1" class="on">01 Argument</button>
+    <button data-dir="2">02 Instrument</button>
+    <button data-dir="3">03 Contact Sheet</button>
+    <button data-dir="4">04 Anatomy</button>
+
+    <span class="tabs-spacer"></span>
+
+    <div class="view-btn-group">
+      <button data-view="1">1 original</button>
+      <button data-view="2">2 prediction</button>
+      <button data-view="3">3 calcium only</button>
+    </div>
+
+    <span class="tabs-study" id="tabs-study"></span>
+  </header>
+
+  <div id="err" hidden></div>
+
+  <!-- ══════════════ 01 ARGUMENT ══════════════ -->
+  <div id="d1" class="dir">
+    <div class="a-prov">
+      <span style="font-weight: 500;">PrediCT Studio · Study Argument Analysis</span>
+      <span id="a-prov1"></span>
+    </div>
+    <div class="a-prov2">
+      <span id="a-prov2"></span>
+      <span id="a-prov3"></span>
+    </div>
+
+    <div class="a-body">
+      <div class="a-main">
+        <div class="a-card">
+          <div class="a-claim">
+            <div class="a-claim-num">
+              <span class="a-kicker">Agatston Calcium Score</span>
+              <span class="a-total" id="a-total">—</span>
+            </div>
+            <div class="a-claim-tier">
+              <span class="a-tier" id="a-tier"></span>
+              <span class="a-tiernote" id="a-tiernote"></span>
+            </div>
+          </div>
         </div>
-        <div class="a-claim-tier">
-          <span class="a-tier" id="a-tier"></span>
-          <span class="a-tiernote" id="a-tiernote"></span>
+
+        <div class="a-card a-section">
+          <div class="a-rule">
+            <span class="a-kicker">Clinical Findings</span>
+          </div>
+          <p class="a-because" id="a-because"></p>
+        </div>
+
+        <div class="a-card a-section a-shown">
+          <div class="a-rule">
+            <span class="a-kicker">Selected Exhibit · <b id="a-viewname"></b></span>
+            <span class="a-note" id="a-overlay"></span>
+          </div>
+          <div class="a-exhibit-row">
+            <div class="a-exhibit-main">
+              <div class="pane" id="a-pane" data-pane="a">
+                <img class="pane-ct" alt="">
+                <img class="pane-mask" alt="">
+                <canvas class="pane-ring"></canvas>
+                <div class="pane-labels"></div>
+              </div>
+              <span class="a-note" id="a-panecap"></span>
+            </div>
+            <div class="a-exhibit-side">
+              <div class="a-strip" id="a-strip"></div>
+              <span class="a-note" id="a-stripnote"></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="a-section a-grow">
+          <div class="a-rule">
+            <span class="a-kicker">Counted Lesions (<b id="a-ncounted"></b>)</span>
+            <span class="a-note">Select a row to focus lesion</span>
+          </div>
+          <div class="scroll a-tablewrap">
+            <table class="a-table">
+              <thead>
+                <tr>
+                  <th class="l">Lesion</th>
+                  <th>Slice</th>
+                  <th>z (mm)</th>
+                  <th>Area (mm²)</th>
+                  <th>Peak HU</th>
+                  <th>Weight</th>
+                  <th>Mean p</th>
+                  <th>Score</th>
+                </tr>
+              </thead>
+              <tbody id="a-rows"></tbody>
+            </table>
+          </div>
         </div>
       </div>
 
-      <div class="a-section">
-        <div class="a-rule"><span class="a-kicker green">BECAUSE</span><i></i></div>
-        <p class="a-because" id="a-because"></p>
+      <div class="a-side scroll">
+        <div class="a-side-sec">
+          <span class="a-kicker">3D Lesion Index</span>
+          <div class="scroll a-l3dwrap">
+            <table class="a-extable">
+              <tbody id="a-l3drows"></tbody>
+            </table>
+          </div>
+          <div class="a-exsummary" id="a-l3dsummary"></div>
+        </div>
+
+        <div class="a-side-sec">
+          <span class="a-kicker" style="color: var(--md-sys-color-error);">Withheld / Excluded (< 1.0 mm²)</span>
+              <div class="scroll a-exwrap">
+                <table class="a-extable">
+                  <tbody id="a-exrows"></tbody>
+                </table>
+              </div>
+              <div class="a-exsummary" id="a-exsummary"></div>
+        </div>
+
+        <div class="a-side-sec">
+          <span class="a-kicker">Model Delineation</span>
+          <div class="a-soft" id="a-soft"></div>
+        </div>
+
+        <div class="a-side-sec a-produced">
+          <span class="a-kicker">Pipeline Parameters</span>
+          <div class="a-provblock" id="a-provblock"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════ 02 INSTRUMENT ══════════════ -->
+  <div id="d2" class="dir">
+    <div class="i-prov">
+      <span id="i-prov1"></span><span id="i-prov2"></span><span id="i-prov3" class="push"></span>
+    </div>
+
+    <div class="i-track-block">
+      <div class="i-track-head"><span id="i-tracklabel"></span><span id="i-tracksummary"></span></div>
+      <div class="i-track" id="i-track"></div>
+      <div class="i-track-legend">
+        <span style="color: var(--md-sys-color-primary);">■ Scored calcium</span>
+        <span style="color: var(--md-sys-color-on-surface-subtle);">■ Sub-minimum</span>
+        <span id="i-legend3d" hidden style="color: var(--md-sys-color-primary);">▢ Active 3D lesion</span>
+        <span id="i-cursor"></span>
+        <span id="i-reach"></span>
+      </div>
+    </div>
+
+    <div class="i-body">
+      <div class="i-viewport" id="i-viewport">
+        <div class="pane" id="i-pane" data-pane="i">
+          <img class="pane-ct" alt="">
+          <img class="pane-mask" alt="">
+          <canvas class="pane-ring"></canvas>
+          <div class="pane-labels"></div>
+        </div>
+        <div class="i-caption" id="i-caption"></div>
       </div>
 
-      <div class="a-section a-shown">
-        <div class="a-rule">
-          <span class="a-kicker green">SHOWN · <b id="a-viewname"></b></span><i></i>
-          <span class="a-note" id="a-overlay"></span>
+      <div class="i-rail">
+        <div class="i-rail-head">
+          <div class="i-rail-title"><span id="i-slice">SLICE —</span><span id="i-z"></span></div>
+          <div class="i-chips" id="i-chips"></div>
         </div>
-        <div class="a-exhibit-row">
-          <div class="a-exhibit-main">
-            <div class="pane" id="a-pane" data-pane="a">
+
+        <div class="scroll i-rail-body">
+          <div class="i-sec" id="i-l3d-sec">
+            <span class="i-label">3D LESION SUMMARY</span>
+            <div id="i-l3d"></div>
+            <div class="i-l3d-slices" id="i-l3d-slices"></div>
+          </div>
+          <div class="i-sec">
+            <span class="i-label">SELECTED COMPONENT</span>
+            <div id="i-sel"></div>
+          </div>
+          <div class="i-sec" id="i-bands-sec">
+            <span class="i-label">PROBABILITY BANDS</span>
+            <div id="i-bands"></div>
+            <span class="i-softnote" id="i-softnote"></span>
+          </div>
+          <div class="i-sec">
+            <span class="i-label">SLICE LESIONS</span>
+            <table class="i-table">
+              <tbody id="i-rows"></tbody>
+            </table>
+            <span class="i-empty" id="i-empty" hidden></span>
+          </div>
+          <div class="i-sec">
+            <span class="i-label">WITHHELD (<b id="i-nex"></b>)</span>
+            <span class="i-exsummary" id="i-exsummary"></span>
+          </div>
+        </div>
+
+        <div class="i-foot">
+          <div class="i-foot-row">
+            <span class="i-label">TOTAL AGATSTON</span>
+            <span class="i-total" id="i-total">—</span>
+            <span class="i-tier" id="i-tier"></span>
+          </div>
+          <div class="i-tierbar"><i id="i-tierfill"></i><u style="left:7.1%"></u><u style="left:28.6%"></u></div>
+          <span class="i-tiernote" id="i-tiernote"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════ 03 CONTACT SHEET ══════════════ -->
+  <div id="d3" class="dir">
+    <div class="i-prov">
+      <span id="cs-prov1"></span><span id="cs-prov2"></span><span id="cs-prov3" class="push"></span>
+    </div>
+
+    <div class="cs-body">
+      <div class="cs-main">
+        <div class="scroll cs-grid-wrap">
+          <div class="cs-grid" id="cs-grid"></div>
+        </div>
+        <div class="cs-legend">
+          <span>● <b id="cs-n-counted">0</b> scored</span>
+          <span>○ <b id="cs-n-submin">0</b> sub-minimum</span>
+          <span>▪ <b id="cs-n-empty">0</b> empty</span>
+          <span class="push" id="cs-legend-note"></span>
+        </div>
+
+        <div class="cs-enlargement">
+          <div class="cs-enlargement-pane">
+            <div class="pane" id="cs-pane" data-pane="cs">
               <img class="pane-ct" alt="">
               <img class="pane-mask" alt="">
               <canvas class="pane-ring"></canvas>
               <div class="pane-labels"></div>
             </div>
-            <span class="a-note" id="a-panecap"></span>
           </div>
-          <div class="a-exhibit-side">
-            <div class="a-strip" id="a-strip"></div>
-            <span class="a-note" id="a-stripnote"></span>
-          </div>
-        </div>
-      </div>
-
-      <div class="a-section a-grow">
-        <div class="a-rule"><span class="a-kicker green">COUNTED · <b id="a-ncounted"></b></span><i></i>
-          <span class="a-note">click a row to select its lesion</span></div>
-        <div class="scroll a-tablewrap">
-          <table class="a-table">
-            <thead><tr>
-              <th class="l">lesion</th><th>slice</th><th>z mm</th><th>area mm²</th>
-              <th>peak HU</th><th>wt</th><th>mean p</th><th>score</th>
-            </tr></thead>
-            <tbody id="a-rows"></tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-
-    <div class="a-side">
-      <div class="a-side-sec">
-        <div class="a-kicker green">LESION INDEX · 3D</div>
-        <div class="scroll a-l3dwrap"><table class="a-extable"><tbody id="a-l3drows"></tbody></table></div>
-        <div class="a-exsummary" id="a-l3dsummary"></div>
-      </div>
-      <div class="a-side-sec a-grow">
-        <div class="a-kicker red">EXCLUDED · RECORDED, NOT COUNTED</div>
-        <div class="scroll a-exwrap"><table class="a-extable"><tbody id="a-exrows"></tbody></table></div>
-        <div class="a-exsummary" id="a-exsummary"></div>
-      </div>
-      <div class="a-side-sec">
-        <div class="a-kicker green">SOFT COVERAGE · HOW AREA IS FORMED</div>
-        <div class="a-soft" id="a-soft"></div>
-      </div>
-      <div class="a-side-sec a-produced">
-        <div class="a-kicker">PRODUCED BY</div>
-        <div class="a-provblock" id="a-provblock"></div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ══════════════ 02 INSTRUMENT ══════════════ -->
-<div id="d2" class="dir">
-  <div class="i-prov">
-    <span id="i-prov1"></span><span id="i-prov2"></span><span id="i-prov3" class="push"></span>
-  </div>
-
-  <div class="i-track-block">
-    <div class="i-track-head"><span id="i-tracklabel"></span><span id="i-tracksummary"></span></div>
-    <div class="i-track" id="i-track"></div>
-    <div class="i-track-legend">
-      <span class="accent">█ carries scored calcium</span>
-      <span class="muted2">▌ sub-minimum, recorded not counted</span>
-      <span class="accent" id="i-legend3d" hidden>▢ slices of the selected lesion</span>
-      <span id="i-cursor"></span>
-      <span id="i-reach"></span>
-    </div>
-  </div>
-
-  <div class="i-body">
-    <div class="i-viewport" id="i-viewport">
-      <div class="pane" id="i-pane" data-pane="i">
-        <img class="pane-ct" alt="">
-        <img class="pane-mask" alt="">
-        <canvas class="pane-ring"></canvas>
-        <div class="pane-labels"></div>
-      </div>
-      <div class="i-caption" id="i-caption"></div>
-    </div>
-
-    <div class="i-rail">
-      <div class="i-rail-head">
-        <div class="i-rail-title"><span id="i-slice">SLICE —</span><span id="i-z"></span></div>
-        <div class="i-chips" id="i-chips"></div>
-      </div>
-
-      <div class="scroll i-rail-body">
-        <div class="i-sec" id="i-l3d-sec">
-          <span class="i-label">LESION · SPANS SLICES</span>
-          <div id="i-l3d"></div>
-          <div class="i-l3d-slices" id="i-l3d-slices"></div>
-        </div>
-        <div class="i-sec">
-          <span class="i-label">SELECTED LESION</span>
-          <div id="i-sel"></div>
-        </div>
-        <div class="i-sec" id="i-bands-sec">
-          <span class="i-label">COVERAGE ON THIS SLICE</span>
-          <div id="i-bands"></div>
-          <span class="i-softnote" id="i-softnote"></span>
-        </div>
-        <div class="i-sec">
-          <span class="i-label">LESIONS · CLICK TO SELECT</span>
-          <table class="i-table"><tbody id="i-rows"></tbody></table>
-          <span class="i-empty" id="i-empty" hidden></span>
-        </div>
-        <div class="i-sec">
-          <span class="i-label">EXCLUDED · <b id="i-nex"></b></span>
-          <span class="i-exsummary" id="i-exsummary"></span>
-        </div>
-      </div>
-
-      <div class="i-foot">
-        <div class="i-foot-row">
-          <span class="i-label">TOTAL</span>
-          <span class="i-total" id="i-total">—</span>
-          <span class="i-tier" id="i-tier"></span>
-        </div>
-        <div class="i-tierbar"><i id="i-tierfill"></i><u style="left:7.1%"></u><u style="left:28.6%"></u></div>
-        <span class="i-tiernote" id="i-tiernote"></span>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ══════════════ 03 CONTACT SHEET ══════════════ -->
-<div id="d3" class="dir">
-  <div class="i-prov">
-    <span id="cs-prov1"></span><span id="cs-prov2"></span><span id="cs-prov3" class="push"></span>
-  </div>
-
-  <div class="cs-body">
-    <div class="cs-main">
-      <div class="scroll cs-grid-wrap">
-        <div class="cs-grid" id="cs-grid"></div>
-      </div>
-      <div class="cs-legend">
-        <span class="accent">● <b id="cs-n-counted">0</b> frames carry scored calcium</span>
-        <span class="muted2">○ <b id="cs-n-submin">0</b> sub-minimum only</span>
-        <span class="cs-legend-empty">▪ <b id="cs-n-empty">0</b> empty</span>
-        <span class="push" id="cs-legend-note"></span>
-      </div>
-      
-      <div class="cs-enlargement">
-        <div class="cs-enlargement-pane">
-          <div class="pane" id="cs-pane" data-pane="cs">
-            <img class="pane-ct" alt="">
-            <img class="pane-mask" alt="">
-            <canvas class="pane-ring"></canvas>
-            <div class="pane-labels"></div>
+          <div class="cs-enlargement-info">
+            <div class="i-rail-title"><span id="cs-slice">FRAME —</span><span id="cs-z"></span></div>
+            <div class="i-chips" id="cs-chips"></div>
+            <div class="cs-l3d-info" id="cs-l3d-info"></div>
           </div>
         </div>
-        <div class="cs-enlargement-info">
-          <div class="i-rail-title"><span id="cs-slice">FRAME —</span><span id="cs-z"></span></div>
-          <div class="i-chips" id="cs-chips"></div>
-          <div class="cs-l3d-info" id="cs-l3d-info"></div>
-        </div>
-      </div>
-    </div>
-
-    <div class="i-rail">
-      <div class="scroll i-rail-body">
-        <div class="i-sec">
-          <span class="i-label">COUNTED · <b id="cs-ncounted-text"></b></span>
-          <table class="i-table"><tbody id="cs-rows"></tbody></table>
-          <span class="i-empty" id="cs-empty" hidden></span>
-        </div>
-        <div class="i-sec">
-          <span class="i-label">WITHHELD · <b id="cs-nex"></b></span>
-          <span class="i-exsummary" id="cs-exsummary"></span>
-        </div>
       </div>
 
-      <div class="i-foot">
-        <div class="i-foot-row">
-          <span class="i-label">TOTAL</span>
-          <span class="i-total" id="cs-total">—</span>
-          <span class="i-tier" id="cs-tier"></span>
-        </div>
-        <div class="i-tierbar"><i id="cs-tierfill"></i><u style="left:7.1%"></u><u style="left:28.6%"></u></div>
-        <span class="i-tiernote" id="cs-tiernote"></span>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ══════════════ 04 ANATOMY ══════════════ -->
-<div id="d4" class="dir">
-  <div class="i-prov">
-    <span id="v-prov1"></span><span id="v-mode"></span><span id="v-prov3" class="push"></span>
-  </div>
-
-  <div class="v-body">
-    <div class="v-stage">
-      <div id="v-canvas"></div>
-      <div class="v-axes"><span class="oS">S</span><span class="oI">I</span></div>
-      <div class="v-coords" id="v-coords">
-        <label>X <input type="number" id="v-cam-x" step="1"></label>
-        <label>Y <input type="number" id="v-cam-y" step="1"></label>
-        <label>Z <input type="number" id="v-cam-z" step="1"></label>
-      </div>
-      <div class="v-hint" id="v-counts"></div>
-      <div class="v-err" id="v-err" hidden></div>
-    </div>
-
-    <div class="i-rail">
-      <div class="i-rail-head">
-        <div class="i-rail-title"><span>ANATOMY</span></div>
-        <div class="v-cams" id="v-cams">
-          <button data-cam="A">anterior</button><button data-cam="P">posterior</button>
-          <button data-cam="R">right</button><button data-cam="L">left</button>
-          <button data-cam="S">superior</button>
-        </div>
-      </div>
-
-      <div class="scroll i-rail-body">
-        <div class="i-sec">
-          <span class="i-label">SURFACES · CLICK TO TOGGLE</span>
-          <div class="v-layers" id="v-layers"></div>
-          <div class="v-layers">
-            <button id="v-heart"><i style="background:#6E7C86"></i>heart shell<em>context, smoothed</em></button>
-            <button id="v-plane"><i style="background:#FFFFFF"></i>slice plane<em>follows the 2D viewer</em></button>
+      <div class="i-rail">
+        <div class="scroll i-rail-body">
+          <div class="i-sec">
+            <span class="i-label">COUNTED COMPONENTS (<b id="cs-ncounted-text"></b>)</span>
+            <table class="i-table">
+              <tbody id="cs-rows"></tbody>
+            </table>
+            <span class="i-empty" id="cs-empty" hidden></span>
+          </div>
+          <div class="i-sec">
+            <span class="i-label">WITHHELD (<b id="cs-nex"></b>)</span>
+            <span class="i-exsummary" id="cs-exsummary"></span>
           </div>
         </div>
 
-        <div class="i-sec">
-          <span class="i-label">SELECTED LESION</span>
-          <div id="v-sel"></div>
+        <div class="i-foot">
+          <div class="i-foot-row">
+            <span class="i-label">TOTAL AGATSTON</span>
+            <span class="i-total" id="cs-total">—</span>
+            <span class="i-tier" id="cs-tier"></span>
+          </div>
+          <div class="i-tierbar"><i id="cs-tierfill"></i><u style="left:7.1%"></u><u style="left:28.6%"></u></div>
+          <span class="i-tiernote" id="cs-tiernote"></span>
         </div>
-
-        <div class="i-sec">
-          <span class="i-label">HOW TO READ THIS</span>
-          <span class="v-note">
-            Surfaces are drawn from the predicted probability volume. The stepping
-            you can see is 3 mm slice spacing against 0.37 mm pixels — the real
-            resolution of the scan, not a rendering artefact. Nothing here is
-            smoothed except the heart shell, which is context only.
-            Drag to rotate, scroll to zoom, click a surface to select its lesion
-            and jump the 2D viewer to it.
-          </span>
-        </div>
-
-        <div class="i-sec">
-          <span class="i-label red">NOT COMPUTED</span>
-          <span class="v-warn">
-            Calcium is <b>not attributed to a named vessel</b> (LM / LAD / LCX / RCA).
-            That requires coronary centreline extraction or atlas registration,
-            neither of which is implemented in this pipeline. Totals and per-lesion
-            detail are reported; vessel-level scores are not.
-          </span>
-        </div>
-      </div>
-
-      <div class="i-foot">
-        <div class="i-foot-row">
-          <span class="i-label">TOTAL</span>
-          <span class="i-total" id="v-total">—</span>
-          <span class="i-tier" id="v-tier"></span>
-        </div>
-        <span class="i-tiernote" id="v-tiernote"></span>
       </div>
     </div>
   </div>
-</div>
 
-<script src="app.js"></script>
-<script type="module" src="view3d.js"></script>
+  <!-- ══════════════ 04 ANATOMY ══════════════ -->
+  <div id="d4" class="dir">
+    <div class="i-prov">
+      <span id="v-prov1"></span><span id="v-mode"></span><span id="v-prov3" class="push"></span>
+    </div>
+
+    <div class="v-body">
+      <div class="v-stage">
+        <div id="v-canvas"></div>
+        <div class="v-axes"><span class="oS">S</span><span class="oI">I</span></div>
+        <div class="v-coords" id="v-coords">
+          <label>X <input type="number" id="v-cam-x" step="1"></label>
+          <label>Y <input type="number" id="v-cam-y" step="1"></label>
+          <label>Z <input type="number" id="v-cam-z" step="1"></label>
+        </div>
+        <div class="v-hint" id="v-counts"></div>
+        <div class="v-err" id="v-err" hidden></div>
+      </div>
+
+      <div class="i-rail" style="background: #1e2226; border-left-color: #2e343b; color: #fff;">
+        <div class="i-rail-head" style="border-bottom-color: #2e343b;">
+          <div class="i-rail-title"><span style="font-weight: 700;">3D MESH VIEWER</span></div>
+          <div class="v-cams" id="v-cams">
+            <button data-cam="A">Anterior</button><button data-cam="P">Posterior</button>
+            <button data-cam="R">Right</button><button data-cam="L">Left</button>
+            <button data-cam="S">Superior</button>
+          </div>
+        </div>
+
+        <div class="scroll i-rail-body">
+          <div class="i-sec">
+            <span class="i-label" style="color: #9aa0a6;">SURFACES</span>
+            <div class="v-layers" id="v-layers"></div>
+            <div class="v-layers" style="margin-top: 6px;">
+              <button id="v-heart"><i style="background:#6E7C86"></i>Heart Context<em>smoothed</em></button>
+              <button id="v-plane"><i style="background:#FFFFFF"></i>Slice Plane<em>follows 2D</em></button>
+            </div>
+          </div>
+
+          <div class="i-sec">
+            <span class="i-label" style="color: #9aa0a6;">SELECTED LESION</span>
+            <div id="v-sel"></div>
+          </div>
+
+          <div class="i-sec">
+            <span class="i-label" style="color: #9aa0a6;">RESOLUTION & ARTIFACTS</span>
+            <span class="v-note" style="color: #bdc1c6; font-size: 11px; line-height: 1.5;">
+              Surfaces are drawn from the predicted probability volume. The stepping is 3 mm slice spacing against 0.37
+              mm pixels (true CT resolution).
+            </span>
+          </div>
+
+          <div class="i-sec">
+            <span class="i-label" style="color: var(--md-sys-color-error);">NOT VESSEL-ATTRIBUTED</span>
+            <span class="v-warn">
+              Calcium is not attributed to a named coronary artery (LM/LAD/LCX/RCA)[cite: 3].
+            </span>
+          </div>
+        </div>
+
+        <div class="i-foot" style="background: #181b1e; border-top-color: #2e343b;">
+          <div class="i-foot-row">
+            <span class="i-label" style="color: #9aa0a6;">TOTAL</span>
+            <span class="i-total" id="v-total" style="color: #fff;">—</span>
+            <span class="i-tier" id="v-tier"></span>
+          </div>
+          <span class="i-tiernote" id="v-tiernote"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+  <script type="module" src="view3d.js"></script>
+</body>
+
+</html>

@@ -74,7 +74,7 @@
     "z_mm": 15.0,
     "n_lesions": 2,
     "n_lesions_all": 3,
-    "slice_score": 27.746042563145664,
+    "slice_score": 27.746046741002218,
     "has_calcium": true,
     "coverage_hist": [
       2,
@@ -298,7 +298,7 @@
     "z_mm": 63.0,
     "n_lesions": 1,
     "n_lesions_all": 1,
-    "slice_score": 140.2351195691474,
+    "slice_score": 140.2351362805736,
     "has_calcium": true,
     "coverage_hist": [
       4,
@@ -340,7 +340,7 @@
     "z_mm": 72.0,
     "n_lesions": 1,
     "n_lesions_all": 1,
-    "slice_score": 111.10459696772278,
+    "slice_score": 111.10458861200968,
     "has_calcium": true,
     "coverage_hist": [
       1,
@@ -354,7 +354,7 @@
     "z_mm": 75.0,
     "n_lesions": 2,
     "n_lesions_all": 2,
-    "slice_score": 35.80432779434635,
+    "slice_score": 35.80432674988221,
     "has_calcium": true,
     "coverage_hist": [
       4,
@@ -424,7 +424,7 @@
     "z_mm": 90.0,
     "n_lesions": 2,
     "n_lesions_all": 3,
-    "slice_score": 34.349096799806546,
+    "slice_score": 34.34909706092258,
     "has_calcium": true,
     "coverage_hist": [
       4,
@@ -438,7 +438,7 @@
     "z_mm": 93.0,
     "n_lesions": 4,
     "n_lesions_all": 4,
-    "slice_score": 140.8818935421168,
+    "slice_score": 140.88189406434887,
     "has_calcium": true,
     "coverage_hist": [
       7,
@@ -452,7 +452,7 @@
     "z_mm": 96.0,
     "n_lesions": 3,
     "n_lesions_all": 3,
-    "slice_score": 95.98383271499402,
+    "slice_score": 95.9838316705299,
     "has_calcium": true,
     "coverage_hist": [
       3,

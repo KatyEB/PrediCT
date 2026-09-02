@@ -1,0 +1,110 @@
+{
+  "agatston_total": 845.9701351245883,
+  "risk_category": "severe",
+  "n_lesions": 25,
+  "n_lesions_all": 31,
+  "n_lesions_3d": 15,
+  "n_lesions_3d_all": 21,
+  "slices_with_calcium": [
+    6,
+    7,
+    9,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    31,
+    32,
+    33,
+    34
+  ],
+  "study_id": "336",
+  "model_id": "a3-coverage-v2",
+  "cropped": true,
+  "shape": [
+    44,
+    412,
+    495
+  ],
+  "output": "coverage",
+  "threshold": 0.1,
+  "min_area_mm2": 1.0,
+  "max_gap_slices": 0,
+  "hu_window": [
+    0,
+    1200
+  ],
+  "spacing": [
+    0.37,
+    0.37,
+    3.0
+  ],
+  "sha256": "c83170af5772581f0f75f2fe903da2adc400d53ce0c577fa8ec376258afcbe97",
+  "locator_version": "2.15.0",
+  "date": "2026-09-01T22:25:09.598190",
+  "mesh": {
+    "axes": {
+      "x": "R",
+      "y": "A",
+      "z": "S"
+    },
+    "units": "mm",
+    "origin": "centre of voxel (0,0,0); no display flip applied",
+    "extent_mm": [
+      182.78,
+      152.07,
+      129.0
+    ],
+    "spacing_mm": [
+      0.37,
+      0.37,
+      3.0
+    ],
+    "output_mode": "coverage",
+    "levels": [
+      0.25,
+      0.5,
+      0.75
+    ],
+    "surfaces": [
+      {
+        "level": 0.25,
+        "file": "mesh/lesions_p025.ply",
+        "n_vertices": 4486,
+        "n_faces": 8888,
+        "bytes": 169607,
+        "smoothed": false
+      },
+      {
+        "level": 0.5,
+        "file": "mesh/lesions_p050.ply",
+        "n_vertices": 4396,
+        "n_faces": 8708,
+        "bytes": 166186,
+        "smoothed": false
+      },
+      {
+        "level": 0.75,
+        "file": "mesh/lesions_p075.ply",
+        "n_vertices": 4334,
+        "n_faces": 8580,
+        "bytes": 163779,
+        "smoothed": false
+      }
+    ],
+    "heart": {
+      "file": "mesh/heart.ply",
+      "n_vertices": 12348,
+      "n_faces": 24732,
+      "bytes": 469925,
+      "smoothed": true,
+      "downsample_xy": 8
+    },
+    "note": "Lesion surfaces are unsmoothed: 3.0 mm slices against 0.37 mm pixels produce visible stepping, which is the true resolution of the data. Isosurface levels are for display only and are not used by any score."
+  }
+}

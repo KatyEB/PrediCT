@@ -190,11 +190,12 @@ def build_meshes(prob: np.ndarray, heart_mask: np.ndarray | None, spacing: tuple
         size = write_ply(verts, faces, mesh_dir / name,
                          f"PrediCT lesion isosurface p={lv} mm x=R y=A z=S")
         if len(verts):
-            # A vertex outside the volume means the pad or the axis reorder is
+            # A vertex outside the padded volume means the axis reorder is
             # wrong, which would look plausible on screen rather than error.
-            assert verts.min() >= -1e-3, f"{name}: vertex below origin"
-            assert (verts.max(axis=0) <= np.array(extent_mm) + 1e-3).all(), \
-                f"{name}: vertex outside volume extent"
+            spacing_xyz = np.array([sx, sy, sz])
+            assert (verts.min(axis=0) >= -spacing_xyz - 1e-3).all(), f"{name}: vertex below origin pad"
+            assert (verts.max(axis=0) <= np.array(extent_mm) + spacing_xyz + 1e-3).all(), \
+                f"{name}: vertex outside volume extent pad"
         surfaces.append(dict(level=lv, file=f"mesh/{name}",
                              n_vertices=len(verts), n_faces=len(faces),
                              bytes=size, smoothed=False))

@@ -57,7 +57,7 @@ const state = {
 async function boot() {
   try {
     ACCENT_COLOR = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#C98B2E';
-    
+
     const [run, slices, csv, csv3d] = await Promise.all([
       getJson(`${BASE}/run.json`),
       getJson(`${BASE}/slices.json`),
@@ -112,7 +112,7 @@ function parseCsv(text) {
     head.forEach((h, i) => {
       const v = (cells[i] ?? '').trim();
       o[h] = v === 'True' ? true : v === 'False' ? false
-           : (v !== '' && !isNaN(v)) ? Number(v) : v;
+        : (v !== '' && !isNaN(v)) ? Number(v) : v;
     });
     return o;
   });
@@ -200,7 +200,7 @@ function goToLesion(key3d) {
   const g = group3d(key3d);
   if (!g) return;
   const m = membersOf(key3d).find(l => l.slice_idx === g.peak_slice_idx)
-         || membersOf(key3d)[0];
+    || membersOf(key3d)[0];
   goTo(m.slice_idx, keyOf(m));
 }
 
@@ -257,7 +257,7 @@ function render() {
   document.getElementById('tabs-study').textContent =
     `study ${STUDY} · ${MODEL} · ${state.slices.length} slices`;
 
-  if (state.dir === 1) renderArgument(); 
+  if (state.dir === 1) renderArgument();
   else if (state.dir === 2) renderInstrument();
   else if (state.dir === 3) renderContactSheet();
   else renderAnatomy();
@@ -433,8 +433,8 @@ function renderArgument() {
       becauseStr += `They group into ${counted3d().length} lesions across ${cs.length} of ${state.slices.length} slices, z ${zmin}–${zmax} mm, weights ${wmin}–${wmax}. `;
     }
     becauseStr += (outputType() === 'coverage'
-        ? 'Area is the sum of per-voxel coverage, so partial voxels enter at their own fraction.'
-        : 'Area is a count of voxels above threshold, so each boundary voxel is either fully counted or fully discarded.');
+      ? 'Area is the sum of per-voxel coverage, so partial voxels enter at their own fraction.'
+      : 'Area is a count of voxels above threshold, so each boundary voxel is either fully counted or fully discarded.');
   }
   document.getElementById('a-because').textContent = becauseStr;
 
@@ -504,7 +504,7 @@ function renderArgument() {
   const spans = counted3d().filter(g => g.n_slices > 1).length;
   document.getElementById('a-l3dsummary').textContent =
     counted3d().length === 0 ? 'no scored lesion'
-    : `${counted3d().length} lesions · ${spans} span more than one slice · ` +
+      : `${counted3d().length} lesions · ${spans} span more than one slice · ` +
       `largest ${Math.max(...counted3d().map(g => g.n_slices))} slices`;
 
   // excluded
@@ -513,14 +513,14 @@ function renderArgument() {
   ex.forEach(l => {
     const tr = document.createElement('tr');
     tr.innerHTML = `<td class="l">sl ${l.slice_idx}</td><td>${l.area_mm2.toFixed(2)} mm²</td>` +
-                   `<td>${l.peak_hu} HU</td><td class="w">withheld</td>`;
+      `<td>${l.peak_hu} HU</td><td class="w">withheld</td>`;
     tr.onclick = () => goTo(l.slice_idx, keyOf(l));
     eb.appendChild(tr);
   });
   document.getElementById('a-exsummary').textContent = exSummary();
   document.getElementById('a-soft').textContent =
     outputType() === 'coverage' ? SOFT_NOTE
-    : 'This model outputs a binary mask. Area is a voxel count above threshold ' +
+      : 'This model outputs a binary mask. Area is a voxel count above threshold ' +
       `${threshold().toFixed(2)}, so every boundary voxel is either fully counted or fully ` +
       'discarded. That rounding is what the coverage model exists to remove.';
   document.getElementById('a-provblock').textContent = provBlock();
@@ -561,7 +561,7 @@ function renderInstrument() {
     if (s.idx === state.slice) b.classList.add('cur');
     if (state.sel3d && slicesOf(state.sel3d).includes(s.idx)) b.classList.add('in3d');
     b.title = `slice ${s.idx} · z ${s.z_mm.toFixed(1)} mm · ${sc ? sc.toFixed(1) : 'empty'}` +
-              (reach ? '' : ' · unreachable in calcium-only');
+      (reach ? '' : ' · unreachable in calcium-only');
     if (reach) b.onclick = () => goTo(s.idx);
     track.appendChild(b);
   });
@@ -591,7 +591,7 @@ function renderInstrument() {
       const b = document.createElement('button');
       b.className = (keyOf(l) === state.sel ? 'on ' : '') + (l.included ? '' : 'ex');
       b.textContent = `${String.fromCharCode(97 + n)} · ${l.lesion_3d_key} · ${l.area_mm2.toFixed(2)} mm²` +
-                      (p == null ? '' : ` · p${p.toFixed(2)}`) + (l.included ? '' : ' · withheld');
+        (p == null ? '' : ` · p${p.toFixed(2)}`) + (l.included ? '' : ' · withheld');
       b.onclick = () => goTo(l.slice_idx, keyOf(l));
       chips.appendChild(b);
     });
@@ -609,8 +609,8 @@ function renderInstrument() {
       kv('slices', `${g3.n_slices} (${g3.slice_min}–${g3.slice_max})`) +
       kv('z extent', `${g3.span_mm.toFixed(1)} mm`) +
       kv('components', g3.n_components_included === g3.n_components
-          ? g3.n_components
-          : `${g3.n_components_included} of ${g3.n_components} counted`) +
+        ? g3.n_components
+        : `${g3.n_components_included} of ${g3.n_components} counted`) +
       kv('total area', `${g3.total_area_mm2.toFixed(2)} mm²`) +
       kv('peak HU', `${g3.max_peak_hu} (slice ${g3.peak_slice_idx})`) +
       kv('lesion score', g3.total_agatston.toFixed(2), 'score');
@@ -660,7 +660,7 @@ function renderInstrument() {
       if (!h) { box.innerHTML = '<span class="i-empty">no mask PNG for this slice</span>'; return; }
       const tot = h.reduce((a, b) => a + b, 0) || 1;
       const labels = ['0.10–0.25 · soft rim', '0.25–0.50 · partial',
-                      '0.50–0.75 · partial', '0.75–1.00 · dense core'];
+        '0.50–0.75 · partial', '0.75–1.00 · dense core'];
       box.innerHTML = h.map((n, i) =>
         `<div class="i-band"><i><b style="width:${Math.round(n / tot * 100)}%"></b></i>` +
         `<span>${labels[i]} · ${n} vox</span></div>`).join('');
@@ -672,14 +672,14 @@ function renderInstrument() {
   tb.innerHTML = '';
   const ordered = [...state.lesions].sort((a, b) =>
     a.lesion_3d_id - b.lesion_3d_id || a.slice_idx - b.slice_idx);
-  
+
   let prev = null;
   ordered.forEach(l => {
     const first = l.lesion_3d_key !== prev; prev = l.lesion_3d_key;
     const p = meanCoverage(l);
     const tr = document.createElement('tr');
     tr.className = [keyOf(l) === state.sel ? 'on' : l.slice_idx === state.slice ? 'cur' : '',
-                    l.included ? '' : 'ex'].filter(Boolean).join(' ');
+    l.included ? '' : 'ex'].filter(Boolean).join(' ');
     tr.classList.toggle('g3-first', first);
     tr.classList.toggle('g3-on', l.lesion_3d_key === state.sel3d);
     tr.innerHTML =
@@ -694,7 +694,7 @@ function renderInstrument() {
   const empty = document.getElementById('i-empty');
   empty.hidden = state.lesions.length > 0;
   empty.textContent = `Track empty. ${state.slices.length} slices predicted, no voxel above ` +
-                      `component threshold ${threshold().toFixed(2)}. The instrument still steps through all of them.`;
+    `component threshold ${threshold().toFixed(2)}. The instrument still steps through all of them.`;
 
   document.getElementById('i-nex').textContent = ex.length;
   document.getElementById('i-exsummary').textContent = exSummary();
@@ -731,7 +731,7 @@ function renderContactSheet() {
   // grid
   const grid = document.getElementById('cs-grid');
   const sel3dSlices = state.sel3d ? slicesOf(state.sel3d) : [];
-  
+
   if (grid.children.length !== state.slices.length) {
     grid.innerHTML = '';
     state.slices.forEach(s => {
@@ -743,22 +743,22 @@ function renderContactSheet() {
         `<img class="pane-mask" loading="lazy" decoding="async" src="${maskUrl(s.idx)}" alt=""></span>` +
         `<span class="cs-cap">${s.idx}</span>`;
       b.onclick = () => goTo(s.idx);
-      
+
       const maskImg = b.querySelector('.pane-mask');
       maskImg.onerror = () => b.classList.add('cs-missing');
-      
+
       grid.appendChild(b);
     });
   }
-  
+
   let nCounted = 0, nSubmin = 0, nEmpty = 0;
-  
+
   state.slices.forEach(s => {
     const b = document.getElementById('cs-frame-' + s.idx);
-    b.className = 'cs-frame'; 
+    b.className = 'cs-frame';
     if (s.idx === state.slice) b.classList.add('cs-cursor');
     if (state.sel3d && sel3dSlices.includes(s.idx)) b.classList.add('cs-in3d');
-    
+
     // View 3 dims unreachable frames
     b.style.opacity = (state.view !== 3 || s.has_calcium) ? 1 : 0.3;
     const pane = b.querySelector('.pane');
@@ -792,7 +792,7 @@ function renderContactSheet() {
       const b = document.createElement('button');
       b.className = (keyOf(l) === state.sel ? 'on ' : '') + (l.included ? '' : 'ex');
       b.textContent = `${String.fromCharCode(97 + n)} · ${l.lesion_3d_key} · ${l.area_mm2.toFixed(2)} mm²` +
-                      (p == null ? '' : ` · p${p.toFixed(2)}`) + (l.included ? '' : ' · withheld');
+        (p == null ? '' : ` · p${p.toFixed(2)}`) + (l.included ? '' : ' · withheld');
       b.onclick = () => goTo(l.slice_idx, keyOf(l));
       chips.appendChild(b);
     });
@@ -813,14 +813,14 @@ function renderContactSheet() {
   tb.innerHTML = '';
   const ordered = [...cnt].sort((a, b) =>
     a.lesion_3d_id - b.lesion_3d_id || a.slice_idx - b.slice_idx);
-  
+
   let prev = null;
   ordered.forEach(l => {
     const first = l.lesion_3d_key !== prev; prev = l.lesion_3d_key;
     const p = meanCoverage(l);
     const tr = document.createElement('tr');
     tr.className = [keyOf(l) === state.sel ? 'on' : l.slice_idx === state.slice ? 'cur' : '',
-                    l.included ? '' : 'ex'].filter(Boolean).join(' ');
+    l.included ? '' : 'ex'].filter(Boolean).join(' ');
     tr.classList.toggle('g3-first', first);
     tr.classList.toggle('g3-on', l.lesion_3d_key === state.sel3d);
     tr.innerHTML =
@@ -832,12 +832,12 @@ function renderContactSheet() {
     tr.onclick = () => goTo(l.slice_idx, keyOf(l));
     tb.appendChild(tr);
   });
-  
+
   document.getElementById('cs-ncounted-text').textContent = cnt.length;
   const empty = document.getElementById('cs-empty');
   empty.hidden = cnt.length > 0;
   empty.textContent = `No components counted.`;
-  
+
   document.getElementById('cs-nex').textContent = ex.length;
   document.getElementById('cs-exsummary').textContent = exSummary();
 
@@ -872,8 +872,8 @@ function prov(n) {
     return `model HU window ${r.hu_window[0]}–${r.hu_window[1]} · ${sp} mm · RAS`;
   }
   return `crop heart +8 mm, TotalSegmentator ${r.locator_version} · ckpt ${String(r.sha256).slice(0, 12)} · ` +
-         `min lesion 1.0 mm² · ${r.date}` +
-         ` · 3D link: in-plane overlap, max gap ${state.run.max_gap_slices} slice(s)`;
+    `min lesion 1.0 mm² · ${r.date}` +
+    ` · 3D link: in-plane overlap, max gap ${state.run.max_gap_slices} slice(s)`;
 }
 
 function provBlock() { return [prov(1), prov(2), prov(3)].join('\n'); }
@@ -890,7 +890,7 @@ function exSummary() {
   const area = ex.reduce((a, l) => a + l.area_mm2, 0);
   const would = ex.reduce((a, l) => a + l.area_mm2 * l.density_weight, 0);
   return `${ex.length} withheld · ${area.toFixed(2)} mm² · below 1.0 mm² · ` +
-         `would add ${would.toFixed(1)} if admitted`;
+    `would add ${would.toFixed(1)} if admitted`;
 }
 
 boot();

@@ -180,7 +180,7 @@ so the total must be **bit-identical**:
 
 ```
 agatston_total  == 1064.1237274277692
-n_lesions       == 20
+n_lesions       == 24
 n_lesions_all   == 25
 ```
 

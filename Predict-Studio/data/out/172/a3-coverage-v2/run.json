@@ -1,5 +1,5 @@
 {
-  "agatston_total": 945.8737601533463,
+  "agatston_total": 945.8737713813358,
   "risk_category": "severe",
   "n_lesions": 22,
   "n_lesions_all": 24,
@@ -44,7 +44,7 @@
   ],
   "sha256": "c83170af5772581f0f75f2fe903da2adc400d53ce0c577fa8ec376258afcbe97",
   "locator_version": "2.15.0",
-  "date": "2026-08-16T01:45:26.290419",
+  "date": "2026-08-16T07:00:45.571793",
   "mesh": {
     "axes": {
       "x": "R",

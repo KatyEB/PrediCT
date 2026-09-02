@@ -204,7 +204,7 @@ if __name__ == "__main__":
         print("No CLI arguments provided. Running in MANUAL mode...")
         
         # EDIT THESE VALUES FOR MANUAL RUNS:
-        MANUAL_INPUT_PATH = Path("/pscratch/sd/s/soham95/SOHAM/coca_raw/cocacoronarycalciumandchestcts-2/Gated_release_final/patient/46/Pro_Gated_CS_3.0_I30f_3_70%")
+        MANUAL_INPUT_PATH = Path("/pscratch/sd/s/soham95/SOHAM/coca_raw/cocacoronarycalciumandchestcts-2/Gated_release_final/patient/336/Pro_Gated_Calcium_Score_(CS)_3.0_Qr36_2_BestDiast_71_%")
         MANUAL_MODEL_ID = "a3-coverage-v2"
         
         study_id = MANUAL_INPUT_PATH.parent.name # Usually the patient ID folder
