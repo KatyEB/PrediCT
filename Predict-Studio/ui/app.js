@@ -39,7 +39,7 @@ let ACCENT_COLOR = '#C98B2E';
 
 // ── state ────────────────────────────────────────────────────────────────
 const state = {
-  dir: 2,          // 1 argument, 2 instrument
+  dir: 1,          // 1 argument, 2 instrument
   view: 2,         // 1 original, 2 prediction, 3 calcium only
   slice: 0,
   sel: null,       // "sliceIdx:lesionId"
@@ -57,6 +57,8 @@ const state = {
 async function boot() {
   try {
     ACCENT_COLOR = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#C98B2E';
+
+    loadSidebar();
 
     const [run, slices, csv, csv3d] = await Promise.all([
       getJson(`${BASE}/run.json`),
@@ -272,8 +274,7 @@ function renderAnatomy() {
   const man = state.run.mesh;
   const err = document.getElementById('v-err');
 
-  document.getElementById('v-prov1').textContent = prov(1);
-  document.getElementById('v-prov3').textContent = prov(3);
+
   document.getElementById('v-total').textContent = state.run.agatston_total.toFixed(1);
   const tier = tierOf(state.run.agatston_total);
   const tEl = document.getElementById('v-tier');
@@ -405,15 +406,14 @@ function renderArgument() {
   const r = state.run, cs = calcSlices(), cnt = counted(), ex = excluded();
   const total = r.agatston_total, tier = tierOf(total);
 
-  document.getElementById('a-prov1').textContent = prov(1);
-  document.getElementById('a-prov2').textContent = prov(2);
-  document.getElementById('a-prov3').textContent = prov(3);
+
 
   document.getElementById('a-total').textContent = total.toFixed(1);
   const tierEl = document.getElementById('a-tier');
   tierEl.textContent = tier;
   tierEl.style.color = tier === 'SEVERE' ? 'var(--red)' : tier === 'ZERO' ? 'var(--paper-muted)' : '#8A6A1F';
   document.getElementById('a-tiernote').textContent = tierNote(total);
+  document.getElementById('a-tierfill').style.width = Math.min(100, total / TIER_SCALE_MAX * 100) + '%';
 
   const zs = cs.map(i => sliceMeta(i).z_mm);
   const wts = cnt.map(l => l.density_weight);
@@ -459,33 +459,9 @@ function renderArgument() {
     b.onclick = () => goTo(i);
     strip.appendChild(b);
   });
-  document.getElementById('a-stripnote').textContent = cs.length
-    ? `${cs.length} exhibits · every calcium-bearing slice is shown · wheel or arrows step`
-    : 'No exhibits: no slice carries a scored component. The claim is an absence, and the evidence is that all slices were examined.';
+  document.getElementById('a-stripnote').textContent = '';
 
-  // counted table
-  const tb = document.getElementById('a-rows');
-  tb.innerHTML = '';
-  const orderedCnt = [...cnt].sort((a, b) =>
-    a.lesion_3d_id - b.lesion_3d_id || a.slice_idx - b.slice_idx);
-  let prevCnt = null;
-  orderedCnt.forEach(l => {
-    const first = l.lesion_3d_key !== prevCnt; prevCnt = l.lesion_3d_key;
-    const p = meanCoverage(l);
-    const tr = document.createElement('tr');
-    tr.className = keyOf(l) === state.sel ? 'on' : l.slice_idx === state.slice ? 'cur' : '';
-    tr.classList.toggle('g3-first', first);
-    tr.classList.toggle('g3-on', l.lesion_3d_key === state.sel3d);
-    tr.innerHTML =
-      `<td class="g3">${first ? l.lesion_3d_key : ''}</td>` +
-      `<td class="l">sl ${l.slice_idx}</td><td>${l.z_mm.toFixed(1)}</td>` +
-      `<td>${l.area_mm2.toFixed(2)}</td><td>${l.peak_hu}</td><td>${l.density_weight}</td>` +
-      `<td class="${p != null && p < 0.5 ? 'soft' : ''}">${p == null ? '—' : p.toFixed(2)}</td>` +
-      `<td>${l.agatston.toFixed(1)}</td>`;
-    tr.onclick = () => goTo(l.slice_idx, keyOf(l));
-    tb.appendChild(tr);
-  });
-  document.getElementById('a-ncounted').textContent = cnt.length;
+
 
   // lesion 3d index
   const lb = document.getElementById('a-l3drows');
@@ -533,9 +509,7 @@ function renderInstrument() {
   const here = onSlice(state.slice);
   const meta = sliceMeta(state.slice);
 
-  document.getElementById('i-prov1').textContent = prov(1);
-  document.getElementById('i-prov2').textContent = prov(2);
-  document.getElementById('i-prov3').textContent = prov(3);
+
 
   // ── track
   document.getElementById('i-tracklabel').textContent =
@@ -724,9 +698,7 @@ function renderContactSheet() {
   const here = onSlice(state.slice);
   const meta = sliceMeta(state.slice);
 
-  document.getElementById('cs-prov1').textContent = prov(1);
-  document.getElementById('cs-prov2').textContent = prov(2);
-  document.getElementById('cs-prov3').textContent = prov(3);
+
 
   // grid
   const grid = document.getElementById('cs-grid');
@@ -891,6 +863,58 @@ function exSummary() {
   const would = ex.reduce((a, l) => a + l.area_mm2 * l.density_weight, 0);
   return `${ex.length} withheld · ${area.toFixed(2)} mm² · below 1.0 mm² · ` +
     `would add ${would.toFixed(1)} if admitted`;
+}
+
+async function loadSidebar() {
+  const toggle = document.getElementById('sidebar-toggle');
+  const sidebar = document.getElementById('sidebar');
+  if (toggle && sidebar) {
+    toggle.onclick = () => sidebar.classList.toggle('collapsed');
+  }
+
+  try {
+    const res = await fetch('/data/out/');
+    if (!res.ok) return;
+    const text = await res.text();
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(text, 'text/html');
+    const links = Array.from(doc.querySelectorAll('a'))
+                       .map(a => a.getAttribute('href').replace(/\/$/, ''))
+                       .filter(h => h !== '..' && h !== '' && !h.startsWith('?'));
+    
+    const list = document.getElementById('sidebar-list');
+    if (!list) return;
+    list.innerHTML = '';
+    
+    for (const studyId of links) {
+      // Find the first model available for this study
+      let modelId = 'a1-roi'; // fallback
+      try {
+        const mRes = await fetch(`/data/out/${studyId}/`);
+        if (mRes.ok) {
+           const mText = await mRes.text();
+           const mDoc = parser.parseFromString(mText, 'text/html');
+           const mLinks = Array.from(mDoc.querySelectorAll('a'))
+                       .map(a => a.getAttribute('href').replace(/\/$/, ''))
+                       .filter(h => h !== '..' && h !== '' && !h.startsWith('?'));
+           if (mLinks.length > 0) modelId = mLinks[0];
+        }
+      } catch (e) {}
+
+      const el = document.createElement('div');
+      el.className = `study-item ${studyId === STUDY ? 'active' : ''}`;
+      el.innerHTML = `
+        <span class="study-item-title">${studyId}</span>
+        <span class="study-item-subtitle" title="${modelId}">${modelId.length > 20 ? modelId.substring(0, 18) + '...' : modelId}</span>
+      `;
+      el.onclick = () => {
+        window.location.href = `?study=${studyId}&model=${modelId}`;
+      };
+      list.appendChild(el);
+    }
+  } catch (e) {
+    console.error("Could not load sidebar", e);
+  }
 }
 
 boot();

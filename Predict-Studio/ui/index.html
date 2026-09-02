@@ -22,6 +22,16 @@
 </head>
 
 <body>
+  <div id="sidebar" class="sidebar">
+    <div class="sidebar-header">
+      <button id="sidebar-toggle" class="material-symbols-outlined icon-btn">menu</button>
+      <span class="sidebar-title">Studies</span>
+    </div>
+    <div class="scroll sidebar-list" id="sidebar-list">
+      <!-- Studies will be populated here -->
+    </div>
+  </div>
+  <div id="main-content">
 
   <!-- Workspace Header & Tab Bar -->
   <header id="tabs">
@@ -63,14 +73,17 @@
       <div class="a-main">
         <div class="a-card">
           <div class="a-claim">
-            <div class="a-claim-num">
-              <span class="a-kicker">Agatston Calcium Score</span>
-              <span class="a-total" id="a-total">—</span>
+            <div class="a-claim-header">
+              <div class="a-claim-num">
+                <span class="a-kicker">Agatston Calcium Score</span>
+                <span class="a-total" id="a-total">—</span>
+              </div>
+              <div class="a-claim-tier">
+                <span class="a-tier" id="a-tier"></span>
+                <span class="a-tiernote" id="a-tiernote"></span>
+              </div>
             </div>
-            <div class="a-claim-tier">
-              <span class="a-tier" id="a-tier"></span>
-              <span class="a-tiernote" id="a-tiernote"></span>
-            </div>
+            <div class="i-tierbar" style="width: 100%;"><i id="a-tierfill"></i><u style="left:7.1%"></u><u style="left:28.6%"></u></div>
           </div>
         </div>
 
@@ -103,29 +116,7 @@
           </div>
         </div>
 
-        <div class="a-section a-grow">
-          <div class="a-rule">
-            <span class="a-kicker">Counted Lesions (<b id="a-ncounted"></b>)</span>
-            <span class="a-note">Select a row to focus lesion</span>
-          </div>
-          <div class="scroll a-tablewrap">
-            <table class="a-table">
-              <thead>
-                <tr>
-                  <th class="l">Lesion</th>
-                  <th>Slice</th>
-                  <th>z (mm)</th>
-                  <th>Area (mm²)</th>
-                  <th>Peak HU</th>
-                  <th>Weight</th>
-                  <th>Mean p</th>
-                  <th>Score</th>
-                </tr>
-              </thead>
-              <tbody id="a-rows"></tbody>
-            </table>
-          </div>
-        </div>
+
       </div>
 
       <div class="a-side scroll">
@@ -164,9 +155,6 @@
 
   <!-- ══════════════ 02 INSTRUMENT ══════════════ -->
   <div id="d2" class="dir">
-    <div class="i-prov">
-      <span id="i-prov1"></span><span id="i-prov2"></span><span id="i-prov3" class="push"></span>
-    </div>
 
     <div class="i-track-block">
       <div class="i-track-head"><span id="i-tracklabel"></span><span id="i-tracksummary"></span></div>
@@ -240,9 +228,6 @@
 
   <!-- ══════════════ 03 CONTACT SHEET ══════════════ -->
   <div id="d3" class="dir">
-    <div class="i-prov">
-      <span id="cs-prov1"></span><span id="cs-prov2"></span><span id="cs-prov3" class="push"></span>
-    </div>
 
     <div class="cs-body">
       <div class="cs-main">
@@ -303,9 +288,6 @@
 
   <!-- ══════════════ 04 ANATOMY ══════════════ -->
   <div id="d4" class="dir">
-    <div class="i-prov">
-      <span id="v-prov1"></span><span id="v-mode"></span><span id="v-prov3" class="push"></span>
-    </div>
 
     <div class="v-body">
       <div class="v-stage">
@@ -373,6 +355,7 @@
     </div>
   </div>
 
+  </div>
   <script src="app.js"></script>
   <script type="module" src="view3d.js"></script>
 </body>

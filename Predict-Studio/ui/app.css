@@ -62,10 +62,127 @@ body {
 
 body {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   font-family: var(--font-body);
   color: var(--md-sys-color-on-surface);
   -webkit-font-smoothing: antialiased;
+}
+
+#main-content {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+}
+
+/* ── Sidebar ───────────────────────────────────────────── */
+.sidebar {
+  width: 250px;
+  background: var(--md-sys-color-surface);
+  border-right: 1px solid var(--md-sys-color-outline);
+  display: flex;
+  flex-direction: column;
+  transition: width 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.sidebar.collapsed {
+  width: 56px;
+}
+
+.sidebar-header {
+  height: 48px;
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  border-bottom: 1px solid var(--md-sys-color-outline);
+  gap: 12px;
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+.icon-btn {
+  color: var(--md-sys-color-on-surface-variant);
+  font-size: 20px;
+  padding: 4px;
+  border-radius: var(--radius-pill);
+  transition: background 0.15s;
+}
+
+.icon-btn:hover {
+  background: var(--md-sys-color-surface-variant);
+  color: var(--md-sys-color-on-surface);
+}
+
+.sidebar-title {
+  font-family: var(--font-sans);
+  font-size: 16px;
+  font-weight: 500;
+  opacity: 1;
+  transition: opacity 0.2s;
+}
+
+.sidebar.collapsed .sidebar-title {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.sidebar-list {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 8px;
+  gap: 4px;
+}
+
+.study-item {
+  display: flex;
+  flex-direction: column;
+  padding: 8px 12px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: background 0.15s;
+  white-space: nowrap;
+  border: 1px solid transparent;
+}
+
+.sidebar.collapsed .study-item {
+  padding: 8px 0;
+  align-items: center;
+  justify-content: center;
+}
+
+.study-item:hover {
+  background: var(--md-sys-color-surface-variant);
+}
+
+.study-item.active {
+  background: var(--md-sys-color-primary-container);
+  color: var(--md-sys-color-on-primary-container);
+  border-color: var(--md-sys-color-primary);
+}
+
+.study-item-title {
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.sidebar.collapsed .study-item-title {
+  font-size: 12px;
+}
+
+.study-item-subtitle {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--md-sys-color-on-surface-variant);
+  margin-top: 2px;
+}
+
+.sidebar.collapsed .study-item-subtitle {
+  display: none;
 }
 
 button {
@@ -220,7 +337,9 @@ button {
   position: absolute;
   inset: 0;
   width: 100%;
+  max-width: 100%;
   height: 100%;
+  object-fit: contain;
   image-rendering: pixelated;
   display: block;
 }
@@ -337,6 +456,9 @@ button {
   flex-direction: column;
   gap: 16px;
   min-height: 0;
+  min-width: 0;
+  overflow-y: auto;
+  padding-bottom: 20px;
 }
 
 .a-grow {
@@ -350,12 +472,20 @@ button {
   border-radius: var(--radius-lg);
   padding: 18px 20px;
   box-shadow: var(--elevation-1);
+  min-width: 0;
 }
 
 .a-claim {
   display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.a-claim-header {
+  display: flex;
   align-items: center;
   gap: 24px;
+  flex-wrap: wrap;
 }
 
 .a-claim-num {
@@ -409,6 +539,7 @@ button {
   flex-direction: column;
   gap: 10px;
   min-height: 0;
+  min-width: 0;
 }
 
 .a-rule {
@@ -433,18 +564,30 @@ button {
 .a-exhibit-row {
   display: flex;
   gap: 16px;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
+  min-width: 0;
 }
 
 .a-exhibit-main {
   display: flex;
   flex-direction: column;
   gap: 6px;
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.a-exhibit-side {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1 1 0;
+  min-width: 0;
 }
 
 #a-pane {
-  width: 230px;
-  height: 230px;
+  width: 100%;
+  max-width: 100%;
+  aspect-ratio: 1 / 1;
   border: 2px solid var(--md-sys-color-primary);
   box-shadow: var(--elevation-1);
 }
@@ -456,10 +599,10 @@ button {
 }
 
 .a-strip {
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
   gap: 8px;
-  flex-wrap: wrap;
-  max-width: 540px;
+  min-width: 0;
 }
 
 .a-strip button {
@@ -469,11 +612,13 @@ button {
   display: flex;
   flex-direction: column;
   gap: 4px;
+  min-width: 0;
 }
 
 .a-strip .pane {
-  width: 72px;
-  height: 72px;
+  width: 100%;
+  max-width: 100%;
+  aspect-ratio: 1 / 1;
   border: 1px solid var(--md-sys-color-outline);
 }
 
