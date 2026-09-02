@@ -173,6 +173,12 @@ const selLesion = () => state.lesions.find(l => keyOf(l) === state.sel) || null;
 const sliceMeta = i => state.slices.find(s => s.idx === i) || { idx: i, z_mm: 0, slice_score: 0 };
 
 function tierOf(t) { return t === 0 ? 'ZERO' : t <= 100 ? 'MILD' : t <= 400 ? 'MODERATE' : 'SEVERE'; }
+function tierColor(tier) {
+  if (tier === 'SEVERE') return 'var(--md-sys-color-error)';
+  if (tier === 'MODERATE') return 'var(--md-sys-color-warning)';
+  if (tier === 'MILD') return 'var(--md-sys-color-success)';
+  return 'var(--md-sys-color-outline)';
+}
 
 // ── interaction ──────────────────────────────────────────────────────────
 function stack() { return state.view === 3 ? calcSlices() : state.slices.map(s => s.idx); }
@@ -280,7 +286,7 @@ function renderAnatomy() {
   const tier = tierOf(state.run.agatston_total);
   const tEl = document.getElementById('v-tier');
   tEl.textContent = tier;
-  tEl.classList.toggle('severe', tier === 'SEVERE');
+  tEl.style.color = tierColor(tier);
   document.getElementById('v-tiernote').textContent =
     tierNote(state.run.agatston_total) + ' · scored in 2D, per slice — this view measures nothing';
 
@@ -412,9 +418,11 @@ function renderArgument() {
   document.getElementById('a-total').textContent = total.toFixed(1);
   const tierEl = document.getElementById('a-tier');
   tierEl.textContent = tier;
-  tierEl.style.color = tier === 'SEVERE' ? 'var(--red)' : tier === 'ZERO' ? 'var(--paper-muted)' : '#8A6A1F';
+  tierEl.style.color = tierColor(tier);
   document.getElementById('a-tiernote').textContent = tierNote(total);
-  document.getElementById('a-tierfill').style.width = Math.min(100, total / TIER_SCALE_MAX * 100) + '%';
+  const aTierFill = document.getElementById('a-tierfill');
+  aTierFill.style.width = Math.min(100, total / TIER_SCALE_MAX * 100) + '%';
+  aTierFill.style.backgroundColor = tierColor(tier);
 
   const zs = cs.map(i => sliceMeta(i).z_mm);
   const wts = cnt.map(l => l.density_weight);
@@ -687,9 +695,10 @@ function renderInstrument() {
   document.getElementById('i-total').textContent = total.toFixed(1);
   const tEl = document.getElementById('i-tier');
   tEl.textContent = tier;
-  tEl.classList.toggle('severe', tier === 'SEVERE');
-  document.getElementById('i-tierfill').style.width =
-    Math.min(100, total / TIER_SCALE_MAX * 100) + '%';
+  tEl.style.color = tierColor(tier);
+  const iTierFill = document.getElementById('i-tierfill');
+  iTierFill.style.width = Math.min(100, total / TIER_SCALE_MAX * 100) + '%';
+  iTierFill.style.backgroundColor = tierColor(tier);
   document.getElementById('i-tiernote').textContent = tierNote(total) + ' · ↑↓ step · 1/2/3 view · esc clear';
 }
 
@@ -827,9 +836,10 @@ function renderContactSheet() {
   document.getElementById('cs-total').textContent = total.toFixed(1);
   const tEl = document.getElementById('cs-tier');
   tEl.textContent = tier;
-  tEl.classList.toggle('severe', tier === 'SEVERE');
-  document.getElementById('cs-tierfill').style.width =
-    Math.min(100, total / TIER_SCALE_MAX * 100) + '%';
+  tEl.style.color = tierColor(tier);
+  const csTierFill = document.getElementById('cs-tierfill');
+  csTierFill.style.width = Math.min(100, total / TIER_SCALE_MAX * 100) + '%';
+  csTierFill.style.backgroundColor = tierColor(tier);
   document.getElementById('cs-tiernote').textContent = tierNote(total) + ' · ↑↓ step · 1/2/3 view · esc clear';
 }
 
@@ -896,7 +906,7 @@ async function loadSidebar() {
       const modelId = s.model;
 
       const el = document.createElement('div');
-      el.className = `study-item ${studyId === STUDY ? 'active' : ''}`;
+      el.className = `study-item ${studyId === STUDY && modelId === MODEL ? 'active' : ''}`;
       el.innerHTML = `
         <span class="study-item-title">${studyId}</span>
         <span class="study-item-subtitle" title="${modelId}">${modelId.length > 20 ? modelId.substring(0, 18) + '...' : modelId}</span>

@@ -1,0 +1,98 @@
+{
+  "agatston_total": 176.12355769882203,
+  "risk_category": "moderate",
+  "n_lesions": 5,
+  "n_lesions_all": 5,
+  "n_lesions_3d": 3,
+  "n_lesions_3d_all": 3,
+  "slices_with_calcium": [
+    28,
+    29,
+    30,
+    31
+  ],
+  "study_id": "294",
+  "model_id": "a3-coverage-v2",
+  "cropped": true,
+  "shape": [
+    43,
+    387,
+    469
+  ],
+  "output": "coverage",
+  "threshold": 0.1,
+  "min_area_mm2": 1.0,
+  "max_gap_slices": 0,
+  "hu_window": [
+    0,
+    1200
+  ],
+  "spacing": [
+    0.37,
+    0.37,
+    3.0
+  ],
+  "sha256": "c83170af5772581f0f75f2fe903da2adc400d53ce0c577fa8ec376258afcbe97",
+  "locator_version": "2.15.0",
+  "date": "2026-09-02T01:28:59.834494",
+  "mesh": {
+    "axes": {
+      "x": "R",
+      "y": "A",
+      "z": "S"
+    },
+    "units": "mm",
+    "origin": "centre of voxel (0,0,0); no display flip applied",
+    "extent_mm": [
+      173.16,
+      142.82,
+      126.0
+    ],
+    "spacing_mm": [
+      0.37,
+      0.37,
+      3.0
+    ],
+    "output_mode": "coverage",
+    "levels": [
+      0.25,
+      0.5,
+      0.75
+    ],
+    "surfaces": [
+      {
+        "level": 0.25,
+        "file": "mesh/lesions_p025.ply",
+        "n_vertices": 812,
+        "n_faces": 1612,
+        "bytes": 30930,
+        "smoothed": false
+      },
+      {
+        "level": 0.5,
+        "file": "mesh/lesions_p050.ply",
+        "n_vertices": 800,
+        "n_faces": 1588,
+        "bytes": 30473,
+        "smoothed": false
+      },
+      {
+        "level": 0.75,
+        "file": "mesh/lesions_p075.ply",
+        "n_vertices": 788,
+        "n_faces": 1564,
+        "bytes": 30018,
+        "smoothed": false
+      }
+    ],
+    "heart": {
+      "file": "mesh/heart.ply",
+      "n_vertices": 9821,
+      "n_faces": 19654,
+      "bytes": 373586,
+      "smoothed": true,
+      "downsample_xy": 8
+    },
+    "note": "Lesion surfaces are unsmoothed: 3.0 mm slices against 0.37 mm pixels produce visible stepping, which is the true resolution of the data. Isosurface levels are for display only and are not used by any score."
+  }
+}

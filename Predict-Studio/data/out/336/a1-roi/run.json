@@ -1,0 +1,92 @@
+{
+  "agatston_total": 937.2174241567612,
+  "risk_category": "severe",
+  "n_lesions": 28,
+  "n_lesions_all": 37,
+  "n_lesions_3d": 18,
+  "n_lesions_3d_all": 27,
+  "slices_with_calcium": [
+    6,
+    7,
+    9,
+    20,
+    21,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    31,
+    32,
+    33,
+    34
+  ],
+  "study_id": "336",
+  "model_id": "a1-roi",
+  "cropped": true,
+  "shape": [
+    44,
+    412,
+    495
+  ],
+  "output": "binary",
+  "threshold": 0.5,
+  "min_area_mm2": 1.0,
+  "max_gap_slices": 0,
+  "hu_window": [
+    0,
+    1200
+  ],
+  "spacing": [
+    0.3700000047683716,
+    0.3700000047683716,
+    3.0
+  ],
+  "sha256": "3fd07f9aad53c75be76b1279c8d861d82f8e25ffc817c414e4e7b2aab92be0af",
+  "locator_version": "2.15.0",
+  "date": "2026-09-02T01:26:24.398335",
+  "mesh": {
+    "axes": {
+      "x": "R",
+      "y": "A",
+      "z": "S"
+    },
+    "units": "mm",
+    "origin": "centre of voxel (0,0,0); no display flip applied",
+    "extent_mm": [
+      182.78,
+      152.07,
+      129.0
+    ],
+    "spacing_mm": [
+      0.3700000047683716,
+      0.3700000047683716,
+      3.0
+    ],
+    "output_mode": "binary",
+    "levels": [
+      0.5
+    ],
+    "surfaces": [
+      {
+        "level": 0.5,
+        "file": "mesh/lesions_p050.ply",
+        "n_vertices": 5062,
+        "n_faces": 10020,
+        "bytes": 191235,
+        "smoothed": false
+      }
+    ],
+    "heart": {
+      "file": "mesh/heart.ply",
+      "n_vertices": 12348,
+      "n_faces": 24732,
+      "bytes": 469925,
+      "smoothed": true,
+      "downsample_xy": 8
+    },
+    "note": "Lesion surfaces are unsmoothed: 3.0 mm slices against 0.37 mm pixels produce visible stepping, which is the true resolution of the data. Isosurface levels are for display only and are not used by any score."
+  }
+}

@@ -64,14 +64,15 @@ def get_studies():
     results = []
     for d in out_dir.iterdir():
         if d.is_dir() and not d.name.startswith("."):
-            model = "a1-roi"
+            found = False
             for md in d.iterdir():
                 if md.is_dir():
-                    model = md.name
-                    break
-            results.append({"id": d.name, "model": model})
+                    results.append({"id": d.name, "model": md.name})
+                    found = True
+            if not found:
+                results.append({"id": d.name, "model": "a1-roi"})
     # Sort results by id as a fallback
-    results.sort(key=lambda x: x["id"])
+    results.sort(key=lambda x: (x["id"], x["model"]))
     return results
 
 @app.get("/models")

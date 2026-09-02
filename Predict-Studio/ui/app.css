@@ -92,6 +92,10 @@ body {
   width: 56px;
 }
 
+.sidebar.collapsed .sidebar-run {
+  display: none;
+}
+
 .sidebar-header {
   height: 48px;
   display: flex;
