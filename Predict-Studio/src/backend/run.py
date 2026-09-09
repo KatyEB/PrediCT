@@ -204,7 +204,7 @@ if __name__ == "__main__":
         print("No CLI arguments provided. Running in MANUAL mode...")
         
         # EDIT THESE VALUES FOR MANUAL RUNS:
-        MANUAL_INPUT_PATH = Path("/pscratch/sd/s/soham95/SOHAM/coca_raw/cocacoronarycalciumandchestcts-2/Gated_release_final/patient/336/Pro_Gated_Calcium_Score_(CS)_3.0_Qr36_2_BestDiast_71_%")
+        MANUAL_INPUT_PATH = Path("/pscratch/sd/s/soham95/SOHAM/coca_raw/cocacoronarycalciumandchestcts-2/Gated_release_final/patient/342/Pro_Gated_Calcium_Score_(CS)_3.0_Qr36_2_BestDiast_74_%")
         MANUAL_MODEL_ID = "a3-coverage-v2"
         
         study_id = MANUAL_INPUT_PATH.parent.name # Usually the patient ID folder
@@ -228,7 +228,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
     
     if args.input:
-        study_id = Path(args.input).name
+        study_id = args.study if args.study else Path(args.input).name
         input_path = Path(args.input)
     elif args.study:
         study_id = args.study

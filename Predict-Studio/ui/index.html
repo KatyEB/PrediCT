@@ -30,10 +30,14 @@
 
     <div class="sidebar-run">
       <h3 class="run-title">Run Pipeline</h3>
+      <select id="run-patient" class="run-input">
+        <option value="">Select a raw patient...</option>
+      </select>
       <input type="text" id="run-path" placeholder="Absolute path to DICOMs" class="run-input">
       <select id="run-model" class="run-input">
         <option value="">Loading models...</option>
       </select>
+      <input type="text" id="run-name" placeholder="Study Name (Optional)" class="run-input">
       <button id="run-btn" class="run-btn">Run</button>
       <div id="run-progress-container" class="run-progress-container" hidden>
         <div class="run-progress-bar">

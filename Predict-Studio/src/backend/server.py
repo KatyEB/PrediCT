@@ -82,6 +82,27 @@ def get_models():
         return []
     return [{"id": d.name} for d in models_dir.iterdir() if d.is_dir() and not d.name.startswith(".")]
 
+@app.get("/raw_patients")
+def get_raw_patients():
+    raw_dir = DATA / "raw"
+    if not raw_dir.exists():
+        return []
+        
+    patients = []
+    for d in raw_dir.iterdir():
+        if d.is_dir() and not d.name.startswith("."):
+            # Find the inner dicom directory
+            # Usually it's the first directory inside the patient folder
+            dicom_dirs = [sub for sub in d.iterdir() if sub.is_dir()]
+            if dicom_dirs:
+                dicom_dir = dicom_dirs[0]
+                patients.append({"id": d.name, "path": str(dicom_dir.absolute())})
+            else:
+                patients.append({"id": d.name, "path": str(d.absolute())})
+                
+    patients.sort(key=lambda x: int(x["id"]) if x["id"].isdigit() else x["id"])
+    return patients
+
 class JobRequest(BaseModel):
     study_id: str | None = None
     input_path: str | None = None
@@ -92,7 +113,7 @@ def start_job(req: JobRequest):
     if not req.study_id and not req.input_path:
         raise HTTPException(status_code=400, detail="Must provide study_id or input_path")
         
-    if req.input_path:
+    if req.input_path and not req.study_id:
         # Infer study_id from the parent folder name (usually the patient ID)
         req.study_id = Path(req.input_path).parent.name
 
@@ -107,16 +128,47 @@ def start_job(req: JobRequest):
     
     def work():
         job = JOBS[job_id]
+        import subprocess, sys
         try:
-            def progress(stage, pct):
-                job["stage"] = stage
-                job["pct"] = pct
+            cmd = [sys.executable, "-m", "src.backend.run", "--model", req.model_id]
+            if req.input_path:
+                cmd.extend(["--input", req.input_path])
+                if req.study_id:
+                    cmd.extend(["--study", req.study_id])
+            else:
+                cmd.extend(["--study", req.study_id])
                 
-            run(study_id=req.study_id, model_id=req.model_id, progress=progress, 
-                custom_input=Path(req.input_path) if req.input_path else None)
-            job["status"] = "done"
-            job["pct"] = 1.0
-            job["stage"] = "done"
+            process = subprocess.Popen(
+                cmd, 
+                stdout=subprocess.PIPE, 
+                stderr=subprocess.STDOUT, 
+                text=True,
+                bufsize=1
+            )
+            
+            for line in process.stdout:
+                line = line.strip()
+                if not line:
+                    continue
+                if line.startswith("[") and "%]" in line:
+                    try:
+                        pct_str, rest = line.split("%]", 1)
+                        pct_val = float(pct_str.strip().strip("[")) / 100.0
+                        stage_name = rest.strip()
+                        job["pct"] = pct_val
+                        job["stage"] = stage_name
+                    except:
+                        pass
+                        
+            process.wait()
+            if process.returncode == 0:
+                job["status"] = "done"
+                job["pct"] = 1.0
+                job["stage"] = "done"
+            else:
+                job["status"] = "failed"
+                job["error"] = f"Process exited with code {process.returncode}"
+                
         except Exception as e:
             job["status"] = "failed"
             job["error"] = traceback.format_exc()
@@ -148,5 +200,5 @@ def read_root():
 
 if __name__ == "__main__":
     import uvicorn
-    print("\n  PrediCT Studio -> http://127.0.0.1:8080\n")
-    uvicorn.run(app, host="127.0.0.1", port=8080, log_level="warning")
+    print("\n  PrediCT Studio -> http://127.0.0.1:8001\n")
+    uvicorn.run(app, host="127.0.0.1", port=8001, log_level="warning")

@@ -927,6 +927,7 @@ async function initRunForm() {
   const modelSelect = document.getElementById('run-model');
   const pathInput = document.getElementById('run-path');
   const runBtn = document.getElementById('run-btn');
+  const runNameInput = document.getElementById('run-name');
   const progressContainer = document.getElementById('run-progress-container');
   const progressFill = document.getElementById('run-progress-fill');
   const progressText = document.getElementById('run-progress-text');
@@ -953,10 +954,41 @@ async function initRunForm() {
     modelSelect.innerHTML = '<option value="">Error loading models</option>';
   }
 
+  // Fetch patients
+  const patientSelect = document.getElementById('run-patient');
+  if (patientSelect) {
+    try {
+      const res = await fetch('/raw_patients');
+      if (res.ok) {
+        const patients = await res.json();
+        for (const p of patients) {
+          const opt = document.createElement('option');
+          opt.value = p.path;
+          opt.textContent = p.id;
+          opt.dataset.id = p.id;
+          patientSelect.appendChild(opt);
+        }
+      }
+    } catch (e) {
+      console.error("Could not fetch raw patients", e);
+    }
+
+    patientSelect.onchange = () => {
+      const val = patientSelect.value;
+      if (val) {
+        pathInput.value = val;
+        // Auto populate name field too
+        const selectedOpt = patientSelect.options[patientSelect.selectedIndex];
+        runNameInput.value = selectedOpt.dataset.id;
+      }
+    };
+  }
+
   // Handle run click
   runBtn.onclick = async () => {
     const path = pathInput.value.trim();
     const model = modelSelect.value;
+    const runName = runNameInput.value.trim();
     if (!path || !model) return;
 
     runBtn.disabled = true;
@@ -965,10 +997,13 @@ async function initRunForm() {
     progressText.textContent = '0%';
 
     try {
+      const payload = { input_path: path, model_id: model };
+      if (runName) payload.study_id = runName;
+      
       const res = await fetch('/jobs', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ input_path: path, model_id: model })
+        body: JSON.stringify(payload)
       });
       
       if (!res.ok) {
@@ -991,10 +1026,11 @@ async function initRunForm() {
               clearInterval(poll);
               // Wait a moment for UX
               setTimeout(() => {
-                // Determine study ID from the parent folder (usually patient ID)
+                // Determine study ID from the parent folder if runName isn't provided
                 const parts = path.split(/[\\/]/).filter(p => p);
                 const folderName = parts.length > 1 ? parts[parts.length - 2] : parts[0];
-                window.location.href = `?study=${folderName}&model=${model}`;
+                const finalStudyId = runName ? runName : folderName;
+                window.location.href = `?study=${finalStudyId}&model=${model}`;
               }, 500);
             } else if (statusJson.status === 'failed') {
               clearInterval(poll);
