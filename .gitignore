@@ -1,1 +1,5 @@
-._dbindex_/
+__pycache__/
+.pytest_cache
+data/
+models/nnunet_simple_scv/nnUNet_results/fold_0/
+models/nnunet_dob_scv/nnUNet_results/fold_0/

@@ -16,8 +16,9 @@ import yaml
 import hashlib
 from .paths import MODELS
 
-REQUIRED = ["id", "name", "weights", "output", "threshold", "hu_window",
-            "spacing", "crop", "activation", "patch", "overlap", "arch"]
+REQUIRED_COMMON = ["id", "name", "output", "threshold", "hu_window",
+                   "spacing", "crop", "arch"]
+REQUIRED_PYTORCH = ["weights", "activation", "patch", "overlap"]
 
 def load_manifest(model_id: str) -> dict:
     """Load and validate a model manifest."""
@@ -27,15 +28,23 @@ def load_manifest(model_id: str) -> dict:
         raise FileNotFoundError(f"Manifest not found for model {model_id} at {manifest_path}")
         
     m = yaml.safe_load(manifest_path.read_text()) or {}
-    missing = [k for k in REQUIRED if k not in m or m[k] == "REQUIRED"]
+    
+    req = REQUIRED_COMMON.copy()
+    if m.get("arch") != "nnunet":
+        req.extend(REQUIRED_PYTORCH)
+        
+    missing = [k for k in req if k not in m or m[k] == "REQUIRED"]
     if missing:
         raise ValueError(f"{model_id}: manifest missing {missing}")
         
-    m["weights_path"] = d / m["weights"]
-    if m.get("sha256"):
-        got = hashlib.sha256(m["weights_path"].read_bytes()).hexdigest()
-        if got != m["sha256"]:
-            raise ValueError(f"{model_id}: checkpoint sha256 mismatch (expected {m['sha256']}, got {got})")
+    if m.get("arch") != "nnunet":
+        m["weights_path"] = d / m["weights"]
+        if m.get("sha256"):
+            got = hashlib.sha256(m["weights_path"].read_bytes()).hexdigest()
+            if got != m["sha256"]:
+                raise ValueError(f"{model_id}: checkpoint sha256 mismatch (expected {m['sha256']}, got {got})")
+    else:
+        m["nnunet_results_path"] = d / m.get("nnunet_results", "nnUNet_results")
             
     return m
 

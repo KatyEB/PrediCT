@@ -123,18 +123,22 @@ def run(study_id: str, model_id: str, crop: bool = None, progress=None, custom_i
             sitk.WriteImage(heart_img, str(heart_path))
 
     array = sitk.GetArrayFromImage(image)                 # (Z, Y, X)
-    x = normalize(np.transpose(array, (2, 1, 0)), tuple(m["hu_window"])) # (X, Y, Z)
     
     p("predict", 0.5)
-    prob_xyz = predict(
-        x, 
-        m["weights_path"], 
-        m["arch"],
-        tuple(m["patch"]), 
-        m["overlap"], 
-        m["activation"]
-    )
-    prob = np.transpose(prob_xyz, (2, 1, 0)) # back to (Z, Y, X)
+    if m.get("arch") == "nnunet":
+        from src.backend.pipeline_nnunet import predict_nnunet
+        prob = predict_nnunet(image, m) # returns (Z, Y, X)
+    else:
+        x = normalize(np.transpose(array, (2, 1, 0)), tuple(m["hu_window"])) # (X, Y, Z)
+        prob_xyz = predict(
+            x, 
+            m["weights_path"], 
+            m["arch"],
+            tuple(m["patch"]), 
+            m["overlap"], 
+            m["activation"]
+        )
+        prob = np.transpose(prob_xyz, (2, 1, 0)) # back to (Z, Y, X)
     
     o = out_dir(study_id, model_id)
     o.mkdir(parents=True, exist_ok=True)

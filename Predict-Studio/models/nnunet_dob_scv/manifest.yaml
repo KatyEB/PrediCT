@@ -1,0 +1,13 @@
+id: nnunet_dob_scv
+name: Rajat nnUNet DOB SCV
+arch: nnunet
+crop: false
+spacing: [0.37, 0.37, 3.0]
+output: binary
+threshold: 0.5
+hu_window: [0, 1200]
+nnunet_results: nnUNet_results
+weights: checkpoint_best.pth
+activation: dummy
+patch: [1, 1, 1]
+overlap: 0.0
