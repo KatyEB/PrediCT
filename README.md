@@ -2,7 +2,7 @@
 ### GSoC 2026 @ ML4Sci | Building and Comparing Segmentation Strategies for Coronary Artery Calcium
 
 **Contributor:** Soham Jadhav &nbsp;|&nbsp; **Mentors:** Katy, Anna &nbsp;|&nbsp; **Co-contributor:** Rajat  
-**Midterm:** July 24, 2026 &nbsp;|&nbsp; **Final:** September 24, 2026
+**Midterm:** July 24, 2026 &nbsp;|&nbsp; **Final:** September 21, 2026
 
 ---
 
@@ -18,11 +18,30 @@ Stage 4  3D UNet baseline training               [COMPLETE]
 Stage 5  ROI Cropping & TotalSegmentator Masking [COMPLETE]
 Stage 6  Approach 3 (Soft Coverage) Training     [COMPLETE]
 Stage 7  Final Test Set Evaluation (Volume MAE)  [COMPLETE]
-Stage 8  Agatston score calculation              [PENDING]
-Stage 9  Agatston comparison (across approaches) [PENDING]
-Stage 10 Hybrid + Custom CNN approach (Results Impr.) [PENDING]
-Stage 11 Software deployment automation plan     [PENDING]
+Stage 8  Corrupted-cohort hunt (14 patients) + A3 retrain (v2) [COMPLETE]
+Stage 9  Agatston scoring — XML GT, A1 & A3 scorers, risk stratification [COMPLETE — core research contribution]
+Stage 10 Hybrid + Custom CNN approach (Results Impr.) [PENDING — time-permitting]
+Stage 11 Software deployment automation plan     [IN PROGRESS — see `predict_software` branch]
 ```
+
+**Core outcome of this branch:** `A3 Coverage v2` — trained on the fully-cleaned 441-patient cohort after removing 14 corrupted-label scans, val Dice 0.7227 (median 0.7865). This is the model that ships in PrediCT Studio's segmentation pipeline alongside `A1 ROI`. See **Models** below for the full comparison; see `docs/progress_report.md` for the complete writeup with source-file references.
+
+---
+
+## Models
+
+Four models were trained across this project. Two (**bold**) are the ones actually deployed in the PrediCT Studio clinical tool (`predict_software` branch, `models/a1-roi/` and `models/a3-coverage-v2/`); the other two are reference/superseded runs kept for the ablation story.
+
+| Model | Status | Val Dice (mean / median) | Test Dice (mean / median) | Test Vol. MAE (mm³) | Test Vol. Bias (mm³) |
+|---|---|---|---|---|---|
+| A1 Full-Volume | Reference baseline (pre-ROI) | 0.6097 / 0.6916 | 0.640 / 0.707 | 249.46 | −199.89 |
+| **A1 ROI-Cropped** | **Deployed** | **0.6524 / 0.7467** | **0.669 / 0.747** | **171.30** | **−32.46** |
+| A3 Coverage v1 | Superseded by v2 | 0.6156 / 0.6900 | 0.654 / 0.742 | 164.23 | −0.09 |
+| **A3 Coverage v2** | **Deployed — core project outcome** | **0.7227 / 0.7865** | **0.655** | **174.53†** | **−56.27†** |
+
+† A3 v2's test-set volumetric MAE/bias are carried from earlier reporting and haven't yet been re-verified against a raw per-patient CSV in this repo (unlike the other three rows, which were independently recomputed from `Results/.../bland_altman_comparison.csv`). Scheduled for re-confirmation once the doc-update pass is done — see `docs/progress_report.md` Open Decisions.
+
+All Dice figures above are read at each run's actual best-checkpoint epoch (`summary.json` → `best_epoch`, cross-checked against `train_log.csv`), not mixed across epochs. Full validation and training-run detail, plus the Agatston/clinical-risk results (the project's core research finding), is in `docs/progress_report.md`.
 
 ---
 
@@ -172,6 +191,8 @@ Test  :  67 patients  (15%)
 Split at **patient level**, `random_state=42`. All splits are ~100% positive  
 (446/447 gated patients have detectable calcium — this is expected for COCA).
 
+**⚠ Superseded by the corrupted-cohort exclusion.** All ROI-cropped, A3, and Agatston results reported in `docs/progress_report.md` use a further-cleaned **441-patient cohort (Train 310 / Val 65 / Test 66)**, after excluding 14 patients found to have DICOM/XML slice-misalignment defects (see `docs/Analysis/Corrupted_Datasets.md`). Before rebuilding splits from scratch, confirm which exclusion list is on disk — this is tracked as an open reconciliation item.
+
 ---
 
 ### Stage 6 — Limitation Analysis (`src/visualization/xml_vs_mask_comparison_v3.py`)
@@ -206,7 +227,7 @@ These are unresolved and require ablation runs. **None block the baseline traini
 
 | # | Decision | Status |
 |---|----------|--------|
-| 1 | **HU window**: `[-150, 350]` (Rajat's cardiac window, preserves soft tissue) vs `[100, 1000]` (calcium-salient, cuts anatomy) | Ablation required |
+| 1 | **HU window** | ✅ Resolved — settled on `[0, 1200]`. The narrower candidates `[-150, 350]` and `[-100, 1000]` both clipped the calcium density range and plateaued near Dice 0.25; `[0, 1200]` reached ~0.61 mean / ~0.69 median. Every trained model (A1 and A3, all variants) uses this window. |
 | 2 | Patient 263 — fixable XML edge case or corrupt DICOM? | Inspect manually |
 | 3 | 2 additional error patients (IDs unknown) — confirm with Rajat | Pending |
 | 4 | Patch sampling ratio: `pos=1, neg=1` vs `pos=1, neg=3` | Tune during training |
@@ -245,8 +266,15 @@ PrediCT-main/
 ├── src/testing/
 │       └── evaluate_models.py              ← Test set evaluation script
 ├── Results/                      ← Training logs, config, best models
-│   ├── approach1_binary/         ← 3D UNet Baseline results
-│   └── approach1_roi_cropped/    ← 3D UNet with Cardiac ROI Cropping results
+│   ├── approach1_roi_cropped/    ← A1 ROI-cropped (deployed)
+│   ├── approach3_coverage_v2/    ← A3 Coverage v2 (deployed, core outcome)
+│   ├── Archives/
+│   │   ├── approach1_binary/     ← A1 full-volume (reference baseline)
+│   │   ├── approach3_coverage/   ← A3 Coverage v1 (superseded by v2)
+│   │   └── testing_models_A1_binary_A1_ROI_corpped/  ← per-patient test CSV, A1 models
+│   └── Agaston_results/
+│       ├── Agaston Results (Unseen Data)/  ← A1 & A3 Agatston vs XML GT, 66-patient test set
+│       └── TrainVal_Experiment/            ← 374-patient train+val replication (McNemar significance)
 ├── docs/
 │   ├── progress_report.md        ← Full written report
 │   ├── Final_Testing_Report.md   ← Test generalization & volumetric MAE
@@ -274,11 +302,13 @@ PrediCT-main/
 - [x] Final Test Set Evaluation (Volume MAE & Bias Analysis)
 - [x] Comparative results & HTML Artifacts added
 - [x] Foreground-biased patch sampling (`RandCropByPosNegLabeld`)
-- [ ] HU window ablation — `[-150, 350]` vs `[100, 1000]`
-- [ ] **Agatston Score Calculation:** Extract original XML area and predict soft/binary volumes.
-- [ ] **Agatston Score Comparison:** Evaluate standard Agatston error across Approaches 1 & 3 vs Ground Truth.
+- [x] HU window — resolved, settled on `[0, 1200]`
+- [x] Corrupted-cohort hunt — all 14 mislabeled scans found and excluded; A3 retrained as `Coverage v2` on the clean 441-patient cohort
+- [x] **Agatston Score Calculation:** XML Shoelace area × peak-HU density weight, computed for GT, A1, and A3.
+- [x] **Agatston Score Comparison:** A1 vs A3 vs XML ground truth, on both the 66-patient test set and a 374-patient train+val replication. Core finding: A3's coverage-fraction labels improve clinical risk-category accuracy (92.4% vs 86.4% on test; 83.7% vs 79.7% on the replication, p=0.038). Full results and caveats in `docs/progress_report.md`.
+- [ ] **Known defect — scorer re-run pending:** both Agatston scorers currently normalize HU with `[100,1000]` (models were trained on `[0,1200]`), and the A3 scorer loads the superseded v1 checkpoint, not v2. Numbers above are correct for what they measure but are provisional until this is fixed and re-run.
 - [ ] **Hybrid + Custom CNN Architecture:** Research and experiment with advanced models for further segmentation improvements (time permitting).
-- [ ] **Software Application Automation Plan:** Formulate a full deployment plan to automate the end-to-end clinical pipeline.
+- [ ] **Software Application Automation Plan:** Formulate a full deployment plan to automate the end-to-end clinical pipeline (see `predict_software` branch for current state).
 
 ---
 
@@ -286,4 +316,4 @@ PrediCT-main/
 
 **Dataset:** Gräni et al. (2021). COCA — Coronary Artery Calcium and Chest CTs. PhysioNet.  
 **Project:** Google Summer of Code 2026 — ML4Sci  
-**Mentors:** Katy (primary),
+**Mentors:** Katy Butler,

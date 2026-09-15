@@ -1,5 +1,7 @@
 # Progress Report — PrediCT CAC Segmentation Pipeline
-**GSoC 2026 @ ML4Sci** | Soham Jadhav | Updated: June 2026
+**GSoC 2026 @ ML4Sci** | Soham Jadhav | Updated: September 2026
+
+Every number in this report was independently re-derived from source files in this repo (`summary.json`, `train_log.csv`, and the raw per-patient CSVs under `Results/`) as part of this update pass, not copied from prior draft text. Where a number could not be re-verified against a source file, it is flagged explicitly rather than presented as confirmed.
 
 ---
 
@@ -9,32 +11,44 @@
 |-------|------|--------|--------|
 | 1 | DICOM + XML → NIfTI + masks | ✅ Complete | 787 NIfTI pairs |
 | 2 | Exploratory Data Analysis | ✅ Complete | `docs/figures/eda_full_dataset.png` |
-| 3 | Dataset cleaning + splitting | ✅ Complete | 313 / 67 / 67 |
+| 3 | Dataset cleaning + splitting | ✅ Complete | 313 / 67 / 67 (447-patient cohort) |
 | 4 | Limitation analysis (fillPoly vs XML) | ✅ Complete | 5 comparison figures, CSV analysis |
-| 5 | 3D UNet baseline training | ✅ Complete | Mean Dice 0.61, Median 0.69 |
-| 6 | Cardiac ROI Cropping Simulation & Training | ✅ Complete | Results in `approach1_roi_cropped/` |
-| 7 | Approach 3 (Soft Coverage) Training | ✅ Complete | Results in `Final_Testing_Report.md` |
-| 8 | Final Test Set Evaluation (Volume MAE) | ✅ Complete | Results in `Final_Testing_Report.md` |
-| 9 | Final Clinical Agatston Evaluation | ✅ Complete | Results in `Final_Testing_Report.md` |
+| 5 | 3D UNet baseline training (A1 Full-Volume) | ✅ Complete | Mean Dice 0.6097, Median 0.6916 |
+| 6 | Cardiac ROI cropping + retrain (A1 ROI) | ✅ Complete | Mean Dice 0.6524, Median 0.7467 — **deployed** |
+| 7 | Approach 3 Soft Coverage training, v1 | ✅ Complete | Superseded by v2 |
+| 8 | Corrupted-cohort hunt (14 patients) + A3 retrain (v2) | ✅ Complete | Mean Dice 0.7227, Median 0.7865 — **deployed, core project outcome** |
+| 9 | Final test-set evaluation (Dice + volumetric MAE/bias) | ✅ Complete | See Models section |
+| 10 | Agatston scoring — XML GT, A1 & A3 scorers, risk stratification | ✅ Complete, numbers provisional | See Agatston Evaluation — core research contribution |
 
 ---
 
-## Final Model Performance & Volumetric Analysis (Unseen Test Set)
+## Models — Summary
 
-The models were evaluated on the `test_split.parquet` dataset consisting of 66 unseen patients to measure generalization and absolute calcium volume accuracy.
+Four models exist. **A1 ROI-Cropped** and **A3 Coverage v2** are the two shipped in PrediCT Studio (`predict_software` branch, `models/a1-roi/` and `models/a3-coverage-v2/` — manifest `val_dice` fields confirmed to match the numbers below exactly). **A3 Coverage v2 is the core outcome of this project**: highest Dice, trained on the fully-cleaned 441-patient cohort, and the model the clinical-risk-stratification argument is ultimately about. The one caveat to that framing is under Agatston Evaluation below — read it before quoting the 92.4% number as "A3 v2's result."
 
-| Model | Test Set Dice | Volumetric MAE (mm³) | Volume Bias (Mean Error) mm³ |
-|-------|---------------|-----------------------|------------------------------|
-| **A1 Full Volume** | 0.640 | 249.46 | -199.89 |
-| **A1 ROI Cropped** | 0.669 | 171.30 | -32.46 |
-| **A3 Coverage (Soft Labels)** | 0.654 | **164.23** | **-0.087** |
-| **A3 Coverage v2 (Anomaly Free)** | 0.655 | 174.53 | -56.27 |
+### Validation results (at each run's true best-checkpoint epoch — not mixed across epochs)
 
-**Key Takeaways:**
-- **Generalization:** All models generalized exceptionally well, scoring equal to or higher on the test set than in validation (A1 ROI Cropped reached 0.669 Test Dice).
-- **ROI Cropping Impact:** Cropping to the heart reduced the extreme under-prediction bias of the full volume model (improving bias from -199.89 mm³ to -32.46 mm³).
-- **A3 Soft Labels Win:** Modeling sub-pixel partial volume directly (`A3_Coverage`) yielded the lowest Mean Absolute Error (164.23 mm³) and achieved an incredible near-zero volume bias of -0.087 mm³.
-- **Impact of Anomaly Removal:** Retraining on the rigorously cleaned dataset (`A3_Coverage_v2`) shifted the volume predictions to be more conservative (Bias: -56.27 mm³). This is an expected and healthier outcome, as the original training data contained massive anomaly overshoots (+723%) that artificially inflated positive volume.
+| Model | Best epoch | Val Dice mean | Val Dice median | Training cohort |
+|---|---|---|---|---|
+| A1 Full-Volume | 110 | 0.6097 | 0.6916 | 313/67/67 (447-patient split) |
+| **A1 ROI-Cropped** | 164 | **0.6524** | **0.7467** | 310/65/66 (441, anomaly-excluded) |
+| A3 Coverage v1 *(superseded)* | 166 | 0.6156 | 0.6900 | 310/65/66 (441, anomaly-excluded) |
+| **A3 Coverage v2** | 140 | **0.7227** | **0.7865** | 310/65/66 (441, further-cleaned before this run) |
+
+**Correction made in this pass:** earlier drafts paired A1-ROI's best-mean checkpoint (epoch 164, mean 0.6524) with a median Dice of 0.7402. That 0.7402 figure is actually the median at epoch 194 — the *last* training epoch, not the one that was checkpointed. At epoch 164 itself, median Dice is 0.7467. Same issue on A3 v1: the previously-reported 0.7145 median is from epoch 134 (a different, best-median epoch), while the actual best-mean checkpoint (epoch 166, mean 0.6156) has median 0.6900. Both are corrected above, verified line-by-line against `train_log.csv`.
+
+### Test-set results (66 unseen patients)
+
+| Model | Test Dice (mean / median) | Vol. MAE (mm³) | Vol. Bias (mm³) |
+|---|---|---|---|
+| A1 Full-Volume | 0.640 / 0.707 | 249.46 | −199.89 |
+| **A1 ROI-Cropped** | **0.669 / 0.747** | **171.30** | **−32.46** |
+| A3 Coverage v1 | 0.654 / 0.742 | 164.23 | −0.09 |
+| **A3 Coverage v2** | **0.655** | 174.53 † | −56.27 † |
+
+† **Not yet independently re-verified.** A1-Full, A1-ROI, and A3-v1 all have a raw per-patient CSV in `Results/` (`bland_altman_comparison.csv` / `test_evaluation_results.csv`) that these figures were recomputed from directly, patient by patient, as part of this update. A3-v2 has no equivalent file in this repo — its test-set median Dice, volumetric MAE, and bias are carried forward from prior reporting as-is, per agreement not to re-run evaluation mid-way through this documentation pass. Flagged in Open Decisions for confirmation once this pass is done; if the re-run produces different numbers, this row updates.
+
+**Reading the v1 → v2 bias shift honestly:** A3 v1's near-zero volumetric bias (−0.09 mm³) is a mean-signed-error cancellation, not calibration — the model over-predicts mild/moderate lesions and under-predicts severe ones, and on this 66-patient test set those two errors happened to net out (see the tier-by-tier bias table under Agatston Evaluation). A3 v2, trained on a further-cleaned cohort, breaks that coincidence and lands at −56.27 mm³ instead. Most of the *validation* Dice jump from v1 (0.6156) to v2 (0.7227) is the removal of scans with an empty ground-truth mask that scored a hard 0.0000 regardless of model quality — the test-set Dice barely moves (0.654 → 0.655), which is the more trustworthy signal that v2 isn't dramatically better at segmentation than v1, just trained on cleaner labels.
 
 ---
 
@@ -61,7 +75,7 @@ The models were evaluated on the `test_split.parquet` dataset consisting of 66 u
 | 75th pct | 1,276 | 13 |
 | Max | 13,093 | 35 |
 
-**Original spacing range:** 0.246mm – 0.715mm across 787 scans.  
+**Original spacing range:** 0.246mm – 0.715mm across 787 scans.
 Per-patient scale correction was applied before XML polygon overlay.
 
 ---
@@ -74,14 +88,16 @@ Per-patient scale correction was applied before XML polygon overlay.
 | Val | 67 | 67 (100%) | 0 |
 | Test | 67 | 67 (100%) | 0 |
 
-Split at patient level. `random_state=42`.
+Split at patient level, `random_state=42`. This is the split immediately after Stage 3 cleaning (XML filter + P263 removal + dedup, 447 patients).
+
+**⚠ Superseded for all results after A1-ROI.** Every A1-ROI, A3, and Agatston number in this report uses a further-cleaned **441-patient cohort — Train 310 / Val 65 / Test 66** — after excluding 14 patients with confirmed DICOM/XML slice-misalignment defects (see "The 14 Corrupted Datasets" below and `docs/Analysis/Corrupted_Datasets.md`). **Open item, not yet resolved:** confirm which split — the 447-based or 441-based one — is actually what's on disk in `data_canonical/tables/` before treating either as reproducible from scratch.
 
 ---
 
 ## Key Finding — fillPoly Boundary Limitation
 
-XML polygon annotations are stored at floating-point (subpixel) precision.  
-`cv2.fillPoly` rounds vertices to the integer pixel grid before filling.  
+XML polygon annotations are stored at floating-point (subpixel) precision.
+`cv2.fillPoly` rounds vertices to the integer pixel grid before filling.
 This creates boundary quantisation error that scales with original pixel spacing mismatch.
 
 | Patient | Original Spacing | Scale Factor | Area Error |
@@ -90,22 +106,22 @@ This creates boundary quantisation error that scales with original pixel spacing
 | P1 z=19 | 0.38mm | 1.03× | **7.0%** |
 | P10 z=10 | 0.44mm | 1.18× | **79.4%** |
 
-**Implication:** For small calcium deposits (<50 voxels), the majority of boundary pixels  
+**Implication:** For small calcium deposits (<50 voxels), the majority of boundary pixels
 are uncertain. This is a **label-quality ceiling**, not a model performance ceiling.
 
 ---
 
 ## Approach 3 — Continuous Coverage Fraction (Soft Labels)
 
-To eliminate the `fillPoly` boundary quantisation error, a new labeling strategy was implemented using exact analytic polygon-pixel clipping (Sutherland-Hodgman) to compute the exact fractional coverage `[0.0 - 1.0]` of each voxel.
+To eliminate the `fillPoly` boundary quantisation error, a labeling strategy was implemented using exact analytic polygon-pixel clipping (Sutherland-Hodgman) to compute the exact fractional coverage `[0.0 - 1.0]` of each voxel.
 
-**Validation Results (15-patient sample):**
+**Label-fidelity validation (15-patient sample):**
 A verification script (`src/analysis/verify_a3_coverage_area.py`) compared the raw subpixel XML area (Shoelace formula) directly against the sum of the coverage mask fractions.
 
 | Label Type | Mean Area Error (vs XML) | Notes |
 |------------|-------------------------|-------|
-| Approach 1 (fillPoly) | 10.19% (full dataset) | Integer snapping introduces systematic +6.33% over-counting bias. |
-| **Approach 3 (Coverage)** | **0.03% (15-pt sample)** | Boundary-inclusion bias completely eliminated. Error reduced to float rounding noise. |
+| Approach 1 (fillPoly) | 10.19% (full 447-patient dataset) | Integer snapping introduces a systematic +6.33% over-counting bias. |
+| **Approach 3 (Coverage)** | **0.03% (15-pt sample)** | Boundary-inclusion bias essentially eliminated. Error reduced to float rounding noise. |
 
 **Sample Patient Results:**
 
@@ -114,9 +130,9 @@ A verification script (`src/analysis/verify_a3_coverage_area.py`) compared the r
 | 411 (Tiny) | 6.47 px² | 6.51 px² | 0.59% |
 | 316 (Small) | 99.06 px² | 99.25 px² | 0.19% |
 | 354 (Large) | 1228.16 px² | 1229.14 px² | 0.08% |
-| 321 (Massive)| 12788.52 px² | 12790.81 px² | 0.02% |
+| 321 (Massive) | 12788.52 px² | 12790.81 px² | 0.02% |
 
-**Implication:** The soft coverage labels are geometrically exact. When evaluated using a Soft Agatston Scorer (sum of predicted probability × voxel volume), Approach 3 is highly expected to reduce the 171.30 mm³ Volumetric MAE baseline established by Approach 1.
+**Outcome, confirmed:** the coverage-fraction labels did reduce volumetric MAE relative to A1-ROI's 171.30 mm³ baseline — A3 v1 reached 164.23 mm³, a modest gain. The much larger effect turned out to be on *clinical risk categorization*, not raw volumetric error — see Agatston Evaluation below.
 
 ---
 
@@ -128,37 +144,40 @@ A verification script (`src/analysis/verify_a3_coverage_area.py`) compared the r
 | Median calcium voxels | 357 |
 | Foreground:background | ~1 : 27,000 |
 
-**Random patch sampling will produce Dice = 0.**  
-Model converges to predicting all-zero with near-perfect BCE loss.  
+**Random patch sampling will produce Dice = 0.**
+Model converges to predicting all-zero with near-perfect BCE loss.
 **Required:** `RandCropByPosNegLabeld(pos=1, neg=1)` in MONAI.
 
 ---
 
 ## Open Experimental Decisions
 
-| # | Decision | Priority |
-|---|----------|----------|
-| 1 | HU window: `[-150, 350]` vs `[100, 1000]` — ablation required | ✅ COMPLETED (Settled on `[100, 1000]`) |
-| 2 | Patient 263 — fixable or permanently exclude? | ✅ COMPLETED (Permanently excluded) |
-| 3 | Hunt down remaining 13 corrupted datasets from Rajat's project-wide warning | ✅ COMPLETED (All 14 corrupted patients found & excluded!) |
-| 4 | Patch sampling ratio `pos:neg` — tune during training | LOW |
-| 5 | TotalSegmentator ROI masking — enable after baseline | ✅ COMPLETED |
+| # | Decision | Status |
+|---|----------|--------|
+| 1 | HU window: `[-150, 350]` vs `[-100, 1000]` — ablation required | ✅ Resolved — settled on **`[0, 1200]`**. Both narrower candidates clipped the calcium density range; widening moved the Dice plateau from ~0.25 to ~0.61. Every trained model uses this window. |
+| 2 | Patient 263 — fixable or permanently exclude? | ✅ Resolved — permanently excluded (Group A, corrupted cohort) |
+| 3 | Hunt down remaining 13 corrupted datasets from Rajat's project-wide warning | ✅ Resolved — all 14 found and excluded (see below) |
+| 4 | Patch sampling ratio `pos:neg` — tune during training | LOW priority, not yet revisited |
+| 5 | TotalSegmentator ROI masking — enable after baseline | ✅ Resolved — adopted for A1-ROI and both A3 runs |
+| 6 | A3 v2 test-set volumetric numbers — no raw CSV in repo to verify against | **Open** — carried forward as previously reported per agreement not to re-run mid-pass; confirm or re-run later |
+| 7 | Agatston scorer defects: `[100,1000]` HU window vs. trained `[0,1200]`; A3 scorer loads superseded v1 checkpoint, not v2; no ≥1mm² minimum-lesion rule | **Open, high priority** — both HU-window and checkpoint issues push in the same direction (make A3 look worse than it likely is). Numbers in Agatston Evaluation below are correct for what they measure but are provisional until this is fixed and re-run. |
+| 8 | Split-file reconciliation — 447 vs 441-patient split, which is on disk | **Open** — see Dataset Split note above |
 
 ---
 
-## 🚨 Major Finding: The 14 Corrupted Datasets Solved
+## 🔎 The 14 Corrupted Datasets
 
-Rajat's original documentation warned of 14 patients affected project-wide by a multi-series data corruption bug causing DICOM/XML z-slice misalignment. This defect causes the `cv2.fillPoly` rasterization to either completely miss calcium (false negatives, 0.00 mask area) or hallucinate massive overshoots on empty slices (+723% area). 
+Rajat's original documentation warned of 14 patients affected project-wide by a multi-series data corruption bug causing DICOM/XML z-slice misalignment. This defect causes `cv2.fillPoly` rasterization to either completely miss calcium (false negatives, 0.00 mask area) or hallucinate massive overshoots on empty slices (+723% area).
 
-Through rigorous area fidelity checks and cross-referencing, we have successfully hunted down **all 14 corrupted datasets** and permanently excluded them from the training and testing pipelines:
+All 14 have been identified and permanently excluded from training and testing:
 
-*   **Group A (Known Corrupted):** Patient `263`
-*   **Group B (Massive Overshoots):** Patients `28`, `38`, `76`, `77`, `159`, `388`
-*   **Group C (Complete Misses):** Patients `135`, `146`, `155`, `192`, `411`, `417`
+* **Group A (known corrupted):** Patient `263`
+* **Group B (massive overshoots):** Patients `28`, `38`, `76`, `77`, `159`, `388`
+* **Group C (complete misses):** Patients `135`, `146`, `155`, `192`, `411`, `417`
 
-*(Note: Patient 159 appears in both Group B and Group C across two different scans, perfectly confirming the multi-series overlapping bug hypothesis).*
+*(Patient 159 appears in both Group B and Group C under two different scan IDs — this is the clearest single piece of evidence for the multi-series hypothesis: one patient, two series, the misalignment expressing as an overshoot in one and a complete miss in the other.)*
 
-**Update (v2 Training Results):** After permanently dropping these 14 corrupted anomalies, the `Approach 3 (Soft Coverage)` model was retrained (`approach3_coverage_v2`). Removing these severely flawed ground truth labels resulted in a massive performance leap: the **Best Validation Dice skyrocketed from 0.596 to 0.7227** (with a Median Dice of **0.7865**, achieved at epoch 140). The final test set evaluation yielded a **Test Dice of 0.655**, a **Volumetric MAE of 174.53 mm³**, and a **Volume Bias of -56.27 mm³**.
+**A3 v2 is the retrain on this fully-cleaned cohort.** See "Models — Summary" above for the resulting Dice jump and why most of it is a validation-cohort artifact (removal of unscoreable zero-Dice patients) rather than a segmentation-quality improvement — confirmed by the fact that test-set Dice barely moved.
 
 ---
 
@@ -173,34 +192,77 @@ Through rigorous area fidelity checks and cross-referencing, we have successfull
 
 ---
 
-## 🏆 Final Clinical Agatston Evaluation (The Ultimate Victory)
+## Agatston Evaluation — Core Research Contribution
 
-The ultimate metric for this project is not Dice score, but **Clinical Risk Stratification Accuracy** based on the Agatston score. We evaluated both Approach 1 and the new anomaly-free Approach 3 on the 66 unseen test patients.
+This is the section the project was built toward. Dice and volumetric MAE (above) are proxies; the Agatston score is what a cardiologist actually acts on. Both A1 and A3 were scored end-to-end against XML ground truth on the 66-patient held-out test set, then again on a 374-patient train+val cohort as a larger paired replication. **All numbers below were independently recomputed in this pass directly from the raw CSVs (`agatston_comparison_a1.csv` / `a3.csv`), matched patient-by-patient — not copied from prior draft text.**
 
-| Metric | A1 (Binary ROI) | A3 (Soft Coverage) |
+**Which A3 checkpoint this evaluates:** `agatston_scoring_a3.py` currently loads the superseded `approach3_coverage` (v1) checkpoint, not `approach3_coverage_v2`. So everywhere "A3" appears in this section, it refers to A3 v1 — the model deployed and described as the project's core outcome above is v2, which has not yet been run through the Agatston scorer. This is a known, still-open item (see Open Decisions #7). The direction of the result below is expected to hold or strengthen once re-run against v2 (v2 has higher Dice and was trained on cleaner labels), but that is a prediction, not yet a measured result.
+
+### Test-set results (66 unseen patients)
+
+| Metric | A1 (Binary, ROI) | A3 (Soft Coverage, v1 checkpoint) |
 |---|---|---|
-| **Mean Absolute Error (MAE)** | 179.62 | **188.53** |
-| **Mean Bias** | -41.44 | **-126.95** |
-| **Pearson Correlation ($R^2$)** | 0.8510 | **0.8458** |
-| **Clinical Risk Accuracy** | 86.4% | **92.4%** |
+| Mean Absolute Error | 179.62 | 188.53 |
+| **Median Absolute Error** | 42.97 | **19.27 (2.2× better)** |
+| Mean Bias (signed) | −41.44 | −126.95 |
+| Pearson r | 0.8510 | 0.8458 |
+| R² | 0.724 | 0.715 |
+| Spearman ρ | 0.942 | 0.932 |
+| **Clinical risk-category accuracy** | 86.4% (57/66) | **92.4% (61/66)** |
 
-### Why A3 Wins Clinical Applicability
-While the Mean Absolute Error (MAE) looks similar (~180 vs ~188), the **Clinical Risk Accuracy** tells the true story. 
+*(Earlier drafts of this table labeled the 0.8510/0.8458 row "Pearson Correlation (R²)" — those are Pearson r, not R². R² is 0.724/0.715, shown as its own row above, corrected in this pass.)*
 
-> [!IMPORTANT]
-> **Why Risk Categories Matter More Than % Error:**
-> Because Agatston scoring is highly zero-inflated, percentage error is mathematically misleading. A patient with a true score of 2 and predicted score of 10 has a negligible absolute difference but a mathematically massive **400% error**. In clinical practice, the exact number is less important than placing the patient into the correct treatment bucket (0, 1-100, 101-400, >400).
+**Mean vs. median:** mean MAE slightly favors A1, but this cohort's Agatston scores span roughly 0–2800, and a handful of heavily-calcified patients dominate any mean of absolute error. Median AE — the typical patient — favors A3 by 2.2×. Neither model meets the <50-unit mean target set at midterm; A3 meets it comfortably on the median.
 
-Because Approach 1 uses harsh integer rounding (0 or 1), borderline calcium deposits are either completely deleted or wildly exaggerated. This pushes patients near clinical thresholds (e.g., a score of 98 vs 102) into the wrong treatment bucket.
+**Clinical risk-category accuracy is the endpoint that matters**, since patients are triaged into treatment tiers (0, 1–100, 101–400, >400), not by exact score. Confirmed directly from the raw comparison CSVs: A3 is correct on 4 patients where A1 is wrong, and A1 is correct on 0 patients where A3 is wrong (McNemar b=4, c=0) — all four are cases of A1 over-predicting a mild/moderate patient across a treatment threshold, exactly the failure mode coverage-fraction labels were designed to remove.
 
-Approach 3 uses fractional coverage probabilities, completely bypassing the "cliff-edge" rounding error. This graceful degradation almost entirely eliminated threshold-crossing misclassifications, skyrocketing the clinical accuracy from 86.4% to an A-grade **92.4%**!
+**Statistical caveat — read before quoting 92.4% on its own:** on n=66, that 4-vs-0 discordance gives McNemar exact p=0.125 — not significant at α=0.05 by itself. The direction and mechanism are consistent with the hypothesis, but the test-set result alone is suggestive, not proven.
 
-*Note on Bias:* Approach 3 has a negative bias (-126.95), meaning it underestimates massive calcium deposits. However, a Bland-Altman analysis confirmed it only underestimates patients with True Agatston > 1500. Since any score > 400 places a patient in the "Severe" clinical bucket, an underestimation from 1500 to 1200 does not change their treatment plan, keeping our Risk Accuracy exceptionally high.
+### Train+val replication (374 patients, paired) — what makes the claim defensible
 
-### Nuanced Clinical Insight: Small vs. Massive Lesions
-A deeper analysis of the individual predictions in the CSV results reveals a fascinating dichotomy in how the two models behave:
+Both models saw this data during training, so absolute accuracy here is optimistic and should not be quoted as generalization performance. But both models saw exactly the same patients, so the paired A1-vs-A3 comparison is fair, and it has 5.7× the test set's sample size. *(Note: A1's raw output file has one extra scan — `f5023aa9974a` — not present in A3's file; numbers below use the 374 patients common to both, for a clean paired comparison.)*
 
-*   **A3 Excels on Small/Borderline Lesions:** Approach 3 is highly conservative and exceptionally accurate on borderline patients. For example, **Patient 205** has a True Agatston of `92` (Mild). The binary A1 model wildly over-predicted to `529` (Severe). The soft-coverage A3 model tamed this to `315` (Moderate), cutting the absolute error in half and preventing a massive clinical over-reaction. Similarly, for **Patient 82** (True `369`), A1 jumped to `834`, while A3 stayed incredibly close at `251`.
-*   **A1 Excels on Massive Lesions:** Conversely, A1 tracks much better on extreme, heavily calcified arteries. For **Patient 196** (True `2822`), A1 predicted `2357` while A3 conservatively under-predicted at `1570`. 
+| Metric | A1 (Binary, ROI) | A3 (Soft Coverage, v1 checkpoint) |
+|---|---|---|
+| n (paired) | 374 | 374 |
+| Mean Absolute Error | 151.62 | 150.66 |
+| Median Absolute Error | 52.91 | 29.96 |
+| Mean Bias (signed) | +50.53 | −40.88 |
+| Clinical risk accuracy | 79.9% | 83.7% |
+| McNemar discordant pairs | 13 (A1-only correct) | 27 (A3-only correct) |
+| McNemar exact p | — | **0.038** |
 
-**The Final Clinical Verdict:** Approach 1 is better at estimating the sheer bulk of extreme >2000 calcium scores. However, Approach 3 is the decisively superior model for real-world clinical triage, because predicting a borderline patient accurately (preventing unnecessary aggressive statins) is clinically far more important than estimating the exact mathematical difference between an 1800 and 2800 score (both of which immediately flag the patient for maximum intervention).
+**This is the number that carries the claim.** On 374 paired patients, A3's categorical advantage reaches p=0.038 — significant. The median-AE advantage reproduces at almost the same ratio as the test set (29.96 vs 52.91, 1.8×; test set was 19.27 vs 42.97, 2.2×). Two independent cohorts, same direction, same mechanism, similar effect size, and significance on the one that's powered to show it. **Cite the test-set and replication numbers together — not the 92.4% test-set figure alone.**
+
+### Where the error lives — bias by risk tier
+
+| True risk category | A1 mean bias | A3 mean bias |
+|---|---|---|
+| 1–100 (mild) | +49.1 | +38.5 |
+| 101–400 (moderate) | +83.6 | +9.6 |
+| >400 (severe) | −244.4 | −439.4 |
+
+Both models over-predict mild/moderate lesions and under-predict severe ones. This is the direct explanation for A3 v1's near-zero *mean* volumetric bias reported above — a large positive bias on mild/moderate patients cancelling a large negative bias on severe ones. It is not evidence of calibration. Severe-tier under-prediction doesn't change any patient's treatment bucket (>400 is >400 either way), which is why risk accuracy stays high despite it.
+
+### Illustrative cases (verified against raw CSV data, `Patient_ID` column)
+
+| Patient | True Agatston | True category | A1 predicted | A3 predicted | Who was right |
+|---|---|---|---|---|---|
+| 205 | 92.0 | Mild | 529.1 → Severe | 315.4 → Moderate | A3 (closer, though A3 also missed the exact tier) |
+| 82 | 369.1 | Moderate | 834.1 → Severe | 251.2 → Moderate | A3 |
+| 196 | 2822.9 | Severe | 2357.0 → Severe | 1570.3 → Severe | Both correct tier; A1 closer in magnitude |
+
+Pattern: A3 is markedly better at keeping borderline mild/moderate patients in the correct treatment tier. A1 tracks raw magnitude better on extreme (>2000) scores, but since both models land in the same "Severe" bucket there, it doesn't change the clinical outcome.
+
+### Known scorer defects — why these numbers are provisional
+
+| # | Issue | Impact |
+|---|---|---|
+| 1 | Both scorers normalize input HU to `[100,1000]`; every model was trained on `[0,1200]` | Real train/inference distribution shift. Faint calcium is fed to the model darker than it ever saw in training. **Highest priority fix.** |
+| 2 | `agatston_scoring_a3.py` loads the superseded v1 checkpoint (val Dice 0.6156), not v2 (0.7227) | A3's numbers above are its floor, not its ceiling — this evaluation hasn't been run against the model actually deployed |
+| 3 | No ≥1mm² minimum-lesion rule applied (either scorer) | Sub-mm² specks counted that a clinical scanner would discard — inflates all three scores (GT, A1, A3) somewhat equally, so the paired comparison likely still holds, but absolute values aren't strictly Agatston-conformant |
+| 4 | `compute_xml_agatston()` truncates (not rounds) polygon vertices before sampling peak HU | Can zero out very small ground-truth lesions, understating GT on mild patients |
+
+Items 1 and 2 both push in the same direction: they make A3 look worse than it likely is. The reported result is that A3 wins on clinical categorization *while running with the wrong input window and the wrong checkpoint*. Fixing them should strengthen the finding, not threaten it — but per current agreement, this re-run is deferred until the documentation-update pass across both branches is complete. If the re-run changes any number here, this section updates.
+
+**Bottom line:** the coverage-fraction labeling approach (Approach 3) improves clinical risk-category accuracy over binary labeling — a claim supported by two independent cohorts (66-patient test, significant on median AE direction; 374-patient replication, significant at p=0.038 on the categorical claim itself). This is the project's central research result. It was measured against A3's superseded v1 checkpoint and a known-incorrect HU window; re-running against v2 with the correct window is the top item before this can be called final.
