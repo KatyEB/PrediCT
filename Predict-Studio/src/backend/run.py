@@ -102,11 +102,11 @@ def run(study_id: str, model_id: str, crop: bool = None, progress=None, custom_i
             
         # Orient to RAS AFTER cropping to match training pipeline order!
         print("Reorienting to RAS...")
-        image = sitk.DICOMOrient(image, m["orientation"])
+        image = sitk.DICOMOrient(image, m.get("orientation", "RAS"))
         # The mask must take the identical reorientation or the heart shell
         # will be mirrored relative to the lesions in the 3D view.
         if heart_img is not None:
-            heart_img = sitk.DICOMOrient(heart_img, m["orientation"])
+            heart_img = sitk.DICOMOrient(heart_img, m.get("orientation", "RAS"))
         
         # Ensure spacing didn't permute in a way that alters the volume area calculations
         spc = image.GetSpacing()

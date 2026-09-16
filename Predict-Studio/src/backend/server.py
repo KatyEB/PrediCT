@@ -5,7 +5,7 @@ import traceback
 from pathlib import Path
 from typing import List
 
-from fastapi import FastAPI, UploadFile, File, HTTPException
+from fastapi import FastAPI, UploadFile, File, HTTPException, Form
 from fastapi.responses import JSONResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
@@ -20,32 +20,44 @@ app = FastAPI(title="PrediCT Server")
 JOBS = {}
 
 @app.post("/studies")
-async def upload_study(files: List[UploadFile] = File(...)):
+async def upload_study(files: List[UploadFile] = File(...), custom_name: str = Form(None)):
     if not files:
         raise HTTPException(status_code=400, detail="No files provided.")
 
-    # Save to a temporary directory first
-    temp_dir = DATA / "uploads" / f"temp_{uuid.uuid4().hex}"
+    temp_id = f"temp_{uuid.uuid4().hex}"
+    temp_dir = DATA / "uploads" / temp_id
     temp_dir.mkdir(parents=True, exist_ok=True)
     
     try:
+        invalid_files = []
         for f in files:
-            file_path = temp_dir / f.filename
+            is_dcm = f.filename.lower().endswith(".dcm")
+            if not is_dcm:
+                invalid_files.append(Path(f.filename).name)
+                
+            file_path = temp_dir / Path(f.filename).name
             with file_path.open("wb") as buffer:
                 shutil.copyfileobj(f.file, buffer)
         
-        # Get study ID
-        try:
-            study_id = study_id_from_series(temp_dir)
-        except StopIteration:
-            raise HTTPException(status_code=400, detail="No files with .dcm extension found in the upload.")
+        if invalid_files:
+            return {"requires_cleaning": True, "temp_id": temp_id, "invalid_files": invalid_files}
             
-        final_dir = upload_dir(study_id)
+        # Get study ID
+        if custom_name:
+            study_id = custom_name.strip()
+        else:
+            try:
+                study_id = study_id_from_series(temp_dir)
+            except StopIteration:
+                raise HTTPException(status_code=400, detail="No files with .dcm extension found in the upload.")
+            
+        final_dir = DATA / "raw" / study_id
         if final_dir.exists():
             shutil.rmtree(final_dir)
+        final_dir.parent.mkdir(parents=True, exist_ok=True)
         temp_dir.rename(final_dir)
         
-        return {"study_id": study_id}
+        return {"study_id": study_id, "requires_cleaning": False}
     except HTTPException:
         if temp_dir.exists():
             shutil.rmtree(temp_dir)
@@ -54,6 +66,47 @@ async def upload_study(files: List[UploadFile] = File(...)):
         if temp_dir.exists():
             shutil.rmtree(temp_dir)
         raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/studies/clean/{temp_id}")
+def clean_and_commit_study(temp_id: str, custom_name: str = None):
+    temp_dir = DATA / "uploads" / temp_id
+    if not temp_dir.exists():
+        raise HTTPException(status_code=404, detail="Temp directory not found.")
+        
+    try:
+        for f in temp_dir.iterdir():
+            if not f.name.lower().endswith(".dcm"):
+                if f.is_file():
+                    f.unlink()
+                elif f.is_dir():
+                    shutil.rmtree(f)
+                    
+        if custom_name:
+            study_id = custom_name.strip()
+        else:
+            try:
+                study_id = study_id_from_series(temp_dir)
+            except StopIteration:
+                raise HTTPException(status_code=400, detail="No DICOM files remained after cleaning.")
+            
+        final_dir = DATA / "raw" / study_id
+        if final_dir.exists():
+            shutil.rmtree(final_dir)
+        final_dir.parent.mkdir(parents=True, exist_ok=True)
+        temp_dir.rename(final_dir)
+        
+        return {"study_id": study_id}
+    except Exception as e:
+        if temp_dir.exists():
+            shutil.rmtree(temp_dir)
+        raise HTTPException(status_code=500, detail=str(e))
+        
+@app.delete("/studies/clean/{temp_id}")
+def abort_upload(temp_id: str):
+    temp_dir = DATA / "uploads" / temp_id
+    if temp_dir.exists():
+        shutil.rmtree(temp_dir)
+    return {"status": "aborted"}
 
 @app.get("/studies")
 def get_studies():
@@ -100,7 +153,7 @@ def get_raw_patients():
             else:
                 patients.append({"id": d.name, "path": str(d.absolute())})
                 
-    patients.sort(key=lambda x: int(x["id"]) if x["id"].isdigit() else x["id"])
+    patients.sort(key=lambda x: (0, int(x["id"])) if x["id"].isdigit() else (1, x["id"]))
     return patients
 
 class JobRequest(BaseModel):

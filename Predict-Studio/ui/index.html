@@ -26,10 +26,13 @@
     <div class="sidebar-header">
       <button id="sidebar-toggle" class="material-symbols-outlined icon-btn">menu</button>
       <span class="sidebar-title">Studies</span>
+      <button id="upload-study-btn" class="material-symbols-outlined icon-btn" style="margin-left:auto" title="Upload DICOM Folder">upload</button>
+      <input type="file" id="upload-input" webkitdirectory directory multiple style="display:none">
     </div>
 
     <div class="sidebar-run">
       <h3 class="run-title">Run Pipeline</h3>
+      <input type="text" id="run-patient-search" placeholder="Search patients..." class="run-input">
       <select id="run-patient" class="run-input">
         <option value="">Select a raw patient...</option>
       </select>
@@ -51,6 +54,11 @@
       <!-- Studies will be populated here -->
     </div>
   </div>
+  
+  <div id="drop-overlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(33, 150, 243, 0.8); z-index:9999; justify-content:center; align-items:center; color:white; font-size:32px; font-weight:bold; backdrop-filter: blur(5px);">
+    Drop DICOM Folder Here
+  </div>
+  
   <div id="main-content">
 
   <!-- Workspace Header & Tab Bar -->

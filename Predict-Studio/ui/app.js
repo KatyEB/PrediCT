@@ -60,6 +60,7 @@ async function boot() {
 
     loadSidebar();
     initRunForm();
+    initUpload();
 
     const [run, slices, csv, csv3d] = await Promise.all([
       getJson(`${BASE}/run.json`),
@@ -98,11 +99,123 @@ async function getJson(u) { const r = await fetch(u); if (!r.ok) throw new Error
 async function getText(u) { const r = await fetch(u); if (!r.ok) throw new Error(`${u} → HTTP ${r.status}`); return r.text(); }
 function loadImage(u) {
   return new Promise((res, rej) => {
-    const im = new Image();
-    im.onload = () => res(im);
-    im.onerror = () => rej(new Error(`${u} → not found`));
-    im.src = u;
+    const img = new Image();
+    img.onload = () => res(img);
+    img.onerror = () => rej(new Error(`Failed to load ${u}`));
+    img.src = u;
   });
+}
+
+function initUpload() {
+  const btn = document.getElementById('upload-study-btn');
+  const input = document.getElementById('upload-input');
+  const overlay = document.getElementById('drop-overlay');
+  
+  if (!btn || !input || !overlay) return;
+
+  btn.onclick = () => input.click();
+
+  input.onchange = async (e) => {
+    if (e.target.files.length > 0) {
+      await handleUpload(e.target.files);
+    }
+    input.value = '';
+  };
+
+  document.body.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    overlay.style.display = 'flex';
+  });
+
+  document.body.addEventListener('dragleave', (e) => {
+    e.preventDefault();
+    if (e.clientX === 0 || e.clientY === 0) {
+      overlay.style.display = 'none';
+    }
+  });
+
+  document.body.addEventListener('drop', async (e) => {
+    e.preventDefault();
+    overlay.style.display = 'none';
+    
+    const files = [];
+    if (e.dataTransfer.items) {
+      for (let i = 0; i < e.dataTransfer.items.length; i++) {
+        const item = e.dataTransfer.items[i].webkitGetAsEntry();
+        if (item) await scanFiles(item, files);
+      }
+    } else {
+      for (let i = 0; i < e.dataTransfer.files.length; i++) {
+        files.push(e.dataTransfer.files[i]);
+      }
+    }
+    
+    if (files.length > 0) await handleUpload(files);
+  });
+}
+
+async function scanFiles(item, files) {
+  if (item.isFile) {
+    const file = await new Promise((resolve) => item.file(resolve));
+    files.push(file);
+  } else if (item.isDirectory) {
+    const dirReader = item.createReader();
+    const entries = await new Promise((resolve) => {
+      dirReader.readEntries(resolve);
+    });
+    for (let i = 0; i < entries.length; i++) {
+      await scanFiles(entries[i], files);
+    }
+  }
+}
+
+async function handleUpload(files) {
+  const customName = prompt("Enter a custom name for this study (leave blank to auto-generate):");
+  if (customName === null) {
+      alert("Upload aborted by user.");
+      return;
+  }
+  
+  const btn = document.getElementById('upload-study-btn');
+  const oldIcon = btn.textContent;
+  btn.textContent = 'hourglass_empty';
+  
+  const fd = new FormData();
+  if (customName.trim()) fd.append('custom_name', customName.trim());
+  for (let i = 0; i < files.length; i++) {
+    fd.append('files', files[i]);
+  }
+
+  try {
+    const res = await fetch('/studies', { method: 'POST', body: fd });
+    
+    if (!res.ok) {
+      const err = await res.json();
+      throw new Error(err.detail || 'Upload failed');
+    }
+    
+    const data = await res.json();
+    
+    if (data.requires_cleaning) {
+      const msg = `Warning: Found ${data.invalid_files.length} non-DICOM files (e.g. ${data.invalid_files[0]}).\n\nDo you want to automatically clean these and continue?`;
+      if (confirm(msg)) {
+        btn.textContent = 'cleaning_services';
+        const cleanRes = await fetch(`/studies/clean/${data.temp_id}?custom_name=${encodeURIComponent(customName.trim())}`, { method: 'POST' });
+        if (!cleanRes.ok) throw new Error('Failed to clean study');
+      } else {
+        await fetch(`/studies/clean/${data.temp_id}`, { method: 'DELETE' });
+        throw new Error('Upload aborted');
+      }
+    }
+    
+    window.location.reload();
+    alert('Upload successful!');
+    
+  } catch (e) {
+    if (e.message !== 'Upload aborted') alert(e.message);
+  } finally {
+    btn.textContent = oldIcon;
+  }
 }
 
 // lesions.csv has no quoted fields, so a split is enough.
@@ -956,21 +1069,36 @@ async function initRunForm() {
 
   // Fetch patients
   const patientSelect = document.getElementById('run-patient');
+  const patientSearch = document.getElementById('run-patient-search');
   if (patientSelect) {
-    try {
-      const res = await fetch('/raw_patients');
-      if (res.ok) {
-        const patients = await res.json();
-        for (const p of patients) {
+    let allPatients = [];
+    const renderPatients = (term) => {
+      patientSelect.innerHTML = '<option value="">Select a raw patient...</option>';
+      allPatients.forEach(p => {
+        if (!term || p.id.toLowerCase().includes(term)) {
           const opt = document.createElement('option');
           opt.value = p.path;
           opt.textContent = p.id;
           opt.dataset.id = p.id;
           patientSelect.appendChild(opt);
         }
+      });
+    };
+
+    try {
+      const res = await fetch('/raw_patients');
+      if (res.ok) {
+        allPatients = await res.json();
+        renderPatients('');
       }
     } catch (e) {
       console.error("Could not fetch raw patients", e);
+    }
+
+    if (patientSearch) {
+      patientSearch.oninput = () => {
+        renderPatients(patientSearch.value.toLowerCase());
+      };
     }
 
     patientSelect.onchange = () => {
