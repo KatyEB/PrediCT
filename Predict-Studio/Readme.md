@@ -24,15 +24,19 @@ predict_software/Predict-Studio/
 │       ├── paths.py      # Centralized DICOM hashing and path registry
 │       ├── pipeline.py   # Pure imaging routines (load, resample, crop, inference)
 │       ├── scoring.py    # Agatston math & connected components (no torch, no file I/O)
+│       ├── grouping.py   # Lesion 3D table grouping logic
 │       ├── render.py     # PIL PNG slice overlays
 │       ├── registry.py   # YAML manifest validation & SHA256 locking
 │       ├── run.py        # Pipeline orchestrator & CLI entrypoint
 │       └── server.py     # FastAPI server providing the web UI and REST API
 ├── ui/                   # Frontend assets for PrediCT Studio (HTML, JS, CSS)
+├── docs/                 # Project documentation and architecture notes
+├── tests/                # Automated unit and integration tests
 ├── models/
 │   ├── a1-roi/           # Binary masking Approach 1
 │   └── a3-coverage-v2/   # Continuous probability Coverage Approach 3 (v2)
-└── data/                 # Root output for inference jobs (uploads, work, out)
+├── data/                 # Root output for inference jobs (uploads, work, out)
+└── requirements.txt      # Python dependencies
 ```
 
 ## How to Run PrediCT Studio (Web UI)
@@ -41,7 +45,13 @@ From the `predict_software/Predict-Studio/` directory, start the FastAPI server:
 ```bash
 python -m src.backend.server
 ```
-Then navigate to `http://127.0.0.1:8000` in your browser. You can upload DICOM files directly through the web interface, run models, and view the results.
+Then navigate to `http://127.0.0.1:8000` in your browser. You can upload DICOM files directly through the web interface (via simple folder selection or Drag-and-Drop), run models, and view the results.
+
+## How to Run Tests
+Tests are located in the `tests/` directory to keep them strictly separated from the application source. To run all tests from the `Predict-Studio/` directory:
+```bash
+python3 -m unittest discover tests/
+```
 
 ## How to Run via CLI
 Place a patient's DICOM folder into `data/uploads/<patient_id>`, then run the orchestrator:

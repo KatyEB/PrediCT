@@ -281,6 +281,7 @@ run.py        Orchestration. Owns the order of stages and the output folder.
     |
     +-- pipeline.py   load / resample / crop / normalize / predict
     +-- scoring.py    lesions and totals        (no file I/O, no torch)
+    +-- grouping.py   lesion 3D table grouping  (no file I/O, no torch)
     +-- render.py     PNG output                (display only)
     +-- registry.py   read manifests            (no torch)
     |
@@ -340,4 +341,5 @@ a preference.
 - [ ] No silent `except` that changes behaviour instead of raising
 - [ ] No copied file — parameterise the original instead
 - [ ] Output folder contains `run.json` with the config actually used
+- [ ] Tests must live strictly in the `tests/` directory, cleanly separated from the `src/backend/` logic
 - [ ] If a number changed, you can explain why
