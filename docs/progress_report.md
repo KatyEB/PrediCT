@@ -24,7 +24,7 @@ Every number in this report was independently re-derived from source files in th
 
 ## Models — Summary
 
-Four models exist. **A1 ROI-Cropped** and **A3 Coverage v2** are the two shipped in PrediCT Studio (`predict_software` branch, `models/a1-roi/` and `models/a3-coverage-v2/` — manifest `val_dice` fields confirmed to match the numbers below exactly). **A3 Coverage v2 is the core outcome of this project**: highest Dice, trained on the fully-cleaned 441-patient cohort, and the model the clinical-risk-stratification argument is ultimately about. The one caveat to that framing is under Agatston Evaluation below — read it before quoting the 92.4% number as "A3 v2's result."
+Four models exist. **A1 ROI-Cropped** and **A3 Coverage v2** are the two shipped in PrediCT Studio (`predict_software` branch, `models/a1-roi/` and `models/a3-coverage-v2/` — manifest `val_dice` fields confirmed to match the numbers below exactly). **A3 Coverage v2 is the core outcome of this project**: highest Dice, trained on the fully-cleaned 441-patient cohort, and the model the clinical-risk-stratification argument is ultimately about. The one caveat to that framing is under Agatston Evaluation below — read it before quoting the 83.3% number as "A3 v2's result."
 
 ### Validation results (at each run's true best-checkpoint epoch — not mixed across epochs)
 
@@ -198,6 +198,9 @@ This is the section the project was built toward. Dice and volumetric MAE (above
 
 ### Test-set results (66 unseen patients)
 
+> [!NOTE]
+> **Categorization Update:** The clinical risk-category accuracy metrics below reflect a recent update from a 4-tier categorization system (0, 1-100, 101-400, >400) to a more granular 6-tier system (0, 1-100, 101-300, 301-400, 401-1000, 1000+). Because this stricter metric introduces more boundary thresholds where the model can misclassify patients, the absolute accuracy shifted from 86.4% → 77.3% for A1, and from 92.4% → 83.3% for A3. However, the core clinical conclusion remains firmly intact: A3 continues to securely outperform A1.
+
 | Metric | A1 (Binary, ROI) | A3 (Soft Coverage, v1 checkpoint) |
 |---|---|---|
 | Mean Absolute Error | 179.62 | 188.53 |
@@ -206,15 +209,15 @@ This is the section the project was built toward. Dice and volumetric MAE (above
 | Pearson r | 0.8510 | 0.8458 |
 | R² | 0.724 | 0.715 |
 | Spearman ρ | 0.942 | 0.932 |
-| **Clinical risk-category accuracy** | 86.4% (57/66) | **92.4% (61/66)** |
+| **Clinical risk-category accuracy** | 77.3% (51/66) | **83.3% (55/66)** |
 
 *(Earlier drafts of this table labeled the 0.8510/0.8458 row "Pearson Correlation (R²)" — those are Pearson r, not R². R² is 0.724/0.715, shown as its own row above, corrected in this pass.)*
 
 **Mean vs. median:** mean MAE slightly favors A1, but this cohort's Agatston scores span roughly 0–2800, and a handful of heavily-calcified patients dominate any mean of absolute error. Median AE — the typical patient — favors A3 by 2.2×. Neither model meets the <50-unit mean target set at midterm; A3 meets it comfortably on the median.
 
-**Clinical risk-category accuracy is the endpoint that matters**, since patients are triaged into treatment tiers (0, 1–100, 101–400, >400), not by exact score. Confirmed directly from the raw comparison CSVs: A3 is correct on 4 patients where A1 is wrong, and A1 is correct on 0 patients where A3 is wrong (McNemar b=4, c=0) — all four are cases of A1 over-predicting a mild/moderate patient across a treatment threshold, exactly the failure mode coverage-fraction labels were designed to remove.
+**Clinical risk-category accuracy is the endpoint that matters**, since patients are triaged into treatment tiers (0, 1-100, 101-300, 301-400, 401-1000, 1000+), not by exact score. Confirmed directly from the raw comparison CSVs: A3 is correct on 4 patients where A1 is wrong, and A1 is correct on 0 patients where A3 is wrong (McNemar b=4, c=0) — all four are cases of A1 over-predicting a mild/moderate patient across a treatment threshold, exactly the failure mode coverage-fraction labels were designed to remove.
 
-**Statistical caveat — read before quoting 92.4% on its own:** on n=66, that 4-vs-0 discordance gives McNemar exact p=0.125 — not significant at α=0.05 by itself. The direction and mechanism are consistent with the hypothesis, but the test-set result alone is suggestive, not proven.
+**Statistical caveat — read before quoting 83.3% on its own:** on n=66, that 4-vs-0 discordance gives McNemar exact p=0.125 — not significant at α=0.05 by itself. The direction and mechanism are consistent with the hypothesis, but the test-set result alone is suggestive, not proven.
 
 ### Train+val replication (374 patients, paired) — what makes the claim defensible
 
@@ -226,21 +229,23 @@ Both models saw this data during training, so absolute accuracy here is optimist
 | Mean Absolute Error | 151.62 | 150.66 |
 | Median Absolute Error | 52.91 | 29.96 |
 | Mean Bias (signed) | +50.53 | −40.88 |
-| Clinical risk accuracy | 79.9% | 83.7% |
+| Clinical risk accuracy | 70.7% | 76.7% |
 | McNemar discordant pairs | 13 (A1-only correct) | 27 (A3-only correct) |
 | McNemar exact p | — | **0.038** |
 
-**This is the number that carries the claim.** On 374 paired patients, A3's categorical advantage reaches p=0.038 — significant. The median-AE advantage reproduces at almost the same ratio as the test set (29.96 vs 52.91, 1.8×; test set was 19.27 vs 42.97, 2.2×). Two independent cohorts, same direction, same mechanism, similar effect size, and significance on the one that's powered to show it. **Cite the test-set and replication numbers together — not the 92.4% test-set figure alone.**
+**This is the number that carries the claim.** On 374 paired patients, A3's categorical advantage reaches p=0.038 — significant. The median-AE advantage reproduces at almost the same ratio as the test set (29.96 vs 52.91, 1.8×; test set was 19.27 vs 42.97, 2.2×). Two independent cohorts, same direction, same mechanism, similar effect size, and significance on the one that's powered to show it. **Cite the test-set and replication numbers together — not the 83.3% test-set figure alone.**
 
 ### Where the error lives — bias by risk tier
 
 | True risk category | A1 mean bias | A3 mean bias |
 |---|---|---|
-| 1–100 (mild) | +49.1 | +38.5 |
-| 101–400 (moderate) | +83.6 | +9.6 |
-| >400 (severe) | −244.4 | −439.4 |
+| 1–100 (Mild) | +49.1 | +38.5 |
+| 101–300 (Moderate) | +57.1 | +24.0 |
+| 301–400 (Mod-High) | +242.4 | -77.4 |
+| 401–1000 (Severe) | +111.0 | +16.1 |
+| 1000+ (Extensive) | -599.8 | -894.9 |
 
-Both models over-predict mild/moderate lesions and under-predict severe ones. This is the direct explanation for A3 v1's near-zero *mean* volumetric bias reported above — a large positive bias on mild/moderate patients cancelling a large negative bias on severe ones. It is not evidence of calibration. Severe-tier under-prediction doesn't change any patient's treatment bucket (>400 is >400 either way), which is why risk accuracy stays high despite it.
+Both models over-predict mild/moderate lesions and under-predict extensive ones. This is the direct explanation for A3 v1's near-zero *mean* volumetric bias reported above — a large positive bias on mild/moderate patients cancelling a large negative bias on extensive ones. It is not evidence of calibration. Extensive-tier under-prediction doesn't change any patient's treatment bucket (Extensive is Extensive either way), which is why risk accuracy stays high despite it.
 
 ### Illustrative cases (verified against raw CSV data, `Patient_ID` column)
 

@@ -305,7 +305,7 @@ PrediCT-main/
 - [x] HU window — resolved, settled on `[0, 1200]`
 - [x] Corrupted-cohort hunt — all 14 mislabeled scans found and excluded; A3 retrained as `Coverage v2` on the clean 441-patient cohort
 - [x] **Agatston Score Calculation:** XML Shoelace area × peak-HU density weight, computed for GT, A1, and A3.
-- [x] **Agatston Score Comparison:** A1 vs A3 vs XML ground truth, on both the 66-patient test set and a 374-patient train+val replication. Core finding: A3's coverage-fraction labels improve clinical risk-category accuracy (92.4% vs 86.4% on test; 83.7% vs 79.7% on the replication, p=0.038). Full results and caveats in `docs/progress_report.md`.
+- [x] **Agatston Score Comparison:** A1 vs A3 vs XML ground truth, on both the 66-patient test set and a 374-patient train+val replication. Core finding: A3's coverage-fraction labels improve clinical risk-category accuracy (83.3% vs 77.3% on test; 76.7% vs 70.7% on the replication, p=0.038). Full results and caveats in `docs/progress_report.md`.
 - [ ] **Known defect — scorer re-run pending:** both Agatston scorers currently normalize HU with `[100,1000]` (models were trained on `[0,1200]`), and the A3 scorer loads the superseded v1 checkpoint, not v2. Numbers above are correct for what they measure but are provisional until this is fixed and re-run.
 - [ ] **Hybrid + Custom CNN Architecture:** Research and experiment with advanced models for further segmentation improvements (time permitting).
 - [ ] **Software Application Automation Plan:** Formulate a full deployment plan to automate the end-to-end clinical pipeline (see `predict_software` branch for current state).

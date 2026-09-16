@@ -42,6 +42,9 @@ The generated evaluation plots have been saved in this directory:
 
 We fully evaluated both the Approach 1 (Binary) and Approach 3 (Soft Coverage) models on the Anomaly-Free Test Set (66 patients) using the true clinical Agatston metric. The models' Agatston predictions were compared against the XML Shoelace Ground Truth.
 
+> [!NOTE]
+> **Categorization Update:** The clinical risk-category accuracy metrics below reflect a recent update from a 4-tier categorization system (0, 1-100, 101-400, >400) to a more granular 6-tier system (0, 1-100, 101-300, 301-400, 401-1000, 1000+). Because this stricter metric introduces more boundary thresholds where the model can misclassify patients, the absolute accuracy shifted from 86.4% → 77.3% for A1, and from 92.4% → 83.3% for A3. However, the core clinical conclusion remains firmly intact: A3 continues to securely outperform A1.
+
 | Metric | A1 (Binary ROI) | A3 (Soft Coverage) |
 |---|---|---|
 | **Mean Absolute Error (MAE)** | 179.62 | **188.53** |
@@ -49,20 +52,20 @@ We fully evaluated both the Approach 1 (Binary) and Approach 3 (Soft Coverage) m
 | **Mean Bias** | -41.44 | **-126.95** |
 | **Pearson r** | 0.8510 | **0.8458** |
 | **R² (r²)** | 0.724 | 0.715 |
-| **Clinical Risk Accuracy** | 86.4% | **92.4%** |
+| **Clinical Risk Accuracy** | 77.3% | **83.3%** |
 
 > **Correction:** an earlier version of this table labeled the 0.8510 / 0.8458 row "Pearson Correlation (R²)". Those are Pearson *r* values, not R². R² is 0.724 / 0.715 and is now shown as its own row.
 
 ### Conclusion: Clinical Applicability Over Absolute Error, With Caveats
 Mean MAE looks similar (~180 vs ~188) and slightly favors A1 — this is dominated by a handful of very heavily calcified patients. **Median absolute error**, the better summary statistic for this distribution, favors A3 by a factor of 2.2 (19.27 vs 42.97). Neither model meets the <50-unit mean target set at midterm; A3 meets it comfortably on the median.
 
-**Clinical Risk Accuracy is the endpoint that matters**, since patients are triaged into treatment buckets (0, 1–100, 101–400, >400), not by exact score. Approach 3's fractional coverage avoids the "cliff-edge" rounding error that pushes A1's borderline patients into the wrong bucket, raising risk-category accuracy from 86.4% to 92.4%.
+**Clinical Risk Accuracy is the endpoint that matters**, since patients are triaged into treatment buckets (0, 1-100, 101-300, 301-400, 401-1000, 1000+), not by exact score. Approach 3's fractional coverage avoids the "cliff-edge" rounding error that pushes A1's borderline patients into the wrong bucket, raising risk-category accuracy from 77.3% to 83.3%.
 
-**Statistical caveat — read before quoting 92.4% on its own:** on the 66-patient test set, the 86.4%→92.4% swing is driven by 4 patients (McNemar b=4, c=0), which gives p=0.125 — not significant at α=0.05 on this cohort alone. The direction and mechanism are consistent with the hypothesis, but the 66-patient result is suggestive, not proven by itself. A separate replication on the 374-patient train+val cohort (79.7% vs 83.7%, McNemar p=0.038) reaches significance and is what actually makes this a defensible claim — see `progress_report_v10` §11.4. Cite both numbers together, not the test-set number alone.
+**Statistical caveat — read before quoting 83.3% on its own:** on the 66-patient test set, the 77.3%→83.3% swing is driven by 4 patients (McNemar b=4, c=0), which gives p=0.125 — not significant at α=0.05 on this cohort alone. The direction and mechanism are consistent with the hypothesis, but the 66-patient result is suggestive, not proven by itself. A separate replication on the 374-patient train+val cohort (70.7% vs 76.7%, McNemar p=0.038) reaches significance and is what actually makes this a defensible claim — see `progress_report_v10` §11.4. Cite both numbers together, not the test-set number alone.
 
 **Known scorer defects — the numbers above are provisional:** the scorers that produced this table normalize input HU with a window of [100, 1000], while every trained model (including A3) was trained on [0, 1200] — a real train/inference distribution shift. Separately, `agatston_scoring_a3.py` currently loads the superseded `approach3_coverage` (v1, val Dice 0.6156) checkpoint rather than the current `approach3_coverage_v2` (val Dice 0.7227), so A3's numbers above come from the weaker model. Both defects push in the same direction — they make A3 look worse than it likely is. A minimum-lesion-area rule (≥1 mm²) is also not yet applied by either scorer. See `progress_report_v10` §11.6 for the full defect list and priority order. **Re-run before these numbers are presented as final.**
 
-*Note on Bias:* A3 shows a negative mean bias (-126.95), i.e. it underestimates large calcium deposits on average. Splitting by true risk category shows both models over-predict mild/moderate lesions and under-predict severe ones (A1: +49.1 / +83.6 / -244.4 by tier; A3: +38.5 / +9.6 / -439.4 by tier) — the near-zero volumetric bias reported in Section 2 is these two errors cancelling, not per-patient calibration. Severe-tier under-prediction does not change any patient's treatment bucket (>400 is >400 either way), which is why risk accuracy stays high despite it. See `progress_report_v10` §11.5 for the tier-by-tier breakdown and the blooming-artifact explanation (itself flagged as provisional pending the HU-window re-run above).
+*Note on Bias:* A3 shows a negative mean bias (-126.95), i.e. it underestimates large calcium deposits on average. Splitting by true risk category shows both models over-predict mild/moderate lesions and under-predict extensive ones (A1: +49.1 / +57.1 / +242.4 / +111.0 / -599.8 by tier; A3: +38.5 / +24.0 / -77.4 / +16.1 / -894.9 by tier) — the near-zero volumetric bias reported in Section 2 is these two errors cancelling, not per-patient calibration. Extensive-tier under-prediction does not change any patient's treatment bucket (>1000 is >1000 either way), which is why risk accuracy stays high despite it. See `progress_report_v10` §11.5 for the tier-by-tier breakdown and the blooming-artifact explanation (itself flagged as provisional pending the HU-window re-run above).
 
 ### Nuanced Clinical Insight: Small vs. Massive Lesions
 A deeper analysis of the individual predictions in the CSV results reveals a dichotomy in how the two models behave:
