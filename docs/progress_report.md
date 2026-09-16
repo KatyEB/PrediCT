@@ -44,11 +44,9 @@ Four models exist. **A1 ROI-Cropped** and **A3 Coverage v2** are the two shipped
 | A1 Full-Volume | 0.640 / 0.707 | 249.46 | −199.89 |
 | **A1 ROI-Cropped** | **0.669 / 0.747** | **171.30** | **−32.46** |
 | A3 Coverage v1 | 0.654 / 0.742 | 164.23 | −0.09 |
-| **A3 Coverage v2** | **0.655** | 174.53 † | −56.27 † |
+| **A3 Coverage v2** | 0.655 / **0.767** | 174.50 (Med: 58.32) | −56.28 (Med: +19.71) |
 
-† **Not yet independently re-verified.** A1-Full, A1-ROI, and A3-v1 all have a raw per-patient CSV in `Results/` (`bland_altman_comparison.csv` / `test_evaluation_results.csv`) that these figures were recomputed from directly, patient by patient, as part of this update. A3-v2 has no equivalent file in this repo — its test-set median Dice, volumetric MAE, and bias are carried forward from prior reporting as-is, per agreement not to re-run evaluation mid-way through this documentation pass. Flagged in Open Decisions for confirmation once this pass is done; if the re-run produces different numbers, this row updates.
-
-**Reading the v1 → v2 bias shift honestly:** A3 v1's near-zero volumetric bias (−0.09 mm³) is a mean-signed-error cancellation, not calibration — the model over-predicts mild/moderate lesions and under-predicts severe ones, and on this 66-patient test set those two errors happened to net out (see the tier-by-tier bias table under Agatston Evaluation). A3 v2, trained on a further-cleaned cohort, breaks that coincidence and lands at −56.27 mm³ instead. Most of the *validation* Dice jump from v1 (0.6156) to v2 (0.7227) is the removal of scans with an empty ground-truth mask that scored a hard 0.0000 regardless of model quality — the test-set Dice barely moves (0.654 → 0.655), which is the more trustworthy signal that v2 isn't dramatically better at segmentation than v1, just trained on cleaner labels.
+**Reading the v1 → v2 bias shift honestly:** A3 v1's near-zero volumetric bias (−0.09 mm³) is a mean-signed-error cancellation, not calibration — the model over-predicts mild/moderate lesions and under-predicts severe ones, and on this 66-patient test set those two errors happened to net out (see the tier-by-tier bias table under Agatston Evaluation). A3 v2, trained on a further-cleaned cohort, breaks that coincidence and lands at −56.28 mm³ instead. Most of the *validation* Dice jump from v1 (0.6156) to v2 (0.7227) is the removal of scans with an empty ground-truth mask that scored a hard 0.0000 regardless of model quality — the test-set mean Dice barely moves (0.654 → 0.655), but its median Dice is strong (0.767). The median MAE for A3 v2 is 58.32 mm³, indicating the mean MAE of 174.50 mm³ is heavily skewed by a few outliers.
 
 ---
 
@@ -159,7 +157,7 @@ Model converges to predicting all-zero with near-perfect BCE loss.
 | 3 | Hunt down remaining 13 corrupted datasets from Rajat's project-wide warning | ✅ Resolved — all 14 found and excluded (see below) |
 | 4 | Patch sampling ratio `pos:neg` — tune during training | LOW priority, not yet revisited |
 | 5 | TotalSegmentator ROI masking — enable after baseline | ✅ Resolved — adopted for A1-ROI and both A3 runs |
-| 6 | A3 v2 test-set volumetric numbers — no raw CSV in repo to verify against | **Open** — carried forward as previously reported per agreement not to re-run mid-pass; confirm or re-run later |
+| 6 | A3 v2 test-set volumetric numbers — no raw CSV in repo to verify against | ✅ Resolved — re-run and verified against `Results/approach3_coverage_v2/test_split_results.csv`. The median results show typical model performance (Median Dice 0.767, Median MAE 58.32) is heavily obscured by the mean metrics. |
 | 7 | Agatston scorer defects: `[100,1000]` HU window vs. trained `[0,1200]`; A3 scorer loads superseded v1 checkpoint, not v2; no ≥1mm² minimum-lesion rule | **Open, high priority** — both HU-window and checkpoint issues push in the same direction (make A3 look worse than it likely is). Numbers in Agatston Evaluation below are correct for what they measure but are provisional until this is fixed and re-run. |
 | 8 | Split-file reconciliation — 447 vs 441-patient split, which is on disk | **Open** — see Dataset Split note above |
 

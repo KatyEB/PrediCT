@@ -22,13 +22,14 @@ Because standard Dice scores do not perfectly correlate with clinical Agatston s
 | **A1_Full_Volume** | 0.640 | 249.46 | -199.89 |
 | **A1_ROI_Cropped** | 0.669 | 171.30 | -32.46 |
 | **A3_Coverage** | 0.654 | **164.23** | **-0.087** |
-| **A3_Coverage_v2** (Anomaly Free) | 0.655 | 174.53 | -56.27 |
+| **A3_Coverage_v2** (Anomaly Free) | 0.655 (Med: 0.767) | 174.50 (Med: 58.32) | -56.28 (Med: +19.71) |
 
 **Conclusion:** 
 1. The `A1_Full_Volume` model severely underestimates calcium volume on average, carrying a heavy negative bias of -199.89 mm³.
 2. Cropping the input exclusively to the heart bounding box (`A1_ROI_Cropped`) resolved the severe under-prediction issue, reeling the bias into a tight -32.46 mm³ and drastically improving the absolute volume error to 171.30 mm³.
 3. Modeling the sub-pixel partial volume effect directly with soft labels (`A3_Coverage`) further reduced the MAE to **164.23 mm³** and achieved a near-zero mean signed bias of **-0.087 mm³**. Note: this is a mean-signed-error cancellation (over-prediction on mild/moderate patients offsetting under-prediction on severe ones), not evidence of per-patient calibration — see `progress_report_v10` §10.6 and §11.5.
-4. **Impact of Anomaly Removal:** Retraining the model on the rigorously cleaned dataset (`A3_Coverage_v2`) slightly improved the Test Dice (**0.655**), but shifted the volume predictions to be more conservative (Bias: **-56.27 mm³**, MAE: **174.53 mm³**). This is an expected and healthier outcome — the original v1 baseline was artificially buoyed toward positive volume by the 14 anomalous scans, which contained massive area overshoots (up to +723%). Removing them breaks the cancellation described in point 3 and gives a more honest bias figure.
+4. **Impact of Anomaly Removal:** Retraining the model on the rigorously cleaned dataset (`A3_Coverage_v2`) slightly improved the Test Dice (**0.655**), but shifted the volume predictions to be more conservative (Bias: **-56.28 mm³**, MAE: **174.50 mm³**). This is an expected and healthier outcome — the original v1 baseline was artificially buoyed toward positive volume by the 14 anomalous scans, which contained massive area overshoots (up to +723%). Removing them breaks the cancellation described in point 3 and gives a more honest bias figure.
+5. **Impact of Outliers on A3_Coverage_v2:** While the *mean* metrics for A3_Coverage_v2 show a Dice of 0.655 and MAE of 174.50 mm³, the *median* metrics for the test split are noticeably better (Median Dice: **0.767**, Median MAE: **58.32 mm³**, Median Bias: **+19.71 mm³**). This discrepancy indicates that a few severe outlier cases are disproportionately pulling the averages down, and typical patient performance is significantly higher than the mean suggests.
 
 ## 3. Visualizations
 
