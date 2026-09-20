@@ -1,6 +1,4 @@
 __pycache__/
 .pytest_cache
 data/
-Predict-Studio/models/nnunet_simple_scv/nnUNet_results/**/fold_0/
-Predict-Studio/models/nnunet_dob_scv/nnUNet_results/**/fold_0/
 ._dbindex_/

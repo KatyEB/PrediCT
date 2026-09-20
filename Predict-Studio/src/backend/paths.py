@@ -31,7 +31,8 @@ def out_dir(study_id: str, model_id: str) -> Path:
 def study_id_from_series(dicom_dir: str | Path) -> str:
     """Generate a consistent 12-char ID from the DICOM SeriesInstanceUID."""
     r = sitk.ImageFileReader()
-    r.SetFileName(str(next(Path(dicom_dir).rglob("*.dcm"))))
+    first_dcm = next(Path(dicom_dir).rglob("*.dcm"))
+    r.SetFileName(str(first_dcm))
     r.ReadImageInformation()
     uid = r.GetMetaData("0020|000e")  # SeriesInstanceUID
     return hashlib.sha1(uid.encode()).hexdigest()[:12]

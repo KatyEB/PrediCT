@@ -30,14 +30,20 @@ async def upload_study(files: List[UploadFile] = File(...), custom_name: str = F
     
     try:
         invalid_files = []
+        dicom_dirs = set()
         for f in files:
             is_dcm = f.filename.lower().endswith(".dcm")
             if not is_dcm:
                 invalid_files.append(Path(f.filename).name)
+            else:
+                dicom_dirs.add(str(Path(f.filename).parent))
                 
             file_path = temp_dir / Path(f.filename).name
             with file_path.open("wb") as buffer:
                 shutil.copyfileobj(f.file, buffer)
+                
+        if len(dicom_dirs) > 1:
+            raise HTTPException(status_code=400, detail="Multiple folders contain DICOM files. Please upload the specific folder.")
         
         if invalid_files:
             return {"requires_cleaning": True, "temp_id": temp_id, "invalid_files": invalid_files}

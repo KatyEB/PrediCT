@@ -24,11 +24,24 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 def load(patient_folder: str | Path) -> sitk.Image:
     """Load DICOM series from folder into a SimpleITK Image."""
-    print(f"Loading {patient_folder}...")
+    patient_folder = Path(patient_folder)
+    
+    dicom_files = list(patient_folder.rglob("*.dcm"))
+    if not dicom_files:
+        raise ValueError(f"No DICOM files found in {patient_folder} or its subdirectories.")
+        
+    series_dirs = list({f.parent for f in dicom_files})
+    
+    if len(series_dirs) > 1:
+        raise ValueError("Multiple folders contain DICOM files. Please upload the specific folder.")
+        
+    target_folder = series_dirs[0]
+    
+    print(f"Loading {target_folder}...")
     reader = sitk.ImageSeriesReader()
-    dicom_names = reader.GetGDCMSeriesFileNames(str(patient_folder))
+    dicom_names = reader.GetGDCMSeriesFileNames(str(target_folder))
     if not dicom_names:
-        raise ValueError(f"No DICOM files found in {patient_folder}")
+        raise ValueError(f"SimpleITK failed to recognize DICOM series in {target_folder}")
     reader.SetFileNames(dicom_names)
     return reader.Execute()
 
