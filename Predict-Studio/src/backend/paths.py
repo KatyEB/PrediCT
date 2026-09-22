@@ -28,11 +28,19 @@ def work_dir(study_id: str) -> Path:
 def out_dir(study_id: str, model_id: str) -> Path: 
     return DATA / "out" / study_id / model_id
 
-def study_id_from_series(dicom_dir: str | Path) -> str:
-    """Generate a consistent 12-char ID from the DICOM SeriesInstanceUID."""
-    r = sitk.ImageFileReader()
-    first_dcm = next(Path(dicom_dir).rglob("*.dcm"))
-    r.SetFileName(str(first_dcm))
-    r.ReadImageInformation()
-    uid = r.GetMetaData("0020|000e")  # SeriesInstanceUID
-    return hashlib.sha1(uid.encode()).hexdigest()[:12]
+def study_id_from_series(input_dir: str | Path) -> str:
+    """Generate a consistent 12-char ID from the DICOM SeriesInstanceUID or NIfTI filename."""
+    input_dir = Path(input_dir)
+    try:
+        first_dcm = next(input_dir.rglob("*.dcm"))
+        r = sitk.ImageFileReader()
+        r.SetFileName(str(first_dcm))
+        r.ReadImageInformation()
+        uid = r.GetMetaData("0020|000e")  # SeriesInstanceUID
+        return hashlib.sha1(uid.encode()).hexdigest()[:12]
+    except StopIteration:
+        nifti_files = list(input_dir.rglob("*.nii")) + list(input_dir.rglob("*.nii.gz"))
+        if not nifti_files:
+            raise StopIteration("No DICOM or NIfTI files found.")
+        filename = nifti_files[0].name
+        return hashlib.sha1(filename.encode()).hexdigest()[:12]

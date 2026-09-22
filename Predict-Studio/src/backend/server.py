@@ -13,6 +13,7 @@ from pydantic import BaseModel
 from src.backend.paths import study_id_from_series, upload_dir, DATA
 from src.backend.registry import list_models
 from src.backend.run import run
+from src.backend.ingest import fix_extensions
 
 app = FastAPI(title="PrediCT Server")
 
@@ -29,18 +30,33 @@ async def upload_study(files: List[UploadFile] = File(...), custom_name: str = F
     temp_dir.mkdir(parents=True, exist_ok=True)
     
     try:
-        invalid_files = []
-        dicom_dirs = set()
+        original_parents = {}
         for f in files:
-            is_dcm = f.filename.lower().endswith(".dcm")
-            if not is_dcm:
-                invalid_files.append(Path(f.filename).name)
-            else:
-                dicom_dirs.add(str(Path(f.filename).parent))
-                
-            file_path = temp_dir / Path(f.filename).name
+            file_name = Path(f.filename).name
+            file_path = temp_dir / file_name
+            original_parents[file_name] = str(Path(f.filename).parent)
             with file_path.open("wb") as buffer:
                 shutil.copyfileobj(f.file, buffer)
+                
+        fix_extensions(temp_dir)
+        
+        invalid_files = []
+        dicom_dirs = set()
+        for f_path in temp_dir.iterdir():
+            if f_path.is_file():
+                lower_name = f_path.name.lower()
+                is_valid = lower_name.endswith(".dcm") or lower_name.endswith(".nii") or lower_name.endswith(".nii.gz")
+                
+                original_name = f_path.name
+                if original_name not in original_parents and original_name.endswith(".dcm"):
+                    original_name = original_name[:-4]
+                    
+                parent_dir = original_parents.get(original_name, "")
+                
+                if not is_valid:
+                    invalid_files.append(f_path.name)
+                elif lower_name.endswith(".dcm"):
+                    dicom_dirs.add(parent_dir)
                 
         if len(dicom_dirs) > 1:
             raise HTTPException(status_code=400, detail="Multiple folders contain DICOM files. Please upload the specific folder.")
@@ -55,7 +71,7 @@ async def upload_study(files: List[UploadFile] = File(...), custom_name: str = F
             try:
                 study_id = study_id_from_series(temp_dir)
             except StopIteration:
-                raise HTTPException(status_code=400, detail="No files with .dcm extension found in the upload.")
+                raise HTTPException(status_code=400, detail="No DICOM or NIfTI files found in the upload.")
             
         final_dir = DATA / "raw" / study_id
         if final_dir.exists():
@@ -81,7 +97,9 @@ def clean_and_commit_study(temp_id: str, custom_name: str = None):
         
     try:
         for f in temp_dir.iterdir():
-            if not f.name.lower().endswith(".dcm"):
+            lower_name = f.name.lower()
+            is_valid = lower_name.endswith(".dcm") or lower_name.endswith(".nii") or lower_name.endswith(".nii.gz")
+            if not is_valid:
                 if f.is_file():
                     f.unlink()
                 elif f.is_dir():
@@ -93,7 +111,7 @@ def clean_and_commit_study(temp_id: str, custom_name: str = None):
             try:
                 study_id = study_id_from_series(temp_dir)
             except StopIteration:
-                raise HTTPException(status_code=400, detail="No DICOM files remained after cleaning.")
+                raise HTTPException(status_code=400, detail="No DICOM or NIfTI files remained after cleaning.")
             
         final_dir = DATA / "raw" / study_id
         if final_dir.exists():

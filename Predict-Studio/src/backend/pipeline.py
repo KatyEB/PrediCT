@@ -23,27 +23,36 @@ from monai.inferers import sliding_window_inference
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 def load(patient_folder: str | Path) -> sitk.Image:
-    """Load DICOM series from folder into a SimpleITK Image."""
+    """Load DICOM series or NIfTI file from folder into a SimpleITK Image."""
     patient_folder = Path(patient_folder)
     
+    # 1. Try DICOM first
     dicom_files = list(patient_folder.rglob("*.dcm"))
-    if not dicom_files:
-        raise ValueError(f"No DICOM files found in {patient_folder} or its subdirectories.")
+    if dicom_files:
+        series_dirs = list({f.parent for f in dicom_files})
+        if len(series_dirs) > 1:
+            raise ValueError("Multiple folders contain DICOM files. Please upload the specific folder.")
+            
+        target_folder = series_dirs[0]
+        print(f"Loading DICOM series from {target_folder}...")
+        reader = sitk.ImageSeriesReader()
+        dicom_names = reader.GetGDCMSeriesFileNames(str(target_folder))
+        if not dicom_names:
+            raise ValueError(f"SimpleITK failed to recognize DICOM series in {target_folder}")
+        reader.SetFileNames(dicom_names)
+        return reader.Execute()
         
-    series_dirs = list({f.parent for f in dicom_files})
-    
-    if len(series_dirs) > 1:
-        raise ValueError("Multiple folders contain DICOM files. Please upload the specific folder.")
+    # 2. If no DICOM, try NIfTI
+    nifti_files = list(patient_folder.rglob("*.nii")) + list(patient_folder.rglob("*.nii.gz"))
+    if not nifti_files:
+        raise ValueError(f"No DICOM or NIfTI files found in {patient_folder}")
         
-    target_folder = series_dirs[0]
-    
-    print(f"Loading {target_folder}...")
-    reader = sitk.ImageSeriesReader()
-    dicom_names = reader.GetGDCMSeriesFileNames(str(target_folder))
-    if not dicom_names:
-        raise ValueError(f"SimpleITK failed to recognize DICOM series in {target_folder}")
-    reader.SetFileNames(dicom_names)
-    return reader.Execute()
+    if len(nifti_files) > 1:
+        raise ValueError(f"Multiple NIfTI files found in '{patient_folder}'. Please provide only one scan.")
+        
+    target_file = nifti_files[0]
+    print(f"Loading NIfTI file from {target_file}...")
+    return sitk.ReadImage(str(target_file))
 
 def resample(image: sitk.Image, target_spacing_mm: tuple[float, float, float]) -> sitk.Image:
     """Resample volume to target spacing (sx, sy, sz) in mm."""
