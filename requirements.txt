@@ -1,0 +1,8 @@
+numpy
+scipy
+SimpleITK
+torch
+matplotlib
+pandas
+tqdm
+scikit-learn
