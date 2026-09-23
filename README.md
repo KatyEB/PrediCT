@@ -22,8 +22,7 @@ The codebase is organized into four distinct biological phases:
 * **`analysis/`**: Various auditing, validation, and diagnostic scripts.
 * **`docs/`**: Generated reports and reproducibility logs.
 
-## Legacy Code
-Older iterations of the pipeline have been moved to `_legacy_archive/` to keep the main source tree clean.
+
 
 ## Usage
 1. Install dependencies via `pip install -r requirements.txt`
