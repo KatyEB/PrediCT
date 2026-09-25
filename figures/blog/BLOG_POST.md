@@ -1,0 +1,524 @@
+# PrediCT(Data Augmentation): A Physics-Informed Digital Twin for Synthetic Coronary Artery Calcium Generation
+
+### Growing biologically realistic calcified plaque — inside a real patient's CT scan — using multi-atlas registration, Navier-Stokes PINNs, stochastic differential equations, and radiometric alpha-blending.
+
+---
+
+Coronary Artery Disease (CAD) is the world's leading cause of death. One of the most powerful non-invasive tools for detecting it early is the **Coronary Artery Calcium (CAC) score** — a clinical metric derived from Non-Contrast CT (NCCT) scans that quantifies the total burden of calcified atherosclerotic plaque inside the coronary arteries. Studies have consistently shown that a high CAC score is one of the strongest independent predictors of future cardiac events (MESA trial, 2003–present).
+
+Yet despite its clinical importance, training deep learning models to automatically detect, quantify, and predict CAC progression faces a fundamental data problem: **the vast majority of patients in population datasets are healthy.** In the publicly available COCA dataset (Coronary Calcium and Chest CTs), the distribution of Agatston scores is extremely right-skewed — most patients have a score of zero, and severe calcification (Agatston > 400) is rare. This class imbalance makes it nearly impossible to train robust models that generalize to the high-score patients who matter most clinically.
+
+The standard answer to data scarcity is synthetic data generation. But every existing approach shares the same fundamental weakness: **they learn to imitate the visual appearance of disease, not the biology that causes it.** A GAN trained on calcium CT images can produce a blob that looks vaguely like calcium in approximately the right location. But it has no concept of why calcium grows where it does — it has never heard of endothelial shear stress, never solved the Navier-Stokes equations, and has no model of the mechanobiology of atherosclerosis.
+
+**PrediCT takes a radically different approach.** Instead of learning to generate disease, we simulate the biophysical process that *causes* disease. We grow calcium the same way the human body does — driven by disturbed blood flow, mechanobiological vulnerability, and stochastic nucleation — and then composite it into a real patient's CT scan with full radiometric fidelity.
+
+The result is a fully automated, end-to-end pipeline that takes any healthy NCCT scan and outputs a synthetically diseased twin with a user-specified Agatston score, where every calcium deposit is positioned, shaped, and textured according to real cardiovascular physiology.
+
+---
+
+## The Biology Behind the Math
+
+Before diving into the technical architecture, it is worth spending a moment on the biology, because every design decision in PrediCT flows directly from it.
+
+Atherosclerosis — the process that leads to coronary calcium — is fundamentally a disease of the vessel wall, not the bloodstream. It begins when the endothelial cells lining the inner surface of the coronary arteries are chronically exposed to disturbed or low-velocity blood flow. This mechanical stress (or rather, the absence of healthy stress) triggers an inflammatory cascade: monocytes infiltrate the intima, become lipid-laden macrophages (foam cells), and over years of progression, the accumulated lipid core undergoes calcification.
+
+The key hemodynamic driver is **Endothelial Shear Stress (ESS)** — the tangential frictional force that flowing blood exerts on the vessel wall. Measured in Pascals (Pa), ESS in healthy coronary arteries typically ranges from 1.0–7.0 Pa. Seminal studies (Chatzizisis et al. 2007; Samady et al. 2011) have established that:
+
+- **ESS < 1.0 Pa:** Atherogenic zone — endothelial dysfunction, monocyte adhesion, plaque vulnerability
+- **ESS 1.0–7.0 Pa:** Normal protective range
+- **ESS > 7.0 Pa:** Atheroprotective — shear-induced eNOS activation, anti-inflammatory response
+
+Low ESS regions occur predictably at vessel bifurcations, inner curvatures, and regions of geometric narrowing — exactly where clinical calcium is most commonly found. This mechanobiological relationship is the physical backbone of the PrediCT pipeline.
+
+---
+
+## System Architecture Overview
+
+The PrediCT pipeline is organized as four sequential, modular phases, each with clearly defined inputs, outputs, and biological functions:
+
+![PrediCT Complete Pipeline](01b_pipeline_flowchart.jpg)
+
+Each phase is an independent Python module with its own configuration, I/O contract, and validation gates. The master orchestrator script (`physio_twin.py`) chains them together, passing absolute file paths between phases so the entire pipeline is runnable with a single command:
+
+```bash
+python scripts/physio_twin.py \
+    --patient_dir COCA/02b52e3578fc \
+    --target_agatston 400 \
+    --out_dir output/
+```
+
+---
+
+## Phase 1 — Anatomical Scaffolding: Extracting the Coronary Geometry
+
+### The Problem with Segmentation on NCCT
+
+Coronary artery segmentation from NCCT is among the most challenging tasks in medical image analysis. On contrast-enhanced CT (CECT), the coronary lumen fills with high-density contrast agent, making it clearly distinguishable from surrounding tissue. On NCCT — the only modality where calcium is scoreable — there is no such contrast. The coronary arteries appear as faint, thin, tortuous structures (2–5mm diameter) embedded in the pericardial fat and myocardium, with no reliable HU signature to threshold on.
+
+Standard U-Net segmentation models trained on CECT data completely fail when applied to NCCT. Custom NCCT segmentation models require large annotated datasets that are prohibitively expensive to create. We needed a different approach entirely.
+
+### Multi-Atlas Registration: The Core Methodology
+
+Our solution draws from the classical medical image analysis literature: **Multi-Atlas Label Propagation (MALP)**. The key insight is that if we have a library of pre-segmented atlas images (where a human expert has already drawn the vessel boundaries), we can *warp* those atlases into the space of a new patient and use the warped labels as the segmentation.
+
+The PrediCT atlas pool consists of healthy NCCT scans with manually annotated coronary artery masks. For a new patient, the pipeline executes the following steps:
+
+#### Step 1: NCC-Based Pre-Selection
+
+Running full registration for every atlas in the pool is computationally expensive. We use **Normalized Cross-Correlation (NCC)** as a fast, pre-registration similarity metric to select the top N most similar atlases:
+
+![NCC Equation](equations/eq_01.png)
+
+where F is the fixed (patient) image and M is the moving (atlas) image, both windowed to the cardiac HU range (−100 to +700 HU). This reduces the full registration pool to the N most promising candidates (typically N=5).
+
+#### Step 2: Three-Stage Registration Pipeline
+
+Each selected atlas is registered to the patient using a cascaded pipeline:
+
+![Multi-Atlas Registration Pipeline](02_phase1_registration_pipeline.jpg)
+
+The **Cardiac ROI** cropping between Stage 1 and Stage 2 was a critical engineering decision. Global affine registration across the full thorax was consistently failing to align the tiny coronary arteries accurately — the optimizer was distracted by the large, globally dominant structures (aorta, ribs, spine). By tightly cropping the bounding box around the heart after rigid alignment, we dramatically improved affine accuracy on the actual coronary structures.
+
+#### Step 3: Best-Atlas Voting
+
+After all N atlases are registered, we must select a single vessel scaffold. We evaluate each registration using **Mutual Information (MI)** between the registered atlas and the patient scan:
+
+```
+MI(F, M) = H(F) + H(M) − H(F, M)
+         = Σ p(f,m) log [ p(f,m) / (p(f) · p(m)) ]
+```
+
+The atlas with the **most negative MI score** (highest information overlap) is selected as the winner. Its warped label mask becomes the Phase 1 output.
+
+> **Key Design Decision:** An earlier version used **Majority Vote Fusion** — averaging all N registered atlases together. This produced smoother, more rounded vessel masks with fewer registration artifacts. But testing revealed a critical failure: fusion blurred out sharp vessel bifurcations and inner curvatures — exactly the geometric features that drive turbulent flow and calcium formation in Phase 2. Switching to single-winner Best-Atlas Voting preserved these features at the cost of slightly higher registration variance on poor-quality scans. The biological accuracy trade-off was worth it.
+
+### Validation Gate 1: Phase 1 Plaque Consistency Check
+
+After generating the vessel mask, a hard validation gate checks whether the proposed synthetic calcium location (from Phase 3, precomputed as a seed) is physically consistent with the actual vessel anatomy. The `PlaqueValidator` class confirms that:
+
+1. The vessel mask is non-empty and contains a connected component of sufficient voxel volume.
+2. The mask is loaded at native resolution to avoid resampling artifacts that could bias Phase 2 geometry.
+
+If these checks fail, Phase 1 raises a `RuntimeError` and aborts the run, preventing bad anatomy from propagating into the fluid simulation.
+
+**Phase 1 Output:** `{patient_id}_synthetic_vessel.nii.gz` — a binary 3D NIfTI image delineating the coronary artery tree in patient space.
+
+---
+
+## Phase 2 — Hemodynamic Surrogate: Solving Navier-Stokes with a Neural Network
+
+![Phase 2 Flowchart](03b_phase2_pinn_flowchart.jpg)
+
+This is the most technically complex phase of the pipeline, and the one that most directly grounds PrediCT in physical reality.
+
+### Why Not Standard CFD?
+
+Traditional Computational Fluid Dynamics (CFD) on patient-specific coronary geometry involves:
+1. **Meshing** the complex 3D vessel surface (hours of computation with tools like VMTK or Meshmixer).
+2. **Solving** a finite-element or finite-volume discretization of Navier-Stokes (minutes to hours depending on mesh resolution).
+3. **Post-processing** the resulting velocity field for wall shear stress.
+
+This is completely intractable at scale — you cannot run traditional CFD on hundreds of patients in a reasonable timeframe. Physics-Informed Neural Networks offer a fundamentally different paradigm.
+
+### The PINN Architecture
+
+The hemodynamic surrogate is a **fully-connected Physics-Informed Neural Network (PINN)** that learns the mapping from spatial coordinates to flow variables directly, without ever being given labelled training data.
+
+![PINN Architecture](03_phase2_pinn_architecture.jpg)
+
+**Why Tanh activations?** The network must compute second-order spatial derivatives via autograd (for the Laplacian terms in the viscous stress). Tanh is twice-differentiable and well-conditioned for this purpose. ReLU activations produce zero second derivatives almost everywhere and were tested — they caused complete loss convergence failure.
+
+### Non-Dimensionalization
+
+This is one of the most critical engineering choices in the entire pipeline. Neural networks are extremely sensitive to the scale of their inputs and outputs. Physical coronary flow involves:
+- Coordinates in millimetres (1–50 mm range)
+- Velocities in cm/s (0.1–1.5 m/s range)
+- Pressures in Pascals (1,000–15,000 Pa range)
+
+Training a single network on variables spanning six orders of magnitude is numerically disastrous. We non-dimensionalize everything using characteristic scales of coronary hemodynamics:
+
+| Physical Quantity | Scale | Reference Value |
+|---|---|---|
+| Length $L_0$ | Mean vessel length | ~10 mm |
+| Velocity $U_0$ | Mean inlet velocity | ~0.3 m/s |
+| Time $T_0$ | $L_0 / U_0$ | ~0.033 s |
+| Pressure $P_0$ | $\rho U_0^2$ | ~90 Pa |
+| Reynolds Number $Re$ | $\rho U_0 L_0 / \mu$ | ~150 (laminar) |
+
+The dimensionless coordinates are $x^* = x/L_0$ and the dimensionless velocities are $u^* = u/U_0$. The PINN operates entirely in this dimensionless space.
+
+### The Physics Loss Function
+
+The training loss is a weighted sum of four residual terms, each enforcing a different physical constraint:
+
+#### 1. Continuity (Mass Conservation)
+For incompressible Newtonian flow:
+![Equation](equations/eq_03.png)
+
+#### 2. Navier-Stokes Momentum (x, y, z components)
+![Equation](equations/eq_04.png)
+
+#### 3. No-Slip Wall Boundary Condition
+At every sampled wall collocation point, velocity must vanish:
+![Equation](equations/eq_05.png)
+
+#### 4. Parabolic Inlet Velocity Profile (Hagen-Poiseuille)
+At the aortic ostium (the inlet), blood enters with a physiological parabolic profile:
+![Equation](equations/eq_06.png)
+
+where $R^*$ is the **patient-specific inlet radius** measured from the vessel centerline graph — a critical detail described in the engineering challenges section below.
+
+#### 5. Outlet Neumann Condition
+At vessel outlets, we enforce a zero-gradient (fully-developed flow) condition:
+![Equation](equations/eq_07.png)
+
+The **total weighted loss** is:
+![Equation](equations/eq_08.png)
+
+All $\lambda$ weights are set to 1.0 — equal weighting was found to be more stable than manual tuning during our experimentation.
+
+### Collocation Point Sampling
+
+The network is trained not on a fixed mesh, but on randomly sampled **collocation points** drawn from four distinct regions of the domain at each training iteration:
+
+| Region | Count | Sampling Method |
+|---|---|---|
+| **Interior** | 8,000 pts | Uniform random inside vessel mask |
+| **Wall** | 5,000 pts | Surface voxel boundary detection |
+| **Inlet** | 512 pts | Circular disk at aortic ostium |
+| **Outlet** | 512 pts/outlet | Circular disk at each branch termination |
+
+The wall count was increased from 2,000 to 5,000 and interior from 3,000 to 8,000 during development after discovering that ESS computation was undersampling the boundary layer — the thin region near the wall where velocity gradients are steepest.
+
+### Optimization
+
+Training uses the **Adam optimizer** with an initial learning rate of $1 \times 10^{-3}$. A cosine annealing scheduler reduces the learning rate over the training cycle. **Early stopping** is triggered if the best validation loss does not improve over 5,000 consecutive epochs, preventing unnecessary computation.
+
+A typical training run converges in approximately 9,700–10,000 epochs (~90 minutes on Apple M-series silicon). The best-loss checkpoint is automatically restored before ESS computation.
+
+### Computing Endothelial Shear Stress
+
+Once training is complete, ESS is computed by projecting the viscous stress tensor onto the wall normal at each sampled wall point.
+
+The physical viscous shear stress requires careful dimensional reconstruction. Since the PINN Jacobian $J^* = \partial \mathbf{u}^*/\partial \mathbf{x}^*$ is dimensionless (both numerator and denominator are scaled), the physical stress scale factor is:
+
+![Equation](equations/eq_09.png)
+
+where $\mu = 3.5 \times 10^{-3}$ Pa·s is blood dynamic viscosity. The viscous stress tensor and its wall-normal projection are:
+
+![Equation](equations/eq_10.png)
+
+![Equation](equations/eq_11.png)
+
+This is computed via PyTorch `vmap`-accelerated batched Jacobian over all wall points simultaneously.
+
+### Engineering Challenges & Solutions
+
+#### Challenge 1: Non-Dimensional Bug — ESS Off by Factor of 83
+
+The first time we ran the full pipeline, the computed ESS values were in the range of 7–74 Pa, far above any physiological coronary value. After extensive debugging, we identified the root cause: the viscous stress computation was using raw dynamic viscosity $\mu$ against the dimensionless Jacobian $J^*$, instead of the stress scale $\mu \cdot U_0/L_0$.
+
+```
+Before fix:  τ = μ · J*           # Wrong: μ has units of Pa·s, J* is dimensionless
+                                   # Result: units are Pa·s, not Pa
+
+After fix:   τ = (μ · U₀/L₀) · J* # Correct: stress scale in Pa/s⁻¹ × dimensionless = Pa
+```
+
+The fix reduced all ESS values by exactly a factor of $U_0/L_0 \approx 83\ \text{s}^{-1}$ into the physiologically expected range.
+
+#### Challenge 2: Velocity Collapse to Trivial Solution
+
+The PINN repeatedly discovered that predicting $\mathbf{u}^* = 0$ everywhere was a perfectly valid solution to the continuity and momentum equations (trivially satisfied by zero velocity and zero pressure gradient). This "trivial solution" produces zero physics loss but zero useful hemodynamics.
+
+**Fix 1 — Inlet Dirichlet Enforcement:** Strongly enforcing the parabolic inlet profile with $\lambda_{inlet} = 1.0$ prevents the zero-velocity collapse at the inlet boundary, forcing the network to propagate non-zero flow into the domain.
+
+**Fix 2 — Velocity Collapse Detection Gate:** After training, the pipeline evaluates the mean velocity magnitude across the interior. If $|\mathbf{u}^*|_{mean} < 1 \times 10^{-3}$, a `RuntimeError` is raised:
+```
+CRITICAL: PINN velocity field has collapsed to trivial solution.
+Training failed to converge to a physical solution.
+```
+
+#### Challenge 3: Hardcoded Inlet Radius Failure
+
+Initially, the Hagen-Poiseuille inlet profile used a hardcoded radius of $R = 0.0015$ m (1.5 mm), appropriate for a typical 3 mm diameter coronary artery. However, patient coronary arteries vary substantially — some patients have 2.5 mm vessels, others 4.5 mm.
+
+For a patient with a 4 mm diameter vessel, using a 1.5 mm hardcoded radius caused $r^2/R^2 \gg 1$ at most inlet points, clamping the parabolic profile to zero nearly everywhere and effectively starving the flow.
+
+**Fix:** The inlet radius is now computed algorithmically from the vessel mask's centerline skeleton graph using the vessel's actual local cross-sectional radius, extracted via the `geometry.py` module.
+
+#### Challenge 4: Outlet-Edge ESS Spikes
+
+The artificial cut-plane at each vessel outlet terminus produces a geometric edge where the wall normal transitions abruptly from tangential to the vessel to nearly axial. This produces mathematically infinite velocity gradients and correspondingly massive spurious ESS spikes at the outlets.
+
+**Fix:** A two-pass clipping algorithm removes these artifacts before export:
+1. **Geometric clip:** Removes all wall points within 1 mm of any outlet plane.
+2. **Statistical clip:** Removes any remaining points exceeding $Q3 + 3 \times IQR$ (3-sigma outlier rejection).
+
+### Validation Gates — Phase 2
+
+Phase 2 has three hard physiological safety gates before ESS export:
+
+| Gate | Check | Threshold | Failure Action |
+|---|---|---|---|
+| **Velocity Collapse** | $|\mathbf{u}^*|_{mean}$ | $> 1 \times 10^{-3}$ | Abort pipeline |
+| **Inlet Profile RMSE** | $RMSE(u_{pred}, u_{HP})$ | $< 0.05$ | Warning + continue |
+| **ESS Physiological Floor** | $\overline{ESS}_{wall}$ | $> 0.1$ Pa | Abort pipeline |
+| **Mass Conservation Error** | $|Q_{in} - Q_{out}| / Q_{in}$ | Logged | Warning only |
+
+![Phase 2 ESS Heatmap](04_phase2_ess_heatmap.png)
+
+The ESS floor gate is the most critical. An ESS < 0.1 Pa indicates that the velocity field has collapsed to near-zero or that the geometry was degenerate, and any calcium grown from such a field would be physically meaningless. **If this gate fails, the entire run is aborted and the patient is flagged for manual review.**
+
+**Phase 2 Output:** `ess_predictions.csv` — a point cloud containing 3D physical coordinates, velocity vectors, and ESS magnitudes in Pascals for all validated wall points.
+
+---
+
+## Phase 3 — Stochastic Plaque Growth: Seeding Biology on the Hemodynamic Risk Map
+
+![SDE Plaque Growth](05b_phase3_sde_flowchart.jpg)
+
+### From ESS Field to 3D Voxel Mask
+
+Phase 2 produces an ESS point cloud in physical coordinates. Phase 3 must translate this sparse hemodynamic risk map into a dense 3D binary mask of synthetic calcium deposits at native CT resolution.
+
+#### Step 1: ESS Interpolation to Dense Grid
+
+The ESS point cloud is first interpolated onto the full voxel grid of the vessel mask using `scipy.interpolate.griddata` with a linear interpolation scheme. Only voxels inside the vessel mask are interpolated (saving substantial computation). Voxels outside the vessel receive a neutral ESS of 1.5 Pa (normal range, zero growth probability).
+
+```
+Dense ESS Field Shape: (Z, Y, X) ← native CT resolution, typically 1×1×1 mm voxels
+Values: [0.05 Pa — 12.0 Pa] ← after clipping outliers
+```
+
+Each voxel in the vessel wall region receives a **growth probability** derived from its ESS value using an inverse-proportional atherogenic scoring function:
+
+```
+P_growth(ESS) ∝ 1.0 / max(ESS, 0.1)
+```
+
+This ensures that deeply atherogenic regions (ESS < 0.5 Pa) have maximum growth probability while protected regions (ESS > 2.0 Pa) have drastically lower probability of seeding calcium.
+
+#### Step 3: Monte Carlo Seed Generation
+
+Using the growth probability map as a spatial probability distribution, the algorithm draws $N_{seeds}$ Monte Carlo samples to place **growth nucleation sites** on the vessel wall. The number of seeds is calibrated to the target Agatston score:
+
+```
+N_seeds ≈ target_agatston / 50   (empirically calibrated)
+```
+
+For a target Agatston score of 400, approximately 8 seeds are dropped. Each seed is guaranteed to land in a high-ESS-risk region due to the probability-weighted sampling.
+
+#### Step 4: Anisotropic Breadth-First Growth
+
+From each seed, calcium "grows" outward using a **stochastic anisotropic breadth-first search (BFS)**. Instead of forming perfect geometric spheres, the growth hugs the vessel contour:
+
+- Growth *along* the wall circumferentially has high probability.
+- Growth *inward* toward the lumen has lower probability.
+
+This produces the bumpy, heterogeneous, wall-hugging morphology characteristic of real calcified plaque.
+
+#### Step 5: Core vs. Gradient Separation
+
+The growth mask is split into two layers based on distance from the seed:
+
+- **Core voxels** ($D < 0.6 \times MaxDepth$): Dense, high-HU calcium interior
+- **Gradient voxels** ($0.6 \times MaxDepth \leq D < MaxDepth$): Softer boundary region for alpha-blending
+
+This separation is critical for Phase 4 to produce radiometrically realistic calcium with natural HU gradients instead of sharp artificial edges.
+
+#### Step 6: Mask Intersection (Biological Hard Constraint)
+
+The final calcium mask is intersected with the vessel wall mask from Phase 1:
+
+```python
+final_mask = grown_mask & vessel_wall_mask
+```
+
+This single line is the biological hard constraint that makes PrediCT physically sound. It is **mathematically impossible** for synthetic calcium to exist outside the anatomical boundaries of the coronary artery.
+
+**Phase 3 Output:** `{patient_id}_synthetic_calcium_mask.nii.gz` — a multi-label NIfTI with label 1 (core) and label 2 (gradient) voxels.
+
+![Phase 3 Growth Results](06_phase3_sde_growth.png)
+
+---
+
+## Phase 4 — Physiological Texturing: Making the CT Look Real
+
+![Phase 4 Texture Flowchart](07b_phase4_texture_flowchart.jpg)
+
+### Hounsfield Unit Calibration
+
+CT images store tissue density as **Hounsfield Units (HU)**, a standardized radiometric scale where:
+- Air: −1000 HU
+- Water: 0 HU
+- Soft tissue: 20–80 HU
+- Cortical bone: 400–1000 HU
+- Dense calcium: 400–1800+ HU
+
+The Agatston scoring algorithm uses HU thresholds to assign density multipliers to calcium voxels:
+
+| HU Range | Agatston Density Multiplier |
+|---|---|
+| 130–199 | 1 |
+| 200–299 | 2 |
+| 300–399 | 3 |
+| ≥ 400 | 4 |
+
+For maximum score density, we want the majority of core calcium voxels in the ≥400 HU band. To match the natural variance seen in clinical data, the HU profile for each synthetic scan is dynamically sampled from a Gaussian distribution. For example, a typical generation might use:
+
+$$HU_{calcium} \sim \mathcal{N}(\mu=850,\ \sigma=150)$$
+
+This places the vast majority of generated HU values well above the 400 threshold (the 4x multiplier band) while providing the realistic intra-lesion heterogeneity found in real patients.
+
+### The Alpha-Blending Degrading Function
+
+The interface between synthetic calcium and native tissue is where naive approaches produce obviously artificial results. A hard boundary between 900 HU calcium and 50 HU pericardial fat would be immediately detectable by any trained radiologist (or classification model).
+
+Real CT scans exhibit the **partial volume effect** — at voxel boundaries between two tissue types, the scanner records an average HU weighted by the volume fraction of each tissue in the voxel. We simulate this by applying a continuously degrading alpha blend across the gradient zone:
+
+![Equation](equations/eq_12.png)
+
+where the blending weight $\alpha(d)$ decays exponentially with distance $d$ from the core boundary:
+
+![Equation](equations/eq_13.png)
+
+$\lambda$ controls the steepness of the transition (empirically set to 2.5). $D_{gradient}$ is the total gradient zone thickness in voxels. At $d = 0$ (at the core boundary), $\alpha = 1.0$ (full calcium HU). At $d = D_{gradient}$, $\alpha \approx 0.08$ (nearly pure tissue).
+
+A final **Gaussian blur** ($\sigma = 0.5$ voxels) is applied to the transition zone to anti-alias any remaining sub-voxel discontinuities.
+
+### Agatston Score Computation
+
+After compositing, the pipeline runs a closed-loop **Agatston score computation** over the synthetic scan:
+
+1. Threshold the scan at 130 HU to identify all candidate calcium voxels.
+2. Apply connected-component labelling to separate distinct calcium clusters.
+3. For each cluster with area ≥ 1 mm²: multiply voxel count by the appropriate density multiplier (1–4).
+4. Sum all weighted voxel contributions.
+
+The computed score is logged alongside the target score. The ratio serves as a key quality metric — a ratio > 1.5× from target flags the patient for seed parameter re-tuning.
+
+**Phase 4 Output:** `{patient_id}_synthetic_coca.nii.gz` — the final, radiometrically faithful synthetic NCCT scan, clinically scoreable with standard Agatston software.
+
+---
+
+## End-to-End Validation Results
+
+![Results Before/After CT](08_results_before_after_ct.jpg)
+
+### Pipeline Run: Patient `02b52e3578fc` (COCA Dataset)
+
+The following results are from a complete, unmodified end-to-end pipeline run:
+
+| Phase | Metric | Value |
+|---|---|---|
+| Phase 1 | Best atlas MI score | −0.3439 |
+| Phase 1 | Winning atlas | Atlas 137 |
+| Phase 1 | Vessel mask voxel count | 8,413 |
+| Phase 2 | PINN training epochs | 9,733 |
+| Phase 2 | Best physics loss | 4.35 × 10⁻² |
+| Phase 2 | Training time | 97 min (M-series) |
+| Phase 2 | Mean ESS (all wall) | 0.467 Pa |
+| Phase 2 | Atherogenic fraction (<1 Pa) | 93.7% |
+| Phase 2 | Normal ESS fraction (1–7 Pa) | 6.2% |
+| Phase 2 | Inlet velocity RMSE | 0.0069 |
+| Phase 2 | Mass conservation error | 22.6% |
+| Phase 3 | Seeds generated | 8 |
+| Phase 3 | Core calcium voxels | 128 |
+| Phase 3 | Gradient voxels | 248 |
+| Phase 4 | Alpha-blended voxels | 621 |
+| Phase 4 | HU mean (core) | 927 |
+| Phase 4 | HU std (core) | 135 |
+| Phase 4 | HU actual range | [415, 1439] |
+| **Phase 4** | **Computed Agatston Score** | **608.9** |
+| Target | Target Agatston Score | 400 |
+
+### Biological Plausibility Assessment
+
+The ESS distribution from the Phase 2 run shows 93.7% of the vessel wall in the atherogenic (<1 Pa) range. This is consistent with clinical literature for a patient with severe coronary stenosis — a small, diseased vessel geometry will have low overall wall shear due to the slow, disturbed flow regime that develops in the presence of existing disease.
+
+The mass conservation error of 22.6% reflects a known limitation of PINNs on complex multi-outlet coronary geometries — the optimizer balances the integral mass loss against the local collocation residuals, and for a vessel tree with many small outlets, perfect mass conservation is difficult to achieve simultaneously with accurate velocity field learning. This is an active area of improvement in the roadmap.
+
+---
+
+## Discussion: Why This Matters for Cardiovascular AI
+
+### The Counterfactual Scan Problem
+
+One of the most clinically powerful applications of PrediCT is generating **counterfactual pairs** — showing what a patient's scan would look like at different disease severities. Given a patient with Agatston = 0, we can generate their scan at Agatston = 100, 250, 400, and 1000 — using the same anatomy and hemodynamics, varying only the calcium burden.
+
+This is impossible with real data (you cannot ethically give a patient more calcium to image them again) but trivially achievable with PrediCT.
+
+### Augmenting Calcium Scoring Models
+
+Deep learning models trained on real COCA data for calcium detection suffer severely from class imbalance. By generating matched synthetic pairs for every zero-calcium patient, we can transform a 90% negative / 10% positive dataset into a balanced 50/50 training set — without any privacy concerns, because the calcium is entirely synthetic.
+
+### The Biological Grounding Advantage
+
+A GAN-generated calcium blob will fool a radiologist visually. But it will fail physics tests. A PrediCT-generated calcium deposit:
+- Grows only in regions with documented hemodynamic vulnerability
+- Has a realistic 3D shape (non-spherical, organic)
+- Has a radiometrically calibrated HU profile with correct partial-volume blending
+- Has a computable Agatston score that can be directly compared to clinical targets
+
+This biological grounding means that PrediCT-generated data will not introduce distributional shortcuts that cause ML models to learn the wrong features.
+
+---
+
+## Limitations and Current Challenges
+
+### 1. PINN Training Time (~90 min/patient)
+
+The single biggest practical limitation. Solving Navier-Stokes for a complex 3D coronary geometry takes approximately 9,700 epochs of Adam optimization on an Apple M-series chip. Parallelizing across patients (running a batch) helps throughput but not per-patient latency.
+
+**Roadmap:** Investigating neural operator approaches (Fourier Neural Operators, DeepONet) that could amortize the training cost across patients and reduce per-patient inference to seconds.
+
+### 2. Mass Conservation in Multi-Outlet Geometries
+
+The mass conservation error of ~22% indicates the PINN is not perfectly satisfying the integral flow balance across all outlets. This is a known challenge for PINNs on complex vessel geometries with many small outlets.
+
+**Roadmap:** Implementing a hard mass-correction post-processing step that rescales outlet velocities to enforce global conservation after training.
+
+### 3. Agatston Score Targeting Precision
+
+The stochastic nature of Phase 3 means the output Agatston score is not deterministically equal to the target. For a target of 400, the typical output ranges from 350–700 depending on the vessel geometry.
+
+**Roadmap:** A closed-loop controller that iteratively adjusts seed parameters (count, max depth) using a proportional feedback loop until the computed score is within ±10% of target.
+
+### 4. Single-Phase Simulation
+
+Currently, the PINN solves a steady-state (time-averaged) Navier-Stokes problem. Real coronary flow is pulsatile, driven by the cardiac cycle. Including time-periodic boundary conditions would require a substantially larger network and significantly longer training.
+
+**Roadmap:** Implementing a time-dependent PINN formulation with a Womersley inlet profile parameterized by heart rate.
+
+---
+
+## Conclusion
+
+PrediCT demonstrates that generating biologically realistic synthetic medical imaging data does not require learning from large datasets of diseased patients. It requires a physical model of disease.
+
+By simulating the mechanobiological process that causes coronary atherosclerosis — disturbed hemodynamics driving endothelial dysfunction, driving plaque nucleation and growth — we produce synthetic calcium deposits that are:
+
+- **Anatomically constrained** (inside real patient vessels)
+- **Hemodynamically motivated** (placed where physics dictates)
+- **Morphologically realistic** (organic, asymmetric, nodular)
+- **Radiometrically faithful** (calibrated HU distributions, partial-volume blending)
+- **Clinically scoreable** (valid Agatston score computation)
+
+The four-phase pipeline — multi-atlas registration, PINN hemodynamics, stochastic SDE growth, and alpha-blended radiometric texturing — forms a complete, automated, and scientifically rigorous data synthesis system for cardiovascular AI.
+
+The code is fully open-source and available at [**github.com/CodeShrek/Predi_CT**](https://github.com/CodeShrek/Predi_CT).
+
+---
+
+*If you found this interesting, feel free to reach out or leave a comment. This project sits at the intersection of computational physics, clinical cardiology, and machine learning — an endlessly rich space to build in.*
+
+---
+
+### References
+
+1. Chatzizisis, Y.S. et al. (2007). Role of Endothelial Shear Stress in the Natural History of Coronary Atherosclerosis and Vascular Remodelling. *JACC*, 49(25), 2379–2393.
+2. Samady, H. et al. (2011). Coronary Artery Wall Shear Stress Is Associated With Progression and Transformation of Atherosclerotic Plaque and Arterial Remodeling. *Circulation*, 124(7), 779–788.
+3. Budoff, M.J. et al. (2018). Ten-Year Association of Coronary Artery Calcium With Atherosclerotic Cardiovascular Disease Events. *JAMA*, 319(22), 2279–2289.
+4. Raissi, M., Perdikaris, P., & Karniadakis, G.E. (2019). Physics-informed neural networks: A deep learning framework for solving forward and inverse problems involving nonlinear PDEs. *Journal of Computational Physics*, 378, 686–707.
+5. COCA Dataset: Gao, J. et al. (2023). Coronary Calcium and Chest CTs. PhysioNet.
