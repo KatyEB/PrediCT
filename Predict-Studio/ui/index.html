@@ -4,14 +4,16 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>PrediCT Studio — Google Health AI</title>
+  <title>PrediCT Studio </title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet"
     href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Roboto:wght@400;500;700&family=Roboto+Mono:wght@400;500;600&display=swap">
   <link rel="stylesheet"
     href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
-  <link rel="stylesheet" href="app.css">
+  <!-- ?v= forces browsers to fetch the new files after an update (the server
+       sends no cache headers). Bump it whenever app.css / app.js / view3d.js change. -->
+  <link rel="stylesheet" href="app.css?v=2">
 
   <script type="importmap">
   { "imports": {
@@ -48,6 +50,7 @@
         </div>
         <span id="run-progress-text" class="run-progress-text">0%</span>
       </div>
+      <div id="run-msg" class="run-msg" hidden></div>
     </div>
 
     <div class="scroll sidebar-list" id="sidebar-list">
@@ -58,7 +61,21 @@
   <div id="drop-overlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(33, 150, 243, 0.8); z-index:9999; justify-content:center; align-items:center; color:white; font-size:32px; font-weight:bold; backdrop-filter: blur(5px);">
     Drop DICOM Folder Here
   </div>
-  
+
+  <!-- One dialog for every question the UI asks (see askDialog in app.js). -->
+  <dialog id="dlg" class="dlg">
+    <form method="dialog">
+      <h3 id="dlg-title"></h3>
+      <p id="dlg-msg"></p>
+      <input type="text" id="dlg-input" class="run-input" autocomplete="off" hidden>
+      <div class="dlg-actions">
+        <button type="button" class="dlg-btn" id="dlg-cancel">Cancel</button>
+        <button value="ok" class="dlg-btn primary" id="dlg-ok">OK</button>
+      </div>
+    </form>
+  </dialog>
+  <div id="toast" class="toast" role="status" hidden></div>
+
   <div id="main-content">
 
   <!-- Workspace Header & Tab Bar -->
@@ -81,23 +98,70 @@
       <button data-view="3">3 calcium only</button>
     </div>
 
+    <div class="view-btn-group" title="Risk tier scheme. Display only: the Agatston score does not change.">
+      <button data-tiers="4">4-tier</button>
+      <button data-tiers="6">6-tier</button>
+    </div>
+
     <span class="tabs-study" id="tabs-study"></span>
   </header>
 
-  <div id="err" hidden></div>
+  <!-- ══════════════ START SCREEN (no study in the URL) ══════════════ -->
+  <div id="welcome" class="welcome" hidden>
+    <div class="welcome-card">
+      <!-- Illustration in the app's own visual language: an axial slice,
+           calcium in the mask colour, the selection ring in its blue. -->
+      <svg class="welcome-art" viewBox="0 0 200 150" aria-hidden="true">
+        <rect width="200" height="150" rx="12" fill="#000" />
+        <ellipse cx="100" cy="78" rx="84" ry="58" fill="#5f6368" />
+        <ellipse cx="100" cy="78" rx="76" ry="51" fill="#202124" />
+        <ellipse cx="108" cy="70" rx="38" ry="31" fill="#80868b" />
+        <ellipse cx="72" cy="88" rx="14" ry="12" fill="#5f6368" />
+        <circle cx="100" cy="124" r="11" fill="#e8eaed" />
+        <circle cx="86" cy="50" r="3.4" fill="#C9541F" />
+        <circle cx="92" cy="46" r="2.4" fill="#C9541F" />
+        <circle cx="131" cy="88" r="2.8" fill="#C9541F" />
+        <rect x="79" y="40" width="20" height="17" rx="1" fill="none" stroke="#4FA8C5" stroke-width="1.5" />
+        <text x="100" y="14" fill="#9aa0a6" font-size="9" text-anchor="middle" font-family="monospace">A</text>
+      </svg>
+      <h1 class="welcome-title">PrediCT Studio</h1>
+      <p class="welcome-sub">Coronary artery calcium scoring workstation</p>
+
+      <div class="welcome-err" id="welcome-err" hidden>
+        <pre id="welcome-errmsg"></pre>
+        <a href="?">Back to start</a>
+      </div>
+
+      <ol class="welcome-steps">
+        <li>
+          <span class="material-symbols-outlined">upload</span>
+          <b>1 · Upload</b>
+          <span>a DICOM or NIfTI folder</span>
+          <button class="run-btn" id="welcome-upload">Upload scan</button>
+        </li>
+        <li>
+          <span class="material-symbols-outlined">play_circle</span>
+          <b>2 · Run</b>
+          <span>choose a patient and a model under <em>Run Pipeline</em> on the left</span>
+        </li>
+        <li>
+          <span class="material-symbols-outlined">monitoring</span>
+          <b>3 · Review</b>
+          <span>Argument, Instrument, Contact Sheet and Anatomy views</span>
+        </li>
+      </ol>
+      <p class="welcome-hint">Or open an existing study from the list on the left.</p>
+    </div>
+  </div>
 
   <!-- ══════════════ 01 ARGUMENT ══════════════ -->
   <div id="d1" class="dir">
     <div class="a-prov">
       <span style="font-weight: 500;">PrediCT Studio · Study Argument Analysis</span>
-      <span id="a-prov1"></span>
-    </div>
-    <div class="a-prov2">
-      <span id="a-prov2"></span>
-      <span id="a-prov3"></span>
     </div>
 
     <div class="a-body">
+      <div class="rail-handle" title="Drag to resize · double-click to reset"></div>
       <div class="a-main">
         <div class="a-card">
           <div class="a-claim">
@@ -111,7 +175,7 @@
                 <span class="a-tiernote" id="a-tiernote"></span>
               </div>
             </div>
-            <div class="i-tierbar" style="width: 100%;"><i id="a-tierfill"></i><u style="left:7.1%"></u><u style="left:28.6%"></u></div>
+            <div class="i-tierbar" id="a-tierbar"></div>
           </div>
         </div>
 
@@ -138,8 +202,7 @@
               <span class="a-note" id="a-panecap"></span>
             </div>
             <div class="a-exhibit-side">
-              <div class="a-strip" id="a-strip"></div>
-              <span class="a-note" id="a-stripnote"></span>
+              <div class="a-strip scroll" id="a-strip"></div>
             </div>
           </div>
         </div>
@@ -148,35 +211,35 @@
       </div>
 
       <div class="a-side scroll">
-        <div class="a-side-sec">
-          <span class="a-kicker">3D Lesion Index</span>
+        <details class="a-side-sec" data-sec="a-l3d" open>
+          <summary class="a-kicker">3D Lesion Index</summary>
           <div class="scroll a-l3dwrap">
             <table class="a-extable">
               <tbody id="a-l3drows"></tbody>
             </table>
           </div>
           <div class="a-exsummary" id="a-l3dsummary"></div>
-        </div>
+        </details>
 
-        <div class="a-side-sec">
-          <span class="a-kicker" style="color: var(--md-sys-color-error);">Withheld / Excluded (< 1.0 mm²)</span>
-              <div class="scroll a-exwrap">
-                <table class="a-extable">
-                  <tbody id="a-exrows"></tbody>
-                </table>
-              </div>
-              <div class="a-exsummary" id="a-exsummary"></div>
-        </div>
+        <details class="a-side-sec" data-sec="a-ex" open>
+          <summary class="a-kicker" style="color: var(--md-sys-color-error);">Withheld / Excluded (&lt; 1.0 mm²)</summary>
+          <div class="scroll a-exwrap">
+            <table class="a-extable">
+              <tbody id="a-exrows"></tbody>
+            </table>
+          </div>
+          <div class="a-exsummary" id="a-exsummary"></div>
+        </details>
 
-        <div class="a-side-sec">
-          <span class="a-kicker">Model Delineation</span>
+        <details class="a-side-sec" data-sec="a-soft" open>
+          <summary class="a-kicker">Model Delineation</summary>
           <div class="a-soft" id="a-soft"></div>
-        </div>
+        </details>
 
-        <div class="a-side-sec a-produced">
-          <span class="a-kicker">Pipeline Parameters</span>
+        <details class="a-side-sec a-produced" data-sec="a-prov" open>
+          <summary class="a-kicker">Pipeline Parameters</summary>
           <div class="a-provblock" id="a-provblock"></div>
-        </div>
+        </details>
       </div>
     </div>
   </div>
@@ -197,12 +260,24 @@
     </div>
 
     <div class="i-body">
+      <div class="rail-handle" title="Drag to resize · double-click to reset"></div>
       <div class="i-viewport" id="i-viewport">
         <div class="pane" id="i-pane" data-pane="i">
-          <img class="pane-ct" alt="">
-          <img class="pane-mask" alt="">
+          <!-- Only the images zoom; the ring is redrawn at screen resolution and
+               the A/P/R/L labels stay on the edges. -->
+          <div class="pane-zoom">
+            <!-- draggable=false: a native image drag would cancel panning -->
+            <img class="pane-ct" alt="" draggable="false">
+            <img class="pane-mask" alt="" draggable="false">
+          </div>
           <canvas class="pane-ring"></canvas>
           <div class="pane-labels"></div>
+        </div>
+        <div class="i-zoom" id="i-zoom">
+          <button data-zoom="out" title="Zoom out (−)">−</button>
+          <span id="i-zoomlvl">1.0×</span>
+          <button data-zoom="in" title="Zoom in (+)">+</button>
+          <button data-zoom="fit" title="Fit to view (0 or double-click)">Fit</button>
         </div>
         <div class="i-caption" id="i-caption"></div>
       </div>
@@ -214,31 +289,31 @@
         </div>
 
         <div class="scroll i-rail-body">
-          <div class="i-sec" id="i-l3d-sec">
-            <span class="i-label">3D LESION SUMMARY</span>
+          <details class="i-sec" id="i-l3d-sec" data-sec="i-l3d" open>
+            <summary class="i-label">3D LESION SUMMARY</summary>
             <div id="i-l3d"></div>
             <div class="i-l3d-slices" id="i-l3d-slices"></div>
-          </div>
-          <div class="i-sec">
-            <span class="i-label">SELECTED COMPONENT</span>
+          </details>
+          <details class="i-sec" data-sec="i-sel" open>
+            <summary class="i-label">SELECTED COMPONENT</summary>
             <div id="i-sel"></div>
-          </div>
-          <div class="i-sec" id="i-bands-sec">
-            <span class="i-label">PROBABILITY BANDS</span>
+          </details>
+          <details class="i-sec" id="i-bands-sec" data-sec="i-bands" open>
+            <summary class="i-label">PROBABILITY BANDS</summary>
             <div id="i-bands"></div>
             <span class="i-softnote" id="i-softnote"></span>
-          </div>
-          <div class="i-sec">
-            <span class="i-label">SLICE LESIONS</span>
+          </details>
+          <details class="i-sec" data-sec="i-rows" open>
+            <summary class="i-label">SLICE LESIONS</summary>
             <table class="i-table">
               <tbody id="i-rows"></tbody>
             </table>
             <span class="i-empty" id="i-empty" hidden></span>
-          </div>
-          <div class="i-sec">
-            <span class="i-label">WITHHELD (<b id="i-nex"></b>)</span>
+          </details>
+          <details class="i-sec" data-sec="i-ex" open>
+            <summary class="i-label">WITHHELD (<b id="i-nex"></b>)</summary>
             <span class="i-exsummary" id="i-exsummary"></span>
-          </div>
+          </details>
         </div>
 
         <div class="i-foot">
@@ -247,7 +322,7 @@
             <span class="i-total" id="i-total">—</span>
             <span class="i-tier" id="i-tier"></span>
           </div>
-          <div class="i-tierbar"><i id="i-tierfill"></i><u style="left:7.1%"></u><u style="left:28.6%"></u></div>
+          <div class="i-tierbar" id="i-tierbar"></div>
           <span class="i-tiernote" id="i-tiernote"></span>
         </div>
       </div>
@@ -258,6 +333,7 @@
   <div id="d3" class="dir">
 
     <div class="cs-body">
+      <div class="rail-handle" title="Drag to resize · double-click to reset"></div>
       <div class="cs-main">
         <div class="scroll cs-grid-wrap">
           <div class="cs-grid" id="cs-grid"></div>
@@ -267,6 +343,7 @@
           <span>○ <b id="cs-n-submin">0</b> sub-minimum</span>
           <span>▪ <b id="cs-n-empty">0</b> empty</span>
           <span class="push" id="cs-legend-note"></span>
+          <label class="cs-size">Tile size <input type="range" id="cs-size" min="48" max="160" step="4"></label>
         </div>
 
         <div class="cs-enlargement">
@@ -288,17 +365,17 @@
 
       <div class="i-rail">
         <div class="scroll i-rail-body">
-          <div class="i-sec">
-            <span class="i-label">COUNTED COMPONENTS (<b id="cs-ncounted-text"></b>)</span>
+          <details class="i-sec" data-sec="cs-rows" open>
+            <summary class="i-label">COUNTED COMPONENTS (<b id="cs-ncounted-text"></b>)</summary>
             <table class="i-table">
               <tbody id="cs-rows"></tbody>
             </table>
             <span class="i-empty" id="cs-empty" hidden></span>
-          </div>
-          <div class="i-sec">
-            <span class="i-label">WITHHELD (<b id="cs-nex"></b>)</span>
+          </details>
+          <details class="i-sec" data-sec="cs-ex" open>
+            <summary class="i-label">WITHHELD (<b id="cs-nex"></b>)</summary>
             <span class="i-exsummary" id="cs-exsummary"></span>
-          </div>
+          </details>
         </div>
 
         <div class="i-foot">
@@ -307,7 +384,7 @@
             <span class="i-total" id="cs-total">—</span>
             <span class="i-tier" id="cs-tier"></span>
           </div>
-          <div class="i-tierbar"><i id="cs-tierfill"></i><u style="left:7.1%"></u><u style="left:28.6%"></u></div>
+          <div class="i-tierbar" id="cs-tierbar"></div>
           <span class="i-tiernote" id="cs-tiernote"></span>
         </div>
       </div>
@@ -318,6 +395,7 @@
   <div id="d4" class="dir">
 
     <div class="v-body">
+      <div class="rail-handle" title="Drag to resize · double-click to reset"></div>
       <div class="v-stage">
         <div id="v-canvas"></div>
         <div class="v-axes"><span class="oS">S</span><span class="oI">I</span></div>
@@ -341,32 +419,34 @@
         </div>
 
         <div class="scroll i-rail-body">
-          <div class="i-sec">
-            <span class="i-label" style="color: #9aa0a6;">SURFACES</span>
+          <details class="i-sec" data-sec="v-surf" open>
+            <summary class="i-label" style="color: #9aa0a6;">SURFACES</summary>
+            <span class="v-note" id="v-mode"></span>
             <div class="v-layers" id="v-layers"></div>
             <div class="v-layers" style="margin-top: 6px;">
               <button id="v-heart"><i style="background:#6E7C86"></i>Heart Context<em>smoothed</em></button>
               <button id="v-plane"><i style="background:#FFFFFF"></i>Slice Plane<em>follows 2D</em></button>
             </div>
-          </div>
+          </details>
 
-          <div class="i-sec">
-            <span class="i-label" style="color: #9aa0a6;">SELECTED LESION</span>
+          <details class="i-sec" data-sec="v-sel" open>
+            <summary class="i-label" style="color: #9aa0a6;">SELECTED LESION</summary>
             <div id="v-sel"></div>
-          </div>
+          </details>
 
-          <div class="i-sec">
-            <span class="i-label" style="color: #9aa0a6;">RESOLUTION & ARTIFACTS</span>
-            <span class="v-note" style="color: #bdc1c6; font-size: 11px; line-height: 1.5;">
+          <details class="i-sec" data-sec="v-res" open>
+            <summary class="i-label" style="color: #9aa0a6;">RESOLUTION &amp; ARTIFACTS</summary>
+            <span class="v-note">
               Surfaces are drawn from the predicted probability volume. The stepping is 3 mm slice spacing against 0.37
               mm pixels (true CT resolution).
             </span>
-          </div>
+          </details>
 
+          <!-- Permanent and load-bearing (see view3d.js header): never collapsible. -->
           <div class="i-sec">
             <span class="i-label" style="color: var(--md-sys-color-error);">NOT VESSEL-ATTRIBUTED</span>
             <span class="v-warn">
-              Calcium is not attributed to a named coronary artery (LM/LAD/LCX/RCA)[cite: 3].
+              Calcium is not attributed to a named coronary artery (LM/LAD/LCX/RCA).
             </span>
           </div>
         </div>
@@ -384,8 +464,8 @@
   </div>
 
   </div>
-  <script src="app.js"></script>
-  <script type="module" src="view3d.js"></script>
+  <script src="app.js?v=2"></script>
+  <script type="module" src="view3d.js?v=2"></script>
 </body>
 
 </html>

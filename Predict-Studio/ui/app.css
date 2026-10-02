@@ -27,6 +27,14 @@
   --md-sys-color-warning: #e37400;
   --md-sys-color-warning-container: #fef7e0;
 
+  /* Risk tiers that exist only in the 6-tier scheme (the 4-tier ones reuse
+     success / warning / error above) */
+  --tier-mod-high: #f4511e;
+  --tier-extensive: #a50e0e;
+
+  /* Width of the right-hand panel on every tab; set by the drag handle */
+  --rail-w: 380px;
+
   /* Model & Mask Color (Preserved for compatibility with Python render overlay) */
   --accent: #1a73e8;
   --prediction: #C9541F;
@@ -50,6 +58,12 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+}
+
+/* The hidden attribute always wins. Without this, any rule that sets display
+   (e.g. .i-sec { display: flex }) silently shows an element JS has hidden. */
+[hidden] {
+  display: none !important;
 }
 
 html,
@@ -251,6 +265,13 @@ button {
   font-size: 22px;
 }
 
+/* Header items never wrap; the study badge on the right shrinks instead. */
+#tabs button,
+.tabs-label {
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
 #tabs button[data-dir] {
   padding: 0 16px;
   height: 48px;
@@ -284,7 +305,8 @@ button {
   gap: 2px;
 }
 
-#tabs button[data-view] {
+#tabs button[data-view],
+#tabs button[data-tiers] {
   padding: 4px 12px;
   font-size: 12px;
   font-weight: 500;
@@ -292,16 +314,40 @@ button {
   border-radius: var(--radius-pill);
 }
 
-#tabs button[data-view].on {
+#tabs button[data-view].on,
+#tabs button[data-tiers].on {
   background: var(--md-sys-color-surface);
   color: var(--md-sys-color-primary);
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
   font-weight: 700;
 }
 
+#tabs .view-btn-group + .view-btn-group {
+  margin-left: 8px;
+}
+
+/* Laptop widths: keep every control on one line by dropping the header's app
+   name (it is in the page title and on the start screen) and tightening tabs. */
+@media (max-width: 1400px) {
+  .tabs-label span:last-child {
+    display: none;
+  }
+
+  .tabs-label {
+    padding-right: 8px;
+  }
+
+  #tabs button[data-dir] {
+    padding: 0 10px;
+  }
+}
+
 .tabs-study {
-  display: flex;
-  align-items: center;
+  display: block;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   padding: 4px 10px;
   margin-left: 12px;
   font-family: var(--font-mono);
@@ -311,12 +357,263 @@ button {
   color: var(--md-sys-color-on-surface-variant);
 }
 
-#err {
-  padding: 12px 20px;
+.tabs-study:empty {
+  display: none;
+}
+
+/* No study loaded: the header stays visible but does nothing. */
+body.no-study #tabs button {
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+/* ── Start screen ─────────────────────────────────────────────────────────── */
+.welcome {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 24px;
+}
+
+.welcome-card {
+  max-width: 760px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 8px;
+}
+
+.welcome-art {
+  width: 220px;
+  height: auto;
+  margin-bottom: 12px;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--elevation-2);
+}
+
+.welcome-title {
+  font-family: var(--font-sans);
+  font-size: 28px;
+  font-weight: 500;
+  color: var(--md-sys-color-on-surface);
+}
+
+.welcome-sub {
+  font-size: 14px;
+  color: var(--md-sys-color-on-surface-variant);
+}
+
+.welcome-err {
+  width: 100%;
+  margin-top: 12px;
+  padding: 12px 16px;
+  text-align: left;
   background: var(--md-sys-color-error-container);
   color: var(--md-sys-color-on-error-container);
+  border-radius: var(--radius-md);
   font: 12px/1.5 var(--font-mono);
-  border-bottom: 1px solid #f5c2c7;
+}
+
+.welcome-err pre {
+  white-space: pre-wrap;
+  font: inherit;
+  margin-bottom: 8px;
+}
+
+.welcome-err a {
+  color: inherit;
+  font-weight: 600;
+}
+
+.welcome-steps {
+  list-style: none;
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.welcome-steps li {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 18px 16px;
+  background: var(--md-sys-color-surface);
+  border: 1px solid var(--md-sys-color-outline);
+  border-radius: var(--radius-lg);
+  font-size: 13px;
+  color: var(--md-sys-color-on-surface-variant);
+}
+
+.welcome-steps .material-symbols-outlined {
+  font-size: 28px;
+  color: var(--md-sys-color-primary);
+}
+
+.welcome-steps b {
+  font-family: var(--font-sans);
+  font-size: 15px;
+  color: var(--md-sys-color-on-surface);
+}
+
+.welcome-steps .run-btn {
+  margin-top: 6px;
+}
+
+.welcome-hint {
+  margin-top: 12px;
+  font-size: 13px;
+  color: var(--md-sys-color-on-surface-subtle);
+}
+
+/* ── Dialog and toast ─────────────────────────────────────────────────────── */
+.dlg {
+  margin: auto;
+  width: min(440px, calc(100vw - 32px));
+  padding: 20px 24px;
+  border: 0;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--elevation-2);
+  color: var(--md-sys-color-on-surface);
+}
+
+.dlg::backdrop {
+  background: rgba(32, 33, 36, 0.45);
+}
+
+.dlg h3 {
+  font-family: var(--font-sans);
+  font-size: 18px;
+  font-weight: 500;
+  margin-bottom: 8px;
+}
+
+.dlg p {
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--md-sys-color-on-surface-variant);
+  margin-bottom: 16px;
+  word-break: break-word;
+}
+
+.dlg .run-input {
+  margin-bottom: 16px;
+}
+
+.dlg-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.dlg-btn {
+  padding: 8px 16px;
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--md-sys-color-primary);
+}
+
+.dlg-btn:hover {
+  background: var(--md-sys-color-primary-container);
+}
+
+.dlg-btn.primary {
+  background: var(--md-sys-color-primary);
+  color: var(--md-sys-color-on-primary);
+}
+
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: 24px;
+  transform: translateX(-50%);
+  z-index: 10000;
+  max-width: min(560px, calc(100vw - 32px));
+  padding: 10px 16px;
+  border-radius: var(--radius-md);
+  background: #202124;
+  color: #fff;
+  font-size: 13px;
+  line-height: 1.4;
+  box-shadow: var(--elevation-2);
+  cursor: pointer;
+}
+
+.toast.ok {
+  border-left: 4px solid var(--md-sys-color-success);
+}
+
+.toast.error {
+  border-left: 4px solid var(--md-sys-color-error);
+}
+
+/* ── Collapsible side sections (<details data-sec>) ───────────────────────── */
+details > summary {
+  list-style: none;
+  cursor: pointer;
+  display: block;
+  position: relative;
+  padding-right: 18px;   /* room for the chevron */
+  user-select: none;
+}
+
+details > summary::-webkit-details-marker {
+  display: none;
+}
+
+/* chevron: points down when open, right when folded */
+details > summary::after {
+  content: '';
+  position: absolute;
+  right: 4px;
+  top: 50%;
+  width: 6px;
+  height: 6px;
+  margin-top: -5px;
+  border-right: 1.5px solid currentColor;
+  border-bottom: 1.5px solid currentColor;
+  transform: rotate(45deg);
+  opacity: 0.6;
+}
+
+details:not([open]) > summary::after {
+  margin-top: -3px;
+  transform: rotate(-45deg);
+}
+
+/* ── Right-panel resize handle ────────────────────────────────────────────── */
+/* Sits on the border between the image area and the right panel. Each body
+   grid sets --rail-off: the distance from its right edge to that border,
+   minus the rail itself (padding and half the gap). */
+.a-body,
+.i-body,
+.cs-body,
+.v-body {
+  position: relative;
+}
+
+.rail-handle {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: calc(var(--rail-w) + var(--rail-off, 0px) - 4px);
+  width: 8px;
+  z-index: 10;
+  cursor: col-resize;
+  touch-action: none;
+}
+
+.rail-handle:hover,
+.rail-handle.dragging {
+  background: linear-gradient(to right, transparent 3px, var(--md-sys-color-primary) 3px, var(--md-sys-color-primary) 5px, transparent 5px);
 }
 
 .dir {
@@ -422,39 +719,29 @@ button {
   color: var(--md-sys-color-on-surface);
 }
 
-.a-prov,
-.a-prov2 {
+.a-prov {
   flex: 0 0 auto;
   display: flex;
   gap: 16px;
   flex-wrap: wrap;
   align-items: center;
-  font-family: var(--font-mono);
-  font-size: 11px;
-}
-
-.a-prov {
   justify-content: space-between;
   padding: 8px 24px;
   background: var(--md-sys-color-surface);
   border-bottom: 1px solid var(--md-sys-color-outline-variant);
   color: var(--md-sys-color-on-surface-variant);
-}
-
-.a-prov2 {
-  padding: 6px 24px;
-  border-bottom: 1px solid var(--md-sys-color-outline);
-  background: var(--md-sys-color-surface-variant);
-  color: var(--md-sys-color-on-surface-variant);
+  font-family: var(--font-mono);
+  font-size: 11px;
 }
 
 .a-body {
   flex: 1;
   min-height: 0;
   display: grid;
-  grid-template-columns: 1fr 380px;
+  grid-template-columns: minmax(0, 1fr) var(--rail-w);
   gap: 20px;
   padding: 20px 24px;
+  --rail-off: 34px;   /* 24px right padding + half of the 20px gap */
 }
 
 .a-main {
@@ -582,12 +869,16 @@ button {
   min-width: 0;
 }
 
+/* contain: size stops the thumbnail column from setting the row height, so the
+   row is exactly as tall as the large image and the strip scrolls inside it
+   instead of spilling out of the card. */
 .a-exhibit-side {
   display: flex;
   flex-direction: column;
   gap: 6px;
   flex: 1 1 0;
   min-width: 0;
+  contain: size;
 }
 
 #a-pane {
@@ -605,10 +896,14 @@ button {
 }
 
 .a-strip {
+  flex: 1;
+  min-height: 0;
   display: grid;
-  grid-template-columns: repeat(6, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(64px, 1fr));
+  align-content: start;
   gap: 8px;
   min-width: 0;
+  padding-right: 4px;   /* room for the scrollbar */
 }
 
 .a-strip button {
@@ -636,6 +931,9 @@ button {
   font-family: var(--font-mono);
   font-size: 10px;
   color: var(--md-sys-color-on-surface-variant);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .a-strip button.on span {
@@ -823,7 +1121,7 @@ button {
   flex: 1;
   min-height: 0;
   display: grid;
-  grid-template-columns: 1fr 380px;
+  grid-template-columns: minmax(0, 1fr) var(--rail-w);
   overflow: hidden;
 }
 
@@ -834,6 +1132,7 @@ button {
   justify-content: center;
   position: relative;
   min-height: 0;
+  min-width: 0;
   padding: 16px;
 }
 
@@ -843,13 +1142,73 @@ button {
   border-radius: var(--radius-sm);
 }
 
+/* Zoom: only the images are transformed (see paintPane). */
+.pane-zoom {
+  position: absolute;
+  inset: 0;
+  transform-origin: 0 0;
+}
+
+#i-pane.zoomed {
+  cursor: grab;
+}
+
+#i-pane.panning {
+  cursor: grabbing;
+}
+
+.i-zoom {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 2px;
+  background: rgba(32, 33, 36, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: #fff;
+}
+
+.i-zoom button {
+  min-width: 26px;
+  height: 24px;
+  padding: 0 6px;
+  border-radius: 4px;
+  color: #fff;
+  font-size: 13px;
+}
+
+.i-zoom button:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.i-zoom span {
+  min-width: 36px;
+  text-align: center;
+}
+
 .i-caption {
   position: absolute;
   left: 16px;
   bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
   font-family: var(--font-mono);
   font-size: 11px;
   color: #fff;
+}
+
+/* 10 mm scale bar: an end-capped line, width set from the current zoom */
+.i-scalebar {
+  display: block;
+  height: 6px;
+  border: 1.5px solid #fff;
+  border-top: 0;
 }
 
 .i-rail {
@@ -1009,6 +1368,103 @@ button {
   font-weight: 600;
 }
 
+/* ── Classes app.js already sets but that had no styles ───────────────────── */
+/* Per-slice bars of the selected 3D lesion (Instrument rail) */
+.i-l3d-slices {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-top: 4px;
+}
+
+.i-l3d-slices button {
+  display: grid;
+  grid-template-columns: 44px 1fr 64px;
+  align-items: center;
+  gap: 8px;
+  padding: 3px 4px;
+  border-radius: 4px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--md-sys-color-on-surface);
+  text-align: left;
+}
+
+.i-l3d-slices button:hover {
+  background: var(--md-sys-color-surface-variant);
+}
+
+.i-l3d-slices button.on {
+  background: var(--md-sys-color-primary-container);
+  font-weight: 700;
+}
+
+.i-l3d-slices i {
+  height: 6px;
+  background: var(--md-sys-color-surface-variant);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.i-l3d-slices i b {
+  display: block;
+  height: 100%;
+  background: var(--md-sys-color-primary);
+}
+
+.i-l3d-slices .sc {
+  text-align: right;
+}
+
+.i-l3d-slices button.ex .sc,
+.withheld {
+  color: var(--md-sys-color-on-surface-subtle);
+}
+
+/* mean coverage below 0.5: a soft, mostly partial-volume component */
+.soft {
+  color: var(--md-sys-color-warning);
+}
+
+/* lesion tables grouped by 3D lesion; the selected lesion's rows are marked */
+.i-table tr.g3-first {
+  border-top-color: var(--md-sys-color-outline);
+}
+
+.i-table tr.g3-on td.g3 {
+  color: var(--md-sys-color-primary);
+  font-weight: 700;
+}
+
+.i-table td.g3 {
+  text-align: left;
+  color: var(--md-sys-color-on-surface-variant);
+}
+
+.i-table tr.ex {
+  color: var(--md-sys-color-on-surface-subtle);
+}
+
+.i-softnote,
+.i-empty,
+.i-exsummary,
+.cs-l3d-info {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  line-height: 1.5;
+  color: var(--md-sys-color-on-surface-variant);
+}
+
+/* Contact Sheet frames that belong to the selected 3D lesion */
+.cs-frame.cs-in3d {
+  outline: 2px dashed var(--md-sys-color-primary);
+  outline-offset: 2px;
+}
+
+.cs-frame.cs-in3d.cs-cursor {
+  outline-style: solid;
+}
+
 .i-foot {
   flex: 0 0 auto;
   border-top: 1px solid var(--md-sys-color-outline);
@@ -1083,7 +1539,7 @@ button {
   flex: 1;
   min-height: 0;
   display: grid;
-  grid-template-columns: 1fr 380px;
+  grid-template-columns: minmax(0, 1fr) var(--rail-w);
   overflow: hidden;
 }
 
@@ -1102,7 +1558,7 @@ button {
 
 .cs-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(68px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(var(--cs-thumb, 68px), 1fr));
   gap: 6px;
   max-width: 1100px;
 }
@@ -1150,9 +1606,28 @@ button {
   border-top: 1px solid var(--md-sys-color-outline);
   background: var(--md-sys-color-surface);
   display: flex;
-  gap: 16px;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 16px;
   font-family: var(--font-mono);
   font-size: 11px;
+}
+
+.cs-legend .push {
+  margin-left: auto;
+  color: var(--md-sys-color-on-surface-variant);
+}
+
+.cs-size {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--md-sys-color-on-surface-variant);
+}
+
+.cs-size input {
+  width: 96px;
+  accent-color: var(--md-sys-color-primary);
 }
 
 .cs-enlargement {
@@ -1195,7 +1670,7 @@ button {
   flex: 1;
   min-height: 0;
   display: grid;
-  grid-template-columns: 1fr 340px;
+  grid-template-columns: minmax(0, 1fr) var(--rail-w);
 }
 
 .v-stage {
@@ -1321,6 +1796,40 @@ button {
   color: var(--md-sys-color-on-surface-subtle);
 }
 
+.v-note {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  line-height: 1.5;
+  color: #bdc1c6;
+}
+
+/* Lesion count (bottom-left) and load errors (top) over the 3D stage */
+.v-hint {
+  position: absolute;
+  left: 16px;
+  bottom: 16px;
+  max-width: calc(50% - 40px);   /* stays clear of the centred "I" label */
+  font-family: var(--font-mono);
+  font-size: 11px;
+  line-height: 1.5;
+  color: #8B939B;
+  pointer-events: none;
+}
+
+.v-err {
+  position: absolute;
+  top: 36px;
+  left: 16px;
+  right: 16px;
+  padding: 8px 12px;
+  background: rgba(217, 48, 37, 0.15);
+  border-left: 3px solid var(--md-sys-color-error);
+  color: #fff;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  white-space: pre-line;
+}
+
 .v-warn {
   font-family: var(--font-mono);
   font-size: 11px;
@@ -1409,4 +1918,19 @@ button {
   font-size: 12px;
   color: var(--md-sys-color-on-surface-variant);
   align-self: flex-end;
+}
+
+.run-input:disabled {
+  opacity: 0.6;
+}
+
+.run-msg {
+  font-size: 12px;
+  line-height: 1.4;
+  color: var(--md-sys-color-on-surface-variant);
+  word-break: break-word;
+}
+
+.run-msg.error {
+  color: var(--md-sys-color-error);
 }

@@ -1,13 +1,13 @@
-/* PrediCT Studio — phase 1.
+/* PrediCT Studio — frontend.
  *
- * Reads an already-produced output folder and renders it. No backend, no
- * inference, no job launching. Serve the repo root and open /ui/.
+ * Served by src/backend/server.py (FastAPI): ui/ at /ui, data/ at /data.
  *
- *     python -m http.server 8000
- *     http://localhost:8000/ui/?study=172&model=a1-roi
+ *     python -m src.backend.server
+ *     http://127.0.0.1:8001/ui/?study=172&model=a1-roi
  *
- * Later, FastAPI mounts data/ at /data and ui/ at /, so these URLs do not
- * change.
+ * Reads an already-produced output folder (data/out/<study>/<model>) and
+ * renders it. With no study in the URL a start screen is shown instead.
+ * Nothing here computes a score; tiers are a display classification only.
  *
  * One state object, one render(). Every handler mutates state then calls
  * render(). There is no other update path.
@@ -15,9 +15,12 @@
 
 // ── configuration ────────────────────────────────────────────────────────
 const qs = new URLSearchParams(location.search);
-const STUDY = qs.get('study') || '172';
-const MODEL = qs.get('model') || 'a1-roi';
-const BASE = `/data/out/${STUDY}/${MODEL}`;
+const STUDY = qs.get('study');   // null on the start screen
+const MODEL = qs.get('model');
+const HAS_STUDY = Boolean(STUDY && MODEL);
+const BASE = `/data/out/${encodeURIComponent(STUDY)}/${encodeURIComponent(MODEL)}`;
+const studyUrl = (study, model) =>
+  `?study=${encodeURIComponent(study)}&model=${encodeURIComponent(model)}`;
 
 // render.py flips vertically (flipud) because the direction cosines are
 // diag(-1,-1,1): increasing array row is increasing anterior, so row 0 at the
@@ -28,7 +31,28 @@ const BASE = `/data/out/${STUDY}/${MODEL}`;
 const FLIP_Y = true;
 const FLIP_X = true;
 
-const TIER_SCALE_MAX = 1400;   // full width of the tier bar; ticks at 100 / 400
+const TIER_SCALE_MAX = 1400;   // full width of the tier bar; ticks at the tier bounds
+
+// Risk tier schemes. Display only: the score is never recomputed, only the
+// label it is shown under. Each entry is [inclusive upper bound, name].
+// 4-tier is what scoring.py writes to run.json as risk_category; the 6-tier
+// bounds are the ones used in the soham_segmentation evaluation.
+const TIER_SCHEMES = {
+  4: [[0, 'ZERO'], [100, 'MILD'], [400, 'MODERATE'], [Infinity, 'SEVERE']],
+  6: [[0, 'ZERO'], [100, 'MILD'], [300, 'MODERATE'], [400, 'MOD-HIGH'],
+      [1000, 'SEVERE'], [Infinity, 'EXTENSIVE']],
+};
+const TIER_COLORS = {
+  ZERO: 'var(--md-sys-color-outline)',
+  MILD: 'var(--md-sys-color-success)',
+  MODERATE: 'var(--md-sys-color-warning)',
+  'MOD-HIGH': 'var(--tier-mod-high)',
+  SEVERE: 'var(--md-sys-color-error)',
+  EXTENSIVE: 'var(--tier-extensive)',
+};
+
+const ZOOM_MAX = 8;            // Instrument viewer, ×
+const RAIL_DEFAULT = 380, RAIL_MIN = 280, RAIL_MAX = 600;   // right panel, px
 
 const SOFT_NOTE =
   'Coverage is not binary. A voxel at 0.35 contributes 0.35 of its area and ' +
@@ -39,8 +63,11 @@ let ACCENT_COLOR = '#C98B2E';
 
 // ── state ────────────────────────────────────────────────────────────────
 const state = {
-  dir: 1,          // 1 argument, 2 instrument
+  dir: 1,          // 1 argument, 2 instrument, 3 contact sheet, 4 anatomy
   view: 2,         // 1 original, 2 prediction, 3 calcium only
+  tiers: loadPref('tiers') === '6' ? 6 : 4,   // risk tier scheme shown
+  zoom: { s: 1, x: 0, y: 0 },   // Instrument viewer: scale, and top-left offset
+                                // as a fraction of the pane (survives resizes)
   slice: 0,
   sel: null,       // "sliceIdx:lesionId"
   sel3d: null,     // "L004" — the selected 3D lesion, or null
@@ -55,12 +82,16 @@ const state = {
 
 // ── load ─────────────────────────────────────────────────────────────────
 async function boot() {
+  // The sidebar works with or without a study open.
+  loadSidebar();
+  initRunForm();
+  initUpload();
+  initSections();
+
+  if (!HAS_STUDY) { showWelcome(); return; }
+
   try {
     ACCENT_COLOR = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#C98B2E';
-
-    loadSidebar();
-    initRunForm();
-    initUpload();
 
     const [run, slices, csv, csv3d] = await Promise.all([
       getJson(`${BASE}/run.json`),
@@ -86,13 +117,30 @@ async function boot() {
     wire();
     render();
   } catch (e) {
-    const el = document.getElementById('err');
-    el.hidden = false;
-    el.textContent =
-      `Could not load ${BASE}\n\n${e.message}\n\n` +
-      `Serve the repo root (python -m http.server) and open /ui/.\n` +
-      `Check that the folder exists and contains run.json, slices.json, lesions.csv.`;
+    showWelcome(
+      `Could not load study "${STUDY}" with model "${MODEL}".\n\n${e.message}\n\n` +
+      `Check that data/out/${STUDY}/${MODEL}/ contains run.json, slices.json, ` +
+      `lesions.csv and lesions_3d.csv, or run the pipeline again.`);
   }
+}
+
+/* Start screen: shown when no study is in the URL, or when one failed to load.
+   The tabs stay visible but inert (body.no-study), and render() never runs. */
+function showWelcome(errMsg) {
+  document.body.classList.add('no-study');
+  document.getElementById('welcome').hidden = false;
+  document.getElementById('welcome-err').hidden = !errMsg;
+  document.getElementById('welcome-errmsg').textContent = errMsg || '';
+}
+
+// Per-browser UI preferences (tier scheme, panel width, folded sections).
+// Storage can be unavailable (private mode, blocked site data); the UI then
+// simply starts from its defaults.
+function loadPref(key) {
+  try { return localStorage.getItem('predict.' + key); } catch { return null; }
+}
+function savePref(key, value) {
+  try { localStorage.setItem('predict.' + key, value); } catch { /* defaults next time */ }
 }
 
 async function getJson(u) { const r = await fetch(u); if (!r.ok) throw new Error(`${u} → HTTP ${r.status}`); return r.json(); }
@@ -114,6 +162,7 @@ function initUpload() {
   if (!btn || !input || !overlay) return;
 
   btn.onclick = () => input.click();
+  document.getElementById('welcome-upload').onclick = () => input.click();
 
   input.onchange = async (e) => {
     if (e.target.files.length > 0) {
@@ -169,53 +218,103 @@ async function scanFiles(item, files) {
   }
 }
 
+/* Upload a folder to data/raw/<id> (server.py). On success the new patient is
+   selected in the Run Pipeline form; nothing reloads and nothing runs until
+   the user presses Run. */
 async function handleUpload(files) {
-  const customName = prompt("Enter a custom name for this study (leave blank to auto-generate):");
-  if (customName === null) {
-      alert("Upload aborted by user.");
-      return;
-  }
-  
+  const name = await askDialog({
+    title: 'Upload study',
+    message: `${files.length} file(s) selected. Name this study, or leave it blank ` +
+      'to generate a name from the series.',
+    input: '',
+    okLabel: 'Upload',
+  });
+  if (name === null) return;   // cancelled: nothing was sent
+
   const btn = document.getElementById('upload-study-btn');
-  const oldIcon = btn.textContent;
+  btn.disabled = true;
   btn.textContent = 'hourglass_empty';
-  
-  const fd = new FormData();
-  if (customName.trim()) fd.append('custom_name', customName.trim());
-  for (let i = 0; i < files.length; i++) {
-    fd.append('files', files[i]);
-  }
 
   try {
+    const fd = new FormData();
+    if (name) fd.append('custom_name', name);
+    for (const f of files) fd.append('files', f);
+
     const res = await fetch('/studies', { method: 'POST', body: fd });
-    
-    if (!res.ok) {
-      const err = await res.json();
-      throw new Error(err.detail || 'Upload failed');
-    }
-    
-    const data = await res.json();
-    
+    if (!res.ok) throw new Error(await errorText(res, 'Upload failed'));
+    let data = await res.json();
+
     if (data.requires_cleaning) {
-      const msg = `Warning: Found ${data.invalid_files.length} non-DICOM files (e.g. ${data.invalid_files[0]}).\n\nDo you want to automatically clean these and continue?`;
-      if (confirm(msg)) {
-        btn.textContent = 'cleaning_services';
-        const cleanRes = await fetch(`/studies/clean/${data.temp_id}?custom_name=${encodeURIComponent(customName.trim())}`, { method: 'POST' });
-        if (!cleanRes.ok) throw new Error('Failed to clean study');
-      } else {
+      const clean = await askDialog({
+        title: 'Some files are not DICOM or NIfTI',
+        message: `${data.invalid_files.length} file(s) cannot be used ` +
+          `(e.g. ${data.invalid_files[0]}). Remove them and continue with the rest?`,
+        okLabel: 'Remove and continue',
+      });
+      if (!clean) {
         await fetch(`/studies/clean/${data.temp_id}`, { method: 'DELETE' });
-        throw new Error('Upload aborted');
+        toast('Upload cancelled. Nothing was saved.');
+        return;
       }
+      btn.textContent = 'cleaning_services';
+      const q = name ? `?custom_name=${encodeURIComponent(name)}` : '';
+      const cleanRes = await fetch(`/studies/clean/${data.temp_id}${q}`, { method: 'POST' });
+      if (!cleanRes.ok) throw new Error(await errorText(cleanRes, 'Cleaning failed'));
+      data = await cleanRes.json();
     }
-    
-    window.location.reload();
-    alert('Upload successful!');
-    
+
+    await refreshPatients(data.study_id);
+    toast(`Uploaded "${data.study_id}". Choose a model and press Run.`, 'ok');
   } catch (e) {
-    if (e.message !== 'Upload aborted') alert(e.message);
+    toast(e.message, 'error');
   } finally {
-    btn.textContent = oldIcon;
+    btn.disabled = false;
+    btn.textContent = 'upload';
   }
+}
+
+// FastAPI errors are {"detail": "..."}; anything else falls back to the status.
+async function errorText(res, fallback) {
+  try {
+    const j = await res.json();
+    return j.detail ? `${fallback}: ${j.detail}` : fallback;
+  } catch {
+    return `${fallback} (HTTP ${res.status})`;
+  }
+}
+
+/* The one modal the UI uses. Resolves to the typed text when `input` is given,
+   true when confirmed without input, and null when cancelled (button or Esc). */
+function askDialog({ title, message, input = null, okLabel = 'OK' }) {
+  const dlg = document.getElementById('dlg');
+  const field = document.getElementById('dlg-input');
+  document.getElementById('dlg-title').textContent = title;
+  document.getElementById('dlg-msg').textContent = message;
+  document.getElementById('dlg-ok').textContent = okLabel;
+  document.getElementById('dlg-cancel').onclick = () => dlg.close();
+  field.hidden = input === null;
+  field.value = input || '';
+  dlg.returnValue = '';
+  dlg.showModal();
+  if (input !== null) field.focus();
+  return new Promise(resolve => {
+    dlg.onclose = () => {
+      if (dlg.returnValue !== 'ok') resolve(null);
+      else resolve(input === null ? true : field.value.trim());
+    };
+  });
+}
+
+// Short non-blocking message at the bottom of the screen. Click to dismiss.
+let toastTimer = null;
+function toast(msg, kind = 'info') {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.className = `toast ${kind}`;
+  el.hidden = false;
+  el.onclick = () => { el.hidden = true; };
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => { el.hidden = true; }, kind === 'error' ? 8000 : 4000);
 }
 
 // lesions.csv has no quoted fields, so a split is enough.
@@ -285,13 +384,9 @@ const keyOf = l => `${l.slice_idx}:${l.lesion_id}`;
 const selLesion = () => state.lesions.find(l => keyOf(l) === state.sel) || null;
 const sliceMeta = i => state.slices.find(s => s.idx === i) || { idx: i, z_mm: 0, slice_score: 0 };
 
-function tierOf(t) { return t === 0 ? 'ZERO' : t <= 100 ? 'MILD' : t <= 400 ? 'MODERATE' : 'SEVERE'; }
-function tierColor(tier) {
-  if (tier === 'SEVERE') return 'var(--md-sys-color-error)';
-  if (tier === 'MODERATE') return 'var(--md-sys-color-warning)';
-  if (tier === 'MILD') return 'var(--md-sys-color-success)';
-  return 'var(--md-sys-color-outline)';
-}
+const tierIn = (t, n) => TIER_SCHEMES[n].find(([max]) => t <= max)[1];
+const tierOf = t => tierIn(t, state.tiers);
+const tierColor = tier => TIER_COLORS[tier];
 
 // ── interaction ──────────────────────────────────────────────────────────
 function stack() { return state.view === 3 ? calcSlices() : state.slices.map(s => s.idx); }
@@ -338,13 +433,27 @@ function wire() {
       }
       render();
     });
+  document.querySelectorAll('#tabs button[data-tiers]').forEach(b =>
+    b.onclick = () => {
+      state.tiers = Number(b.dataset.tiers);
+      savePref('tiers', state.tiers);
+      render();
+    });
 
   const onWheel = e => { e.preventDefault(); step(e.deltaY > 0 ? 1 : -1); };
-  document.getElementById('i-viewport').addEventListener('wheel', onWheel, { passive: false });
   document.getElementById('i-track').addEventListener('wheel', onWheel, { passive: false });
   document.getElementById('a-pane').addEventListener('wheel', onWheel, { passive: false });
+  wireZoom();   // the Instrument viewport's wheel: slices, or zoom with ctrl
+  initRailResize();
+  initThumbSize();
 
   document.addEventListener('keydown', e => {
+    // Shortcuts belong to the viewer: not to a form field, an open dialog, or
+    // browser shortcuts such as Ctrl+0 / Ctrl+1.
+    if (e.target.closest('input, select, textarea, [contenteditable]')) return;
+    if (document.querySelector('dialog[open]')) return;
+    if (e.ctrlKey || e.metaKey || e.altKey) return;
+
     const cols = state.dir === 3 ? currentColumnCount() : 1;
     if (e.key === 'ArrowDown') { step(cols); e.preventDefault(); }
     else if (e.key === 'ArrowRight') { step(1); e.preventDefault(); }
@@ -361,9 +470,140 @@ function wire() {
       const btn = document.querySelector(`#tabs button[data-view="${e.key}"]`);
       if (btn) btn.click();
     }
+    else if (state.dir === 2 && (e.key === '+' || e.key === '=')) zoomBy(1.25);
+    else if (state.dir === 2 && e.key === '-') zoomBy(1 / 1.25);
+    else if (state.dir === 2 && e.key === '0') resetZoom();
   });
 
-  window.addEventListener('resize', () => render());
+  window.addEventListener('resize', scheduleRender);
+}
+
+// Coalesce bursts (window resize, panel drag, pan) into one render per frame.
+let renderQueued = false;
+function scheduleRender() {
+  if (renderQueued) return;
+  renderQueued = true;
+  requestAnimationFrame(() => { renderQueued = false; render(); });
+}
+
+// ── zoom (02 Instrument) ─────────────────────────────────────────────────
+// Display only: the images are scaled with a CSS transform, so voxels stay
+// voxels (image-rendering: pixelated) and nothing is resampled or measured.
+
+// Zoom to scale s, keeping the point (cx, cy) fixed. cx/cy are fractions of
+// the pane, e.g. the pointer position or 0.5/0.5 for the centre.
+function zoomAt(s, cx, cy) {
+  const z = state.zoom;
+  s = Math.min(ZOOM_MAX, Math.max(1, s));
+  // the image must always cover the pane: offset stays within [1 - s, 0]
+  const clamp = v => Math.min(0, Math.max(1 - s, v));
+  z.x = clamp(cx - (cx - z.x) * s / z.s);
+  z.y = clamp(cy - (cy - z.y) * s / z.s);
+  z.s = s;
+  scheduleRender();
+}
+const zoomBy = f => zoomAt(state.zoom.s * f, 0.5, 0.5);
+function resetZoom() { state.zoom = { s: 1, x: 0, y: 0 }; render(); }
+
+function wireZoom() {
+  const vp = document.getElementById('i-viewport');
+  const pane = document.getElementById('i-pane');
+
+  // Plain wheel steps slices, as before. Ctrl/⌘ + wheel zooms about the
+  // pointer; a trackpad pinch arrives as ctrl + wheel too. preventDefault is
+  // what stops the browser zooming the whole page while over the image.
+  vp.addEventListener('wheel', e => {
+    e.preventDefault();
+    if (!e.ctrlKey && !e.metaKey) { step(e.deltaY > 0 ? 1 : -1); return; }
+    const r = pane.getBoundingClientRect();
+    const fx = Math.min(1, Math.max(0, (e.clientX - r.left) / r.width));
+    const fy = Math.min(1, Math.max(0, (e.clientY - r.top) / r.height));
+    zoomAt(state.zoom.s * Math.exp(-e.deltaY * 0.002), fx, fy);
+  }, { passive: false });
+
+  // Drag to pan while zoomed in.
+  pane.addEventListener('pointerdown', e => {
+    if (state.zoom.s === 1 || e.button !== 0) return;
+    pane.setPointerCapture(e.pointerId);
+    pane.classList.add('panning');
+    let lastX = e.clientX, lastY = e.clientY;
+    pane.onpointermove = ev => {
+      const z = state.zoom, r = pane.getBoundingClientRect();
+      z.x = Math.min(0, Math.max(1 - z.s, z.x + (ev.clientX - lastX) / r.width));
+      z.y = Math.min(0, Math.max(1 - z.s, z.y + (ev.clientY - lastY) / r.height));
+      lastX = ev.clientX; lastY = ev.clientY;
+      scheduleRender();
+    };
+    pane.onpointerup = pane.onpointercancel = () => {
+      pane.onpointermove = null;
+      pane.classList.remove('panning');
+    };
+  });
+  pane.addEventListener('dblclick', resetZoom);
+
+  document.querySelectorAll('#i-zoom button').forEach(b => b.onclick = () => {
+    if (b.dataset.zoom === 'in') zoomBy(1.25);
+    else if (b.dataset.zoom === 'out') zoomBy(1 / 1.25);
+    else resetZoom();
+  });
+}
+
+// ── layout controls ──────────────────────────────────────────────────────
+// Right panel width: one value for every tab, dragged from .rail-handle.
+function initRailResize() {
+  const root = document.getElementById('main-content');
+  const setWidth = px => root.style.setProperty('--rail-w', px + 'px');
+  let width = Number(loadPref('rail-w')) || RAIL_DEFAULT;
+  setWidth(width);
+
+  document.querySelectorAll('.rail-handle').forEach(h => {
+    h.onpointerdown = e => {
+      h.setPointerCapture(e.pointerId);
+      h.classList.add('dragging');
+      const body = h.parentElement.getBoundingClientRect();
+      const off = parseFloat(getComputedStyle(h.parentElement).getPropertyValue('--rail-off')) || 0;
+      // never squeeze the image area below 400 px
+      const max = Math.max(RAIL_MIN, Math.min(RAIL_MAX, body.width - off - 400));
+      h.onpointermove = ev => {
+        width = Math.round(Math.min(max, Math.max(RAIL_MIN, body.right - off - ev.clientX)));
+        setWidth(width);
+        scheduleRender();
+      };
+      h.onpointerup = h.onpointercancel = () => {
+        h.onpointermove = null;
+        h.classList.remove('dragging');
+        savePref('rail-w', width);
+      };
+    };
+    h.ondblclick = () => {
+      width = RAIL_DEFAULT;
+      setWidth(width);
+      savePref('rail-w', width);
+      scheduleRender();
+    };
+  });
+}
+
+// Contact Sheet tile size.
+function initThumbSize() {
+  const input = document.getElementById('cs-size');
+  const grid = document.getElementById('cs-grid');
+  const apply = () => grid.style.setProperty('--cs-thumb', input.value + 'px');
+  input.value = loadPref('cs-thumb') || 68;
+  apply();
+  input.oninput = () => { apply(); savePref('cs-thumb', input.value); };
+}
+
+// Side sections are <details data-sec>; remember which ones were folded.
+function initSections() {
+  const closed = new Set((loadPref('closed') || '').split(',').filter(Boolean));
+  document.querySelectorAll('details[data-sec]').forEach(d => {
+    d.open = !closed.has(d.dataset.sec);
+    d.addEventListener('toggle', () => {
+      if (d.open) closed.delete(d.dataset.sec); else closed.add(d.dataset.sec);
+      savePref('closed', [...closed].join(','));
+    });
+  });
 }
 
 // ── render ───────────────────────────────────────────────────────────────
@@ -376,6 +616,8 @@ function render() {
     b.classList.toggle('on', Number(b.dataset.dir) === state.dir));
   document.querySelectorAll('#tabs button[data-view]').forEach(b =>
     b.classList.toggle('on', Number(b.dataset.view) === state.view));
+  document.querySelectorAll('#tabs button[data-tiers]').forEach(b =>
+    b.classList.toggle('on', Number(b.dataset.tiers) === state.tiers));
   document.getElementById('tabs-study').textContent =
     `study ${STUDY} · ${MODEL} · ${state.slices.length} slices`;
 
@@ -394,14 +636,7 @@ function renderAnatomy() {
   const man = state.run.mesh;
   const err = document.getElementById('v-err');
 
-
-  document.getElementById('v-total').textContent = state.run.agatston_total.toFixed(1);
-  const tier = tierOf(state.run.agatston_total);
-  const tEl = document.getElementById('v-tier');
-  tEl.textContent = tier;
-  tEl.style.color = tierColor(tier);
-  document.getElementById('v-tiernote').textContent =
-    tierNote(state.run.agatston_total) + ' · scored in 2D, per slice — this view measures nothing';
+  paintScore('v', ' · scored in 2D, per slice — this view measures nothing');
 
   if (!man) {
     err.hidden = false;
@@ -428,18 +663,26 @@ function preload(i) {
 }
 
 /* Fill an image pane: CT underneath, mask on top, selection ring on the canvas.
-   The pane keeps the volume's aspect ratio inside whatever box CSS gives it. */
+   The pane keeps the volume's aspect ratio inside whatever box CSS gives it.
+   A pane with a .pane-zoom wrapper (Instrument) also gets state.zoom. */
 function paintPane(paneId, boxW, boxH) {
   const pane = document.getElementById(paneId);
   const ct = pane.querySelector('.pane-ct');
   const mask = pane.querySelector('.pane-mask');
   const cv = pane.querySelector('.pane-ring');
+  const zoomEl = pane.querySelector('.pane-zoom');
+  const z = zoomEl ? state.zoom : { s: 1, x: 0, y: 0 };
 
   const ar = state.imgW / state.imgH;
   let w = boxW, h = boxW / ar;
   if (h > boxH) { h = boxH; w = boxH * ar; }
   pane.style.width = Math.round(w) + 'px';
   pane.style.height = Math.round(h) + 'px';
+
+  if (zoomEl) {
+    zoomEl.style.transform = `translate(${z.x * 100}%, ${z.y * 100}%) scale(${z.s})`;
+    pane.classList.toggle('zoomed', z.s > 1);
+  }
 
   if (ct.getAttribute('src') !== ctUrl(state.slice)) ct.src = ctUrl(state.slice);
   if (mask.getAttribute('src') !== maskUrl(state.slice)) {
@@ -466,8 +709,11 @@ function paintPane(paneId, boxW, boxH) {
   // Two rings, one rule: solid = the component you selected, dashed = the same
   // 3D lesion on the slice you are looking at now. Both are drawn in array
   // coordinates and flipped here, the only place that conversion happens.
+  // The canvas is not zoomed; the zoom is applied to the coordinates instead,
+  // so the ring stays a crisp 1.5 px line at any scale.
   const drawRing = (l, dashed) => {
-    const sx = cv.width / state.imgW, sy = cv.height / state.imgH;
+    const sx = cv.width / state.imgW * z.s, sy = cv.height / state.imgH * z.s;
+    const ox = z.x * cv.width, oy = z.y * cv.height;
     let x0 = l.bbox_x0, x1 = l.bbox_x1, y0 = l.bbox_y0, y1 = l.bbox_y1;
     if (FLIP_X) { const a = state.imgW - 1 - x1, b = state.imgW - 1 - x0; x0 = a; x1 = b; }
     if (FLIP_Y) { const a = state.imgH - 1 - y1, b = state.imgH - 1 - y0; y0 = a; y1 = b; }
@@ -475,7 +721,7 @@ function paintPane(paneId, boxW, boxH) {
     g.setLineDash(dashed ? [3, 3] : []);
     g.strokeStyle = dashed ? ACCENT_COLOR : '#4FA8C5';
     g.lineWidth = 1.5;
-    g.strokeRect(x0 * sx - m, y0 * sy - m, (x1 - x0 + 1) * sx + 2 * m, (y1 - y0 + 1) * sy + 2 * m);
+    g.strokeRect(ox + x0 * sx - m, oy + y0 * sy - m, (x1 - x0 + 1) * sx + 2 * m, (y1 - y0 + 1) * sy + 2 * m);
     g.setLineDash([]);
   };
 
@@ -523,19 +769,9 @@ function coverageBands(idx, done) {
 
 // ══ 01 ARGUMENT ══════════════════════════════════════════════════════════
 function renderArgument() {
-  const r = state.run, cs = calcSlices(), cnt = counted(), ex = excluded();
-  const total = r.agatston_total, tier = tierOf(total);
+  const cs = calcSlices(), cnt = counted(), ex = excluded();
 
-
-
-  document.getElementById('a-total').textContent = total.toFixed(1);
-  const tierEl = document.getElementById('a-tier');
-  tierEl.textContent = tier;
-  tierEl.style.color = tierColor(tier);
-  document.getElementById('a-tiernote').textContent = tierNote(total);
-  const aTierFill = document.getElementById('a-tierfill');
-  aTierFill.style.width = Math.min(100, total / TIER_SCALE_MAX * 100) + '%';
-  aTierFill.style.backgroundColor = tierColor(tier);
+  paintScore('a');
 
   const zs = cs.map(i => sliceMeta(i).z_mm);
   const wts = cnt.map(l => l.density_weight);
@@ -567,23 +803,35 @@ function renderArgument() {
   document.getElementById('a-panecap').textContent =
     `selected exhibit · slice ${state.slice} · z ${sliceMeta(state.slice).z_mm.toFixed(1)} mm`;
 
-  // exhibit strip — every calcium-bearing slice
+  // exhibit strip — every calcium-bearing slice. Built once per study; a
+  // render only moves the highlight, so thumbnails are never re-created (and
+  // never flash) while stepping, scrolling or resizing.
   const strip = document.getElementById('a-strip');
-  strip.innerHTML = '';
-  cs.forEach(i => {
-    const sc = sliceMeta(i).slice_score || 0;
-    const b = document.createElement('button');
-    b.className = i === state.slice ? 'on' : '';
-    b.innerHTML =
-      `<span class="pane${state.view === 1 ? ' view-1' : ''}">` +
-      `<img class="pane-ct" src="${ctUrl(i)}" alt=""><img class="pane-mask" src="${maskUrl(i)}" alt="">` +
-      `</span><span>${i} · ${sc.toFixed(1)}</span>`;
-    b.onclick = () => goTo(i);
-    strip.appendChild(b);
-  });
-  document.getElementById('a-stripnote').textContent = '';
-
-
+  if (!strip.children.length) {
+    cs.forEach(i => {
+      const sc = sliceMeta(i).slice_score || 0;
+      const b = document.createElement('button');
+      b.dataset.idx = i;
+      b.innerHTML =
+        `<span class="pane">` +
+        `<img class="pane-ct" loading="lazy" src="${ctUrl(i)}" alt="">` +
+        `<img class="pane-mask" loading="lazy" src="${maskUrl(i)}" alt="">` +
+        `</span><span>${i} · ${sc.toFixed(1)}</span>`;
+      b.onclick = () => goTo(i);
+      strip.appendChild(b);
+    });
+  }
+  for (const b of strip.children) {
+    const on = Number(b.dataset.idx) === state.slice;
+    b.classList.toggle('on', on);
+    b.firstChild.classList.toggle('view-1', state.view === 1);
+    // bring the selected thumbnail into view once per slice change, scrolling
+    // only the strip so the page does not jump
+    if (on && strip.dataset.shown !== String(state.slice)) {
+      strip.dataset.shown = state.slice;
+      keepVisible(strip, b);
+    }
+  }
 
   // lesion 3d index
   const lb = document.getElementById('a-l3drows');
@@ -624,10 +872,16 @@ function renderArgument() {
   document.getElementById('a-provblock').textContent = provBlock();
 }
 
+// Scroll box (only) so that el is visible inside it.
+function keepVisible(box, el) {
+  const b = box.getBoundingClientRect(), r = el.getBoundingClientRect();
+  if (r.top < b.top) box.scrollTop -= b.top - r.top;
+  else if (r.bottom > b.bottom) box.scrollTop += r.bottom - b.bottom;
+}
+
 // ══ 02 INSTRUMENT ════════════════════════════════════════════════════════
 function renderInstrument() {
   const r = state.run, cs = calcSlices(), ex = excluded();
-  const total = r.agatston_total, tier = tierOf(total);
   const here = onSlice(state.slice);
   const meta = sliceMeta(state.slice);
 
@@ -679,9 +933,12 @@ function renderInstrument() {
   // ── viewport
   const vp = document.getElementById('i-viewport');
   const { w } = paintPane('i-pane', vp.clientWidth - 28, vp.clientHeight - 28);
+  // 10 mm scale bar at the current zoom: mm -> source pixels -> screen pixels
   const sp = r.spacing || [0.37, 0.37, 3.0];
-  const barPx = Math.round((10 / sp[0]) * (w / state.imgW));
-  document.getElementById('i-caption').textContent = '';
+  const barPx = Math.round((10 / sp[0]) * (w / state.imgW) * state.zoom.s);
+  document.getElementById('i-caption').innerHTML =
+    `<i class="i-scalebar" style="width:${barPx}px"></i><span>10 mm</span>`;
+  document.getElementById('i-zoomlvl').textContent = state.zoom.s.toFixed(1) + '×';
 
   // ── rail head
   document.getElementById('i-slice').textContent = `SLICE ${state.slice}`;
@@ -805,14 +1062,7 @@ function renderInstrument() {
   document.getElementById('i-exsummary').textContent = exSummary();
 
   // ── footer
-  document.getElementById('i-total').textContent = total.toFixed(1);
-  const tEl = document.getElementById('i-tier');
-  tEl.textContent = tier;
-  tEl.style.color = tierColor(tier);
-  const iTierFill = document.getElementById('i-tierfill');
-  iTierFill.style.width = Math.min(100, total / TIER_SCALE_MAX * 100) + '%';
-  iTierFill.style.backgroundColor = tierColor(tier);
-  document.getElementById('i-tiernote').textContent = tierNote(total) + ' · ↑↓ step · 1/2/3 view · esc clear';
+  paintScore('i', ' · ↑↓ step · ctrl+wheel zoom · 1/2/3 view · esc clear');
 }
 
 // ══ 03 CONTACT SHEET ═════════════════════════════════════════════════════
@@ -825,8 +1075,7 @@ function currentColumnCount() {
 }
 
 function renderContactSheet() {
-  const r = state.run, cs = calcSlices(), ex = excluded();
-  const total = r.agatston_total, tier = tierOf(total);
+  const ex = excluded();
   const here = onSlice(state.slice);
   const meta = sliceMeta(state.slice);
 
@@ -946,14 +1195,7 @@ function renderContactSheet() {
   document.getElementById('cs-exsummary').textContent = exSummary();
 
   // ── footer
-  document.getElementById('cs-total').textContent = total.toFixed(1);
-  const tEl = document.getElementById('cs-tier');
-  tEl.textContent = tier;
-  tEl.style.color = tierColor(tier);
-  const csTierFill = document.getElementById('cs-tierfill');
-  csTierFill.style.width = Math.min(100, total / TIER_SCALE_MAX * 100) + '%';
-  csTierFill.style.backgroundColor = tierColor(tier);
-  document.getElementById('cs-tiernote').textContent = tierNote(total) + ' · ↑↓ step · 1/2/3 view · esc clear';
+  paintScore('cs', ' · ↑↓ step · 1/2/3 view · esc clear');
 }
 
 // ── shared text ──────────────────────────────────────────────────────────
@@ -984,9 +1226,41 @@ function prov(n) {
 function provBlock() { return [prov(1), prov(2), prov(3)].join('\n'); }
 
 function tierNote(t) {
-  if (t === 0) return 'tier Zero (0) · nothing to bound';
-  if (t > 400) return `tier >400 · ${(t - 400).toFixed(1)} above the bound`;
-  return 'bounds 0 / 1–100 / 101–400 / >400';
+  const scheme = TIER_SCHEMES[state.tiers];
+  const top = scheme[scheme.length - 2][0];   // last finite bound
+  const n = `${state.tiers}-tier`;
+  if (t === 0) return `${n} · Zero (0) · nothing to bound`;
+  if (t > top) return `${n} · >${top} · ${(t - top).toFixed(1)} above the bound`;
+  const bounds = scheme.map(([max], i) =>
+    i === 0 ? '0' : max === Infinity ? `>${top}` : `${scheme[i - 1][0] + 1}–${max}`);
+  return `${n} · bounds ${bounds.join(' / ')}`;
+}
+
+// scoring.py writes the 4-tier category into run.json. If the UI's own 4-tier
+// reading of the same total disagrees, say so rather than silently pick one.
+function tierMismatch() {
+  const rc = state.run.risk_category;
+  if (!rc) return '';
+  const ui = tierIn(state.run.agatston_total, 4);
+  return ui === String(rc).toUpperCase() ? '' : ` · ⚠ run.json says ${rc}`;
+}
+
+// Total, tier label, tier bar and note: the same block on every tab.
+// prefix is the id prefix: 'a', 'i', 'cs' or 'v' (Anatomy has no bar).
+function paintScore(prefix, hint = '') {
+  const total = state.run.agatston_total, tier = tierOf(total);
+  document.getElementById(`${prefix}-total`).textContent = total.toFixed(1);
+  const tierEl = document.getElementById(`${prefix}-tier`);
+  tierEl.textContent = tier;
+  tierEl.style.color = tierColor(tier);
+  document.getElementById(`${prefix}-tiernote`).textContent = tierNote(total) + tierMismatch() + hint;
+
+  const bar = document.getElementById(`${prefix}-tierbar`);
+  if (!bar) return;
+  const pct = v => Math.min(100, v / TIER_SCALE_MAX * 100);
+  bar.innerHTML =
+    `<i style="width:${pct(total)}%;background:${tierColor(tier)}"></i>` +
+    TIER_SCHEMES[state.tiers].slice(1, -1).map(([max]) => `<u style="left:${pct(max)}%"></u>`).join('');
 }
 
 function exSummary() {
@@ -1014,19 +1288,20 @@ async function loadSidebar() {
     if (!list) return;
     list.innerHTML = '';
     
+    // Study names are typed by users at upload, so they are set as text,
+    // never as HTML, and encoded in the link.
     for (const s of studies) {
-      const studyId = s.id;
-      const modelId = s.model;
-
       const el = document.createElement('div');
-      el.className = `study-item ${studyId === STUDY && modelId === MODEL ? 'active' : ''}`;
-      el.innerHTML = `
-        <span class="study-item-title">${studyId}</span>
-        <span class="study-item-subtitle" title="${modelId}">${modelId.length > 20 ? modelId.substring(0, 18) + '...' : modelId}</span>
-      `;
-      el.onclick = () => {
-        window.location.href = `?study=${studyId}&model=${modelId}`;
-      };
+      el.className = 'study-item' + (s.id === STUDY && s.model === MODEL ? ' active' : '');
+      const title = document.createElement('span');
+      title.className = 'study-item-title';
+      title.textContent = s.id;
+      const sub = document.createElement('span');
+      sub.className = 'study-item-subtitle';
+      sub.title = s.model;
+      sub.textContent = s.model.length > 20 ? s.model.substring(0, 18) + '...' : s.model;
+      el.append(title, sub);
+      el.onclick = () => { window.location.href = studyUrl(s.id, s.model); };
       list.appendChild(el);
     }
   } catch (e) {
@@ -1034,148 +1309,157 @@ async function loadSidebar() {
   }
 }
 
-boot();
+// ── run pipeline form (sidebar) ──────────────────────────────────────────
+let rawPatients = [];   // [{id, path}] from /raw_patients, i.e. data/raw/*
 
 async function initRunForm() {
   const modelSelect = document.getElementById('run-model');
-  const pathInput = document.getElementById('run-path');
-  const runBtn = document.getElementById('run-btn');
-  const runNameInput = document.getElementById('run-name');
-  const progressContainer = document.getElementById('run-progress-container');
-  const progressFill = document.getElementById('run-progress-fill');
-  const progressText = document.getElementById('run-progress-text');
+  const search = document.getElementById('run-patient-search');
+  const select = document.getElementById('run-patient');
 
-  if (!runBtn) return;
+  search.oninput = () => renderPatients(search.value.toLowerCase());
+  select.onchange = () => {
+    const opt = select.options[select.selectedIndex];
+    if (!opt.value) return;
+    document.getElementById('run-path').value = opt.value;
+    document.getElementById('run-name').value = opt.dataset.id;   // auto-populate the name too
+  };
+  document.getElementById('run-btn').onclick = startRun;
 
-  // Fetch models
   try {
     const res = await fetch('/models');
-    if (res.ok) {
-      const models = await res.json();
-      modelSelect.innerHTML = '';
-      for (const m of models) {
-        const opt = document.createElement('option');
-        opt.value = m.id;
-        opt.textContent = m.id;
-        modelSelect.appendChild(opt);
-      }
-    } else {
-        modelSelect.innerHTML = '<option value="">Error loading models</option>';
-    }
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const models = await res.json();
+    modelSelect.innerHTML = '';
+    for (const m of models) modelSelect.add(new Option(m.id, m.id));
   } catch (e) {
-    console.error("Could not fetch models for run form", e);
+    console.error('Could not fetch models for run form', e);
     modelSelect.innerHTML = '<option value="">Error loading models</option>';
   }
 
-  // Fetch patients
-  const patientSelect = document.getElementById('run-patient');
-  const patientSearch = document.getElementById('run-patient-search');
-  if (patientSelect) {
-    let allPatients = [];
-    const renderPatients = (term) => {
-      patientSelect.innerHTML = '<option value="">Select a raw patient...</option>';
-      allPatients.forEach(p => {
-        if (!term || p.id.toLowerCase().includes(term)) {
-          const opt = document.createElement('option');
-          opt.value = p.path;
-          opt.textContent = p.id;
-          opt.dataset.id = p.id;
-          patientSelect.appendChild(opt);
-        }
-      });
-    };
-
-    try {
-      const res = await fetch('/raw_patients');
-      if (res.ok) {
-        allPatients = await res.json();
-        renderPatients('');
-      }
-    } catch (e) {
-      console.error("Could not fetch raw patients", e);
-    }
-
-    if (patientSearch) {
-      patientSearch.oninput = () => {
-        renderPatients(patientSearch.value.toLowerCase());
-      };
-    }
-
-    patientSelect.onchange = () => {
-      const val = patientSelect.value;
-      if (val) {
-        pathInput.value = val;
-        // Auto populate name field too
-        const selectedOpt = patientSelect.options[patientSelect.selectedIndex];
-        runNameInput.value = selectedOpt.dataset.id;
-      }
-    };
-  }
-
-  // Handle run click
-  runBtn.onclick = async () => {
-    const path = pathInput.value.trim();
-    const model = modelSelect.value;
-    const runName = runNameInput.value.trim();
-    if (!path || !model) return;
-
-    runBtn.disabled = true;
-    progressContainer.hidden = false;
-    progressFill.style.width = '0%';
-    progressText.textContent = '0%';
-
-    try {
-      const payload = { input_path: path, model_id: model };
-      if (runName) payload.study_id = runName;
-      
-      const res = await fetch('/jobs', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      });
-      
-      if (!res.ok) {
-        throw new Error(await res.text());
-      }
-      
-      const { job_id } = await res.json();
-      
-      // Poll progress
-      const poll = setInterval(async () => {
-        try {
-          const statusRes = await fetch(`/jobs/${job_id}`);
-          if (statusRes.ok) {
-            const statusJson = await statusRes.json();
-            const pct = Math.round(statusJson.pct * 100);
-            progressFill.style.width = `${pct}%`;
-            progressText.textContent = `${pct}% - ${statusJson.stage}`;
-            
-            if (statusJson.status === 'done') {
-              clearInterval(poll);
-              // Wait a moment for UX
-              setTimeout(() => {
-                // Determine study ID from the parent folder if runName isn't provided
-                const parts = path.split(/[\\/]/).filter(p => p);
-                const folderName = parts.length > 1 ? parts[parts.length - 2] : parts[0];
-                const finalStudyId = runName ? runName : folderName;
-                window.location.href = `?study=${finalStudyId}&model=${model}`;
-              }, 500);
-            } else if (statusJson.status === 'failed') {
-              clearInterval(poll);
-              progressText.textContent = 'Failed!';
-              progressFill.style.backgroundColor = 'var(--md-sys-color-error)';
-              runBtn.disabled = false;
-            }
-          }
-        } catch (pollErr) {
-          console.error("Polling error", pollErr);
-        }
-      }, 500);
-      
-    } catch (e) {
-      alert("Failed to start job: " + e.message);
-      runBtn.disabled = false;
-      progressContainer.hidden = true;
-    }
-  };
+  await refreshPatients();
 }
+
+// Reload the patient list; optionally select one (e.g. a study just uploaded).
+async function refreshPatients(selectId) {
+  try {
+    const res = await fetch('/raw_patients');
+    if (res.ok) rawPatients = await res.json();
+  } catch (e) {
+    console.error('Could not fetch raw patients', e);
+  }
+  const search = document.getElementById('run-patient-search');
+  if (selectId) search.value = '';
+  renderPatients(search.value.toLowerCase());
+
+  if (selectId) {
+    const select = document.getElementById('run-patient');
+    const opt = [...select.options].find(o => o.dataset.id === selectId);
+    if (opt) { select.value = opt.value; select.onchange(); }
+  }
+}
+
+function renderPatients(term) {
+  const select = document.getElementById('run-patient');
+  select.innerHTML = '<option value="">Select a raw patient...</option>';
+  rawPatients
+    .filter(p => !term || p.id.toLowerCase().includes(term))
+    .forEach(p => {
+      const opt = new Option(p.id, p.path);
+      opt.dataset.id = p.id;
+      select.add(opt);
+    });
+}
+
+async function startRun() {
+  const path = document.getElementById('run-path').value.trim();
+  const model = document.getElementById('run-model').value;
+  const runName = document.getElementById('run-name').value.trim();
+  if (!path) { runMessage('Choose a patient, or enter the path to a DICOM folder.', 'error'); return; }
+  if (!model) { runMessage('Choose a model.', 'error'); return; }
+
+  runMessage('');
+  setRunFormBusy(true);
+  showProgress(0, 'starting');
+  try {
+    const payload = { input_path: path, model_id: model };
+    if (runName) payload.study_id = runName;
+    const res = await fetch('/jobs', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+    if (!res.ok) throw new Error(await errorText(res, 'Could not start the job'));
+    const { job_id } = await res.json();
+    pollJob(job_id, path, model, runName);
+  } catch (e) {
+    document.getElementById('run-progress-container').hidden = true;
+    runMessage(e.message, 'error');
+    setRunFormBusy(false);
+  }
+}
+
+function pollJob(jobId, path, model, runName) {
+  let failures = 0;
+  const timer = setInterval(async () => {
+    try {
+      const res = await fetch(`/jobs/${jobId}`);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const job = await res.json();
+      failures = 0;
+      showProgress(job.pct, job.stage);
+
+      if (job.status === 'done') {
+        clearInterval(timer);
+        // Same rule as server.py start_job: with no name, the study is named
+        // after the input's parent folder.
+        const parts = path.split(/[\/]/).filter(Boolean);
+        const studyId = runName || (parts.length > 1 ? parts[parts.length - 2] : parts[0]);
+        setTimeout(() => { window.location.href = studyUrl(studyId, model); }, 500);
+      } else if (job.status === 'failed') {
+        clearInterval(timer);
+        jobFailed(job.error);
+      }
+    } catch (e) {
+      // A restarted server forgets its jobs (404), a stopped one refuses the
+      // connection: stop polling instead of spinning forever.
+      console.error('Polling error', e);
+      if (++failures >= 10) { clearInterval(timer); jobFailed('Lost connection to the server.'); }
+    }
+  }, 500);
+}
+
+function showProgress(pct, stage) {
+  document.getElementById('run-progress-container').hidden = false;
+  const fill = document.getElementById('run-progress-fill');
+  const p = Math.round(pct * 100);
+  fill.style.backgroundColor = '';
+  fill.style.width = `${p}%`;
+  document.getElementById('run-progress-text').textContent = `${p}% - ${stage}`;
+}
+
+function jobFailed(error) {
+  document.getElementById('run-progress-fill').style.backgroundColor = 'var(--md-sys-color-error)';
+  document.getElementById('run-progress-text').textContent = 'Failed';
+  // The server sends a traceback or "Process exited with code N"; the last
+  // line names the problem, the full text is kept in the tooltip.
+  const full = String(error || 'Unknown error').trim();
+  runMessage(full.split('\n').pop(), 'error');
+  document.getElementById('run-msg').title = full;
+  setRunFormBusy(false);
+}
+
+function runMessage(text, kind = 'info') {
+  const el = document.getElementById('run-msg');
+  el.hidden = !text;
+  el.textContent = text;
+  el.title = '';
+  el.className = `run-msg ${kind}`;
+}
+
+function setRunFormBusy(busy) {
+  document.querySelectorAll('.sidebar-run input, .sidebar-run select, .sidebar-run button')
+    .forEach(el => { el.disabled = busy; });
+}
+
+boot();
