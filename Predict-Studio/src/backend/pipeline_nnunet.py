@@ -11,7 +11,6 @@ import subprocess
 import numpy as np
 import SimpleITK as sitk
 from pathlib import Path
-import torch
 from .pipeline import save_nifti
 
 def predict_nnunet(image: sitk.Image, manifest: dict) -> np.ndarray:
@@ -56,11 +55,6 @@ def predict_nnunet(image: sitk.Image, manifest: dict) -> np.ndarray:
             "-chk", manifest.get("weights", "checkpoint_final.pth"),
             "--disable_tta" # TTA is slow, skip for speed
         ]
-        
-        # Automatic CPU Fallback if GPU is missing or full
-        if not torch.cuda.is_available():
-            print("WARNING: No CUDA GPU available. Falling back to CPU for nnUNet inference (This will be very slow).")
-            cmd.extend(["-device", "cpu"])
         
         result = subprocess.run(cmd, env=env, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
         if result.returncode != 0:
