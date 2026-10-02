@@ -218,10 +218,12 @@ async function scanFiles(item, files) {
   }
 }
 
-/* Upload a folder to data/raw/<id> (server.py). On success the new patient is
-   selected in the Run Pipeline form; nothing reloads and nothing runs until
-   the user presses Run. */
+/* Upload a folder to data/raw/<id> (server.py). Progress is shown in the
+   sidebar card; on success the new scan is picked in Run Pipeline. Nothing
+   reloads and nothing runs until the user presses Run. */
+let uploading = false;
 async function handleUpload(files) {
+  if (uploading) { toast('An upload is already in progress.'); return; }
   const name = await askDialog({
     title: 'Upload study',
     message: `${files.length} file(s) selected. Name this study, or leave it blank ` +
@@ -231,16 +233,13 @@ async function handleUpload(files) {
   });
   if (name === null) return;   // cancelled: nothing was sent
 
-  const btn = document.getElementById('upload-study-btn');
-  btn.disabled = true;
-  btn.textContent = 'hourglass_empty';
-
+  setUploading(true, `Uploading ${name ? `"${name}"` : 'scan'} · ${files.length} files`);
   try {
     const fd = new FormData();
     if (name) fd.append('custom_name', name);
     for (const f of files) fd.append('files', f);
 
-    const res = await fetch('/studies', { method: 'POST', body: fd });
+    const res = await postWithProgress('/studies', fd, uploadProgress);
     if (!res.ok) throw new Error(await errorText(res, 'Upload failed'));
     let data = await res.json();
 
@@ -256,7 +255,7 @@ async function handleUpload(files) {
         toast('Upload cancelled. Nothing was saved.');
         return;
       }
-      btn.textContent = 'cleaning_services';
+      uploadProgress(null, 'Removing unusable files…');
       const q = name ? `?custom_name=${encodeURIComponent(name)}` : '';
       const cleanRes = await fetch(`/studies/clean/${data.temp_id}${q}`, { method: 'POST' });
       if (!cleanRes.ok) throw new Error(await errorText(cleanRes, 'Cleaning failed'));
@@ -264,13 +263,57 @@ async function handleUpload(files) {
     }
 
     await refreshPatients(data.study_id);
-    toast(`Uploaded "${data.study_id}". Choose a model and press Run.`, 'ok');
+    toast(`Uploaded "${data.study_id}". It is selected in Run Pipeline: choose a model and press Run.`, 'ok');
   } catch (e) {
     toast(e.message, 'error');
   } finally {
-    btn.disabled = false;
-    btn.textContent = 'upload';
+    setUploading(false);
   }
+}
+
+// fetch() cannot report upload progress; XMLHttpRequest can. Resolves to a
+// small fetch-like response so errorText() works on it unchanged.
+function postWithProgress(url, body, onProgress) {
+  return new Promise((resolve, reject) => {
+    const xhr = new XMLHttpRequest();
+    xhr.open('POST', url);
+    xhr.upload.onprogress = e => { if (e.lengthComputable) onProgress(e.loaded, e.total); };
+    xhr.upload.onload = () => onProgress(null, 'Checking files…');   // all bytes sent
+    xhr.onload = () => resolve({
+      ok: xhr.status >= 200 && xhr.status < 300,
+      status: xhr.status,
+      json: async () => JSON.parse(xhr.responseText),
+    });
+    xhr.onerror = () => reject(new Error('Upload failed: the server could not be reached.'));
+    xhr.send(body);
+  });
+}
+
+// Upload card: a filling bar while bytes are sent (loaded, total), an
+// animated one while the server works (loaded === null, label).
+function uploadProgress(loaded, totalOrLabel) {
+  const card = document.getElementById('upload-card');
+  const fill = document.getElementById('upload-fill');
+  const text = document.getElementById('upload-text');
+  card.classList.toggle('busy', loaded === null);
+  if (loaded === null) { fill.style.width = ''; text.textContent = totalOrLabel; return; }
+  const total = totalOrLabel;
+  const mb = n => (n / 1048576).toFixed(n < 10485760 ? 1 : 0);
+  const pct = total ? Math.round(loaded / total * 100) : 0;
+  fill.style.width = pct + '%';
+  text.textContent = `${pct}% · ${mb(loaded)} of ${mb(total)} MB`;
+}
+
+function setUploading(on, title = '') {
+  uploading = on;
+  const btn = document.getElementById('upload-study-btn');
+  btn.disabled = on;
+  btn.classList.toggle('spin', on);
+  btn.textContent = on ? 'progress_activity' : 'upload';
+  document.getElementById('welcome-upload').disabled = on;
+  document.getElementById('upload-card').hidden = !on;
+  document.getElementById('upload-title').textContent = title;
+  if (on) uploadProgress(0, 0);
 }
 
 // FastAPI errors are {"detail": "..."}; anything else falls back to the status.
@@ -283,38 +326,77 @@ async function errorText(res, fallback) {
   }
 }
 
-/* The one modal the UI uses. Resolves to the typed text when `input` is given,
-   true when confirmed without input, and null when cancelled (button or Esc). */
-function askDialog({ title, message, input = null, okLabel = 'OK' }) {
+/* The one modal the UI uses. Resolves to null when cancelled (button or Esc);
+   otherwise to the typed text when `input` is given, to an array of booleans
+   when `checks` is given, else to true. A check with `all: true` stands for
+   every other check: ticking it ticks and locks them. */
+function askDialog({ title, message, input = null, checks = null, okLabel = 'OK', danger = false }) {
   const dlg = document.getElementById('dlg');
   const field = document.getElementById('dlg-input');
+  const box = document.getElementById('dlg-checks');
+  const ok = document.getElementById('dlg-ok');
   document.getElementById('dlg-title').textContent = title;
   document.getElementById('dlg-msg').textContent = message;
-  document.getElementById('dlg-ok').textContent = okLabel;
   document.getElementById('dlg-cancel').onclick = () => dlg.close();
+  ok.textContent = okLabel;
+  ok.classList.toggle('danger', danger);
+  ok.disabled = false;
   field.hidden = input === null;
   field.value = input || '';
+
+  box.hidden = !checks;
+  box.replaceChildren();
+  const boxes = (checks || []).map(c => {
+    const label = document.createElement('label');
+    const cb = document.createElement('input');
+    cb.type = 'checkbox';
+    cb.checked = Boolean(c.checked);
+    label.append(cb, ' ' + c.label);
+    box.append(label);
+    return cb;
+  });
+  const allBox = boxes[(checks || []).findIndex(c => c.all)];
+  const sync = () => {
+    for (const b of boxes) {
+      if (!allBox || b === allBox) continue;
+      b.disabled = allBox.checked;
+      if (allBox.checked) b.checked = true;
+    }
+    ok.disabled = Boolean(checks) && !boxes.some(b => b.checked);
+  };
+  boxes.forEach(b => { b.onchange = sync; });
+  if (checks) sync();
+
   dlg.returnValue = '';
   dlg.showModal();
   if (input !== null) field.focus();
   return new Promise(resolve => {
     dlg.onclose = () => {
       if (dlg.returnValue !== 'ok') resolve(null);
-      else resolve(input === null ? true : field.value.trim());
+      else if (input !== null) resolve(field.value.trim());
+      else resolve(checks ? boxes.map(b => b.checked) : true);
     };
   });
 }
 
 // Short non-blocking message at the bottom of the screen. Click to dismiss.
+// action: optional { label, href } shown as a link, e.g. "Open".
 let toastTimer = null;
-function toast(msg, kind = 'info') {
+function toast(msg, kind = 'info', action = null) {
   const el = document.getElementById('toast');
   el.textContent = msg;
+  if (action) {
+    const a = document.createElement('a');
+    a.className = 'toast-action';
+    a.href = action.href;
+    a.textContent = action.label;
+    el.append(a);
+  }
   el.className = `toast ${kind}`;
   el.hidden = false;
   el.onclick = () => { el.hidden = true; };
   clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => { el.hidden = true; }, kind === 'error' ? 8000 : 4000);
+  toastTimer = setTimeout(() => { el.hidden = true; }, action ? 12000 : kind === 'error' ? 8000 : 4000);
 }
 
 // lesions.csv has no quoted fields, so a split is enough.
@@ -869,7 +951,7 @@ function renderArgument() {
       : 'This model outputs a binary mask. Area is a voxel count above threshold ' +
       `${threshold().toFixed(2)}, so every boundary voxel is either fully counted or fully ` +
       'discarded. That rounding is what the coverage model exists to remove.';
-  document.getElementById('a-provblock').textContent = provBlock();
+  paintParams();
 }
 
 // Scroll box (only) so that el is visible inside it.
@@ -1209,21 +1291,54 @@ function overlayNote() {
     : `binary overlay · thresholded at ${threshold().toFixed(2)}`;
 }
 
-function prov(n) {
-  const r = state.run;
-  if (n === 1) return outputType() === 'coverage'
-    ? `${r.model_id} · coverage · component threshold ${threshold().toFixed(2)} (delineation only — area = Σ coverage)`
-    : `${r.model_id} · binary · threshold ${threshold().toFixed(2)} · area = voxel count`;
-  if (n === 2) {
-    const sp = r.spacing.map(v => v.toFixed(2)).join(' × ');
-    return `model HU window ${r.hu_window[0]}–${r.hu_window[1]} · ${sp} mm · RAS`;
-  }
-  return `crop heart +8 mm, TotalSegmentator ${r.locator_version} · ckpt ${String(r.sha256).slice(0, 12)} · ` +
-    `min lesion 1.0 mm² · ${r.date}` +
-    ` · 3D link: in-plane overlap, max gap ${state.run.max_gap_slices} slice(s)`;
+// Pipeline parameters, grouped. Every value is read from run.json, so the
+// panel describes the run that produced these numbers, not today's settings.
+// A field an older run.json does not have is shown as '—', never guessed.
+function paramGroups() {
+  const r = state.run, cov = outputType() === 'coverage';
+  const known = v => (v == null ? '—' : v);
+  const overridden = r.crop_default != null && r.cropped !== r.crop_default;
+  const crop = !r.cropped ? 'none · full field of view'
+    : `heart${r.crop_margin_mm != null ? ` +${r.crop_margin_mm} mm` : ''} · ` +
+      `TotalSegmentator ${known(r.locator_version)}`;
+  return [
+    ['Model', [
+      ['model', r.model_id],
+      ['output', cov ? 'coverage (fractional)' : 'binary mask'],
+      ['threshold', threshold().toFixed(2) + (cov ? ' · delineation only' : '')],
+      ['checkpoint', r.sha256 ? String(r.sha256).slice(0, 12) : '—', r.sha256],
+    ]],
+    ['Pre-processing', [
+      ['crop', crop + (overridden ? ' · not the model default' : ''), null, overridden],
+      ['HU window', `${r.hu_window[0]} – ${r.hu_window[1]}`],
+      ['voxel spacing', r.spacing.map(v => v.toFixed(2)).join(' × ') + ' mm'],
+      ['orientation', 'RAS'],
+    ]],
+    ['Scoring', [
+      ['min lesion', r.min_area_mm2 != null ? `${r.min_area_mm2.toFixed(1)} mm²` : '—'],
+      ['area', cov ? 'Σ coverage × pixel area' : 'voxel count × pixel area'],
+      ['3D linking', `in-plane overlap · max gap ${known(r.max_gap_slices)} slice(s)`],
+    ]],
+    ['Run', [
+      ['date', r.date ? new Date(r.date).toLocaleString(undefined,
+        { dateStyle: 'medium', timeStyle: 'short' }) : '—'],
+      ['volume', r.shape ? r.shape.join(' × ') + ' (z × y × x)' : '—'],
+    ]],
+  ];
 }
 
-function provBlock() { return [prov(1), prov(2), prov(3)].join('\n'); }
+function paintParams() {
+  const box = document.getElementById('a-params');
+  box.replaceChildren();
+  for (const [group, rows] of paramGroups()) {
+    box.append(el('div', 'a-params-group', group));
+    for (const [key, value, full, warn] of rows) {
+      const v = el('span', 'v' + (warn ? ' warn' : ''), value);
+      if (full) v.title = full;
+      box.append(el('span', 'k', key), v);
+    }
+  }
+}
 
 function tierNote(t) {
   const scheme = TIER_SCHEMES[state.tiers];
@@ -1272,194 +1387,372 @@ function exSummary() {
     `would add ${would.toFixed(1)} if admitted`;
 }
 
-async function loadSidebar() {
-  const toggle = document.getElementById('sidebar-toggle');
-  const sidebar = document.getElementById('sidebar');
-  if (toggle && sidebar) {
-    toggle.onclick = () => sidebar.classList.toggle('collapsed');
-  }
-
-  try {
-    const res = await fetch('/studies');
-    if (!res.ok) return;
-    const studies = await res.json();
-    
-    const list = document.getElementById('sidebar-list');
-    if (!list) return;
-    list.innerHTML = '';
-    
-    // Study names are typed by users at upload, so they are set as text,
-    // never as HTML, and encoded in the link.
-    for (const s of studies) {
-      const el = document.createElement('div');
-      el.className = 'study-item' + (s.id === STUDY && s.model === MODEL ? ' active' : '');
-      const title = document.createElement('span');
-      title.className = 'study-item-title';
-      title.textContent = s.id;
-      const sub = document.createElement('span');
-      sub.className = 'study-item-subtitle';
-      sub.title = s.model;
-      sub.textContent = s.model.length > 20 ? s.model.substring(0, 18) + '...' : s.model;
-      el.append(title, sub);
-      el.onclick = () => { window.location.href = studyUrl(s.id, s.model); };
-      list.appendChild(el);
-    }
-  } catch (e) {
-    console.error("Could not load sidebar", e);
-  }
+// ══ SIDEBAR: studies, uploads, runs ══════════════════════════════════════
+// An element with its text set safely: study names are typed by users at
+// upload and must never be parsed as HTML.
+function el(tag, cls = '', text = '') {
+  const e = document.createElement(tag);
+  if (cls) e.className = cls;
+  if (text) e.textContent = text;
+  return e;
 }
 
-// ── run pipeline form (sidebar) ──────────────────────────────────────────
-let rawPatients = [];   // [{id, path}] from /raw_patients, i.e. data/raw/*
+let studies = [];       // [{id, models: [...]}] from /studies, grouped by study
+let rawPatients = [];   // [{id, path, uploaded}] from /raw_patients, newest first
+let models = [];        // [{id, name, crop}] from /models
 
+async function loadSidebar() {
+  const sidebar = document.getElementById('sidebar');
+  document.getElementById('sidebar-toggle').onclick = () => sidebar.classList.toggle('collapsed');
+  document.getElementById('study-filter').oninput = renderStudies;
+  try {
+    const res = await fetch('/studies');
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const byId = new Map();
+    for (const s of await res.json()) {
+      if (!byId.has(s.id)) byId.set(s.id, []);
+      byId.get(s.id).push(s.model);
+    }
+    studies = [...byId].map(([id, ms]) => ({ id, models: ms }));
+  } catch (e) {
+    console.error('Could not load studies', e);
+  }
+  renderStudies();
+}
+
+// One row per study with its results as chips; the filter matches either.
+function renderStudies() {
+  const list = document.getElementById('sidebar-list');
+  const term = document.getElementById('study-filter').value.trim().toLowerCase();
+  const shown = studies.filter(s => !term || s.id.toLowerCase().includes(term) ||
+    s.models.some(m => m.toLowerCase().includes(term)));
+  list.replaceChildren();
+  for (const s of shown) {
+    const row = el('div', 'study-item' + (s.id === STUDY ? ' active' : ''));
+    const head = el('div', 'study-item-head');
+    const title = el('a', 'study-item-title', s.id);
+    title.href = studyUrl(s.id, s.id === STUDY && s.models.includes(MODEL) ? MODEL : s.models[0]);
+    const del = el('button', 'study-del material-symbols-outlined', 'delete');
+    del.title = `Delete results of ${s.id}, or the whole study`;
+    del.onclick = () => deleteStudy(s.id);
+    head.append(title, del);
+    const chips = el('div', 'study-item-models');
+    for (const m of s.models) {
+      const chip = el('a', 'model-chip' + (s.id === STUDY && m === MODEL ? ' on' : ''), m);
+      chip.href = studyUrl(s.id, m);
+      chips.append(chip);
+    }
+    row.append(head, chips);
+    list.append(row);
+  }
+  if (!shown.length) list.append(el('div', 'sidebar-empty', term ? 'No study matches.' : 'No results yet.'));
+}
+
+/* Delete some results of a study, or everything it owns (DELETE /studies).
+   The same dialog serves a study in the list and an uploaded scan that was
+   never run (then "everything" is the only choice). */
+async function deleteStudy(studyId) {
+  const results = (studies.find(s => s.id === studyId) || { models: [] }).models;
+  const checks = results.map(m => ({ label: `Result ${m}`, checked: studyId === STUDY && m === MODEL }));
+  checks.push({ label: 'Everything: the uploaded scan, its prep cache and all results',
+                checked: !results.length, all: true });
+  const picks = await askDialog({
+    title: `Delete from "${studyId}"`,
+    message: 'Deleted files cannot be recovered from the app.',
+    checks, okLabel: 'Delete', danger: true,
+  });
+  if (!picks) return;
+
+  const everything = picks[picks.length - 1];
+  const chosen = results.filter((m, i) => picks[i]);
+  const q = new URLSearchParams(everything ? { all: 'true' } : chosen.map(m => ['model', m]));
+  const res = await fetch(`/studies/${encodeURIComponent(studyId)}?${q}`, { method: 'DELETE' });
+  if (!res.ok) { toast(await errorText(res, 'Delete failed'), 'error'); return; }
+
+  // The result on screen no longer exists: back to the start screen.
+  if (studyId === STUDY && (everything || chosen.includes(MODEL))) { window.location.href = '?'; return; }
+  toast(everything ? `Deleted everything for "${studyId}".`
+    : `Deleted ${chosen.join(', ')} from "${studyId}".`, 'ok');
+  await Promise.all([loadSidebar(), refreshPatients()]);
+}
+
+// ── run pipeline form ────────────────────────────────────────────────────
 async function initRunForm() {
   const modelSelect = document.getElementById('run-model');
-  const search = document.getElementById('run-patient-search');
-  const select = document.getElementById('run-patient');
-
-  search.oninput = () => renderPatients(search.value.toLowerCase());
-  select.onchange = () => {
-    const opt = select.options[select.selectedIndex];
-    if (!opt.value) return;
-    document.getElementById('run-path').value = opt.value;
-    document.getElementById('run-name').value = opt.dataset.id;   // auto-populate the name too
+  const crop = document.getElementById('run-crop');
+  modelSelect.onchange = () => {
+    const m = models.find(x => x.id === modelSelect.value);
+    if (m) crop.checked = m.crop;   // each model starts at its own default
+    cropHint();
   };
+  crop.onchange = cropHint;
   document.getElementById('run-btn').onclick = startRun;
+  initPatientPicker();
 
   try {
     const res = await fetch('/models');
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const models = await res.json();
-    modelSelect.innerHTML = '';
-    for (const m of models) modelSelect.add(new Option(m.id, m.id));
+    if (!res.ok) throw new Error(await errorText(res, 'Could not load models'));
+    models = await res.json();
+    modelSelect.replaceChildren(...models.map(m => {
+      const o = new Option(m.id, m.id);
+      o.title = m.name;
+      return o;
+    }));
+    modelSelect.onchange();
   } catch (e) {
-    console.error('Could not fetch models for run form', e);
+    console.error(e);
     modelSelect.innerHTML = '<option value="">Error loading models</option>';
+    runMessage(e.message, 'error');
   }
 
-  await refreshPatients();
+  await Promise.all([refreshPatients(), refreshJobs()]);
 }
 
-// Reload the patient list; optionally select one (e.g. a study just uploaded).
+// What the crop box means for the chosen model; an override is flagged.
+function cropHint() {
+  const m = models.find(x => x.id === document.getElementById('run-model').value);
+  const hint = document.getElementById('run-crop-hint');
+  if (!m) { hint.textContent = ''; return; }
+  const differs = document.getElementById('run-crop').checked !== m.crop;
+  hint.textContent = `model default: ${m.crop ? 'on' : 'off'}` +
+    (differs ? ' · differs from how this model was trained' : '');
+  hint.classList.toggle('warn', differs);
+}
+
+// ── patient picker: one field to search and pick an uploaded scan ───────
+let picked = null;       // id of the chosen scan, or null
+let pickerItems = [];    // the scans currently listed
+let pickerIndex = -1;    // the highlighted one
+
+// Reload the list of uploaded scans; keep (or make) a pick if it still exists.
 async function refreshPatients(selectId) {
   try {
     const res = await fetch('/raw_patients');
     if (res.ok) rawPatients = await res.json();
   } catch (e) {
-    console.error('Could not fetch raw patients', e);
+    console.error('Could not fetch uploaded scans', e);
   }
-  const search = document.getElementById('run-patient-search');
-  if (selectId) search.value = '';
-  renderPatients(search.value.toLowerCase());
-
-  if (selectId) {
-    const select = document.getElementById('run-patient');
-    const opt = [...select.options].find(o => o.dataset.id === selectId);
-    if (opt) { select.value = opt.value; select.onchange(); }
-  }
+  const p = rawPatients.find(x => x.id === (selectId || picked));
+  if (p) pickPatient(p);
+  else if (picked) clearPatient();
 }
 
-function renderPatients(term) {
-  const select = document.getElementById('run-patient');
-  select.innerHTML = '<option value="">Select a raw patient...</option>';
-  rawPatients
-    .filter(p => !term || p.id.toLowerCase().includes(term))
-    .forEach(p => {
-      const opt = new Option(p.id, p.path);
-      opt.dataset.id = p.id;
-      select.add(opt);
-    });
+function pickPatient(p) {
+  picked = p.id;
+  document.getElementById('run-patient').value = p.id;
+  document.getElementById('run-path').value = p.path;
+  document.getElementById('run-name').value = p.id;   // auto-populate the name too
+  document.getElementById('run-patient-clear').hidden = false;
+  closePicker();
 }
+
+function clearPatient() {
+  picked = null;
+  for (const id of ['run-patient', 'run-path', 'run-name']) document.getElementById(id).value = '';
+  document.getElementById('run-patient-clear').hidden = true;
+}
+
+function initPatientPicker() {
+  const input = document.getElementById('run-patient');
+  const list = document.getElementById('run-patient-list');
+  input.onfocus = input.onclick = openPicker;
+  input.onblur = closePicker;
+  input.oninput = () => {
+    // Editing the field drops the previous pick and the path it had filled.
+    if (picked) {
+      picked = null;
+      document.getElementById('run-path').value = '';
+      document.getElementById('run-name').value = '';
+    }
+    document.getElementById('run-patient-clear').hidden = !input.value;
+    openPicker();
+  };
+  input.onkeydown = e => {
+    if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+      e.preventDefault();
+      if (list.hidden) openPicker();
+      const last = pickerItems.length - 1;
+      pickerIndex = Math.max(0, Math.min(last, pickerIndex + (e.key === 'ArrowDown' ? 1 : -1)));
+      highlightPick();
+    } else if (e.key === 'Enter' && !list.hidden && pickerItems[pickerIndex]) {
+      e.preventDefault();
+      pickPatient(pickerItems[pickerIndex]);
+    } else if (e.key === 'Escape') {
+      closePicker();
+    }
+  };
+  // Pressing on the list must not blur the field before the click lands.
+  list.onmousedown = e => e.preventDefault();
+  document.getElementById('run-patient-clear').onclick = () => { clearPatient(); input.focus(); };
+}
+
+function openPicker() {
+  const input = document.getElementById('run-patient');
+  const list = document.getElementById('run-patient-list');
+  // While a scan is picked its name fills the field: list everything then.
+  const term = (picked ? '' : input.value).trim().toLowerCase();
+  pickerItems = rawPatients.filter(p => !term || p.id.toLowerCase().includes(term));
+  pickerIndex = pickerItems.length ? Math.max(0, pickerItems.findIndex(p => p.id === picked)) : -1;
+
+  list.replaceChildren();
+  if (!rawPatients.length) list.append(el('li', 'combo-empty', 'No uploaded scans yet. Use the upload button above.'));
+  else if (!pickerItems.length) list.append(el('li', 'combo-empty', 'No scan matches.'));
+  pickerItems.forEach((p, i) => {
+    const li = el('li', 'combo-option');
+    li.id = `run-patient-opt-${i}`;
+    li.setAttribute('role', 'option');
+    const name = el('span', 'combo-name');
+    const at = term ? p.id.toLowerCase().indexOf(term) : -1;
+    if (at >= 0) {   // mark the typed part
+      name.append(p.id.slice(0, at), el('mark', '', p.id.slice(at, at + term.length)),
+                  p.id.slice(at + term.length));
+    } else {
+      name.textContent = p.id;
+    }
+    const when = el('span', 'combo-when', ago(p.uploaded));
+    when.title = `uploaded ${new Date(p.uploaded).toLocaleString()}`;
+    const del = el('button', 'combo-del material-symbols-outlined', 'delete');
+    del.type = 'button';
+    del.title = `Delete ${p.id}`;
+    del.onclick = e => { e.stopPropagation(); closePicker(); deleteStudy(p.id); };
+    li.append(name, when, del);
+    li.onclick = () => pickPatient(p);
+    list.append(li);
+  });
+  list.hidden = false;
+  input.setAttribute('aria-expanded', 'true');
+  highlightPick();
+}
+
+function closePicker() {
+  document.getElementById('run-patient-list').hidden = true;
+  document.getElementById('run-patient').setAttribute('aria-expanded', 'false');
+  pickerIndex = -1;
+}
+
+function highlightPick() {
+  const list = document.getElementById('run-patient-list');
+  const options = list.querySelectorAll('[role="option"]');
+  options.forEach((li, i) => {
+    li.classList.toggle('active', i === pickerIndex);
+    li.setAttribute('aria-selected', String(i === pickerIndex));
+  });
+  const cur = options[pickerIndex];
+  document.getElementById('run-patient').setAttribute('aria-activedescendant', cur ? cur.id : '');
+  if (cur) keepVisible(list, cur);
+}
+
+function ago(iso) {
+  const s = (Date.now() - new Date(iso)) / 1000;
+  if (s < 60) return 'just now';
+  if (s < 3600) return `${Math.floor(s / 60)} min ago`;
+  if (s < 86400) return `${Math.floor(s / 3600)} h ago`;
+  return new Date(iso).toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
+}
+
+// ── runs: they live on the server; this page only watches them ─────────
+let jobStatus = null;   // job_id -> status at the previous look; null before the first
+let jobsTimer = null;
 
 async function startRun() {
   const path = document.getElementById('run-path').value.trim();
   const model = document.getElementById('run-model').value;
   const runName = document.getElementById('run-name').value.trim();
-  if (!path) { runMessage('Choose a patient, or enter the path to a DICOM folder.', 'error'); return; }
+  if (!path) { runMessage('Choose a scan, or enter the path to a DICOM folder.', 'error'); return; }
   if (!model) { runMessage('Choose a model.', 'error'); return; }
 
   runMessage('');
-  setRunFormBusy(true);
-  showProgress(0, 'starting');
   try {
-    const payload = { input_path: path, model_id: model };
+    const payload = { input_path: path, model_id: model,
+                      crop: document.getElementById('run-crop').checked };
     if (runName) payload.study_id = runName;
     const res = await fetch('/jobs', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload),
     });
-    if (!res.ok) throw new Error(await errorText(res, 'Could not start the job'));
-    const { job_id } = await res.json();
-    pollJob(job_id, path, model, runName);
+    if (!res.ok) throw new Error(await errorText(res, 'Could not start the run'));
+    await refreshJobs();
   } catch (e) {
-    document.getElementById('run-progress-container').hidden = true;
     runMessage(e.message, 'error');
-    setRunFormBusy(false);
   }
 }
 
-function pollJob(jobId, path, model, runName) {
-  let failures = 0;
-  const timer = setInterval(async () => {
-    try {
-      const res = await fetch(`/jobs/${jobId}`);
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      const job = await res.json();
-      failures = 0;
-      showProgress(job.pct, job.stage);
+/* Read GET /jobs and show the runs. Polls once a second only while a run is
+   active. A finished run is announced with an Open link; the page never
+   navigates by itself, so whatever the user is doing is not interrupted. */
+async function refreshJobs() {
+  clearTimeout(jobsTimer);
+  let jobs;
+  try {
+    const res = await fetch('/jobs');
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    jobs = await res.json();
+  } catch (e) {
+    console.error('Could not read runs', e);
+    const wasRunning = jobStatus && Object.values(jobStatus).includes('running');
+    if (wasRunning) jobsTimer = setTimeout(refreshJobs, 5000);   // server busy or restarting
+    return;
+  }
 
-      if (job.status === 'done') {
-        clearInterval(timer);
-        // Same rule as server.py start_job: with no name, the study is named
-        // after the input's parent folder.
-        const parts = path.split(/[\/]/).filter(Boolean);
-        const studyId = runName || (parts.length > 1 ? parts[parts.length - 2] : parts[0]);
-        setTimeout(() => { window.location.href = studyUrl(studyId, model); }, 500);
-      } else if (job.status === 'failed') {
-        clearInterval(timer);
-        jobFailed(job.error);
+  if (jobStatus) {
+    for (const j of jobs) {
+      if (jobStatus[j.job_id] !== 'running') continue;
+      const name = `${j.study_id} · ${j.model_id}`;
+      if (j.status === 'done') {
+        toast(`Finished ${name}.`, 'ok', { label: 'Open', href: studyUrl(j.study_id, j.model_id) });
+        loadSidebar();
+      } else if (j.status === 'failed') {
+        toast(`Run failed: ${name}.`, 'error');
       }
-    } catch (e) {
-      // A restarted server forgets its jobs (404), a stopped one refuses the
-      // connection: stop polling instead of spinning forever.
-      console.error('Polling error', e);
-      if (++failures >= 10) { clearInterval(timer); jobFailed('Lost connection to the server.'); }
     }
-  }, 500);
+  }
+  jobStatus = Object.fromEntries(jobs.map(j => [j.job_id, j.status]));
+  renderJobs(jobs);
+
+  const running = jobs.some(j => j.status === 'running');
+  const btn = document.getElementById('run-btn');
+  btn.disabled = running;
+  btn.textContent = running ? 'Run in progress…' : 'Run';
+  if (running) jobsTimer = setTimeout(refreshJobs, 1000);
 }
 
-function showProgress(pct, stage) {
-  document.getElementById('run-progress-container').hidden = false;
-  const fill = document.getElementById('run-progress-fill');
-  const p = Math.round(pct * 100);
-  fill.style.backgroundColor = '';
-  fill.style.width = `${p}%`;
-  document.getElementById('run-progress-text').textContent = `${p}% - ${stage}`;
-}
-
-function jobFailed(error) {
-  document.getElementById('run-progress-fill').style.backgroundColor = 'var(--md-sys-color-error)';
-  document.getElementById('run-progress-text').textContent = 'Failed';
-  // The server sends a traceback or "Process exited with code N"; the last
-  // line names the problem, the full text is kept in the tooltip.
-  const full = String(error || 'Unknown error').trim();
-  runMessage(full.split('\n').pop(), 'error');
-  document.getElementById('run-msg').title = full;
-  setRunFormBusy(false);
+// The two most recent runs of this server session.
+function renderJobs(jobs) {
+  const box = document.getElementById('run-jobs');
+  box.replaceChildren();
+  for (const j of jobs.slice(0, 2)) {
+    const row = el('div', `job ${j.status}`);
+    const head = el('div', 'job-head');
+    const pct = Math.round(j.pct * 100);
+    head.append(el('span', 'job-name', `${j.study_id} · ${j.model_id}`),
+                el('span', 'job-state', j.status === 'running' ? `${pct}% · ${j.stage}` : j.status));
+    row.append(head);
+    if (j.status === 'running') {
+      const bar = el('div', 'run-progress-bar');
+      const fill = el('div', 'run-progress-fill');
+      fill.style.width = `${pct}%`;
+      bar.append(fill);
+      row.append(bar);
+    } else if (j.status === 'done') {
+      const open = el('a', 'job-open', 'Open result');
+      open.href = studyUrl(j.study_id, j.model_id);
+      row.append(open);
+    } else {
+      const err = String(j.error || 'Unknown error').trim();
+      const line = el('span', 'job-err', err.split('\n').pop());
+      line.title = err;
+      row.append(line);
+    }
+    box.append(row);
+  }
 }
 
 function runMessage(text, kind = 'info') {
-  const el = document.getElementById('run-msg');
-  el.hidden = !text;
-  el.textContent = text;
-  el.title = '';
-  el.className = `run-msg ${kind}`;
-}
-
-function setRunFormBusy(busy) {
-  document.querySelectorAll('.sidebar-run input, .sidebar-run select, .sidebar-run button')
-    .forEach(el => { el.disabled = busy; });
+  const msg = document.getElementById('run-msg');
+  msg.hidden = !text;
+  msg.textContent = text;
+  msg.className = `run-msg ${kind}`;
 }
 
 boot();

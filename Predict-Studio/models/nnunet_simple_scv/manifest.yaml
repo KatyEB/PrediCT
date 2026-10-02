@@ -2,6 +2,7 @@ id: nnunet_simple_scv
 name: Rajat nnUNet Simple SCV
 arch: nnunet
 crop: false
+margin_mm: 8        # used only when a run turns crop on (project-wide heart margin)
 spacing: [0.37, 0.37, 3.0]
 output: binary
 threshold: 0.5

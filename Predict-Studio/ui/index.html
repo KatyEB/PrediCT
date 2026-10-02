@@ -13,7 +13,7 @@
     href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
   <!-- ?v= forces browsers to fetch the new files after an update (the server
        sends no cache headers). Bump it whenever app.css / app.js / view3d.js change. -->
-  <link rel="stylesheet" href="app.css?v=2">
+  <link rel="stylesheet" href="app.css?v=3">
 
   <script type="importmap">
   { "imports": {
@@ -32,27 +32,45 @@
       <input type="file" id="upload-input" webkitdirectory directory multiple style="display:none">
     </div>
 
+    <!-- Upload in progress: real byte progress, then "checking files" -->
+    <div id="upload-card" class="upload-card" hidden>
+      <div class="upload-card-head">
+        <span class="material-symbols-outlined spin">progress_activity</span>
+        <span id="upload-title"></span>
+      </div>
+      <div class="run-progress-bar"><div id="upload-fill" class="run-progress-fill"></div></div>
+      <span id="upload-text" class="run-progress-text"></span>
+    </div>
+
     <div class="sidebar-run">
       <h3 class="run-title">Run Pipeline</h3>
-      <input type="text" id="run-patient-search" placeholder="Search patients..." class="run-input">
-      <select id="run-patient" class="run-input">
-        <option value="">Select a raw patient...</option>
-      </select>
+      <!-- One field to search and pick an uploaded scan (see the patient picker in app.js) -->
+      <div class="combo">
+        <input type="text" id="run-patient" class="run-input" placeholder="Search uploaded scans"
+          role="combobox" aria-expanded="false" aria-controls="run-patient-list" aria-autocomplete="list"
+          autocomplete="off" spellcheck="false">
+        <button type="button" class="combo-clear material-symbols-outlined" id="run-patient-clear"
+          title="Clear" hidden>close</button>
+        <ul class="combo-list" id="run-patient-list" role="listbox" hidden></ul>
+      </div>
       <input type="text" id="run-path" placeholder="Absolute path to DICOMs" class="run-input">
       <select id="run-model" class="run-input">
         <option value="">Loading models...</option>
       </select>
+      <label class="run-crop">
+        <input type="checkbox" id="run-crop"> Crop to heart <span class="run-hint">(TotalSegmentator)</span>
+      </label>
+      <span class="run-hint" id="run-crop-hint"></span>
       <input type="text" id="run-name" placeholder="Study Name (Optional)" class="run-input">
       <button id="run-btn" class="run-btn">Run</button>
-      <div id="run-progress-container" class="run-progress-container" hidden>
-        <div class="run-progress-bar">
-          <div id="run-progress-fill" class="run-progress-fill"></div>
-        </div>
-        <span id="run-progress-text" class="run-progress-text">0%</span>
-      </div>
       <div id="run-msg" class="run-msg" hidden></div>
+      <!-- Runs of this server session, read from GET /jobs -->
+      <div id="run-jobs" class="run-jobs"></div>
     </div>
 
+    <div class="sidebar-search">
+      <input type="search" id="study-filter" class="run-input" placeholder="Filter studies" autocomplete="off">
+    </div>
     <div class="scroll sidebar-list" id="sidebar-list">
       <!-- Studies will be populated here -->
     </div>
@@ -68,6 +86,7 @@
       <h3 id="dlg-title"></h3>
       <p id="dlg-msg"></p>
       <input type="text" id="dlg-input" class="run-input" autocomplete="off" hidden>
+      <div id="dlg-checks" class="dlg-checks" hidden></div>
       <div class="dlg-actions">
         <button type="button" class="dlg-btn" id="dlg-cancel">Cancel</button>
         <button value="ok" class="dlg-btn primary" id="dlg-ok">OK</button>
@@ -109,21 +128,6 @@
   <!-- ══════════════ START SCREEN (no study in the URL) ══════════════ -->
   <div id="welcome" class="welcome" hidden>
     <div class="welcome-card">
-      <!-- Illustration in the app's own visual language: an axial slice,
-           calcium in the mask colour, the selection ring in its blue. -->
-      <svg class="welcome-art" viewBox="0 0 200 150" aria-hidden="true">
-        <rect width="200" height="150" rx="12" fill="#000" />
-        <ellipse cx="100" cy="78" rx="84" ry="58" fill="#5f6368" />
-        <ellipse cx="100" cy="78" rx="76" ry="51" fill="#202124" />
-        <ellipse cx="108" cy="70" rx="38" ry="31" fill="#80868b" />
-        <ellipse cx="72" cy="88" rx="14" ry="12" fill="#5f6368" />
-        <circle cx="100" cy="124" r="11" fill="#e8eaed" />
-        <circle cx="86" cy="50" r="3.4" fill="#C9541F" />
-        <circle cx="92" cy="46" r="2.4" fill="#C9541F" />
-        <circle cx="131" cy="88" r="2.8" fill="#C9541F" />
-        <rect x="79" y="40" width="20" height="17" rx="1" fill="none" stroke="#4FA8C5" stroke-width="1.5" />
-        <text x="100" y="14" fill="#9aa0a6" font-size="9" text-anchor="middle" font-family="monospace">A</text>
-      </svg>
       <h1 class="welcome-title">PrediCT Studio</h1>
       <p class="welcome-sub">Coronary artery calcium scoring workstation</p>
 
@@ -211,6 +215,11 @@
       </div>
 
       <div class="a-side scroll">
+        <details class="a-side-sec a-produced" data-sec="a-prov" open>
+          <summary class="a-kicker">Pipeline Parameters</summary>
+          <div class="a-params" id="a-params"></div>
+        </details>
+
         <details class="a-side-sec" data-sec="a-l3d" open>
           <summary class="a-kicker">3D Lesion Index</summary>
           <div class="scroll a-l3dwrap">
@@ -234,11 +243,6 @@
         <details class="a-side-sec" data-sec="a-soft" open>
           <summary class="a-kicker">Model Delineation</summary>
           <div class="a-soft" id="a-soft"></div>
-        </details>
-
-        <details class="a-side-sec a-produced" data-sec="a-prov" open>
-          <summary class="a-kicker">Pipeline Parameters</summary>
-          <div class="a-provblock" id="a-provblock"></div>
         </details>
       </div>
     </div>
@@ -464,8 +468,8 @@
   </div>
 
   </div>
-  <script src="app.js?v=2"></script>
-  <script type="module" src="view3d.js?v=2"></script>
+  <script src="app.js?v=3"></script>
+  <script type="module" src="view3d.js?v=3"></script>
 </body>
 
 </html>

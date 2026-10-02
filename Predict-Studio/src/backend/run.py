@@ -60,12 +60,17 @@ def run(study_id: str, model_id: str, crop: bool = None, progress=None, custom_i
     """Execute the inference pipeline for a given study and model."""
     m = load_manifest(model_id)
     crop = m["crop"] if crop is None else crop
-    
+    if crop != m["crop"]:
+        print(f"NOTE: crop={crop} overrides the {model_id} default (crop={m['crop']}); "
+              f"it was trained on {'heart-cropped' if m['crop'] else 'full'} volumes.")
+
     def p(stage, pct):
-        if progress: 
+        if progress:
             progress(stage, pct)
 
-    w = work_dir(study_id)
+    # Cropped and full volumes are different inputs, so each has its own cache.
+    # One shared cache let a model silently reuse a CT prepared the other way.
+    w = work_dir(study_id) / ("crop" if crop else "full")
     w.mkdir(parents=True, exist_ok=True)
     ct_path = w / "ct.nii.gz"
     # The heart mask is cached beside the CT because it is produced by the same
@@ -84,8 +89,8 @@ def run(study_id: str, model_id: str, crop: bool = None, progress=None, custom_i
             heart_img = sitk.ReadImage(str(heart_path))
         else:
             print("NOTE: no cached heart mask for this study — 3D view will "
-                  "show lesions without the heart shell. Delete data/work/"
-                  f"{study_id}/ and re-run to generate one.")
+                  f"show lesions without the heart shell. Delete {w} "
+                  "and re-run to generate one.")
     else:
         p("load", 0.05)
         load_path = custom_input if custom_input else upload_dir(study_id)
@@ -98,7 +103,7 @@ def run(study_id: str, model_id: str, crop: bool = None, progress=None, custom_i
             p("crop", 0.3)
             image, heart_img = crop_heart(image, m["margin_mm"], fast=m.get("ts_fast", False))
         else:
-            print("WARNING: cropping OFF — models trained on cropped volumes.")
+            print("Cropping OFF — the full field of view is used.")
             
         # Orient to RAS AFTER cropping to match training pipeline order!
         print("Reorienting to RAS...")
@@ -171,6 +176,8 @@ def run(study_id: str, model_id: str, crop: bool = None, progress=None, custom_i
         "study_id": study_id,
         "model_id": model_id,
         "cropped": crop,
+        "crop_default": m["crop"],   # the model's own setting; differs => overridden
+        "crop_margin_mm": m["margin_mm"] if crop else None,
         "shape": list(array.shape),
         "output": m["output"],
         "threshold": m["threshold"],

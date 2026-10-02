@@ -9,7 +9,7 @@ Does NOT: read images (only metadata), create directories, or manage models.
 Called by: run.py, registry.py, server.py.
 
 Usage:
-    from .paths import MODELS, work_dir, out_dir
+    from .paths import MODELS, work_dir, out_dir, safe_name, study_dirs
 """
 from pathlib import Path
 import hashlib
@@ -19,14 +19,45 @@ ROOT = Path(__file__).resolve().parent.parent.parent
 DATA = ROOT / "data"
 MODELS = ROOT / "models"
 
-def upload_dir(study_id: str) -> Path: 
+# Characters that would let a name leave its folder (separators, drive colon)
+# or that Windows forbids in file names.
+_FORBIDDEN = set('/\\:*?"<>|')
+
+def safe_name(name: str) -> str:
+    """Return `name` trimmed if it is usable as ONE folder name, else raise ValueError.
+
+    Every study / model / temp id that arrives over HTTP becomes a folder under
+    DATA, so it must not contain separators or '..' tricks. Ordinary names
+    ("Patient 11", "Pro_Gated_CS_3.0_I30f_3_70%") pass unchanged.
+    """
+    name = (name or "").strip()
+    if (not name or name.startswith(".")
+            or any(c in _FORBIDDEN or ord(c) < 32 for c in name)):
+        raise ValueError(f'invalid name {name!r}: must be a single folder name, '
+                         'not starting with "." and without / \\ : * ? " < > |')
+    return name
+
+def upload_dir(study_id: str) -> Path:
     return DATA / "uploads" / study_id
 
-def work_dir(study_id: str) -> Path:   
+def raw_dir(study_id: str) -> Path:
+    """Where an uploaded scan is kept (server.py upload endpoints)."""
+    return DATA / "raw" / study_id
+
+def work_dir(study_id: str) -> Path:
     return DATA / "work" / study_id
 
-def out_dir(study_id: str, model_id: str) -> Path: 
+def out_dir(study_id: str, model_id: str) -> Path:
     return DATA / "out" / study_id / model_id
+
+def study_dirs(study_id: str) -> list[Path]:
+    """Every folder that belongs to one study: uploaded scan, prep cache, results.
+
+    This is the one place that decides what a study owns. When studies become
+    per-user, the user is added here (and in raw_dir / work_dir / out_dir) and
+    every caller — listing, running, deleting — follows.
+    """
+    return [raw_dir(study_id), work_dir(study_id), DATA / "out" / study_id]
 
 def study_id_from_series(input_dir: str | Path) -> str:
     """Generate a consistent 12-char ID from the DICOM SeriesInstanceUID or NIfTI filename."""
