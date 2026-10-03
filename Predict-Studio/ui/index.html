@@ -13,7 +13,7 @@
     href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
   <!-- ?v= forces browsers to fetch the new files after an update (the server
        sends no cache headers). Bump it whenever app.css / app.js / view3d.js change. -->
-  <link rel="stylesheet" href="app.css?v=3">
+  <link rel="stylesheet" href="app.css?v=4">
 
   <script type="importmap">
   { "imports": {
@@ -23,7 +23,34 @@
   </script>
 </head>
 
-<body>
+<!-- "checking" hides the app until boot() knows who is signed in -->
+<body class="checking">
+  <!-- ══════════════ SIGN IN / CREATE ACCOUNT ══════════════ -->
+  <div id="auth" class="auth" hidden>
+    <form id="auth-form" class="auth-card">
+      <h1 class="welcome-title">PrediCT Studio</h1>
+      <p class="welcome-sub">Coronary artery calcium scoring workstation</p>
+      <div class="auth-tabs">
+        <button type="button" data-auth-mode="login" class="on">Sign in</button>
+        <button type="button" data-auth-mode="signup">Create account</button>
+      </div>
+      <label class="auth-field">Username
+        <input id="auth-username" class="run-input" name="username" autocomplete="username"
+          autocapitalize="off" spellcheck="false" required>
+      </label>
+      <label class="auth-field">Password
+        <input id="auth-password" class="run-input" type="password" name="password"
+          autocomplete="current-password" required>
+      </label>
+      <label class="auth-field">Access token
+        <input id="auth-token" class="run-input" type="password" name="access_token" autocomplete="off">
+      </label>
+      <span class="run-hint" id="auth-hint">Given to you by the administrator.</span>
+      <div class="run-msg error" id="auth-error" hidden></div>
+      <button class="run-btn" id="auth-submit">Sign in</button>
+    </form>
+  </div>
+
   <div id="sidebar" class="sidebar">
     <div class="sidebar-header">
       <button id="sidebar-toggle" class="material-symbols-outlined icon-btn">menu</button>
@@ -53,7 +80,8 @@
           title="Clear" hidden>close</button>
         <ul class="combo-list" id="run-patient-list" role="listbox" hidden></ul>
       </div>
-      <input type="text" id="run-path" placeholder="Absolute path to DICOMs" class="run-input">
+      <!-- server paths: admin only (the server refuses them for everyone else too) -->
+      <input type="text" id="run-path" placeholder="Absolute path to DICOMs (admin)" class="run-input admin-only">
       <select id="run-model" class="run-input">
         <option value="">Loading models...</option>
       </select>
@@ -123,6 +151,9 @@
     </div>
 
     <span class="tabs-study" id="tabs-study"></span>
+
+    <span class="tabs-user" id="me-name" title="Signed in"></span>
+    <button id="logout-btn" class="material-symbols-outlined icon-btn" title="Sign out">logout</button>
   </header>
 
   <!-- ══════════════ START SCREEN (no study in the URL) ══════════════ -->
@@ -468,8 +499,8 @@
   </div>
 
   </div>
-  <script src="app.js?v=3"></script>
-  <script type="module" src="view3d.js?v=3"></script>
+  <script src="app.js?v=4"></script>
+  <script type="module" src="view3d.js?v=4"></script>
 </body>
 
 </html>

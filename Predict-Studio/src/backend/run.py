@@ -7,13 +7,16 @@ Handles caching of prep stages and writes the provenance `run.json` to the outpu
 Does NOT: handle HTTP requests, instantiate PyTorch models, or implement math.
 Called by: CLI entrypoint, server.py.
 
+Every run belongs to one account: inputs and outputs live under
+data/users/<user_id>/ (see paths.py). Which account is always explicit.
+
 Usage:
     # Python API
-    run(study_id="some_hash", model_id="a1-roi", custom_input=Path("/some/path"))
+    run(user_id=1, study_id="some_hash", model_id="a1-roi", custom_input=Path("/some/path"))
 
-    # CLI
-    python -m src.run --study patient_1 --model a1-roi
-    python -m src.run --input /path/to/dicom --model a3-coverage
+    # CLI  (account ids: python -m src.backend.accounts list)
+    python -m src.backend.run --user 1 --study patient_1 --model a1-roi       # an uploaded scan
+    python -m src.backend.run --user 1 --input /path/to/dicom --model a3-coverage-v2
 """
 import json
 import argparse
@@ -30,7 +33,7 @@ _project_root = _current_dir.parent.parent
 if str(_project_root) not in sys.path:
     sys.path.insert(0, str(_project_root))
 
-from src.backend.paths import upload_dir, work_dir, out_dir, study_id_from_series
+from src.backend.paths import scan_input_dir, work_dir, out_dir, study_id_from_series
 from src.backend.registry import load_manifest
 from src.backend.pipeline import load, resample, crop_heart, normalize, predict, save_nifti
 from src.backend.scoring import score, totals
@@ -56,8 +59,8 @@ def write_csv(rows: list[dict], path: Path):
         writer.writeheader()
         writer.writerows(rows)
 
-def run(study_id: str, model_id: str, crop: bool = None, progress=None, custom_input: Path = None):
-    """Execute the inference pipeline for a given study and model."""
+def run(user_id: int, study_id: str, model_id: str, crop: bool = None, progress=None, custom_input: Path = None):
+    """Execute the inference pipeline for a given study and model of one account."""
     m = load_manifest(model_id)
     crop = m["crop"] if crop is None else crop
     if crop != m["crop"]:
@@ -70,7 +73,7 @@ def run(study_id: str, model_id: str, crop: bool = None, progress=None, custom_i
 
     # Cropped and full volumes are different inputs, so each has its own cache.
     # One shared cache let a model silently reuse a CT prepared the other way.
-    w = work_dir(study_id) / ("crop" if crop else "full")
+    w = work_dir(user_id, study_id) / ("crop" if crop else "full")
     w.mkdir(parents=True, exist_ok=True)
     ct_path = w / "ct.nii.gz"
     # The heart mask is cached beside the CT because it is produced by the same
@@ -93,7 +96,7 @@ def run(study_id: str, model_id: str, crop: bool = None, progress=None, custom_i
                   "and re-run to generate one.")
     else:
         p("load", 0.05)
-        load_path = custom_input if custom_input else upload_dir(study_id)
+        load_path = custom_input if custom_input else scan_input_dir(user_id, study_id)
         image = load(load_path)
         
         p("resample", 0.15)
@@ -145,7 +148,7 @@ def run(study_id: str, model_id: str, crop: bool = None, progress=None, custom_i
         )
         prob = np.transpose(prob_xyz, (2, 1, 0)) # back to (Z, Y, X)
     
-    o = out_dir(study_id, model_id)
+    o = out_dir(user_id, study_id, model_id)
     o.mkdir(parents=True, exist_ok=True)
     
     prob_img = sitk.GetImageFromArray(prob)
@@ -215,41 +218,53 @@ if __name__ == "__main__":
         print("No CLI arguments provided. Running in MANUAL mode...")
         
         # EDIT THESE VALUES FOR MANUAL RUNS:
+        MANUAL_USER_ID = 1   # the account that owns the result (python -m src.backend.accounts list)
         MANUAL_INPUT_PATH = Path("/pscratch/sd/s/soham95/SOHAM/coca_raw/cocacoronarycalciumandchestcts-2/Gated_release_final/patient/342/Pro_Gated_Calcium_Score_(CS)_3.0_Qr36_2_BestDiast_74_%")
         MANUAL_MODEL_ID = "a3-coverage-v2"
-        
+
         study_id = MANUAL_INPUT_PATH.parent.name # Usually the patient ID folder
-        
+
         def log_progress(stage, pct):
             print(f"[{pct*100:3.0f}%] {stage}")
-            
+
         print(f"Starting manual run for study '{study_id}' with model '{MANUAL_MODEL_ID}'...")
-        out_path = run(study_id, MANUAL_MODEL_ID, progress=log_progress, custom_input=MANUAL_INPUT_PATH)
+        out_path = run(MANUAL_USER_ID, study_id, MANUAL_MODEL_ID, progress=log_progress, custom_input=MANUAL_INPUT_PATH)
         print(f"Done. Outputs saved to {out_path}")
         sys.exit(0)
-        
+
     # EXISTING CLI LOGIC
+    from src.backend.accounts import user_exists
+    from src.backend.paths import safe_name
+
     parser = argparse.ArgumentParser(description="Run PrediCT CAC inference pipeline.")
-    parser.add_argument("--study", help="Study ID (if using data/uploads/<study_id>)")
-    parser.add_argument("--input", help="Absolute path to a DICOM directory (bypasses data/uploads/)")
+    parser.add_argument("--user", type=int, required=True,
+                        help="Account id that owns the result (python -m src.backend.accounts list)")
+    parser.add_argument("--study", help="Study ID: an uploaded scan of that account, or the result name with --input")
+    parser.add_argument("--input", help="Absolute path to a DICOM directory (instead of an uploaded scan)")
     parser.add_argument("--model", required=True, help="Model ID (e.g., a1-roi)")
     parser.add_argument("--crop", action="store_true", default=None, help="Force crop=True")
     parser.add_argument("--no-crop", dest="crop", action="store_false", help="Force crop=False")
-    
+
     args = parser.parse_args()
-    
+    if not user_exists(args.user):
+        parser.error(f"no account with id {args.user} (see: python -m src.backend.accounts list)")
+
     if args.input:
         study_id = args.study if args.study else Path(args.input).name
         input_path = Path(args.input)
     elif args.study:
         study_id = args.study
-        input_path = upload_dir(args.study)
+        input_path = scan_input_dir(args.user, args.study)
     else:
         parser.error("Must provide either --study or --input")
-        
+    try:
+        study_id = safe_name(study_id)     # becomes data/users/<id>/out/<study_id>
+    except ValueError as e:
+        parser.error(str(e))
+
     print(f"Starting run for study '{study_id}' with model '{args.model}'...")
     def log_progress(stage, pct):
         print(f"[{pct*100:3.0f}%] {stage}")
-        
-    out_path = run(study_id, args.model, crop=args.crop, progress=log_progress, custom_input=input_path)
+
+    out_path = run(args.user, study_id, args.model, crop=args.crop, progress=log_progress, custom_input=input_path)
     print(f"Done. Outputs saved to {out_path}")

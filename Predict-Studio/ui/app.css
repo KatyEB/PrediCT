@@ -486,9 +486,108 @@ button {
 }
 
 /* No study loaded: the header stays visible but does nothing. */
-body.no-study #tabs button {
+body.no-study #tabs button:not(#logout-btn) {
   opacity: 0.4;
   pointer-events: none;
+}
+
+.tabs-user {
+  flex-shrink: 0;            /* the study badge shrinks first */
+  max-width: 160px;
+  margin-left: 12px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 12px;
+  color: var(--md-sys-color-on-surface-variant);
+}
+
+#logout-btn {
+  margin-left: 2px;
+}
+
+/* ── Session states ───────────────────────────────────────────────────────── */
+/* Until boot() knows who is signed in, show nothing; signed out, show only
+   the sign-in screen. The server refuses every data request anyway. */
+body.checking #sidebar,
+body.checking #main-content,
+body.signed-out #sidebar,
+body.signed-out #main-content {
+  display: none;
+}
+
+/* Server paths in Run Pipeline are for the admin only. */
+body:not(.is-admin) .admin-only {
+  display: none !important;
+}
+
+/* ── Sign in / create account ─────────────────────────────────────────────── */
+.auth {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  overflow-y: auto;
+}
+
+.auth-card {
+  width: min(380px, 100%);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 28px 28px 24px;
+  background: var(--md-sys-color-surface);
+  border: 1px solid var(--md-sys-color-outline);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--elevation-1);
+}
+
+.auth-card .welcome-title {
+  font-size: 26px;
+  text-align: center;
+}
+
+.auth-card .welcome-sub {
+  text-align: center;
+  margin-bottom: 4px;
+}
+
+.auth-tabs {
+  display: flex;
+  padding: 3px;
+  gap: 3px;
+  background: var(--md-sys-color-surface-variant);
+  border-radius: var(--radius-pill);
+}
+
+.auth-tabs button {
+  flex: 1;
+  padding: 6px 10px;
+  border-radius: var(--radius-pill);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--md-sys-color-on-surface-variant);
+}
+
+.auth-tabs button.on {
+  background: var(--md-sys-color-surface);
+  color: var(--md-sys-color-primary);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+}
+
+.auth-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--md-sys-color-on-surface-variant);
+}
+
+.auth-card .run-btn {
+  margin-top: 4px;
+  padding: 10px 16px;
 }
 
 /* ── Start screen ─────────────────────────────────────────────────────────── */

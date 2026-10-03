@@ -3,7 +3,8 @@ test_paths.py — study names that arrive over HTTP become folders under data/.
 
 safe_name is the only thing standing between a typed study name and
 shutil.rmtree, so every way out of the folder is tried here. study_dirs is the
-list a "delete everything" removes; it must stay exactly the study's own folders.
+list a "delete everything" removes; it must stay exactly the study's own folders,
+inside the folder of the account that owns it.
 
 Run:  python -m pytest tests/test_paths.py -v
       python tests/test_paths.py          (no pytest needed)
@@ -12,7 +13,8 @@ import sys
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))  # Predict-Studio/
 
-from src.backend.paths import safe_name, study_dirs, DATA
+from src.backend import paths
+from src.backend.paths import safe_name, study_dirs, user_root, out_dir
 
 
 def rejects(name):
@@ -47,10 +49,26 @@ def test_hidden_empty_and_reserved_are_rejected():
 
 
 def test_study_dirs_are_the_studys_own_folders():
-    dirs = study_dirs("172")
-    assert dirs == [DATA / "raw" / "172", DATA / "work" / "172", DATA / "out" / "172"]
-    for d in dirs:                      # each sits directly under its data/ area
-        assert d.parent.parent == DATA and d.name == "172"
+    root = paths.DATA / "users" / "7"
+    dirs = study_dirs(7, "172")
+    assert dirs == [root / "raw" / "172", root / "work" / "172", root / "out" / "172"]
+    for d in dirs:                      # each sits directly under its area of that account
+        assert d.parent.parent == root and d.name == "172"
+
+
+def test_every_account_has_its_own_folder():
+    assert user_root(1) != user_root(2)
+    assert out_dir(1, "172", "a1-roi") != out_dir(2, "172", "a1-roi")   # same study name, two owners
+    assert user_root("3") == paths.DATA / "users" / "3"
+
+
+def test_account_id_must_be_a_number():
+    for bad in ["../1", "1/..", "admin", ""]:
+        try:
+            user_root(bad)
+        except ValueError:
+            continue
+        raise AssertionError(f"user_root accepted {bad!r}")
 
 
 if __name__ == "__main__":

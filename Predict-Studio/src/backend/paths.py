@@ -9,7 +9,7 @@ Does NOT: read images (only metadata), create directories, or manage models.
 Called by: run.py, registry.py, server.py.
 
 Usage:
-    from .paths import MODELS, work_dir, out_dir, safe_name, study_dirs
+    from .paths import MODELS, user_root, work_dir, out_dir, safe_name, study_dirs
 """
 from pathlib import Path
 import hashlib
@@ -37,27 +37,46 @@ def safe_name(name: str) -> str:
                          'not starting with "." and without / \\ : * ? " < > |')
     return name
 
-def upload_dir(study_id: str) -> Path:
-    return DATA / "uploads" / study_id
+# ── per-account folders ───────────────────────────────────────────────────
+# Everything an account owns lives under data/users/<id>/. Ownership IS the
+# location: there is no table mapping studies to users, so nothing can drift.
+# Every function below takes the account id first; no caller builds these
+# paths by hand.
+#
+#   data/users/<id>/raw/<scan>/            uploaded scan (DICOM or NIfTI)
+#   data/users/<id>/work/<study>/crop|full prep cache (resampled CT, heart mask)
+#   data/users/<id>/out/<study>/<model>/   results the UI renders
+#   data/users/<id>/tmp/<temp_id>/         an upload being checked
 
-def raw_dir(study_id: str) -> Path:
+def user_root(user_id: int) -> Path:
+    """The account's own folder. int() guarantees a plain number, never a path."""
+    return DATA / "users" / str(int(user_id))
+
+def raw_dir(user_id: int, study_id: str) -> Path:
     """Where an uploaded scan is kept (server.py upload endpoints)."""
-    return DATA / "raw" / study_id
+    return user_root(user_id) / "raw" / study_id
 
-def work_dir(study_id: str) -> Path:
-    return DATA / "work" / study_id
+def work_dir(user_id: int, study_id: str) -> Path:
+    return user_root(user_id) / "work" / study_id
 
-def out_dir(study_id: str, model_id: str) -> Path:
-    return DATA / "out" / study_id / model_id
+def out_dir(user_id: int, study_id: str, model_id: str) -> Path:
+    return user_root(user_id) / "out" / study_id / model_id
 
-def study_dirs(study_id: str) -> list[Path]:
-    """Every folder that belongs to one study: uploaded scan, prep cache, results.
+def tmp_dir(user_id: int, temp_id: str) -> Path:
+    return user_root(user_id) / "tmp" / temp_id
 
-    This is the one place that decides what a study owns. When studies become
-    per-user, the user is added here (and in raw_dir / work_dir / out_dir) and
-    every caller — listing, running, deleting — follows.
-    """
-    return [raw_dir(study_id), work_dir(study_id), DATA / "out" / study_id]
+def study_dirs(user_id: int, study_id: str) -> list[Path]:
+    """Every folder that belongs to one study of one account: uploaded scan,
+    prep cache, results. "Delete everything" removes exactly these."""
+    return [raw_dir(user_id, study_id), work_dir(user_id, study_id),
+            user_root(user_id) / "out" / study_id]
+
+def scan_input_dir(user_id: int, scan: str) -> Path:
+    """The folder a run reads for an uploaded scan: the series sub-folder if the
+    upload kept one, else the scan folder itself."""
+    d = raw_dir(user_id, scan)
+    subs = sorted(p for p in d.iterdir() if p.is_dir())
+    return subs[0] if subs else d
 
 def study_id_from_series(input_dir: str | Path) -> str:
     """Generate a consistent 12-char ID from the DICOM SeriesInstanceUID or NIfTI filename."""

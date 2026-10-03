@@ -1,6 +1,7 @@
 # PrediCT — Code Design & Principles
 
-**Read this before adding a file.**
+**Read this before adding a file.** How the system fits together is in
+[`SYSTEM.md`](SYSTEM.md); this document is how code in it is written.
 
 This project computes coronary artery calcium (CAC) Agatston scores from cardiac
 CT. The numbers it produces are compared against radiologist ground truth and
@@ -96,9 +97,13 @@ it probably isn't worth writing.
 ```python
 threshold = 0.1   # component delineation only; does NOT gate area. Unswept —
                   # see progress report open item 11.
-margin_mm = 8     # matches the training crop (report §10.2). Changing this
-                  # without retraining alters the input distribution.
+margin_mm = 8     # matches the training crop (progress report §10.2). Changing
+                  # this without retraining alters the input distribution.
 ```
+
+"The progress report" here and below is
+[`docs/progress_report.md` on the `soham_segmentation` branch](https://github.com/ML4Sci/PrediCT/blob/soham_segmentation/docs/progress_report.md),
+where the models were trained and evaluated.
 
 A number with no provenance is a number nobody can defend or safely change.
 
@@ -222,7 +227,9 @@ in `models/<id>/manifest.yaml`, written once by whoever trained the model, who
 already knows them.
 
 Every result folder carries a `run.json` recording what was actually used:
-`model_id`, `sha256`, `hu_window`, `spacing`, `cropped`, `threshold`, `date`.
+`model_id`, `sha256`, `hu_window`, `spacing`, `threshold`, `date`, and the crop
+decision — `cropped`, the model's own `crop_default` (they differ when a run
+overrode it) and `crop_margin_mm`.
 
 > **"Which checkpoint and which window produced this number?" must be
 > answerable from the output folder alone** — never from memory, never by
@@ -240,6 +247,12 @@ Every result folder carries a `run.json` recording what was actually used:
 | Can't summarise a file in one sentence | Wrong contents. |
 
 Roughly the amount a reader holds in their head at once. Not arbitrary.
+
+**Known exceptions (debt, not precedent):** `server.py` (all HTTP routes in one
+module — split into route modules when it next grows), `ui/app.js` and
+`ui/app.css` (one script and one stylesheet for the whole UI — split per view
+when a build step or a new view arrives). Do not add a new file over the limit
+because these exist.
 
 ---
 
@@ -275,14 +288,19 @@ it, parameterised where it must differ.
 Dependencies point one direction only:
 
 ```
-server.py     HTTP only. No science. Uploads, launches jobs, reads folders.
+server.py     HTTP only. No science. Sign-in, per-user access, uploads,
+    |         launches jobs (as a subprocess), serves a user's own files.
+    +-- accounts.py   users, passwords, sessions, access tokens (no HTTP)
+    +-- ratelimit.py  token buckets                             (no HTTP, no users)
+    +-- ingest.py     fix extensionless DICOM files
     |
 run.py        Orchestration. Owns the order of stages and the output folder.
     |
-    +-- pipeline.py   load / resample / crop / normalize / predict
+    +-- pipeline.py / pipeline_nnunet.py   load / resample / crop / normalize / predict
     +-- scoring.py    lesions and totals        (no file I/O, no torch)
     +-- grouping.py   lesion 3D table grouping  (no file I/O, no torch)
     +-- render.py     PNG output                (display only)
+    +-- mesh.py       3D surfaces               (display only, measures nothing)
     +-- registry.py   read manifests            (no torch)
     |
 paths.py      Every path in the project. Nothing else builds paths by hand.
@@ -293,12 +311,42 @@ Rules:
 - `scoring.py` imports no torch and touches no files. It is pure: arrays in,
   rows out. That makes it testable by hand and reviewable on its own.
 - `registry.py` imports no torch, so `GET /models` is instant.
-- Nothing below `run.py` knows about HTTP, jobs, or the UI.
+- Nothing below `run.py` knows about HTTP, jobs, users or the UI. `run.py` only
+  learns *which account* a run belongs to, to choose folders — never to change
+  what is computed.
 - Paths come from `paths.py`. A hardcoded path anywhere else is a bug.
+- The UI displays; it never computes a score. Every number it shows is read
+  from a result file.
 
 ---
 
-## 11. Verify a refactor changed nothing
+## 11. Data isolation (multi-user)
+
+Each account's data lives in `data/users/<id>/` and nowhere else. The rule that
+keeps users apart is structural, so it must hold in every new route:
+
+- **The user comes from the session, never from the request.** Every API route
+  takes `user = Depends(current_user)`. A user id, owner or folder in a URL,
+  query string or body is never trusted.
+- **Paths are built from that user's id** with the `paths.py` helpers
+  (`raw_dir`, `work_dir`, `out_dir`, `tmp_dir`, `study_dirs`), so a link copied
+  from someone else resolves inside your own folder and finds nothing.
+- **Every name from a request passes `safe_name`** (one folder name — no
+  separators, no `..`). A file path must still be inside its base folder after
+  `resolve()`.
+- **`data/` is never served statically.** Files go through `/files/...`, which
+  applies the rules above.
+- **Someone else's object does not exist for you:** answer `404`, not `403`, and
+  never put another user's study names in a message.
+- **Limits are explicit:** anything a stranger can repeat (sign-up, sign-in,
+  upload) goes through a token bucket in `ratelimit.py`; anything that can fill
+  a disk has a size cap checked before the body is read.
+
+The reasoning and the full threat table are in [`SYSTEM.md` §5 and §13](SYSTEM.md).
+
+---
+
+## 12. Verify a refactor changed nothing
 
 Before and after any restructuring, run the same patient through both versions
 and compare the total Agatston score.
@@ -312,27 +360,30 @@ enter.
 
 ---
 
-## 12. Settled decisions
+## 13. Settled decisions
 
 These are fixed. Changing one requires stating the new evidence explicitly, not
 a preference.
 
 | Decision | Value | Basis |
 |---|---|---|
-| HU window | `[0, 1200]` | Clipped windows plateaued near Dice 0.25; this reached ~0.61 mean / 0.69 median. Report §3.3. |
+| HU window | `[0, 1200]` | Clipped windows plateaued near Dice 0.25; this reached ~0.61 mean / 0.69 median. Progress report §3.3. |
 | Target spacing | `0.37 x 0.37 x 3.0 mm` | 3.0 mm makes the Agatston thickness factor exactly 1.0. |
-| Heart locator | TotalSegmentator v2.15.0, `--roi_subset heart`, 8 mm margin | Alternative failed on 2/5 test patients. Report §10.1. |
+| Heart locator | TotalSegmentator v2.15.0, `--roi_subset heart`, 8 mm margin | Alternative failed on 2/5 test patients. Progress report §10.1. |
 | Same locator at train and test | Required | Different crops between train and inference is a distribution-shift bug. |
+| Crop per run | Default = the model's `manifest.yaml`; a run may override it | The override is recorded (`cropped` vs `crop_default` in `run.json`) and flagged in the UI. Cropped and full CTs are cached separately (`work/<study>/crop` vs `/full`), never mixed. |
 | Mask storage format | `.nii.gz` float32 | PNG has no voxel spacing, so a PNG mask cannot be scored. |
 | PNG role | Display only, regenerated from NIfTI | Never an input to anything. |
+| Risk tiers | 4-tier in `run.json` (scoring.py); 6-tier is a UI view only | Tiers are labels on the score; changing the view never recomputes a number. |
+| User data | `data/users/<id>/` only; ownership = folder location | One source of truth; see §11. |
 
-> **Known documentation defect:** `docs/progress_report.md` records the HU
-> window as `[100, 1000]`. That is wrong and is the likely origin of the scorer
-> bug. `[0, 1200]` is correct.
+> **Known documentation defect:** the progress report records the HU window as
+> `[100, 1000]`. That is wrong and is the likely origin of the scorer bug.
+> `[0, 1200]` is correct.
 
 ---
 
-## 13. Checklist before committing
+## 14. Checklist before committing
 
 - [ ] File header states what it does, what it does NOT do, and how to call it
 - [ ] Every magic number has a comment saying where it came from
@@ -342,4 +393,7 @@ a preference.
 - [ ] No copied file — parameterise the original instead
 - [ ] Output folder contains `run.json` with the config actually used
 - [ ] Tests must live strictly in the `tests/` directory, cleanly separated from the `src/backend/` logic
+- [ ] A new API route takes `Depends(current_user)` and builds paths with the user's id
+- [ ] Every name taken from a request goes through `safe_name`
+- [ ] Changed `ui/` files? Bump the `?v=` cache version in `ui/index.html`
 - [ ] If a number changed, you can explain why

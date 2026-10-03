@@ -1,12 +1,14 @@
 /* PrediCT Studio — frontend.
  *
- * Served by src/backend/server.py (FastAPI): ui/ at /ui, data/ at /data.
+ * Served by src/backend/server.py (FastAPI): ui/ at /ui. Nothing works until
+ * the user signs in; every request then carries the session cookie and the
+ * server answers only with that user's own data.
  *
  *     python -m src.backend.server
  *     http://127.0.0.1:8001/ui/?study=172&model=a1-roi
  *
- * Reads an already-produced output folder (data/out/<study>/<model>) and
- * renders it. With no study in the URL a start screen is shown instead.
+ * Reads one of the user's result folders through /files/<study>/<model>/...
+ * and renders it. With no study in the URL a start screen is shown instead.
  * Nothing here computes a score; tiers are a display classification only.
  *
  * One state object, one render(). Every handler mutates state then calls
@@ -18,7 +20,9 @@ const qs = new URLSearchParams(location.search);
 const STUDY = qs.get('study');   // null on the start screen
 const MODEL = qs.get('model');
 const HAS_STUDY = Boolean(STUDY && MODEL);
-const BASE = `/data/out/${encodeURIComponent(STUDY)}/${encodeURIComponent(MODEL)}`;
+// Result files come through the server's /files route, which resolves them
+// inside the signed-in user's own folder (never a public path).
+const BASE = `/files/${encodeURIComponent(STUDY)}/${encodeURIComponent(MODEL)}`;
 const studyUrl = (study, model) =>
   `?study=${encodeURIComponent(study)}&model=${encodeURIComponent(model)}`;
 
@@ -82,6 +86,9 @@ const state = {
 
 // ── load ─────────────────────────────────────────────────────────────────
 async function boot() {
+  initAuthForm();
+  if (!await whoAmI()) return;       // signed out: the sign-in screen is showing
+
   // The sidebar works with or without a study open.
   loadSidebar();
   initRunForm();
@@ -143,8 +150,98 @@ function savePref(key, value) {
   try { localStorage.setItem('predict.' + key, value); } catch { /* defaults next time */ }
 }
 
-async function getJson(u) { const r = await fetch(u); if (!r.ok) throw new Error(`${u} → HTTP ${r.status}`); return r.json(); }
-async function getText(u) { const r = await fetch(u); if (!r.ok) throw new Error(`${u} → HTTP ${r.status}`); return r.text(); }
+// ── session ──────────────────────────────────────────────────────────────
+let ME = null;   // { username, is_admin } of the signed-in user
+
+// Every server call goes through api(). A 401 means the session ended (signed
+// out in another tab, expired, or access revoked): show the sign-in screen.
+async function api(url, opts) {
+  const res = await fetch(url, opts);
+  if (res.status === 401) {
+    showAuth('Your session has ended. Please sign in again.');
+    throw new Error('Not signed in.');
+  }
+  return res;
+}
+
+async function whoAmI() {
+  try {
+    const res = await fetch('/auth/me');
+    if (res.status === 401) { showAuth(); return null; }
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    ME = await res.json();
+  } catch (e) {
+    showAuth(`The server could not be reached (${e.message}).`);
+    return null;
+  }
+  document.body.classList.remove('checking');
+  document.body.classList.toggle('is-admin', ME.is_admin);
+  document.getElementById('me-name').textContent = ME.username;
+  document.getElementById('logout-btn').onclick = async () => {
+    try { await fetch('/auth/logout', { method: 'POST' }); } catch { /* signed out anyway */ }
+    window.location.href = '?';
+  };
+  return ME;
+}
+
+function showAuth(message = '') {
+  clearTimeout(jobsTimer);           // nothing to watch while signed out
+  document.body.classList.remove('checking');
+  document.body.classList.add('signed-out');
+  document.getElementById('auth').hidden = false;
+  const err = document.getElementById('auth-error');
+  err.hidden = !message;
+  err.textContent = message;
+  document.getElementById('auth-username').focus();
+}
+
+/* Sign in, or create an account. Both need the access token from the
+   administrator (the admin account itself does not). On success the page
+   reloads and starts as the signed-in user, on the same URL. */
+function initAuthForm() {
+  const form = document.getElementById('auth-form');
+  const submit = document.getElementById('auth-submit');
+  const err = document.getElementById('auth-error');
+  let mode = 'login';
+  const setMode = m => {
+    mode = m;
+    document.querySelectorAll('#auth [data-auth-mode]').forEach(b =>
+      b.classList.toggle('on', b.dataset.authMode === m));
+    submit.textContent = m === 'login' ? 'Sign in' : 'Create account';
+    document.getElementById('auth-password').autocomplete = m === 'login' ? 'current-password' : 'new-password';
+    document.getElementById('auth-hint').textContent = m === 'login'
+      ? 'Given to you by the administrator.'
+      : 'Given to you by the administrator. Passwords need at least 8 characters.';
+    err.hidden = true;
+  };
+  document.querySelectorAll('#auth [data-auth-mode]').forEach(b => { b.onclick = () => setMode(b.dataset.authMode); });
+
+  form.onsubmit = async e => {
+    e.preventDefault();
+    submit.disabled = true;
+    err.hidden = true;
+    try {
+      const res = await fetch(`/auth/${mode}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          username: document.getElementById('auth-username').value,
+          password: document.getElementById('auth-password').value,
+          access_token: document.getElementById('auth-token').value,
+        }),
+      });
+      if (!res.ok) throw new Error(await errorText(res, mode === 'login' ? 'Sign-in failed' : 'Could not create the account'));
+      window.location.reload();
+    } catch (ex) {
+      err.textContent = ex.message;
+      err.hidden = false;
+      submit.disabled = false;
+    }
+  };
+}
+
+async function getJson(u) { const r = await api(u); if (!r.ok) throw new Error(`${u} → HTTP ${r.status}`); return r.json(); }
+async function getText(u) { const r = await api(u); if (!r.ok) throw new Error(`${u} → HTTP ${r.status}`); return r.text(); }
 function loadImage(u) {
   return new Promise((res, rej) => {
     const img = new Image();
@@ -251,13 +348,13 @@ async function handleUpload(files) {
         okLabel: 'Remove and continue',
       });
       if (!clean) {
-        await fetch(`/studies/clean/${data.temp_id}`, { method: 'DELETE' });
+        await api(`/studies/clean/${data.temp_id}`, { method: 'DELETE' });
         toast('Upload cancelled. Nothing was saved.');
         return;
       }
       uploadProgress(null, 'Removing unusable files…');
       const q = name ? `?custom_name=${encodeURIComponent(name)}` : '';
-      const cleanRes = await fetch(`/studies/clean/${data.temp_id}${q}`, { method: 'POST' });
+      const cleanRes = await api(`/studies/clean/${data.temp_id}${q}`, { method: 'POST' });
       if (!cleanRes.ok) throw new Error(await errorText(cleanRes, 'Cleaning failed'));
       data = await cleanRes.json();
     }
@@ -279,11 +376,14 @@ function postWithProgress(url, body, onProgress) {
     xhr.open('POST', url);
     xhr.upload.onprogress = e => { if (e.lengthComputable) onProgress(e.loaded, e.total); };
     xhr.upload.onload = () => onProgress(null, 'Checking files…');   // all bytes sent
-    xhr.onload = () => resolve({
-      ok: xhr.status >= 200 && xhr.status < 300,
-      status: xhr.status,
-      json: async () => JSON.parse(xhr.responseText),
-    });
+    xhr.onload = () => {
+      if (xhr.status === 401) showAuth('Your session has ended. Please sign in again.');
+      resolve({
+        ok: xhr.status >= 200 && xhr.status < 300,
+        status: xhr.status,
+        json: async () => JSON.parse(xhr.responseText),
+      });
+    };
     xhr.onerror = () => reject(new Error('Upload failed: the server could not be reached.'));
     xhr.send(body);
   });
@@ -1406,7 +1506,7 @@ async function loadSidebar() {
   document.getElementById('sidebar-toggle').onclick = () => sidebar.classList.toggle('collapsed');
   document.getElementById('study-filter').oninput = renderStudies;
   try {
-    const res = await fetch('/studies');
+    const res = await api('/studies');
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const byId = new Map();
     for (const s of await res.json()) {
@@ -1466,7 +1566,7 @@ async function deleteStudy(studyId) {
   const everything = picks[picks.length - 1];
   const chosen = results.filter((m, i) => picks[i]);
   const q = new URLSearchParams(everything ? { all: 'true' } : chosen.map(m => ['model', m]));
-  const res = await fetch(`/studies/${encodeURIComponent(studyId)}?${q}`, { method: 'DELETE' });
+  const res = await api(`/studies/${encodeURIComponent(studyId)}?${q}`, { method: 'DELETE' });
   if (!res.ok) { toast(await errorText(res, 'Delete failed'), 'error'); return; }
 
   // The result on screen no longer exists: back to the start screen.
@@ -1490,7 +1590,7 @@ async function initRunForm() {
   initPatientPicker();
 
   try {
-    const res = await fetch('/models');
+    const res = await api('/models');
     if (!res.ok) throw new Error(await errorText(res, 'Could not load models'));
     models = await res.json();
     modelSelect.replaceChildren(...models.map(m => {
@@ -1527,7 +1627,7 @@ let pickerIndex = -1;    // the highlighted one
 // Reload the list of uploaded scans; keep (or make) a pick if it still exists.
 async function refreshPatients(selectId) {
   try {
-    const res = await fetch('/raw_patients');
+    const res = await api('/raw_patients');
     if (res.ok) rawPatients = await res.json();
   } catch (e) {
     console.error('Could not fetch uploaded scans', e);
@@ -1540,7 +1640,7 @@ async function refreshPatients(selectId) {
 function pickPatient(p) {
   picked = p.id;
   document.getElementById('run-patient').value = p.id;
-  document.getElementById('run-path').value = p.path;
+  document.getElementById('run-path').value = p.path || '';   // shown to the admin only
   document.getElementById('run-name').value = p.id;   // auto-populate the name too
   document.getElementById('run-patient-clear').hidden = false;
   closePicker();
@@ -1655,18 +1755,24 @@ let jobStatus = null;   // job_id -> status at the previous look; null before th
 let jobsTimer = null;
 
 async function startRun() {
-  const path = document.getElementById('run-path').value.trim();
+  // Everyone runs one of their own uploads (`scan`); only the admin may give
+  // a folder on the server instead. The server enforces the same rule.
+  const path = ME.is_admin ? document.getElementById('run-path').value.trim() : '';
   const model = document.getElementById('run-model').value;
   const runName = document.getElementById('run-name').value.trim();
-  if (!path) { runMessage('Choose a scan, or enter the path to a DICOM folder.', 'error'); return; }
+  if (!picked && !path) {
+    runMessage(ME.is_admin ? 'Choose an uploaded scan, or enter a folder on the server.'
+                           : 'Choose one of your uploaded scans.', 'error');
+    return;
+  }
   if (!model) { runMessage('Choose a model.', 'error'); return; }
 
   runMessage('');
   try {
-    const payload = { input_path: path, model_id: model,
-                      crop: document.getElementById('run-crop').checked };
+    const payload = { model_id: model, crop: document.getElementById('run-crop').checked };
+    if (picked) payload.scan = picked; else payload.input_path = path;
     if (runName) payload.study_id = runName;
-    const res = await fetch('/jobs', {
+    const res = await api('/jobs', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload),
@@ -1685,13 +1791,14 @@ async function refreshJobs() {
   clearTimeout(jobsTimer);
   let jobs;
   try {
-    const res = await fetch('/jobs');
+    const res = await api('/jobs');
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     jobs = await res.json();
   } catch (e) {
-    console.error('Could not read runs', e);
     const wasRunning = jobStatus && Object.values(jobStatus).includes('running');
-    if (wasRunning) jobsTimer = setTimeout(refreshJobs, 5000);   // server busy or restarting
+    const signedOut = document.body.classList.contains('signed-out');
+    if (!signedOut) console.error('Could not read runs', e);
+    if (wasRunning && !signedOut) jobsTimer = setTimeout(refreshJobs, 5000);   // server busy or restarting
     return;
   }
 
